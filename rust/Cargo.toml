@@ -1,0 +1,12 @@
+[package]
+name = "design-pattern-practice"
+version = "0.1.0"
+edition = "2021"
+description = "Design pattern practice in Rust"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+# Add new patterns as files under examples/ — they are compiled on demand.
+# Run with: cargo run --example singleton

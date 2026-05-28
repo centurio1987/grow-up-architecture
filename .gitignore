@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+python/.venv/
+python/__pycache__/
+python/**/__pycache__/
+python/.pytest_cache/
+python/*.egg-info/
+python/.uv-cache/
+
+# TypeScript / Node
+typescript/node_modules/
+typescript/dist/
+typescript/.tsbuildinfo
+typescript/*.tsbuildinfo
+
+# Rust
+rust/target/
+rust/Cargo.lock
+
+# Java / Gradle
+java/.gradle/
+java/build/
+java/.idea/
+java/*.iml
+java/bin/
