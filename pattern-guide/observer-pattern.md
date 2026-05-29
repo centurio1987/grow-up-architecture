@@ -273,7 +273,7 @@ classDiagram
     Subject <|.. ConcreteSubject
     Observer <|.. ConcreteObserverA
     Observer <|.. ConcreteObserverB
-    ConcreteSubject "1" o--> "*" Observer : observers
+    ConcreteSubject "1" o-- "*" Observer : observers
     ConcreteObserverA ..> ConcreteSubject : queries state (pull)
     ConcreteObserverB ..> ConcreteSubject : queries state (pull)
 ```

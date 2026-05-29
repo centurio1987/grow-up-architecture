@@ -303,7 +303,7 @@ classDiagram
 
     AbstractExpression <|.. TerminalExpression
     AbstractExpression <|.. NonterminalExpression
-    NonterminalExpression o--> AbstractExpression : composes children
+    NonterminalExpression o-- AbstractExpression : composes children
     Client ..> AbstractExpression : builds AST
     Client ..> Context : provides
     AbstractExpression ..> Context : uses

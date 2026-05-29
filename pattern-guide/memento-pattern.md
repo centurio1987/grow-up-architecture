@@ -281,7 +281,7 @@ classDiagram
     }
 
     Originator ..> Memento : creates / restores from
-    Caretaker o--> Memento : stores (opaque)
+    Caretaker o-- Memento : stores (opaque)
     Caretaker ..> Originator : asks to save / restore
 ```
 

@@ -264,7 +264,7 @@ classDiagram
 
     Component <|-- Leaf
     Component <|-- Composite
-    Composite o--> "0..*" Component : children
+    Composite o-- "0..*" Component : children
     Client ..> Component : depends on
 ```
 

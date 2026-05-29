@@ -245,7 +245,7 @@ classDiagram
     Visitor <|.. ConcreteVisitor2
     Element <|.. ConcreteElementA
     Element <|.. ConcreteElementB
-    ObjectStructure o--> Element : contains
+    ObjectStructure o-- Element : contains
     ConcreteElementA ..> Visitor : v.visit(this)
     ConcreteElementB ..> Visitor : v.visit(this)
 ```

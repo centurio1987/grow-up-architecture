@@ -238,7 +238,7 @@ classDiagram
     Abstraction <|-- RefinedAbstraction : extends
     Implementor <|.. ConcreteImplementorA : implements
     Implementor <|.. ConcreteImplementorB : implements
-    Abstraction o--> Implementor : delegates to (bridge)
+    Abstraction o-- Implementor : delegates to (bridge)
     Client --> Abstraction : uses
 ```
 

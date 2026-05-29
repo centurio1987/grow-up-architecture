@@ -221,7 +221,7 @@ classDiagram
 
     Flyweight <|.. ConcreteFlyweight
     Flyweight <|.. UnsharedConcreteFlyweight
-    FlyweightFactory o--> "many" ConcreteFlyweight : pools & shares
+    FlyweightFactory o-- "many" ConcreteFlyweight : pools & shares
     Client --> FlyweightFactory : getFlyweight(key)
     Client ..> Flyweight : operation(extrinsicState)
 ```

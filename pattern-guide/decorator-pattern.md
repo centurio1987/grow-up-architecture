@@ -307,7 +307,7 @@ classDiagram
     Component <|.. Decorator
     Decorator <|-- ConcreteDecoratorA
     Decorator <|-- ConcreteDecoratorB
-    Decorator o--> Component : wraps / delegates to
+    Decorator o-- Component : wraps / delegates to
 ```
 
 > 다이어그램에 등장하는 각 클래스가 패턴의 어떤 역할(Role)을 담당하는지 위 "상세 설명" 섹션과 1:1로 대응되어야 한다.

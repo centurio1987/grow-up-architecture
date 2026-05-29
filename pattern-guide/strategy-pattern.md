@@ -302,7 +302,7 @@ classDiagram
         +main() void
     }
 
-    Context o--> Strategy : delegates to
+    Context o-- Strategy : delegates to
     Strategy <|.. ConcreteStrategyA : implements
     Strategy <|.. ConcreteStrategyB : implements
     Client ..> Context : uses

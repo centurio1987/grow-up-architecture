@@ -268,7 +268,7 @@ classDiagram
 
     Subject <|.. RealSubject : implements
     Subject <|.. Proxy : implements
-    Proxy o--> RealSubject : delegates to
+    Proxy o-- RealSubject : delegates to
     Client --> Subject : depends on
 ```
 

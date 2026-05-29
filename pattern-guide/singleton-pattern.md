@@ -207,9 +207,9 @@ public class Runtime {
 ```mermaid
 classDiagram
     class Singleton {
-        -static Singleton instance
+        -instance : Singleton$
         -Singleton()
-        +static getInstance() Singleton
+        +getInstance()$ Singleton
         +businessOperation() void
     }
 

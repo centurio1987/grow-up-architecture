@@ -288,7 +288,7 @@ classDiagram
     Client ..> ConcreteCommand : creates
     Client ..> Receiver : creates
     Client --> Invoker : configures
-    Invoker o--> Command : holds
+    Invoker o-- Command : holds
     ConcreteCommand ..|> Command : implements
     ConcreteCommand --> Receiver : invokes
 ```

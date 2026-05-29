@@ -218,7 +218,7 @@ classDiagram
     Prototype <|.. ConcretePrototypeA
     Prototype <|.. ConcretePrototypeB
     Client --> Prototype : clone() 호출
-    PrototypeRegistry o--> Prototype : 보관/조회
+    PrototypeRegistry o-- Prototype : 보관/조회
     Client ..> PrototypeRegistry : 원형 조회
 ```
 
