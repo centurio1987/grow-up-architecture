@@ -86,6 +86,12 @@ make java PATTERN=Singleton     # Java는 클래스명이므로 PascalCase
 | Rust | `rust/examples/` | `factory_method.rs` (snake_case) | `make rs PATTERN=factory_method` |
 | Java | `java/src/main/java/patterns/` | `FactoryMethod.java` (PascalCase) | `make java PATTERN=FactoryMethod` |
 
-## 패턴 가이드 문서 작성
+## 패턴 가이드 문서
 
-`.claude/skills/design-pattern-guide/` skill을 사용하면 표준 양식의 `.md` 가이드 문서를 자동 생성할 수 있다. Cowork에서 "Singleton 패턴 가이드 문서 작성" 같이 요청하면 트리거된다.
+GoF 23개 패턴의 한국어 가이드가 `pattern-guide/` 폴더에 `<pattern>-pattern.md` 형태로 모두 작성되어 있다. 전체 목록과 한 줄 요약은 [PATTERNS.md](PATTERNS.md) 참조.
+
+새 가이드 추가나 기존 가이드 보강은 `.claude/skills/design-pattern-guide/` skill 이 담당한다. Cowork 에서 "X 패턴 가이드 작성" 처럼 요청하면 트리거된다.
+
+## 코드 부합도 분석
+
+작성한 코드가 특정 디자인 패턴의 최소 조건을 충족하는지 검사하는 `.claude/skills/design-pattern-analyzer/` skill 이 있다. "이 코드가 Observer 패턴 맞는지 분석" 같이 요청하면 정적 분석 리포트가 `analysis/` 폴더에 생성된다. 평가 기준은 (1) 같은 이름의 `<pattern>-pattern.md` 가이드의 "최소 조건" 섹션을 우선 사용하고, (2) 없으면 skill 내장 `checklist.md` 를 fallback 으로 쓴다.
