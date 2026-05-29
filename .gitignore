@@ -8,6 +8,9 @@ Thumbs.db
 *.swp
 *.swo
 
+# Obsidian
+.obsidian/
+
 # Python
 python/.venv/
 python/__pycache__/
