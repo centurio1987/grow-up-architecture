@@ -43,6 +43,7 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 | Account (계정) | 잔액을 항목(Entry)의 합으로 도출 | [account-pattern.md](account-pattern.md) |
 | Transaction (거래) | 합 0 균형으로 가치 보존을 보장하는 복식부기 거래 | [transaction-pattern.md](transaction-pattern.md) |
 | Posting Rule (전기 규칙) | 사건을 거래로 변환하는 회계 규칙을 객체화 | [posting-rule-pattern.md](posting-rule-pattern.md) |
+| 심화: 객체 모델링 | Transaction과 Account의 관계 및 Entry 소속 딜레마 해소 가이드 | [account-transaction-entry-modeling.md](../consideration/account-transaction-entry-modeling.md) |
 
 ## 패턴 간 의존 관계
 
