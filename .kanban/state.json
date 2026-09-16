@@ -1,15 +1,15 @@
 {
   "next_id": 2,
-  "next_seq": 2,
+  "next_seq": 3,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "backlog",
-      "title": "전체 가이드 재집필을 수행해라.",
+      "title": "전체 가이드 재집필",
       "verbatim": "",
       "생성": "유저",
-      "최종": "유저",
+      "최종": "ai",
       "갱신": "2026-09-16",
-      "title_hash": "1cbf65cdb3cba7d4f3cdd428006d4fd8a80dd211",
+      "title_hash": "11a1d424facfd6665747a8f07b2bc1b55bf6640b",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -20,6 +20,17 @@
     "KAN-001-YXTC2C"
   ],
   "recent": [
+    {
+      "seq": 2,
+      "t": "2026-09-16T23:25",
+      "a": "ai",
+      "id": "KAN-001-YXTC2C",
+      "op": "edit",
+      "w": "TNA8EY",
+      "field": "title",
+      "before": "전체 가이드 재집필을 수행해라.",
+      "after": "전체 가이드 재집필"
+    },
     {
       "seq": 1,
       "t": "2026-09-16T23:23",
