@@ -35,3 +35,6 @@ java/build/
 java/.idea/
 java/*.iml
 java/bin/
+
+# manage-kanban 다중 세션 잠금(로컬 전용)
+.kanban/locks/
