@@ -1,8 +1,43 @@
 {
-  "next_id": 1,
-  "next_seq": 1,
-  "cards": {},
-  "order": [],
-  "recent": [],
+  "next_id": 2,
+  "next_seq": 2,
+  "cards": {
+    "KAN-001-YXTC2C": {
+      "col": "backlog",
+      "title": "전체 가이드 재집필을 수행해라.",
+      "verbatim": "",
+      "생성": "유저",
+      "최종": "유저",
+      "갱신": "2026-09-16",
+      "title_hash": "1cbf65cdb3cba7d4f3cdd428006d4fd8a80dd211",
+      "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "memo": "",
+      "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "request_template": "free"
+    }
+  },
+  "order": [
+    "KAN-001-YXTC2C"
+  ],
+  "recent": [
+    {
+      "seq": 1,
+      "t": "2026-09-16T23:23",
+      "a": "유저",
+      "id": "KAN-001-YXTC2C",
+      "op": "create",
+      "w": "TNA8EY",
+      "col": "backlog",
+      "title": "전체 가이드 재집필을 수행해라.",
+      "verbatim": "",
+      "parent": null,
+      "short": "",
+      "purpose": "",
+      "reason": "",
+      "goal": "",
+      "memo": "",
+      "request_template": "free"
+    }
+  ],
   "layout": 3
 }
