@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 4,
+  "next_seq": 5,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "backlog",
@@ -13,13 +13,33 @@
       "verbatim_hash": "1cbf65cdb3cba7d4f3cdd428006d4fd8a80dd211",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-      "request_template": "free"
+      "request_template": "free",
+      "short": "가이드 재집필",
+      "short_hash": "7a6ec4bf8a9bd6c107a97bc5489eca91492f80db",
+      "purpose": "pattern-guide/ 아래 패턴 가이드 33편(GoF 23 + DDD 분석 패턴 10)을 처음부터 다시 쓴다",
+      "purpose_hash": "bf82719801af70909b789e73eb3b103c83b21016"
     }
   },
   "order": [
     "KAN-001-YXTC2C"
   ],
   "recent": [
+    {
+      "seq": 4,
+      "t": "2026-09-16T23:25",
+      "a": "ai",
+      "id": "KAN-001-YXTC2C",
+      "op": "brief",
+      "w": "TNA8EY",
+      "fields": {
+        "short": "가이드 재집필",
+        "purpose": "pattern-guide/ 아래 패턴 가이드 33편(GoF 23 + DDD 분석 패턴 10)을 처음부터 다시 쓴다"
+      },
+      "before": {
+        "short": "",
+        "purpose": ""
+      }
+    },
     {
       "seq": 3,
       "t": "2026-09-16T23:25",
