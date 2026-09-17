@@ -58,7 +58,10 @@
       "goal_hash": "080969daa1ce8f0449e9867f2884d811a2fd4908",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-      "parent": "KAN-001-YXTC2C"
+      "parent": "KAN-001-YXTC2C",
+      "scope": [
+        "pattern-guide/research/**"
+      ]
     },
     "KAN-001.2-4NWK0T": {
       "col": "backlog",
