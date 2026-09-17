@@ -37,7 +37,7 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 ### 결정 11건
 
 - **1. spec 2개 — `gof-guide` + `analysis-guide`** — 근거 · 버린 대안: 분석 패턴 전용 MUST(DDD 준수 + 배경 전제)를 한 spec에 넣으면 GoF 쪽에서 IF-APPLICABLE로 약화되고 워커가 "정당한 생략"을 스스로 판단한다. 최소 조건의 판정 기준도 다르다(코드 구조 vs 개념적 책임 분리). 공통 절 산문은 두 `spec.md`에 `shared:pattern-guide-common` 여는 주석과 `/shared` 닫는 주석으로 두 벌 두고 `check-guides --spec-shared`가 마커 존재·파일당 1쌍·내용 동일을 검사한다. 버림: spec 1개+조건부 절, spec 3개
-- **2. 새 골격 — 아래 표** — 근거 · 버린 대안: 요청서 4요소를 `##`로, 세부를 `###`로. 절 제목은 제목만 읽고 내용을 알 수 있게
+- **2. 새 골격 — 아래 「새 골격」 목록** — 근거 · 버린 대안: 요청서 4요소를 `##`로, 세부를 `###`로. 절 제목은 제목만 읽고 내용을 알 수 있게
 - **3. analyzer 계약 유지 — `디자인 패턴을 충족하는 최소 조건` 헤딩 문자열 유지, 레벨만 `###`** — 근거 · 버린 대안: analyzer SKILL.md의 경로("프로젝트 루트")·헤딩 레벨·"첫 3개 필수" 규칙을 `[필수]/[선택]` 표기로 교체하고 회귀 4건으로 검증
 - **4. 같은 경로에 덮어쓴다, 기존 문서는 리서치 입력** — 근거 · 버린 대안: 파일명이 analyzer·인덱스의 키. 루트 워크트리에 격리돼 main에 혼재 노출 없음. 문장 복사는 안 함(voice가 바뀌므로 재작성)
 - **5. consideration 2편은 심화 트랙 유지 + 회계 배경 확정안의 출처** — 근거 · 버린 대안: 두 문서는 서로 모순(문서1: Account가 `List<AccountLedger>` 소유 / 문서2: Entry 별도 aggregate + id 참조). .1 S4에서 배경 확정안 1건 — bounded context · aggregate 경계와 일관성 요구(균형 · 중복 전기 방지 · 취소/정정 · 동시 처리 · 파생 balance 지연 허용) · root/entity/VO 배정 · 참조 방식 — 을 만들어 회계 3편이 인용. 권고 초안: 복식부기, Transaction = root, Entry = 그 안의 불변 child, Account = id 참조 + 파생 balance. 유저가 .1 보고에서 확정
@@ -158,4 +158,5 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <
 - 2026-09-17T09:18 · s:548f6b02 — `검증` 섹션 교체
 - 2026-09-17T09:19 · s:548f6b02 — `실행 계획` 섹션 교체
 - 2026-09-17T13:53 · s:548f6b02 — `전략` 섹션 교체
+- 2026-09-17T13:56 · s:548f6b02 — `전략` 섹션 교체
 - 2026-09-17T13:56 · s:548f6b02 — `전략` 섹션 교체
