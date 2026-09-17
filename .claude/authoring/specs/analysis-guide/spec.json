@@ -1,0 +1,428 @@
+{
+  "$schema": "authoring-kit/spec@1",
+  "schema_version": 1,
+  "id": "analysis-guide",
+  "label": "가이드 — 분석 패턴",
+  "version": "1.0.0",
+  "source": {
+    "origin": "extracted",
+    "refs": [
+      ".claude/skills/design-pattern-guide/template.md — 구 9섹션 양식(역추출: 최소 조건 절 문구, 예시·사용 신호·참고 자료 자리, 정보 표 → 삭제 대상)",
+      ".claude/skills/design-pattern-guide/SKILL.md — 구 작성 절차·검증(역추출: 최소 조건은 판정 기준 형태, 빈 코드 블록 금지, Class Diagram 과 역할 설명 1:1)",
+      "pattern-guide/ddd-analysis-pattern-guide/account-pattern.md — 구 양식 산출물(역추출: 경계를 정하지 않은 코드가 실린 모양 → AG3·AG7 의 반례)",
+      "pattern-guide/ddd-analysis-pattern-guide/README.md 「비고」 — 최소 조건은 코드 구조보다 개념적 책임 분리로 판정(역추출 → AG2)",
+      "~/code_test/.claude/authoring/specs/ds-guide — 계승 원형(when.clue → purpose, 조건부 절 규칙, 원칙 코드·축 배정 방식)",
+      "KANBAN/cards/KAN-001-YXTC2C.md 「전략」 — 결정 11건 · 새 골격 · analysis-guide 차이 · 코드 검사 계약 · HTML 버전(정본)",
+      "KANBAN/cards/KAN-001.2-4NWK0T.md 「전략」 — spec 2종 · 공유 블록 · analyzer 계약",
+      "KANBAN/requests/doing/KAN-001-YXTC2C.request.md — 유저 요청서(가이드 구성 4요소, 분석 패턴 DDD 준수·배경 전제)"
+    ],
+    "note": "gof-guide 와 골격을 공유하는 분석 패턴 트랙 명세다. 차이(분석 층위 개념 · 개념적 판정 기준 · 상황 설정 MUST 표 · 표와 1:1 구현 · 상황이 달라지면 · 실제 사례)는 루트 카드 「analysis-guide 차이」와 유저 요청서에서 왔다. 공통 작성법 블록은 gof-guide spec.md 에서 바이트 단위로 복사했다. 잠정 둘: AG4(DDD 전술 용어 한 줄 정의 — 기준선 문서 신설 시 링크로 대체), 값 객체 계열의 AG3 표(파일럿 Quantity 실측 후 1.1 에서 처분). PG 코드는 두 트랙 공통, AG 코드는 분석 전용."
+  },
+  "voice": {
+    "default": "ppangtolab-teacher",
+    "allowed": [
+      "ppangtolab-teacher"
+    ]
+  },
+  "sections": [
+    {
+      "id": "title",
+      "label": "제목 + 부제",
+      "required": true,
+      "order": 5,
+      "heading": "# {패턴} — {직관을 담은 부제}",
+      "heading_fixed": false
+    },
+    {
+      "id": "overview",
+      "label": "한눈에 보는 개요",
+      "required": true,
+      "order": 10,
+      "heading": "## 한눈에 보는 개요",
+      "heading_fixed": true
+    },
+    {
+      "id": "detail",
+      "label": "패턴 자세히 들여다보기",
+      "required": true,
+      "order": 20,
+      "heading": "## 패턴 자세히 들여다보기",
+      "heading_fixed": true,
+      "container": true
+    },
+    {
+      "id": "detail.terms",
+      "label": "등장하는 개념과 정의",
+      "required": true,
+      "order": 21,
+      "heading": "### 등장하는 개념과 정의",
+      "heading_fixed": true,
+      "parent": "detail"
+    },
+    {
+      "id": "detail.procedure",
+      "label": "동작 절차",
+      "required": true,
+      "order": 22,
+      "heading": "### 동작 절차",
+      "heading_fixed": true,
+      "parent": "detail"
+    },
+    {
+      "id": "purpose",
+      "label": "사용 목적",
+      "required": true,
+      "order": 30,
+      "heading": "## 사용 목적",
+      "heading_fixed": true
+    },
+    {
+      "id": "boundary",
+      "label": "패턴의 경계",
+      "required": true,
+      "order": 40,
+      "heading": "## 패턴의 경계",
+      "heading_fixed": true,
+      "container": true
+    },
+    {
+      "id": "boundary.minimum",
+      "label": "디자인 패턴을 충족하는 최소 조건",
+      "required": true,
+      "order": 41,
+      "heading": "### 디자인 패턴을 충족하는 최소 조건",
+      "heading_fixed": true,
+      "parent": "boundary"
+    },
+    {
+      "id": "boundary.compare",
+      "label": "비슷한 패턴·안티패턴과의 차이",
+      "required": true,
+      "order": 42,
+      "heading": "### 비슷한 패턴·안티패턴과의 차이",
+      "heading_fixed": true,
+      "parent": "boundary"
+    },
+    {
+      "id": "example",
+      "label": "구현 예시",
+      "required": true,
+      "order": 50,
+      "heading": "## 구현 예시",
+      "heading_fixed": true,
+      "container": true
+    },
+    {
+      "id": "example.context",
+      "label": "상황 설정",
+      "required": true,
+      "order": 51,
+      "heading": "### 상황 설정",
+      "heading_fixed": true,
+      "parent": "example"
+    },
+    {
+      "id": "example.impl",
+      "label": "구현",
+      "required": true,
+      "order": 52,
+      "heading": "### 구현",
+      "heading_fixed": true,
+      "parent": "example"
+    },
+    {
+      "id": "example.alternatives",
+      "label": "상황이 달라지면",
+      "required": false,
+      "order": 53,
+      "heading": "### 상황이 달라지면",
+      "heading_fixed": true,
+      "parent": "example",
+      "condition": "이 패턴의 개념을 aggregate 로 묶는 경계 선택지가 둘 이상 성립할 때 — Account·Transaction·Posting Rule 은 항상 해당(AG11)"
+    },
+    {
+      "id": "example.realworld",
+      "label": "실제 사례",
+      "required": false,
+      "order": 54,
+      "heading": "### 실제 사례",
+      "heading_fixed": true,
+      "parent": "example",
+      "condition": "출처 링크로 확인한 실제 사례(시스템·표준·공개 문서)가 하나 이상 있을 때"
+    },
+    {
+      "id": "selfcheck",
+      "label": "스스로 점검하기",
+      "required": true,
+      "order": 60,
+      "heading": "## 스스로 점검하기",
+      "heading_fixed": true
+    },
+    {
+      "id": "refs",
+      "label": "참고 자료",
+      "required": true,
+      "order": 70,
+      "heading": "## 참고 자료",
+      "heading_fixed": true
+    }
+  ],
+  "principles": [
+    {
+      "code": "PG1",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "절 헤딩 고정 — `heading_fixed: true` 인 절은 `sections[]` 의 헤딩 문구·레벨·순서를 그대로 쓴다. 특히 `### 디자인 패턴을 충족하는 최소 조건` 은 design-pattern-analyzer 가 기준을 읽어 가는 계약 문자열이라 한 글자라도 다르면 미흡"
+    },
+    {
+      "code": "PG2",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "개요 구성 — `overview` 에 ① 패턴 없이 생기는 문제를 구체 상황 하나로 ② 패턴이 그 문제를 없애는 한 수 ③ 문제→해결 전후를 보이는 그림 1개(text 도식 또는 mermaid) ④ 분류와 함께 쓰는 패턴 한 줄이 모두 있다. 넷 중 하나라도 없으면 미흡"
+    },
+    {
+      "code": "PG3",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "개념 전수 정의 — 본문(개요·절차·경계·구현)에 나오는 역할·개념 이름이 전부 `detail.terms` 에 정의돼 있다. 이름만 나열했거나, 뒤 절에서 정의 없는 이름이 처음 등장하면 미흡"
+    },
+    {
+      "code": "PG4",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "정의 직후 클래스 다이어그램 — `detail.terms` 의 정의 목록 바로 뒤에 mermaid `classDiagram` 이 1개 있고, 그 클래스 이름과 정의 목록의 이름이 1:1로 대응한다"
+    },
+    {
+      "code": "PG5",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "절차 전수와 이유 — `detail.procedure` 가 협력을 번호 단계로 빠짐없이 적고, 단계마다 '왜 그 역할이 그 일을 맡는가' 또는 '순서를 바꾸면 무엇이 깨지는가'를 붙인다. 이유 없는 단계가 하나라도 있으면 미흡"
+    },
+    {
+      "code": "PG6",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "구체 단서 — `purpose` 가 이 패턴을 꺼내게 하는 단서를 코드나 요구에서 관찰되는 구체 상황으로 2개 이상 적는다. '유연성이 필요할 때'·'확장성을 높이고 싶을 때' 같은 추상 서술만 있으면 미흡"
+    },
+    {
+      "code": "PG7",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "쓰지 말아야 할 경우 — `purpose` 가 이 패턴을 쓰면 손해인 상황을 1개 이상, 그때 무엇을 잃는지와 함께 적는다"
+    },
+    {
+      "code": "PG8",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "필수/선택 표기 — `boundary.minimum` 의 조건마다 맨 앞에 `[필수]` 또는 `[선택]` 이 붙어 있고 `[필수]` 가 1개 이상이다. 표기 없는 조건이 하나라도 있으면 미흡"
+    },
+    {
+      "code": "PG9",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "최소 조건의 반례 — `[필수]` 조건마다 그 조건이 빠지면 코드·모델이 무엇이 되는지(비슷한 패턴·안티패턴·단순 분기 등) 구체 반례가 붙는다. 조건을 선언만 하고 넘어가면 미흡"
+    },
+    {
+      "code": "PG10",
+      "level": "IF-APPLICABLE",
+      "axis": "structure",
+      "text": "불변식은 조건으로 — 패턴이 항상 유지해야 하는 불변식이 있으면 산문 속 서술로 두지 않고 `boundary.minimum` 의 조건 항목으로 올린다"
+    },
+    {
+      "code": "PG11",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "비교 대상 수 — `boundary.compare` 가 비슷한 패턴 또는 오해하기 쉬운 안티패턴을 2개 이상 다룬다"
+    },
+    {
+      "code": "PG12",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "차이점 위주 — `boundary.compare` 의 비교 대상마다 코드나 모델에서 확인할 수 있는 구분 기준을 한 문장으로 먼저 제시한다. '의도가 다르다'만 있거나 공통점 서술이 차이 서술보다 길면 미흡"
+    },
+    {
+      "code": "PG13",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "얻는 것과 포기하는 것 — `boundary.compare` 의 비교 대상마다 이 패턴을 고르면 무엇을 얻고 무엇을 포기하는지 적는다"
+    },
+    {
+      "code": "PG14",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "오인 코드 표식 — `### 구현` 밖 본문 절(`boundary.compare` 등)에서 이 패턴으로 오인되는 코드를 보이는 펜스는 정보 문자열이 `<언어> no-compile` 이다. `### 구현` 의 세 펜스와 `selfcheck` 문제 속 코드에는 `no-compile` 을 달지 않는다"
+    },
+    {
+      "code": "PG15",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "상황 설정 선행 — `example.context` 가 구현 펜스보다 앞에서 도메인과 요구 전제(무엇이 변하고 무엇이 고정인가)를 적고, 예시의 타입 이름이 `detail.terms` 의 어느 역할·개념에 대응하는지 매핑한다(매핑이 `example.impl` 해설에 있어도 충족)"
+    },
+    {
+      "code": "PG16",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "구현 펜스 개수·순서 — `### 구현` 안의 코드 펜스가 정확히 3개이고 정보 문자열이 순서대로 `java`, `typescript`, `rust` 이며, 세 펜스 사이에 산문·헤딩이 없다"
+    },
+    {
+      "code": "PG17",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "구현 펜스 자기완결 — 세 펜스가 각각 비어 있지 않고 생략 표기(`...`) 없이 단독 파일로 컴파일된다(Java 21 · TypeScript strict · Rust 2021 edition). `commands.compile` 이 0으로 끝나야 충족"
+    },
+    {
+      "code": "PG18",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "표준 라이브러리만 — 세 펜스가 각 언어의 표준 라이브러리 밖 의존(외부 crate·npm 패키지·Maven 좌표)을 쓰지 않는다"
+    },
+    {
+      "code": "PG19",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "같은 상황 세 언어 — 세 펜스가 `example.context` 의 같은 시나리오를 같은 역할·타입 이름으로 구현하고, 각자 그 시나리오를 호출하는 진입점(Java `main` · TypeScript 최상위 호출 · Rust `fn main`)을 갖는다. 언어 관용 차이(interface·type·trait)는 허용하고, 언어마다 다른 예제면 미흡"
+    },
+    {
+      "code": "PG20",
+      "level": "SHOULD",
+      "axis": "structure",
+      "text": "해설은 한 번 — `example.impl` 의 해설은 세 펜스 뒤에 한 번 두고, 핵심 라인을 짚을 때 세 언어의 대응 줄을 함께 가리킨다. 같은 해설을 언어마다 반복하면 미흡"
+    },
+    {
+      "code": "PG21",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "실제 사용처는 확인된 것만 — 본문이 실제 사용처(라이브러리·프레임워크·시스템)로 드는 사례마다 확인 가능한 출처 링크(공식 문서·소스 저장소·원문)가 붙어 있다. 링크 없는 사용처가 하나라도 있으면 미흡이고, 확인된 사용처가 없으면 `example.realworld` 절이 없다"
+    },
+    {
+      "code": "PG22",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "근거 없는 수치 금지 — 「정보 표」·활용성 별점·학습 난이도 등급처럼 측정·출처 근거가 없는 평가 수치가 본문에 없다"
+    },
+    {
+      "code": "PG23",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "조건부 절 처리 — 조건부 절이 해당 없으면 헤딩째 지워져 있고, 본문에 '해당 없음'·'이 절은 생략' 같은 집필 메타가 없다. 생략 사유는 게이트 보고에만 있다"
+    },
+    {
+      "code": "PG24",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "리서치 노트 밖 사실의 출처 — 리서치 노트(`dirs.research`)에 없는 사실(원전 인용·API 동작·역사·사용처)을 본문에 새로 썼으면 그 자리에 출처가 달려 있고 `refs` 에도 올라 있다"
+    },
+    {
+      "code": "PG25",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "참고 자료 — `refs` 맨 앞에 원전이 장·절(또는 쪽)까지 적혀 있고, 본문에서 출처로 단 링크가 전부 `refs` 에 있다"
+    },
+    {
+      "code": "PG26",
+      "level": "SHOULD",
+      "axis": "scope-principle",
+      "text": "경계 판정 문제 — `selfcheck` 에 `boundary.minimum` 의 조건을 적용해 주어진 코드나 모델이 이 패턴인지 판정하게 하는 문제가 1개 이상 있다"
+    },
+    {
+      "code": "AG1",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "분석 층위 정의 — `detail.terms` 가 패턴이 모델링하는 도메인 개념과 그 관계만 정의하고 Entity·Value Object·Aggregate 같은 DDD 전술 분류를 매기지 않는다(분류는 `example.context` 표의 몫). 정의 직후 classDiagram 에도 전술 분류 스테레오타입이 없다"
+    },
+    {
+      "code": "AG2",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "개념 판정 — `boundary.minimum` 의 조건이 개념적 책임 분리(어떤 개념이 무엇을 책임지는가)와 모델 불변식으로 적혀 있다. 특정 클래스 구조·필드 배치·상속·컬렉션 소유를 조건으로 삼으면 미흡"
+    },
+    {
+      "code": "AG3",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "상황 설정 표 — `example.context` 에 헤더가 `| 항목 | 이 가이드의 설정 |` 인 표가 있고, 행이 정확히 4개이며 라벨이 순서대로 `bounded context` · `불변식의 위치` · `root·entity·VO 배정` · `타 aggregate 참조 방식` 이다. 빈 칸이 있거나 `bounded context` 칸이 한 줄을 넘으면 미흡"
+    },
+    {
+      "code": "AG4",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "DDD 전술 용어 한 줄 정의(잠정 규칙) — 상황 설정 표에서 처음 쓰는 DDD 전술 용어(Bounded Context·Aggregate·Aggregate Root·Entity·Value Object 등)가 표 셀 안 괄호나 표 바로 아래 목록에서 한 줄로 정의돼 있다. 유저가 DDD 전술 용어 기준선 문서 신설을 결정하면 그 문서 링크로 대체한다"
+    },
+    {
+      "code": "AG5",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "id 참조 — 상황 설정 표의 `타 aggregate 참조 방식` 칸이 다른 aggregate 를 id 로 참조한다고 적고, 무엇이 무엇을 어떤 id 로 가리키는지 밝힌다. 다른 aggregate 를 객체로 보유하는 배정이면 미흡"
+    },
+    {
+      "code": "AG6",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "표와 구현 1:1 — `example.impl` 의 세 펜스에서 aggregate root 타입은 표가 root 로 배정한 개념뿐이고, entity 는 식별자를 갖고 VO 는 식별자 없이 불변이며, `불변식의 위치` 칸이 가리킨 root 의 메서드가 그 불변식을 실제로 검사한다"
+    },
+    {
+      "code": "AG7",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "aggregate 간 객체 참조 0 — 세 펜스에서 aggregate 로 배정된 타입의 필드와 메서드 시그니처에 다른 aggregate 의 타입이 나오지 않고, 다른 aggregate 는 id 타입으로만 가리킨다"
+    },
+    {
+      "code": "AG8",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "root 경유 변경 — 세 펜스에서 aggregate 안의 entity·VO 변경이 root 의 메서드로만 일어난다. root 밖으로 가변 컬렉션이나 child 의 상태 변경 메서드를 노출하면 미흡"
+    },
+    {
+      "code": "AG9",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "회계 배경 인용 — Account·Transaction·Posting Rule 세 가이드는 `example.context` 에서 회계 배경 확정안(`dirs.research` 의 `accounting-context.md`)을 링크로 인용하고, 상황 설정 표의 네 칸이 확정안과 어긋나지 않는다. 이 세 패턴에만 적용하며 세 패턴에는 예외 없이 적용한다"
+    },
+    {
+      "code": "AG10",
+      "level": "IF-APPLICABLE",
+      "axis": "structure",
+      "text": "상황이 달라지면 — 이 패턴의 개념을 aggregate 로 묶는 경계 선택지가 둘 이상 성립하면 `### 상황이 달라지면` 에 상황 · 경계 · 이유 세 열의 표가 있고, 이 가이드가 고른 경계도 한 행으로 들어 있다"
+    },
+    {
+      "code": "AG11",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "Entry 소속 네 행 — Account·Transaction·Posting Rule 세 가이드의 `### 상황이 달라지면` 표에 Entry 소속 네 가지(Transaction 이 가진다 / Account 가 가진다 / 홀로 존재한다 / 별도 entity 로 존재하고 Account 가 그에 대한 VO 를 가진다)가 각각 한 행으로 있다. 이 세 패턴에만 적용한다"
+    },
+    {
+      "code": "AG12",
+      "level": "IF-APPLICABLE",
+      "axis": "evidence",
+      "text": "사례 개념 매핑 — `### 실제 사례` 가 있으면 사례마다 그 시스템·표준·문서의 어느 개념이 패턴의 어느 개념에 대응하는지 매핑한다"
+    }
+  ],
+  "conditional_rule": "조건부 절은 해당 사항이 없으면 문서에서 헤딩째 지운다. 문서 안에 '해당 없음' 메모를 남기지 않는다 — 독자용 문서에 집필 메타를 싣지 않는다. 생략 사유는 품질 게이트 보고에만 기록한다.",
+  "template": {
+    "kind": "md",
+    "template_ref": "analysis-guide-canvas",
+    "slot_style": "std-v1",
+    "slots_map": "template.slots.json",
+    "outputs": [
+      {
+        "format": "md",
+        "dir": "analysis"
+      }
+    ]
+  },
+  "placeholders": {
+    "profile": "std-v1",
+    "legacy_accept": [],
+    "_note": "캔버스는 std-v1 표기만 쓴다. 완성본의 최소 조건 표기 `[필수]`·`[선택]` 은 린터가 bracket-inline 레거시로 감지해 경고를 내지만 슬롯이 아니라 analyzer 계약 본문이다. 진짜 대괄호 슬롯을 가리지 않으려고 legacy_accept 에 넣지 않았다."
+  },
+  "gate": {
+    "rubric": "default",
+    "max_rounds": 3,
+    "external_review": {
+      "enabled": true,
+      "axes": "scripts/review-axes-pattern.md",
+      "failure_policy": "hard-fail",
+      "redact": "none"
+    }
+  }
+}
