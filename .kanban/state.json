@@ -108,7 +108,16 @@
       "goal_hash": "f49bfa94d0d688b77e000e65f16960aa05d4284a",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-      "parent": "KAN-001-YXTC2C"
+      "parent": "KAN-001-YXTC2C",
+      "scope": [
+        "pattern-guide/design-pattern-guide/strategy-pattern.md",
+        "pattern-guide/ddd-analysis-pattern-guide/account-pattern.md",
+        "pattern-guide/ddd-analysis-pattern-guide/quantity-pattern.md",
+        "pattern-guide/html/**",
+        "pattern-guide/gate-results.jsonl",
+        ".claude/authoring/**",
+        "KANBAN/batches/**"
+      ]
     },
     "KAN-001.4-BJT8JD": {
       "col": "backlog",
