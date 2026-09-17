@@ -102,7 +102,14 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 
 ## 실행 계획
 <!-- `S<n>`은 고정 id — 이름을 바꾸지 않는다. 체크 상태는 doc-step 이 갱신한다. -->
-- [ ] `S1` (첫 단계를 적으세요)
+루트 work 하나 = 하위 카드 하나. 완료 기준은 그 하위 카드가 `완료`로 이동한 것이다. 순서는 엄격 순차.
+
+- [ ] `S1` KAN-001.1-P5N9NF 리서치와 후보 조사 — 노트 4건 + 후보 보고서 + 회계 배경 확정안, 유저 결정 접수
+- [ ] `S2` KAN-001.2-4NWK0T authoring-kit 정착 — spec 2종·lock·게이트·검사기·렌더러·진입 스킬, `validate --all` 통과
+- [ ] `S3` KAN-001.3-Q6FYKP 파일럿 3편과 회고 — Strategy·Account·Quantity PASS, spec 1.1, `batch_size_works` 확정, .4·.5·.6 배치 생성
+- [ ] `S4` KAN-001.4-BJT8JD GoF 22편 재집필 — 22편 PASS + 검사 0
+- [ ] `S5` KAN-001.5-6HF35H 분석 패턴 8편 재집필 — 8편 PASS + consideration 정합
+- [ ] `S6` KAN-001.6-HB5NH9 인덱스·stale 정리·최종 검증 — 링크 0·HTML 33편 fresh·검토서
 
 ## 검증
 <!-- 무엇을 실행해 무엇이 나오면 이 카드가 끝난 것인가. -->
@@ -138,3 +145,4 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <
 <!-- KANBAN:LOG append-only — 아래로만 덧붙인다. 위를 고치지 않는다. -->
 - 2026-09-17T09:18 · s:548f6b02 — `전략` 섹션 교체
 - 2026-09-17T09:18 · s:548f6b02 — `검증` 섹션 교체
+- 2026-09-17T09:19 · s:548f6b02 — `실행 계획` 섹션 교체
