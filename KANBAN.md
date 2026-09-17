@@ -40,6 +40,12 @@
   - 목적: 나머지 GoF 22편을 gof-guide spec으로 다시 쓴다
   - 이유: 요청서의 재집필 본체이고 analyzer가 읽는 최소 조건이 여기서 갱신된다
   - 목표: 22편 게이트 PASS, 헤딩·placeholder·mermaid·컴파일 검사 0 오류, analyzer 스팟체크 통과
+- `KAN-001.5-6HF35H` 분석 패턴 8편 재집필 — 생성:ai · 최종:ai · 갱신:2026-09-17
+  - 상위: `KAN-001-YXTC2C` (백로그)
+  - 짧은 제목: 분석 패턴 8편 재집필
+  - 목적: 나머지 8편을 analysis-guide spec으로 다시 쓰고 consideration 2편과 정합시킨다
+  - 이유: 회계 3부작이 aggregate 경계 정의 없이 쓰여 독자를 오도한다
+  - 목표: 8편 PASS, 회계 3부작 동일 배경 인용, consideration 교차 참조·모순 0
 
 ## 할 일
 

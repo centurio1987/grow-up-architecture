@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 10,
+  "next_seq": 11,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "backlog",
@@ -122,6 +122,27 @@
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "parent": "KAN-001-YXTC2C"
+    },
+    "KAN-001.5-6HF35H": {
+      "col": "backlog",
+      "title": "분석 패턴 8편 재집필",
+      "verbatim": "",
+      "생성": "ai",
+      "최종": "ai",
+      "갱신": "2026-09-17",
+      "title_hash": "7fa3c41842ecde55032767bb327acef269673590",
+      "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "short": "분석 패턴 8편 재집필",
+      "short_hash": "7fa3c41842ecde55032767bb327acef269673590",
+      "purpose": "나머지 8편을 analysis-guide spec으로 다시 쓰고 consideration 2편과 정합시킨다",
+      "purpose_hash": "3b20188244765174a567a7a20adb8bed7b4816c3",
+      "reason": "회계 3부작이 aggregate 경계 정의 없이 쓰여 독자를 오도한다",
+      "reason_hash": "2f5a01940cf8f694a891dc7ede41d9b2d8765a98",
+      "goal": "8편 PASS, 회계 3부작 동일 배경 인용, consideration 교차 참조·모순 0",
+      "goal_hash": "1bd0448f967fe1e74d4d76514eaed1ac3bf321f3",
+      "memo": "",
+      "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "parent": "KAN-001-YXTC2C"
     }
   },
   "order": [
@@ -129,9 +150,27 @@
     "KAN-001.1-P5N9NF",
     "KAN-001.2-4NWK0T",
     "KAN-001.3-Q6FYKP",
-    "KAN-001.4-BJT8JD"
+    "KAN-001.4-BJT8JD",
+    "KAN-001.5-6HF35H"
   ],
   "recent": [
+    {
+      "seq": 10,
+      "t": "2026-09-17T09:19",
+      "a": "ai",
+      "id": "KAN-001.5-6HF35H",
+      "op": "create",
+      "w": "TNA8EY",
+      "col": "backlog",
+      "title": "분석 패턴 8편 재집필",
+      "verbatim": "",
+      "parent": "KAN-001-YXTC2C",
+      "short": "분석 패턴 8편 재집필",
+      "purpose": "나머지 8편을 analysis-guide spec으로 다시 쓰고 consideration 2편과 정합시킨다",
+      "reason": "회계 3부작이 aggregate 경계 정의 없이 쓰여 독자를 오도한다",
+      "goal": "8편 PASS, 회계 3부작 동일 배경 인용, consideration 교차 참조·모순 0",
+      "memo": ""
+    },
     {
       "seq": 9,
       "t": "2026-09-17T09:19",
