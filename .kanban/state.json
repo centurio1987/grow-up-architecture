@@ -163,7 +163,12 @@
       "goal_hash": "1bd0448f967fe1e74d4d76514eaed1ac3bf321f3",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-      "parent": "KAN-001-YXTC2C"
+      "parent": "KAN-001-YXTC2C",
+      "scope": [
+        "pattern-guide/ddd-analysis-pattern-guide/**",
+        "pattern-guide/consideration/**",
+        "pattern-guide/gate-results.jsonl"
+      ]
     },
     "KAN-001.6-HB5NH9": {
       "col": "backlog",

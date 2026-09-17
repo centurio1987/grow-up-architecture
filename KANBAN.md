@@ -50,6 +50,7 @@
   - 목적: 나머지 8편을 analysis-guide spec으로 다시 쓰고 consideration 2편과 정합시킨다
   - 이유: 회계 3부작이 aggregate 경계 정의 없이 쓰여 독자를 오도한다
   - 목표: 8편 PASS, 회계 3부작 동일 배경 인용, consideration 교차 참조·모순 0
+  - 실행 문서: KANBAN/cards/KAN-001.5-6HF35H.md (0/9 · 최근 09-17)
 - `KAN-001.6-HB5NH9` 인덱스·stale 정리·최종 검증 — 생성:ai · 최종:ai · 갱신:2026-09-17
   - 상위: `KAN-001-YXTC2C` (백로그)
   - 짧은 제목: 인덱스·stale 정리·최종 검증
