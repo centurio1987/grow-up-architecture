@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 9,
+  "next_seq": 10,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "backlog",
@@ -101,15 +101,54 @@
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "parent": "KAN-001-YXTC2C"
+    },
+    "KAN-001.4-BJT8JD": {
+      "col": "backlog",
+      "title": "GoF 22편 재집필",
+      "verbatim": "",
+      "생성": "ai",
+      "최종": "ai",
+      "갱신": "2026-09-17",
+      "title_hash": "9ddc2c90f88b19191cc14dcf8851e0b8a855343c",
+      "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "short": "GoF 22편 재집필",
+      "short_hash": "9ddc2c90f88b19191cc14dcf8851e0b8a855343c",
+      "purpose": "나머지 GoF 22편을 gof-guide spec으로 다시 쓴다",
+      "purpose_hash": "0b8c7b86783caf531c80db4ffe8f692ed7b8b209",
+      "reason": "요청서의 재집필 본체이고 analyzer가 읽는 최소 조건이 여기서 갱신된다",
+      "reason_hash": "e03a1b60e138cecad54aef7bc426e68f94c58b82",
+      "goal": "22편 게이트 PASS, 헤딩·placeholder·mermaid·컴파일 검사 0 오류, analyzer 스팟체크 통과",
+      "goal_hash": "7bf8aef2a88113303c076eb586418521ebc5104e",
+      "memo": "",
+      "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "parent": "KAN-001-YXTC2C"
     }
   },
   "order": [
     "KAN-001-YXTC2C",
     "KAN-001.1-P5N9NF",
     "KAN-001.2-4NWK0T",
-    "KAN-001.3-Q6FYKP"
+    "KAN-001.3-Q6FYKP",
+    "KAN-001.4-BJT8JD"
   ],
   "recent": [
+    {
+      "seq": 9,
+      "t": "2026-09-17T09:19",
+      "a": "ai",
+      "id": "KAN-001.4-BJT8JD",
+      "op": "create",
+      "w": "TNA8EY",
+      "col": "backlog",
+      "title": "GoF 22편 재집필",
+      "verbatim": "",
+      "parent": "KAN-001-YXTC2C",
+      "short": "GoF 22편 재집필",
+      "purpose": "나머지 GoF 22편을 gof-guide spec으로 다시 쓴다",
+      "reason": "요청서의 재집필 본체이고 analyzer가 읽는 최소 조건이 여기서 갱신된다",
+      "goal": "22편 게이트 PASS, 헤딩·placeholder·mermaid·컴파일 검사 0 오류, analyzer 스팟체크 통과",
+      "memo": ""
+    },
     {
       "seq": 8,
       "t": "2026-09-17T09:19",
