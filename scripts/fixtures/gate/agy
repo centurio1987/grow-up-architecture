@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# 가짜 agy — test-comprehension-gate.sh 전용. FAKE_AGY=pass|fail|skip
+case "${FAKE_AGY:-pass}" in
+  skip) echo "Authentication required"; exit 1 ;;
+  fail) printf '[Q4] 판정: FAIL(근거 없음)\nVERDICT: FAIL\n' ;;
+  *)    printf '[Q1] 판정: PASS\nVERDICT: PASS\n' ;;
+esac

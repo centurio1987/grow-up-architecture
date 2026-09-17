@@ -117,7 +117,14 @@
         "pattern-guide/gate-results.jsonl",
         "pattern-guide/gate-logs/**",
         ".claude/authoring/**",
-        "KANBAN/batches/**"
+        "KANBAN/batches/**",
+        "scripts/check-guides.py",
+        "scripts/comprehension-gate.sh",
+        "scripts/test-comprehension-gate.sh",
+        "scripts/fixtures/gate/**",
+        "scripts/fixtures/check/**",
+        ".claude/skills/design-pattern-guide/*-canvas.md",
+        ".agents/skills/design-pattern-guide/*-canvas.md"
       ]
     },
     "KAN-001.4-BJT8JD": {

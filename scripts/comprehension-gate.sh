@@ -31,10 +31,13 @@
 #   comprehension-gate.sh <guide-file>
 #
 # Exit codes:
-#   0 = 이해 게이트 통과 (응답한 모델 전부 VERDICT: PASS)
+#   0 = 이해 게이트 통과 (두 모델 모두 응답했고 모두 VERDICT: PASS)
 #   1 = 사용법 오류 (파일 없음·빈 파일·GUIDE_KIND 오값)
-#   2 = 두 모델 모두 사용 불가 → 게이트 미실행 (통과로 간주 금지)
-#   3 = 이해 게이트 미통과 (한 모델이라도 VERDICT: FAIL, 또는 VERDICT 줄 없음)
+#   2 = 게이트 미완료 — 한 모델이라도 응답하지 않았고 응답한 쪽에 FAIL 이 없음 (통과로 간주 금지)
+#   3 = 이해 게이트 미통과 (응답한 모델 중 하나라도 VERDICT: FAIL, 또는 VERDICT 줄 없음)
+#
+# 개정(KAN-001.3 S4): 예전에는 한 모델만 응답해도 그 모델이 PASS 면 0 이었다. 파일럿 회고 실험에서
+# codex 사용량 한도로 agy 단독 PASS 가 0 으로 나온 것을 확인하고, 두 모델 판정이 모두 있어야 0 이 되게 바꿨다.
 #
 # 모델 선택: 각 CLI 기본 모델. CODEX_MODEL / AGY_MODEL로 오버라이드.
 # 호출 제한 시간: COMPREHENSION_GATE_TIMEOUT(초, 기본 420) — timeout/gtimeout 이 있을 때만 걸린다.
@@ -246,7 +249,11 @@ call_codex() {
         -C "$TMP_DIR" -o "$CODEX_LAST" "${model_args[@]+"${model_args[@]}"}" - \
         >"$CODEX_LOG" 2>&1; then
     {
-      printf 'codex 실행 실패 — 인증 만료(세션 종료)일 수 있습니다. `codex login` 후 다시 시도하세요.\n'
+      if grep -aqiE 'usage limit' "$CODEX_LOG" 2>/dev/null; then
+        printf 'codex 사용량 한도 — 한도가 풀린 뒤 다시 실행하세요(인증 문제가 아닙니다).\n'
+      else
+        printf 'codex 실행 실패 — 인증 만료(세션 종료)일 수 있습니다. `codex login` 후 다시 시도하세요.\n'
+      fi
       grep -aiE 'ERROR:|unauthorized|log in again|invalidated|session has ended' "$CODEX_LOG" 2>/dev/null \
         | awk '!seen[$0]++' | tail -n 4
     } >"$CODEX_ERR"
@@ -278,6 +285,7 @@ PID_AGY=$!
 wait "$PID_CODEX" "$PID_AGY"
 
 ANY_OUTPUT=0
+ANY_SKIP=0
 ANY_FAIL=0
 ANY_MISSING_VERDICT=0
 
@@ -302,9 +310,9 @@ if [ -s "$CODEX_LAST" ]; then
   cat "$CODEX_LAST"; printf '\n'; ANY_OUTPUT=1
   judge "$CODEX_LAST" "codex"
 elif [ -s "$CODEX_ERR" ]; then
-  printf '[skip] %s\n' "$(cat "$CODEX_ERR")"
+  printf '[skip] %s\n' "$(cat "$CODEX_ERR")"; ANY_SKIP=1
 else
-  printf '[빈 응답]\n'
+  printf '[빈 응답]\n'; ANY_SKIP=1
 fi
 
 printf '\n=== Gemini (antigravity CLI) — 폐쇄형 독해 시험 ===\n'
@@ -312,9 +320,9 @@ if [ -s "$AGY_OUT" ]; then
   cat "$AGY_OUT"; printf '\n'; ANY_OUTPUT=1
   judge "$AGY_OUT" "agy"
 elif [ -s "$AGY_ERR" ]; then
-  printf '[skip] %s\n' "$(cat "$AGY_ERR")"
+  printf '[skip] %s\n' "$(cat "$AGY_ERR")"; ANY_SKIP=1
 else
-  printf '[빈 응답]\n'
+  printf '[빈 응답]\n'; ANY_SKIP=1
 fi
 
 if [ "$ANY_OUTPUT" -eq 0 ]; then
@@ -329,5 +337,9 @@ if [ "$ANY_FAIL" -eq 1 ] || [ "$ANY_MISSING_VERDICT" -eq 1 ]; then
   printf '해당 내용을 본문에 채워 넣은 뒤 다시 실행하세요. 기준을 낮춰 통과시키지 마세요.\n'
   exit 3
 fi
-printf '이해 게이트: PASS — 응답한 모델 전부가 본문만으로 5개 질문에 답했습니다.\n'
+if [ "$ANY_SKIP" -eq 1 ]; then
+  printf '이해 게이트: 미완료 — 한 모델만 응답했습니다. 두 모델 판정이 모두 있어야 통과입니다(위 [skip] 사유 참고).\n'
+  exit 2
+fi
+printf '이해 게이트: PASS — 두 모델이 모두 본문만으로 5개 질문에 답했습니다.\n'
 exit 0

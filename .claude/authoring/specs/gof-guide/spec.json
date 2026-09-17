@@ -3,7 +3,7 @@
   "schema_version": 1,
   "id": "gof-guide",
   "label": "가이드 — GoF 디자인 패턴",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "source": {
     "origin": "extracted",
     "refs": [
@@ -312,6 +312,18 @@
       "level": "SHOULD",
       "axis": "scope-principle",
       "text": "경계 판정 문제 — `selfcheck` 에 `boundary.minimum` 의 조건을 적용해 주어진 코드나 모델이 이 패턴인지 판정하게 하는 문제가 1개 이상 있다"
+    },
+    {
+      "code": "PG27",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "[필수] 근거 — `boundary.minimum` 의 `[필수]` 조건마다 `(근거: …)` 괄호가 있고, 그 근거가 원전(GoF 원서의 의도·활용성·구조·참여자·협력·결과, Fowler Analysis Patterns, 저자 공개 보충 자료)에서 그 조건을 패턴의 성립 요건으로 적은 자리다. 원전이 흔한 규칙·구현 선택지로 적은 것이나 이 가이드 예제의 정책을 `[필수]` 로 올렸거나, 근거 괄호가 없으면 미흡"
+    },
+    {
+      "code": "PG28",
+      "level": "SHOULD",
+      "axis": "structure",
+      "text": "구현 분량 — `example.impl` 의 세 펜스가 각각 250줄 이하다. 넘으면 시나리오를 줄인다"
     },
     {
       "code": "GG1",

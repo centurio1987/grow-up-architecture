@@ -3,7 +3,7 @@
   "schema_version": 1,
   "id": "analysis-guide",
   "label": "가이드 — 분석 패턴",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "source": {
     "origin": "extracted",
     "refs": [
@@ -325,6 +325,18 @@
       "text": "경계 판정 문제 — `selfcheck` 에 `boundary.minimum` 의 조건을 적용해 주어진 코드나 모델이 이 패턴인지 판정하게 하는 문제가 1개 이상 있다"
     },
     {
+      "code": "PG27",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "[필수] 근거 — `boundary.minimum` 의 `[필수]` 조건마다 `(근거: …)` 괄호가 있고, 그 근거가 원전(GoF 원서의 의도·활용성·구조·참여자·협력·결과, Fowler Analysis Patterns, 저자 공개 보충 자료)에서 그 조건을 패턴의 성립 요건으로 적은 자리다. 원전이 흔한 규칙·구현 선택지로 적은 것이나 이 가이드 예제의 정책을 `[필수]` 로 올렸거나, 근거 괄호가 없으면 미흡"
+    },
+    {
+      "code": "PG28",
+      "level": "SHOULD",
+      "axis": "structure",
+      "text": "구현 분량 — `example.impl` 의 세 펜스가 각각 250줄 이하다. 넘으면 시나리오를 줄인다"
+    },
+    {
       "code": "AG1",
       "level": "MUST",
       "axis": "structure",
@@ -395,6 +407,12 @@
       "level": "IF-APPLICABLE",
       "axis": "evidence",
       "text": "사례 개념 매핑 — `### 실제 사례` 가 있으면 사례마다 그 시스템·표준·문서의 어느 개념이 패턴의 어느 개념에 대응하는지 매핑한다"
+    },
+    {
+      "code": "AG13",
+      "level": "SHOULD",
+      "axis": "evidence",
+      "text": "경계 반례 전수 — 상황 설정 표의 불변식마다 '다른 aggregate 로 옮기거나 경계를 바꾸면 어느 동작에서 무엇이 어긋나는가', 타 aggregate id 참조마다 '객체 참조로 바꾸면 어떤 잘못된 변경이 가능해지는가'를 한 행씩 적은 표가 본문에 있다. 일부 불변식·참조만 다루면 미흡"
     }
   ],
   "conditional_rule": "조건부 절은 해당 사항이 없으면 문서에서 헤딩째 지운다. 문서 안에 '해당 없음' 메모를 남기지 않는다 — 독자용 문서에 집필 메타를 싣지 않는다. 생략 사유는 품질 게이트 보고에만 기록한다.",

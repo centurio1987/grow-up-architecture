@@ -448,14 +448,27 @@ def check_min_conditions(md: Md) -> tuple[bool, list[str], int]:
     if not items:
         return True, [f"'### {MIN_COND_HEADING}' 절에 목록 항목이 없습니다"], 0
     top = min(ind for _, ind, _ in items)
+    tops = [i for i, ind, _ in items if ind == top]
     errors = []
     count = 0
     for i, ind, body in items:
         if ind != top:
             continue
         count += 1
-        if not re.match(r"^(\*\*|__)?\[(필수|선택)\]", body.strip()):
+        m = re.match(r"^(\*\*|__)?\[(필수|선택)\]", body.strip())
+        if not m:
             errors.append(f"L{i + 1} 최소 조건 항목이 [필수]/[선택] 으로 시작하지 않습니다: '{body.strip()[:60]}'")
+            continue
+        if m.group(2) != "필수":
+            continue
+        # PG27 — [필수] 조건은 원전 근거 괄호를 단다. 항목 범위 = 이 줄부터 다음 최상위 항목(또는 절 끝) 전까지.
+        nxt = next((j for j in tops if j > i), rng[1])
+        span = "\n".join(md.lines[k] for k in range(i, nxt) if not md.masked[k])
+        basis = re.search(r"\(근거:\s*([^)]*)", span)
+        if not basis:
+            errors.append(f"L{i + 1} [필수] 조건에 (근거: …) 괄호가 없습니다(PG27): '{body.strip()[:60]}'")
+        elif basis.group(1).startswith("이 가이드"):
+            errors.append(f"L{i + 1} [필수] 조건의 근거가 이 가이드의 정책입니다 — [선택] 으로 내립니다(PG27): '{body.strip()[:60]}'")
     return True, errors, count
 
 
@@ -926,6 +939,11 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
          lambda d, o: (lambda a, b: (a[0] and b[0], a[1] + " · " + b[1]))(
              need({"heading", "min-conditions", "links", "mermaid"}, "all")(d, o),
              contains("all", "필수 절 누락", "순서가 틀립니다", "spec 에 없는 헤딩", "[필수]/[선택]")(d, o))),
+        ("all", "min-basis 실패([필수] 근거 괄호 없음 · 근거가 가이드 정책)",
+         ["--all", *gof_spec, str(fx / "min-basis-gof.md")], 1,
+         lambda d, o: (lambda a, b: (a[0] and b[0], a[1] + " · " + b[1]))(
+             need({"min-conditions"}, "all")(d, o),
+             contains("all", "(근거: …) 괄호가 없습니다", "근거가 이 가이드의 정책입니다")(d, o))),
         ("all", "good-analysis 통과", ["--all", *ana_spec, str(fx / "good-analysis.md")], 0, None),
         ("all", "bad-analysis 실패(상황 설정 표 라벨)", ["--all", *ana_spec, str(fx / "bad-analysis.md")], 1,
          need({"context-table"}, "all")),
