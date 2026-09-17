@@ -1,9 +1,9 @@
 {
   "next_id": 2,
-  "next_seq": 14,
+  "next_seq": 15,
   "cards": {
     "KAN-001-YXTC2C": {
-      "col": "todo",
+      "col": "doing",
       "title": "전체 가이드 재집필",
       "verbatim": "전체 가이드 재집필을 수행해라.",
       "생성": "유저",
@@ -215,6 +215,16 @@
     "KAN-001-YXTC2C"
   ],
   "recent": [
+    {
+      "seq": 14,
+      "t": "2026-09-17T14:33",
+      "a": "ai",
+      "id": "KAN-001-YXTC2C",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "todo",
+      "to": "doing"
+    },
     {
       "seq": 13,
       "t": "2026-09-17T13:57",
