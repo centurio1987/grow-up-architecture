@@ -138,7 +138,11 @@
       "goal_hash": "7bf8aef2a88113303c076eb586418521ebc5104e",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-      "parent": "KAN-001-YXTC2C"
+      "parent": "KAN-001-YXTC2C",
+      "scope": [
+        "pattern-guide/design-pattern-guide/**",
+        "pattern-guide/gate-results.jsonl"
+      ]
     },
     "KAN-001.5-6HF35H": {
       "col": "backlog",
