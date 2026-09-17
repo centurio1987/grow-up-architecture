@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "template": ".claude/skills/design-pattern-guide/gof-guide-canvas.md",
+  "format": "md",
+  "slot_style": "std-v1",
+  "slots": [
+    {
+      "id": "boundary.compare.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "boundary.minimum.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "detail.procedure.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "detail.terms.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "example.context.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "example.impl.notes",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "example.realworld.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "overview.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "purpose.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "refs.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "selfcheck.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "title.pattern",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "title.subtitle",
+      "kind": "fill",
+      "value": null
+    }
+  ],
+  "legacy_detected": {},
+  "_note": "value 가 null 이면 미해결이다. 템플릿 파일은 프로젝트에 그대로 두고 paths.json 이 경로만 참조한다."
+}
