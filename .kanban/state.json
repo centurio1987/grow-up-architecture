@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 6,
+  "next_seq": 7,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "backlog",
@@ -38,12 +38,51 @@
         "analysis/**",
         "디자인 패턴 가이드 템플릿 작성을 위한 참조 문서.md"
       ]
+    },
+    "KAN-001.1-P5N9NF": {
+      "col": "backlog",
+      "title": "리서치와 후보 조사",
+      "verbatim": "",
+      "생성": "ai",
+      "최종": "ai",
+      "갱신": "2026-09-17",
+      "title_hash": "34adde9dbff19b7056e1c2eb78d9621b3e8136b4",
+      "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "short": "리서치와 후보 조사",
+      "short_hash": "34adde9dbff19b7056e1c2eb78d9621b3e8136b4",
+      "purpose": "33편 집필이 편마다 처음부터 검색하지 않도록 패턴군별 리서치 노트와 추가 패턴 후보 목록을 만든다",
+      "purpose_hash": "501218c806718ad354edaf67775b6f4b7c4d12e5",
+      "reason": "워커가 편마다 같은 원전을 다시 뒤지면 33번 중복되고, 후보 채택은 유저 몫이라 먼저 물어야 한다",
+      "reason_hash": "053d5d297aed45d201f7f6bd55749dd6ff4d174a",
+      "goal": "pattern-guide/research/ 노트 4건(주장·출처·원전 위치·미해결 질문) + 후보 보고서 + 회계 배경 확정안, 유저 결정 접수",
+      "goal_hash": "080969daa1ce8f0449e9867f2884d811a2fd4908",
+      "memo": "",
+      "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "parent": "KAN-001-YXTC2C"
     }
   },
   "order": [
-    "KAN-001-YXTC2C"
+    "KAN-001-YXTC2C",
+    "KAN-001.1-P5N9NF"
   ],
   "recent": [
+    {
+      "seq": 6,
+      "t": "2026-09-17T09:18",
+      "a": "ai",
+      "id": "KAN-001.1-P5N9NF",
+      "op": "create",
+      "w": "TNA8EY",
+      "col": "backlog",
+      "title": "리서치와 후보 조사",
+      "verbatim": "",
+      "parent": "KAN-001-YXTC2C",
+      "short": "리서치와 후보 조사",
+      "purpose": "33편 집필이 편마다 처음부터 검색하지 않도록 패턴군별 리서치 노트와 추가 패턴 후보 목록을 만든다",
+      "reason": "워커가 편마다 같은 원전을 다시 뒤지면 33번 중복되고, 후보 채택은 유저 몫이라 먼저 물어야 한다",
+      "goal": "pattern-guide/research/ 노트 4건(주장·출처·원전 위치·미해결 질문) + 후보 보고서 + 회계 배경 확정안, 유저 결정 접수",
+      "memo": ""
+    },
     {
       "seq": 5,
       "t": "2026-09-17T09:15",
