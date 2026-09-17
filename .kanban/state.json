@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 20,
+  "next_seq": 21,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -104,8 +104,8 @@
       "purpose_hash": "9b652744e801f6cb90ce4118f176567249bb3bf9",
       "reason": "명세는 산출물로 검증되기 전엔 추정이고, 30편을 틀린 명세로 쓰면 되돌리는 비용이 크다",
       "reason_hash": "83e1c5fc0a2aaaed12551305bb71e0f0527c9a33",
-      "goal": "3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar 3건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성",
-      "goal_hash": "f49bfa94d0d688b77e000e65f16960aa05d4284a",
+      "goal": "3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar spec마다 1건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성",
+      "goal_hash": "87746e9adf57c6b1937174a6b699019eff1e8794",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "parent": "KAN-001-YXTC2C",
@@ -223,6 +223,17 @@
     "KAN-001.1-P5N9NF"
   ],
   "recent": [
+    {
+      "seq": 20,
+      "t": "2026-09-17T17:00",
+      "a": "ai",
+      "id": "KAN-001.3-Q6FYKP",
+      "op": "edit",
+      "w": "CEX9MB",
+      "field": "goal",
+      "before": "3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar 3건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성",
+      "after": "3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar spec마다 1건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성"
+    },
     {
       "seq": 19,
       "t": "2026-09-17T15:24",
