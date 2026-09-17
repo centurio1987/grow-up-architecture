@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 17,
+  "next_seq": 18,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -64,7 +64,7 @@
       ]
     },
     "KAN-001.2-4NWK0T": {
-      "col": "doing",
+      "col": "review",
       "title": "authoring-kit 정착",
       "verbatim": "",
       "생성": "ai",
@@ -215,6 +215,16 @@
     "KAN-001.2-4NWK0T"
   ],
   "recent": [
+    {
+      "seq": 17,
+      "t": "2026-09-17T15:02",
+      "a": "ai",
+      "id": "KAN-001.2-4NWK0T",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "doing",
+      "to": "review"
+    },
     {
       "seq": 16,
       "t": "2026-09-17T14:37",
