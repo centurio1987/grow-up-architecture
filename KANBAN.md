@@ -54,8 +54,9 @@
   - 목적: pattern-guide/ 아래 패턴 가이드 33편(GoF 23 + DDD 분석 패턴 10)을 처음부터 다시 쓴다
   - 이유: 현재 33편은 용어 정의 절이 없고 DDD 가이드가 aggregate 경계를 정의하지 않은 채 경계를 암시하는 코드를 실어 기준 문서로 쓸 수 없다
   - 목표: authoring-kit spec 2종으로 33편을 다시 써 게이트 PASS, analyzer·인덱스가 새 가이드를 가리킨다
-  - 요청서: KANBAN/requests/backlog/KAN-001-YXTC2C.request.md (자유 형식 · 유저)
+  - 요청서: KANBAN/requests/todo/KAN-001-YXTC2C.request.md (자유 형식 · 유저)
   - 실행 문서: KANBAN/cards/KAN-001-YXTC2C.md (0/6 · 최근 09-17)
+  - 계획 리포트: KANBAN/reports/KAN-001-YXTC2C.report.html (낡음)
   - 원문:
     ```text
     전체 가이드 재집필을 수행해라.

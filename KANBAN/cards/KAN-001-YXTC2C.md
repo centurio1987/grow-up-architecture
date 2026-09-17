@@ -36,42 +36,38 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 
 ### 결정 11건
 
-| # | 결정 | 근거 · 버린 대안 |
-|---|---|---|
-| 1 | **spec 2개** — `gof-guide` + `analysis-guide` | 분석 패턴 전용 MUST(DDD 준수 + 배경 전제)를 한 spec에 넣으면 GoF 쪽에서 IF-APPLICABLE로 약화되고 워커가 "정당한 생략"을 스스로 판단한다. 최소 조건의 판정 기준도 다르다(코드 구조 vs 개념적 책임 분리). 공통 절 산문은 두 `spec.md`에 `<!-- shared:pattern-guide-common -->`~`<!-- /shared -->` 마커로 두 벌 두고 `check-guides --spec-shared`가 마커 존재·파일당 1쌍·내용 동일을 검사한다. 버림: spec 1개+조건부 절, spec 3개 |
-| 2 | **새 골격** — 아래 표 | 요청서 4요소를 `##`로, 세부를 `###`로. 절 제목은 제목만 읽고 내용을 알 수 있게 |
-| 3 | **analyzer 계약 유지** — `디자인 패턴을 충족하는 최소 조건` 헤딩 문자열 유지, 레벨만 `###` | analyzer SKILL.md의 경로("프로젝트 루트")·헤딩 레벨·"첫 3개 필수" 규칙을 `[필수]/[선택]` 표기로 교체하고 회귀 4건으로 검증 |
-| 4 | **같은 경로에 덮어쓴다**, 기존 문서는 리서치 입력 | 파일명이 analyzer·인덱스의 키. 루트 워크트리에 격리돼 main에 혼재 노출 없음. 문장 복사는 안 함(voice가 바뀌므로 재작성) |
-| 5 | **consideration 2편은 심화 트랙 유지** + 회계 배경 확정안의 출처 | 두 문서는 서로 모순(문서1: Account가 `List<AccountLedger>` 소유 / 문서2: Entry 별도 aggregate + id 참조). .1 S4에서 배경 확정안 1건 — bounded context · aggregate 경계와 일관성 요구(균형 · 중복 전기 방지 · 취소/정정 · 동시 처리 · 파생 balance 지연 허용) · root/entity/VO 배정 · 참조 방식 — 을 만들어 회계 3편이 인용. 권고 초안: 복식부기, Transaction = root, Entry = 그 안의 불변 child, Account = id 참조 + 파생 balance. 유저가 .1 보고에서 확정 |
-| 6 | **voice `ppangtolab-teacher`** 그대로 | 요청이 code_test 계승. 단정체 → 존댓말 전환은 33편 톤 변경이므로 파일럿 .3 S2(Account) 완료 시 유저 승인 게이트 |
-| 7 | **stale 정리 포함** | SKILL.md 2종·`.agents` → .2, PATTERNS.md(GoF 링크 23/23 깨짐)·README·DDD README·루트 참조 문서·4언어 하니스 처분 → .6 |
-| 8 | **추가 패턴 후보는 .1이 보고, 유저가 고르면 .7 신설** | GoF 계열(Null Object·Specification 등)과 분석 계열(Fowler 나머지 장·PoEAA Money 등) 둘 다 후보. DDD 전술 용어 기준선 1편 신설 여부도 같은 보고에 |
-| 9 | **집필 work = 가이드 1편**, 착수마다 `resolve --frozen` 통과 전제 | code_test 실측(1세션 1가이드). 게이트 결과는 `pattern-guide/gate-results.jsonl`에 work마다 1줄(file · spec · resolve 해시 · H축 종료코드 · 라운드 · 외부 검토 · 날짜). `check-guides --gates`가 33건 존재 · H축 0 · resolve 해시 = 현재 lock을 검사(낡은 PASS 검출) |
-| 10 | **예시 코드: Java · TypeScript · Rust 세 언어, 블록마다 컴파일 검사**(유저 결정). md는 나열, **HTML 버전은 탭**으로 묶는다 | 컴파일은 하한이지 정확성 검증이 아니다 — 옳음은 품질 게이트·외부 검토 축·analyzer 스팟체크가 진다(실행 검증은 유저 결정으로 범위 밖). HTML은 md의 파생물이고 .3(파일럿 3편)·.6(33편)에서만 그린다 |
-| 11 | **기존 절 넷의 처분**(유저 결정) — 「어떨 때 사용하나」→ 새 `## 사용 목적` 절, 「장점과 단점, 한계점」→ 비교 절로 흡수, 「정보 표」→ 삭제(활용성 별점은 근거 없는 수치), 「Class Diagram」→ 개념 정의 직후로 이동 | 「사용 목적」은 ds-guide의 `when.clue`("언제 이걸 꺼내야 하는가")를 계승 |
+- **1. spec 2개 — `gof-guide` + `analysis-guide`** — 근거 · 버린 대안: 분석 패턴 전용 MUST(DDD 준수 + 배경 전제)를 한 spec에 넣으면 GoF 쪽에서 IF-APPLICABLE로 약화되고 워커가 "정당한 생략"을 스스로 판단한다. 최소 조건의 판정 기준도 다르다(코드 구조 vs 개념적 책임 분리). 공통 절 산문은 두 `spec.md`에 `shared:pattern-guide-common` 여는 주석과 `/shared` 닫는 주석으로 두 벌 두고 `check-guides --spec-shared`가 마커 존재·파일당 1쌍·내용 동일을 검사한다. 버림: spec 1개+조건부 절, spec 3개
+- **2. 새 골격 — 아래 표** — 근거 · 버린 대안: 요청서 4요소를 `##`로, 세부를 `###`로. 절 제목은 제목만 읽고 내용을 알 수 있게
+- **3. analyzer 계약 유지 — `디자인 패턴을 충족하는 최소 조건` 헤딩 문자열 유지, 레벨만 `###`** — 근거 · 버린 대안: analyzer SKILL.md의 경로("프로젝트 루트")·헤딩 레벨·"첫 3개 필수" 규칙을 `[필수]/[선택]` 표기로 교체하고 회귀 4건으로 검증
+- **4. 같은 경로에 덮어쓴다, 기존 문서는 리서치 입력** — 근거 · 버린 대안: 파일명이 analyzer·인덱스의 키. 루트 워크트리에 격리돼 main에 혼재 노출 없음. 문장 복사는 안 함(voice가 바뀌므로 재작성)
+- **5. consideration 2편은 심화 트랙 유지 + 회계 배경 확정안의 출처** — 근거 · 버린 대안: 두 문서는 서로 모순(문서1: Account가 `List<AccountLedger>` 소유 / 문서2: Entry 별도 aggregate + id 참조). .1 S4에서 배경 확정안 1건 — bounded context · aggregate 경계와 일관성 요구(균형 · 중복 전기 방지 · 취소/정정 · 동시 처리 · 파생 balance 지연 허용) · root/entity/VO 배정 · 참조 방식 — 을 만들어 회계 3편이 인용. 권고 초안: 복식부기, Transaction = root, Entry = 그 안의 불변 child, Account = id 참조 + 파생 balance. 유저가 .1 보고에서 확정
+- **6. voice `ppangtolab-teacher` 그대로** — 근거 · 버린 대안: 요청이 code_test 계승. 단정체 → 존댓말 전환은 33편 톤 변경이므로 파일럿 .3 S2(Account) 완료 시 유저 승인 게이트
+- **7. stale 정리 포함** — 근거 · 버린 대안: SKILL.md 2종·`.agents` → .2, PATTERNS.md(GoF 링크 23/23 깨짐)·README·DDD README·루트 참조 문서·4언어 하니스 처분 → .6
+- **8. 추가 패턴 후보는 .1이 보고, 유저가 고르면 .7 신설** — 근거 · 버린 대안: GoF 계열(Null Object·Specification 등)과 분석 계열(Fowler 나머지 장·PoEAA Money 등) 둘 다 후보. DDD 전술 용어 기준선 1편 신설 여부도 같은 보고에
+- **9. 집필 work = 가이드 1편, 착수마다 `resolve --frozen` 통과 전제** — 근거 · 버린 대안: code_test 실측(1세션 1가이드). 게이트 결과는 `pattern-guide/gate-results.jsonl`에 work마다 1줄(file · spec · resolve 해시 · H축 종료코드 · 라운드 · 외부 검토 · 날짜). `check-guides --gates`가 33건 존재 · H축 0 · resolve 해시 = 현재 lock을 검사(낡은 PASS 검출)
+- **10. 예시 코드: Java · TypeScript · Rust 세 언어, 블록마다 컴파일 검사(유저 결정). md는 나열, HTML 버전은 탭으로 묶는다** — 근거 · 버린 대안: 컴파일은 하한이지 정확성 검증이 아니다 — 옳음은 품질 게이트·외부 검토 축·analyzer 스팟체크가 진다(실행 검증은 유저 결정으로 범위 밖). HTML은 md의 파생물이고 .3(파일럿 3편)·.6(33편)에서만 그린다
+- **11. 기존 절 넷의 처분(유저 결정) — 「어떨 때 사용하나」→ 새 `## 사용 목적` 절, 「장점과 단점, 한계점」→ 비교 절로 흡수, 「정보 표」→ 삭제(활용성 별점은 근거 없는 수치), 「Class Diagram」→ 개념 정의 직후로 이동** — 근거 · 버린 대안: 「사용 목적」은 ds-guide의 `when.clue`("언제 이걸 꺼내야 하는가")를 계승
 
 ### 새 골격 (`gof-guide`)
 
-| id | heading | 필수 | 요청서 대응 |
-|---|---|---|---|
-| title | `# {패턴} — {직관을 담은 부제}` | ✓ | |
-| overview | `## 한눈에 보는 개요` | ✓ | 요소1. 문제→해결의 직관 + 그림 1. 분류·함께 쓰는 패턴 한 줄 |
-| detail.terms | `### 등장하는 개념과 정의` | ✓ | 요소2. participants 전부 정의, 직후 mermaid classDiagram |
-| detail.procedure | `### 동작 절차` | ✓ | 요소2. collaborations를 단계별로, 각 단계에 "왜" |
-| purpose | `## 사용 목적` | ✓ | 어떤 문제·단서가 보일 때 꺼내는가, 쓰지 말아야 할 경우 |
-| boundary.minimum | `### 디자인 패턴을 충족하는 최소 조건` | ✓ | 요소3. analyzer 계약 헤딩. 불변식은 여기 조건으로. 각 조건 `[필수]`/`[선택]` |
-| boundary.compare | `### 비슷한 패턴·안티패턴과의 차이` | ✓ | 요소3. 대상 2개 이상, 차이점 위주, 오인 코드(`no-compile` 표식), 무엇을 얻고 무엇을 포기하는가 |
-| example.context | `### 상황 설정` | ✓ | 요소4. 도메인·요구 전제 |
-| example.impl | `### 구현` | ✓ | 요소4. 코드 블록 3개 고정 순서 `java` → `typescript` → `rust`, 각각 자기완결 |
-| example.realworld | `### 실제 라이브러리에서` | 조건부 | 출처 확인된 사용처가 있을 때만 |
-| selfcheck | `## 스스로 점검하기` | ✓ | voice 계승 |
-| refs | `## 참고 자료` | ✓ | L0 evidence |
+- **title** — heading: `# {패턴} — {직관을 담은 부제}` / 필수: ✓
+- **overview** — heading: `## 한눈에 보는 개요` / 필수: ✓ / 요청서 대응: 요소1. 문제→해결의 직관 + 그림 1. 분류·함께 쓰는 패턴 한 줄
+- **detail.terms** — heading: `### 등장하는 개념과 정의` / 필수: ✓ / 요청서 대응: 요소2. participants 전부 정의, 직후 mermaid classDiagram
+- **detail.procedure** — heading: `### 동작 절차` / 필수: ✓ / 요청서 대응: 요소2. collaborations를 단계별로, 각 단계에 "왜"
+- **purpose** — heading: `## 사용 목적` / 필수: ✓ / 요청서 대응: 어떤 문제·단서가 보일 때 꺼내는가, 쓰지 말아야 할 경우
+- **boundary.minimum** — heading: `### 디자인 패턴을 충족하는 최소 조건` / 필수: ✓ / 요청서 대응: 요소3. analyzer 계약 헤딩. 불변식은 여기 조건으로. 각 조건 `[필수]`/`[선택]`
+- **boundary.compare** — heading: `### 비슷한 패턴·안티패턴과의 차이` / 필수: ✓ / 요청서 대응: 요소3. 대상 2개 이상, 차이점 위주, 오인 코드(`no-compile` 표식), 무엇을 얻고 무엇을 포기하는가
+- **example.context** — heading: `### 상황 설정` / 필수: ✓ / 요청서 대응: 요소4. 도메인·요구 전제
+- **example.impl** — heading: `### 구현` / 필수: ✓ / 요청서 대응: 요소4. 코드 블록 3개 고정 순서 `java` → `typescript` → `rust`, 각각 자기완결
+- **example.realworld** — heading: `### 실제 라이브러리에서` / 필수: 조건부 / 요청서 대응: 출처 확인된 사용처가 있을 때만
+- **selfcheck** — heading: `## 스스로 점검하기` / 필수: ✓ / 요청서 대응: voice 계승
+- **refs** — heading: `## 참고 자료` / 필수: ✓ / 요청서 대응: L0 evidence
 
 컨테이너 `##`: `## 패턴 자세히 들여다보기`(detail) · `## 패턴의 경계`(boundary) · `## 구현 예시`(example). `##` 순서: 개요 → 자세히 → 사용 목적 → 경계 → 구현 예시 → 스스로 점검하기 → 참고 자료.
 
 **`analysis-guide` 차이**: `detail.terms`는 분석 층위 개념만 · `boundary.minimum` 판정 기준 = 개념적 책임 분리 + 모델 불변식 · `example.context`는 MUST 표(bounded context / 불변식의 위치 / root·entity·VO 배정 / 타 aggregate 참조 방식) — 값 객체 계열에서 공회전하는지 파일럿 Quantity로 실측 · `example.impl`은 표와 1:1, aggregate 간 객체 참조 0 · `### 상황이 달라지면`(조건부) — 요청서가 든 Entry 4가지 소속이 이 표의 행이 된다.
 
-**코드 검사 계약(`check-guides --compile`)**: 대상은 `### 구현` 아래 펜스 세 개뿐. 다른 절의 펜스는 검사하지 않고 오인 코드는 ` ```java no-compile ` 표식. 도구·버전 고정 — `javac`(JDK 21), `typescript/node_modules/.bin/tsc --noEmit -p typescript/tsconfig.json`(`npx` 안 씀), `rustc --edition <rust/Cargo.toml의 edition>`(임시 `main.rs` 래핑, 외부 crate 금지). 검사기가 세 도구 버전을 확인해 출력에 적고 하나라도 없으면 비영 종료(`make doctor`는 무엇이 없어도 0이라 게이트가 못 된다).
+**코드 검사 계약(`check-guides --compile`)**: 대상은 `### 구현` 아래 펜스 세 개뿐. 다른 절의 펜스는 검사하지 않고 오인 코드는 펜스 첫 줄에 `java no-compile` 정보 문자열을 단다. 도구·버전 고정 — `javac`(JDK 21), `typescript/node_modules/.bin/tsc --noEmit -p typescript/tsconfig.json`(`npx` 안 씀), `rustc --edition <rust/Cargo.toml의 edition>`(임시 `main.rs` 래핑, 외부 crate 금지). 검사기가 세 도구 버전을 확인해 출력에 적고 하나라도 없으면 비영 종료(`make doctor`는 무엇이 없어도 0이라 게이트가 못 된다).
 
 **HTML 버전**: `scripts/render-guides.py`가 md 하나를 `pattern-guide/html/<name>.html`로. `### 구현`의 세 언어 펜스를 탭 위젯 하나로(`role="tablist"/"tab"/"tabpanel"`, 키보드 좌우), mermaid는 인라인 SVG로 확정(`mmdc` 없으면 비영), 상대 링크는 같은 트리의 `.md` → `.html`. 외부 요청 0건. 소스 지문 입력 = md + 렌더러 + CSS + 탭 JS 전부, `check-guides --derived`가 낡음 판정.
 
@@ -83,15 +79,13 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 
 하위 카드별 work 수와 배치 수다. 원천은 각 하위 카드 실행 문서의 「실행 계획」·「전략」 절이고, 여기 합계를 둔다 — 계획 리포트는 루트 카드 문서만 읽기 때문이다. 배치 크기는 기본 work 3개 기준이며 .3 S4 회고가 `batch_size_works`를 실측으로 확정하면 .4·.5 배치 수를 다시 센다.
 
-| 하위 카드 | work | 단일 에이전트(순차) 배치 | 오케스트레이션(병렬) 배치 · 폭 |
-|---|---|---|---|
-| .1 리서치와 후보 조사 | 4 | 1 | 1 · 폭 4 |
-| .2 authoring-kit 정착 | 6 | 2 | 2 · 배치1 순차, 배치2 폭 3 |
-| .3 파일럿 3편과 회고 | 4 | 2 | 2 · 순차(실측이 목적) |
-| .4 GoF 22편 재집필 | 22 | 7 (3·3·3·3·3·3·4) — 크기 2로 확정되면 11 | 6 · 폭 3~4 |
-| .5 분석 패턴 8편 재집필 | 9 | 3 | 3 · 폭 3 |
-| .6 인덱스·stale 정리·최종 검증 | 3 | 1 | 1 · 순차 |
-| **합계** | **48** | **16** | **15** |
+- **.1 리서치와 후보 조사** — work: 4 / 단일 에이전트(순차) 배치: 1 / 오케스트레이션(병렬) 배치 · 폭: 1 · 폭 4
+- **.2 authoring-kit 정착** — work: 6 / 단일 에이전트(순차) 배치: 2 / 오케스트레이션(병렬) 배치 · 폭: 2 · 배치1 순차, 배치2 폭 3
+- **.3 파일럿 3편과 회고** — work: 4 / 단일 에이전트(순차) 배치: 2 / 오케스트레이션(병렬) 배치 · 폭: 2 · 순차(실측이 목적)
+- **.4 GoF 22편 재집필** — work: 22 / 단일 에이전트(순차) 배치: 7 (3·3·3·3·3·3·4) — 크기 2로 확정되면 11 / 오케스트레이션(병렬) 배치 · 폭: 6 · 폭 3~4
+- **.5 분석 패턴 8편 재집필** — work: 9 / 단일 에이전트(순차) 배치: 3 / 오케스트레이션(병렬) 배치 · 폭: 3 · 폭 3
+- **.6 인덱스·stale 정리·최종 검증** — work: 3 / 단일 에이전트(순차) 배치: 1 / 오케스트레이션(병렬) 배치 · 폭: 1 · 순차
+- **합계** — work: **48** / 단일 에이전트(순차) 배치: **16** / 오케스트레이션(병렬) 배치 · 폭: **15**
 
 - 병렬 폭은 하위 카드 **안**에서만 쓴다. 하위 카드 사이는 .1 → .6 엄격 순차다(.2의 분석 spec에 .1의 회계 확정안이 들어가고, .3은 .2의 파이프라인 위에서만, .4·.5는 .3이 고친 spec 1.1로 쓴다).
 - 가이드 1편은 외부 모델 호출 2회(이해 게이트 1 · 외부 검토 1)를 쓴다. 폭 4면 동시 8회라 호출 한도에 걸릴 수 있어, 폭은 .3에서 실측한 값을 넘기지 않는다.
@@ -108,16 +102,14 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 
 ### 리스크
 
-| 리스크 | 대응 |
-|---|---|
-| 이해 게이트가 플러그인에 없고(code_test 안에만) 질문·FAIL 기준이 알고리즘 전용 | `scripts/comprehension-gate.sh`로 복사한 뒤 질문과 FAIL 판정 문구를 함께 교체. exit 0은 기존 가이드로, exit 3은 결함 주입본으로 실측 |
-| 외부 검토 축 `review-axes/guide.md`가 알고리즘용 | 패턴 전용 축 파일을 .2 S4에서 만든다. fallback 없음 |
-| voice `max_prose_run=2`가 GoF 설명에 도식 강제 | mermaid·코드·표가 끊는 것으로 세어지는지 파일럿에서 확인 |
-| 33편 × 3라운드 = 세션 다수 | `resume` 규율 + 배치 종료 3종(doc-step done·태그·커밋) 강제 |
-| 파일럿 회고가 spec을 크게 바꿈 | .3 S4 완료 기준에 파일럿 3편 `--frozen` 재통과 + 재검사 |
-| 세 언어 툴체인이 워크트리 환경에 없음 | `check-guides --compile`이 버전을 직접 확인하고 없으면 비영 종료 |
-| Rust 스니펫이 단독 컴파일 안 됨 | spec 원칙: 세 블록 전부 자기완결. 검사기가 임시 crate에 래핑. 외부 crate 금지 |
-| 편당 코드 3배로 work 무게 증가 → 배치 크기 2 | 파일럿 .3 S4에서 `batch_size_works` 실측 확정 |
+- **이해 게이트가 플러그인에 없고(code_test 안에만) 질문·FAIL 기준이 알고리즘 전용** — 대응: `scripts/comprehension-gate.sh`로 복사한 뒤 질문과 FAIL 판정 문구를 함께 교체. exit 0은 기존 가이드로, exit 3은 결함 주입본으로 실측
+- **외부 검토 축 `review-axes/guide.md`가 알고리즘용** — 대응: 패턴 전용 축 파일을 .2 S4에서 만든다. fallback 없음
+- **voice `max_prose_run=2`가 GoF 설명에 도식 강제** — 대응: mermaid·코드·표가 끊는 것으로 세어지는지 파일럿에서 확인
+- **33편 × 3라운드 = 세션 다수** — 대응: `resume` 규율 + 배치 종료 3종(doc-step done·태그·커밋) 강제
+- **파일럿 회고가 spec을 크게 바꿈** — 대응: .3 S4 완료 기준에 파일럿 3편 `--frozen` 재통과 + 재검사
+- **세 언어 툴체인이 워크트리 환경에 없음** — 대응: `check-guides --compile`이 버전을 직접 확인하고 없으면 비영 종료
+- **Rust 스니펫이 단독 컴파일 안 됨** — 대응: spec 원칙: 세 블록 전부 자기완결. 검사기가 임시 crate에 래핑. 외부 crate 금지
+- **편당 코드 3배로 work 무게 증가 → 배치 크기 2** — 대응: 파일럿 .3 S4에서 `batch_size_works` 실측 확정
 
 ## 실행 계획
 <!-- `S<n>`은 고정 id — 이름을 바꾸지 않는다. 체크 상태는 doc-step 이 갱신한다. -->
@@ -166,3 +158,4 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <
 - 2026-09-17T09:18 · s:548f6b02 — `검증` 섹션 교체
 - 2026-09-17T09:19 · s:548f6b02 — `실행 계획` 섹션 교체
 - 2026-09-17T13:53 · s:548f6b02 — `전략` 섹션 교체
+- 2026-09-17T13:56 · s:548f6b02 — `전략` 섹션 교체
