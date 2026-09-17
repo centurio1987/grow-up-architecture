@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 7,
+  "next_seq": 8,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "backlog",
@@ -59,13 +59,52 @@
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "parent": "KAN-001-YXTC2C"
+    },
+    "KAN-001.2-4NWK0T": {
+      "col": "backlog",
+      "title": "authoring-kit 정착",
+      "verbatim": "",
+      "생성": "ai",
+      "최종": "ai",
+      "갱신": "2026-09-17",
+      "title_hash": "fce3906c934dd6927c14181fcd7e86550926b8b7",
+      "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "short": "authoring-kit 정착",
+      "short_hash": "fce3906c934dd6927c14181fcd7e86550926b8b7",
+      "purpose": "spec 2종·paths·lock·이해 게이트·외부 검토 축·검사기·렌더러·진입 스킬을 세워 규칙 정본을 플러그인으로 옮긴다",
+      "purpose_hash": "5b1099b4ab3c668020698451cdc9e00beacf8ebf",
+      "reason": "규칙이 SKILL.md 산문에 있으면 33편이 갈라지고, 게이트가 없으면 통과 기준이 없다",
+      "reason_hash": "32ae3d20aaa82452e62cfc5ba6bd251ba2e0e40a",
+      "goal": "validate --all 통과, lock 고정, 두 spec resolve --frozen CONFLICT 0, check-guides·render-guides 동작, 이해 게이트가 결함 문서를 탈락시킴, analyzer 회귀 4건 통과",
+      "goal_hash": "7735d6bfba101d910b4f72177cbb863e88671077",
+      "memo": "",
+      "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "parent": "KAN-001-YXTC2C"
     }
   },
   "order": [
     "KAN-001-YXTC2C",
-    "KAN-001.1-P5N9NF"
+    "KAN-001.1-P5N9NF",
+    "KAN-001.2-4NWK0T"
   ],
   "recent": [
+    {
+      "seq": 7,
+      "t": "2026-09-17T09:19",
+      "a": "ai",
+      "id": "KAN-001.2-4NWK0T",
+      "op": "create",
+      "w": "TNA8EY",
+      "col": "backlog",
+      "title": "authoring-kit 정착",
+      "verbatim": "",
+      "parent": "KAN-001-YXTC2C",
+      "short": "authoring-kit 정착",
+      "purpose": "spec 2종·paths·lock·이해 게이트·외부 검토 축·검사기·렌더러·진입 스킬을 세워 규칙 정본을 플러그인으로 옮긴다",
+      "reason": "규칙이 SKILL.md 산문에 있으면 33편이 갈라지고, 게이트가 없으면 통과 기준이 없다",
+      "goal": "validate --all 통과, lock 고정, 두 spec resolve --frozen CONFLICT 0, check-guides·render-guides 동작, 이해 게이트가 결함 문서를 탈락시킴, analyzer 회귀 4건 통과",
+      "memo": ""
+    },
     {
       "seq": 6,
       "t": "2026-09-17T09:18",
