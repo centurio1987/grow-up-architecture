@@ -483,5 +483,9 @@
       "request_template": "free"
     }
   ],
-  "layout": 3
+  "layout": 3,
+  "batch_size_works": [
+    2,
+    2
+  ]
 }
