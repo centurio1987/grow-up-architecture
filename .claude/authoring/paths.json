@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "_note": "경로·명령 바인딩. spec 은 논리(항목·작성법·원칙·퍼소나)만 담고, 물리적 위치와 실행 명령은 전부 여기 모은다. 가이드 spec(gof-guide·analysis-guide)의 dirs·templates·commands 는 KAN-001.2 에서 더한다.",
+  "dirs": {
+    "draft": "KANBAN/reports",
+    "report": "KANBAN/reports"
+  }
+}
