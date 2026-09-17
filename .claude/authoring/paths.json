@@ -1,8 +1,27 @@
 {
   "schema_version": 1,
-  "_note": "경로·명령 바인딩. spec 은 논리(항목·작성법·원칙·퍼소나)만 담고, 물리적 위치와 실행 명령은 전부 여기 모은다. 가이드 spec(gof-guide·analysis-guide)의 dirs·templates·commands 는 KAN-001.2 에서 더한다.",
+  "_note": "경로·명령 바인딩. spec 은 논리(항목·작성법·원칙·퍼소나)만 담고, 물리적 위치와 실행 명령은 전부 여기 모은다. 같은 spec 을 다른 프로젝트에서 쓰려면 이 파일만 갈아 끼우면 된다.",
   "dirs": {
     "draft": "KANBAN/reports",
-    "report": "KANBAN/reports"
-  }
+    "report": "KANBAN/reports",
+    "gof": "pattern-guide/design-pattern-guide",
+    "analysis": "pattern-guide/ddd-analysis-pattern-guide",
+    "research": "pattern-guide/research",
+    "html": "pattern-guide/html",
+    "gate_results": "pattern-guide/gate-results.jsonl"
+  },
+  "templates": {
+    "gof-guide-canvas": ".claude/skills/design-pattern-guide/gof-guide-canvas.md",
+    "analysis-guide-canvas": ".claude/skills/design-pattern-guide/analysis-guide-canvas.md"
+  },
+  "commands": {
+    "check": "python3 scripts/check-guides.py --all {file}",
+    "compile": "python3 scripts/check-guides.py --compile {file}",
+    "comprehension_gate": "bash scripts/comprehension-gate.sh {file}",
+    "external_review": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/review-external.sh --axes scripts/review-axes-pattern.md {file}",
+    "render": "python3 scripts/render-guides.py {file}",
+    "derived": "python3 scripts/check-guides.py --derived",
+    "gates": "python3 scripts/check-guides.py --gates"
+  },
+  "exemplars": {}
 }

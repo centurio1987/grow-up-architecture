@@ -160,3 +160,4 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <
 - 2026-09-17T13:53 · s:548f6b02 — `전략` 섹션 교체
 - 2026-09-17T13:56 · s:548f6b02 — `전략` 섹션 교체
 - 2026-09-17T13:56 · s:548f6b02 — `전략` 섹션 교체
+- 2026-09-17T14:37 · s:548f6b02 — 결정: .2의 work를 .1과 병렬로 착수한다. .2(도구·spec)는 .1 산출물 내용에 기대지 않고 파일도 겹치지 않는다(.1=pattern-guide/research, .2=.claude·scripts). analysis-guide spec은 회계 배경 확정안을 경로(research/accounting-context.md)로만 참조한다. .3은 .1·.2가 모두 선 뒤에만 착수한다.
