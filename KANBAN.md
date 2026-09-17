@@ -8,6 +8,7 @@
 - `KAN-001-YXTC2C` 전체 가이드 재집필 — 생성:유저 · 최종:ai · 갱신:2026-09-16
   - 짧은 제목: 가이드 재집필
   - 목적: pattern-guide/ 아래 패턴 가이드 33편(GoF 23 + DDD 분석 패턴 10)을 처음부터 다시 쓴다
+  - 요청서: KANBAN/requests/backlog/KAN-001-YXTC2C.request.md (자유 형식 · 유저 · 미반영)
   - 원문:
     ```text
     전체 가이드 재집필을 수행해라.
