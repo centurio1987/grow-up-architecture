@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 8,
+  "next_seq": 9,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "backlog",
@@ -80,14 +80,53 @@
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "parent": "KAN-001-YXTC2C"
+    },
+    "KAN-001.3-Q6FYKP": {
+      "col": "backlog",
+      "title": "파일럿 3편과 회고",
+      "verbatim": "",
+      "생성": "ai",
+      "최종": "ai",
+      "갱신": "2026-09-17",
+      "title_hash": "d0c1d7cc85456412364438d6bc7e735d5b0c0729",
+      "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "short": "파일럿 3편과 회고",
+      "short_hash": "d0c1d7cc85456412364438d6bc7e735d5b0c0729",
+      "purpose": "Strategy·Account·Quantity 1편씩(GoF / 회계 aggregate / 값 객체 계열) 전체 파이프라인을 통과시키고 spec·게이트·배치 크기를 개정한다",
+      "purpose_hash": "9b652744e801f6cb90ce4118f176567249bb3bf9",
+      "reason": "명세는 산출물로 검증되기 전엔 추정이고, 30편을 틀린 명세로 쓰면 되돌리는 비용이 크다",
+      "reason_hash": "83e1c5fc0a2aaaed12551305bb71e0f0527c9a33",
+      "goal": "3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar 3건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성",
+      "goal_hash": "f49bfa94d0d688b77e000e65f16960aa05d4284a",
+      "memo": "",
+      "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "parent": "KAN-001-YXTC2C"
     }
   },
   "order": [
     "KAN-001-YXTC2C",
     "KAN-001.1-P5N9NF",
-    "KAN-001.2-4NWK0T"
+    "KAN-001.2-4NWK0T",
+    "KAN-001.3-Q6FYKP"
   ],
   "recent": [
+    {
+      "seq": 8,
+      "t": "2026-09-17T09:19",
+      "a": "ai",
+      "id": "KAN-001.3-Q6FYKP",
+      "op": "create",
+      "w": "TNA8EY",
+      "col": "backlog",
+      "title": "파일럿 3편과 회고",
+      "verbatim": "",
+      "parent": "KAN-001-YXTC2C",
+      "short": "파일럿 3편과 회고",
+      "purpose": "Strategy·Account·Quantity 1편씩(GoF / 회계 aggregate / 값 객체 계열) 전체 파이프라인을 통과시키고 spec·게이트·배치 크기를 개정한다",
+      "reason": "명세는 산출물로 검증되기 전엔 추정이고, 30편을 틀린 명세로 쓰면 되돌리는 비용이 크다",
+      "goal": "3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar 3건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성",
+      "memo": ""
+    },
     {
       "seq": 7,
       "t": "2026-09-17T09:19",

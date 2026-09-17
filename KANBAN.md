@@ -28,6 +28,12 @@
   - 목적: spec 2종·paths·lock·이해 게이트·외부 검토 축·검사기·렌더러·진입 스킬을 세워 규칙 정본을 플러그인으로 옮긴다
   - 이유: 규칙이 SKILL.md 산문에 있으면 33편이 갈라지고, 게이트가 없으면 통과 기준이 없다
   - 목표: validate --all 통과, lock 고정, 두 spec resolve --frozen CONFLICT 0, check-guides·render-guides 동작, 이해 게이트가 결함 문서를 탈락시킴, analyzer 회귀 4건 통과
+- `KAN-001.3-Q6FYKP` 파일럿 3편과 회고 — 생성:ai · 최종:ai · 갱신:2026-09-17
+  - 상위: `KAN-001-YXTC2C` (백로그)
+  - 짧은 제목: 파일럿 3편과 회고
+  - 목적: Strategy·Account·Quantity 1편씩(GoF / 회계 aggregate / 값 객체 계열) 전체 파이프라인을 통과시키고 spec·게이트·배치 크기를 개정한다
+  - 이유: 명세는 산출물로 검증되기 전엔 추정이고, 30편을 틀린 명세로 쓰면 되돌리는 비용이 크다
+  - 목표: 3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar 3건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성
 
 ## 할 일
 
