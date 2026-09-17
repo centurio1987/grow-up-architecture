@@ -1,0 +1,1 @@
+{"file": "pattern-guide/design-pattern-guide/strategy-pattern.md", "spec": "gof-guide", "work": "KAN-001.3-Q6FYKP/S1", "resolve_hash": "6b470c8f73353742", "h_exit": 3, "rounds": 3, "external": "codex+agy", "verdict": "FAIL", "date": "2026-09-17", "note": "H축 3라운드: codex PASS(5/5) · agy FAIL(Q2~Q5 결론만 있음). 루브릭 3라운드 PASS(MUST 36/36). 자동 통과 없음 — 사람 판단 대기"}

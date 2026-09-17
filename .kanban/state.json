@@ -115,6 +115,7 @@
         "pattern-guide/ddd-analysis-pattern-guide/quantity-pattern.md",
         "pattern-guide/html/**",
         "pattern-guide/gate-results.jsonl",
+        "pattern-guide/gate-logs/**",
         ".claude/authoring/**",
         "KANBAN/batches/**"
       ]
@@ -210,9 +211,9 @@
     "KAN-001.5-6HF35H",
     "KAN-001.6-HB5NH9",
     "KAN-001-YXTC2C",
+    "KAN-001.3-Q6FYKP",
     "KAN-001.2-4NWK0T",
-    "KAN-001.1-P5N9NF",
-    "KAN-001.3-Q6FYKP"
+    "KAN-001.1-P5N9NF"
   ],
   "recent": [
     {
