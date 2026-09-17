@@ -5,7 +5,7 @@
 | 분석 대상 | `{상대 경로}` |
 | 언어 | {Python / TypeScript / Rust / Java} |
 | 분석 일시 | {YYYY-MM-DD HH:MM} |
-| 평가 기준 출처 | {`./<pattern>-pattern.md` 또는 `내장 checklist.md`} |
+| 평가 기준 출처 | {`pattern-guide/design-pattern-guide/<pattern>-pattern.md` · 사용자 지정 문서 경로 `(사용자 지정)` · `내장 checklist.md` 중 하나} |
 | 코드 라인 수 | {N} |
 
 ## 종합 판정
