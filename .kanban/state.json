@@ -189,7 +189,20 @@
       "goal_hash": "1589c06ca3d4c6d5d5c35924b0d1c119f86cc8ad",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-      "parent": "KAN-001-YXTC2C"
+      "parent": "KAN-001-YXTC2C",
+      "scope": [
+        "PATTERNS.md",
+        "README.md",
+        "pattern-guide/ddd-analysis-pattern-guide/README.md",
+        "pattern-guide/html/**",
+        "디자인 패턴 가이드 템플릿 작성을 위한 참조 문서.md",
+        "Makefile",
+        "python/**",
+        "java/**",
+        "typescript/**",
+        "rust/**",
+        "analysis/**"
+      ]
     }
   },
   "order": [
