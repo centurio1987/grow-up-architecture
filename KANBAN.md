@@ -17,7 +17,7 @@
   - 짧은 제목: authoring-kit 정착
   - 목적: spec 2종·paths·lock·이해 게이트·외부 검토 축·검사기·렌더러·진입 스킬을 세워 규칙 정본을 플러그인으로 옮긴다
   - 이유: 규칙이 SKILL.md 산문에 있으면 33편이 갈라지고, 게이트가 없으면 통과 기준이 없다
-  - 목표: validate --all 통과, lock 고정, 두 spec resolve --frozen CONFLICT 0, check-guides·render-guides 동작, 이해 게이트가 결함 문서를 탈락시킴, analyzer 회귀 4건 통과
+  - 목표: 규칙 정본이 spec 2종으로 서고 게이트·검사기·렌더러가 동작해 파일럿을 받을 수 있다
   - 실행 문서: KANBAN/cards/KAN-001.2-4NWK0T.md (0/6 · 최근 09-17)
 - `KAN-001.3-Q6FYKP` 파일럿 3편과 회고 — 생성:ai · 최종:ai · 갱신:2026-09-17
   - 상위: `KAN-001-YXTC2C` (할 일)
@@ -56,7 +56,7 @@
   - 목표: authoring-kit spec 2종으로 33편을 다시 써 게이트 PASS, analyzer·인덱스가 새 가이드를 가리킨다
   - 요청서: KANBAN/requests/todo/KAN-001-YXTC2C.request.md (자유 형식 · 유저)
   - 실행 문서: KANBAN/cards/KAN-001-YXTC2C.md (0/6 · 최근 09-17)
-  - 계획 리포트: KANBAN/reports/KAN-001-YXTC2C.report.html (낡음)
+  - 계획 리포트: KANBAN/reports/KAN-001-YXTC2C.report.html
   - 원문:
     ```text
     전체 가이드 재집필을 수행해라.

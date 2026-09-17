@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 13,
+  "next_seq": 14,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "todo",
@@ -78,8 +78,8 @@
       "purpose_hash": "5b1099b4ab3c668020698451cdc9e00beacf8ebf",
       "reason": "규칙이 SKILL.md 산문에 있으면 33편이 갈라지고, 게이트가 없으면 통과 기준이 없다",
       "reason_hash": "32ae3d20aaa82452e62cfc5ba6bd251ba2e0e40a",
-      "goal": "validate --all 통과, lock 고정, 두 spec resolve --frozen CONFLICT 0, check-guides·render-guides 동작, 이해 게이트가 결함 문서를 탈락시킴, analyzer 회귀 4건 통과",
-      "goal_hash": "7735d6bfba101d910b4f72177cbb863e88671077",
+      "goal": "규칙 정본이 spec 2종으로 서고 게이트·검사기·렌더러가 동작해 파일럿을 받을 수 있다",
+      "goal_hash": "b0813757ec2d4bbb265d2b1901c868f8baa3e2d7",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "parent": "KAN-001-YXTC2C",
@@ -215,6 +215,17 @@
     "KAN-001-YXTC2C"
   ],
   "recent": [
+    {
+      "seq": 13,
+      "t": "2026-09-17T13:57",
+      "a": "ai",
+      "id": "KAN-001.2-4NWK0T",
+      "op": "edit",
+      "w": "TNA8EY",
+      "field": "goal",
+      "before": "validate --all 통과, lock 고정, 두 spec resolve --frozen CONFLICT 0, check-guides·render-guides 동작, 이해 게이트가 결함 문서를 탈락시킴, analyzer 회귀 4건 통과",
+      "after": "규칙 정본이 spec 2종으로 서고 게이트·검사기·렌더러가 동작해 파일럿을 받을 수 있다"
+    },
     {
       "seq": 12,
       "t": "2026-09-17T13:53",
