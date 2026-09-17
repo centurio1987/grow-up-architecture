@@ -1,0 +1,135 @@
+{
+  "$schema": "authoring-kit/spec@1",
+  "schema_version": 1,
+  "id": "analysis-guide",
+  "label": "분석 패턴 가이드(검사기 픽스처)",
+  "version": "0.0.0-fixture",
+  "_note": "check-guides.py --self-test 전용 사본. 결정 문서(KANBAN/cards/KAN-001-YXTC2C.md 「새 골격」)의 골격을 옮겼다. 정본 spec 은 .claude/authoring/specs/<id>/spec.json 이며, 이 파일은 정본이 바뀌어도 자동으로 따라가지 않는다.",
+  "sections": [
+    {
+      "id": "title",
+      "heading": "# {패턴} — {직관을 담은 부제}",
+      "heading_fixed": false,
+      "required": true,
+      "order": 5
+    },
+    {
+      "id": "overview",
+      "heading": "## 한눈에 보는 개요",
+      "heading_fixed": true,
+      "required": true,
+      "order": 10
+    },
+    {
+      "id": "detail",
+      "heading": "## 패턴 자세히 들여다보기",
+      "heading_fixed": true,
+      "required": true,
+      "order": 20,
+      "container": true
+    },
+    {
+      "id": "detail.terms",
+      "heading": "### 등장하는 개념과 정의",
+      "heading_fixed": true,
+      "required": true,
+      "order": 21,
+      "parent": "detail"
+    },
+    {
+      "id": "detail.procedure",
+      "heading": "### 동작 절차",
+      "heading_fixed": true,
+      "required": true,
+      "order": 22,
+      "parent": "detail"
+    },
+    {
+      "id": "purpose",
+      "heading": "## 사용 목적",
+      "heading_fixed": true,
+      "required": true,
+      "order": 30
+    },
+    {
+      "id": "boundary",
+      "heading": "## 패턴의 경계",
+      "heading_fixed": true,
+      "required": true,
+      "order": 40,
+      "container": true
+    },
+    {
+      "id": "boundary.minimum",
+      "heading": "### 디자인 패턴을 충족하는 최소 조건",
+      "heading_fixed": true,
+      "required": true,
+      "order": 41,
+      "parent": "boundary"
+    },
+    {
+      "id": "boundary.compare",
+      "heading": "### 비슷한 패턴·안티패턴과의 차이",
+      "heading_fixed": true,
+      "required": true,
+      "order": 42,
+      "parent": "boundary"
+    },
+    {
+      "id": "example",
+      "heading": "## 구현 예시",
+      "heading_fixed": true,
+      "required": true,
+      "order": 50,
+      "container": true
+    },
+    {
+      "id": "example.context",
+      "heading": "### 상황 설정",
+      "heading_fixed": true,
+      "required": true,
+      "order": 51,
+      "parent": "example"
+    },
+    {
+      "id": "example.impl",
+      "heading": "### 구현",
+      "heading_fixed": true,
+      "required": true,
+      "order": 52,
+      "parent": "example"
+    },
+    {
+      "id": "example.variants",
+      "heading": "### 상황이 달라지면",
+      "heading_fixed": true,
+      "required": false,
+      "order": 53,
+      "parent": "example",
+      "condition": "같은 개념의 소속·경계가 배경에 따라 달라질 때"
+    },
+    {
+      "id": "example.realworld",
+      "heading": "### 실제 라이브러리에서",
+      "heading_fixed": true,
+      "required": false,
+      "order": 54,
+      "parent": "example",
+      "condition": "출처가 확인된 사용처가 있을 때"
+    },
+    {
+      "id": "selfcheck",
+      "heading": "## 스스로 점검하기",
+      "heading_fixed": true,
+      "required": true,
+      "order": 60
+    },
+    {
+      "id": "refs",
+      "heading": "## 참고 자료",
+      "heading_fixed": true,
+      "required": true,
+      "order": 70
+    }
+  ]
+}
