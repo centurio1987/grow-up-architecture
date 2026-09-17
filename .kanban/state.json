@@ -82,7 +82,12 @@
       "goal_hash": "7735d6bfba101d910b4f72177cbb863e88671077",
       "memo": "",
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-      "parent": "KAN-001-YXTC2C"
+      "parent": "KAN-001-YXTC2C",
+      "scope": [
+        ".claude/**",
+        ".agents/skills/**",
+        "scripts/**"
+      ]
     },
     "KAN-001.3-Q6FYKP": {
       "col": "backlog",
