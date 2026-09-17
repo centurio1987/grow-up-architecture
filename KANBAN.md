@@ -42,14 +42,6 @@
     ```text
     전체 가이드 재집필을 수행해라.
     ```
-- `KAN-001.3-Q6FYKP` 파일럿 3편과 회고 — 생성:ai · 최종:ai · 갱신:2026-09-17
-  - 상위: `KAN-001-YXTC2C` (진행 중)
-  - 짧은 제목: 파일럿 3편과 회고
-  - 목적: Strategy·Account·Quantity 1편씩(GoF / 회계 aggregate / 값 객체 계열) 전체 파이프라인을 통과시키고 spec·게이트·배치 크기를 개정한다
-  - 이유: 명세는 산출물로 검증되기 전엔 추정이고, 30편을 틀린 명세로 쓰면 되돌리는 비용이 크다
-  - 목표: 3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar spec마다 1건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성
-  - 실행 문서: KANBAN/cards/KAN-001.3-Q6FYKP.md (단계 없음 · 보류 4 · 최근 09-17)
-  - 검토 문서: KANBAN/reviews/KAN-001.3-Q6FYKP.review.md (승인 0/9 · 검토 대기)
 
 ## 검토
 - `KAN-001.2-4NWK0T` authoring-kit 정착 — 생성:ai · 최종:ai · 갱신:2026-09-17
@@ -68,5 +60,13 @@
   - 목표: pattern-guide/research/ 노트 4건(주장·출처·원전 위치·미해결 질문) + 후보 보고서 + 회계 배경 확정안, 유저 결정 접수
   - 실행 문서: KANBAN/cards/KAN-001.1-P5N9NF.md (4/4 · 최근 09-17)
   - 검토 문서: KANBAN/reviews/KAN-001.1-P5N9NF.review.md (승인 0/8 · 검토 대기)
+- `KAN-001.3-Q6FYKP` 파일럿 3편과 회고 — 생성:ai · 최종:ai · 갱신:2026-09-17
+  - 상위: `KAN-001-YXTC2C` (진행 중)
+  - 짧은 제목: 파일럿 3편과 회고
+  - 목적: Strategy·Account·Quantity 1편씩(GoF / 회계 aggregate / 값 객체 계열) 전체 파이프라인을 통과시키고 spec·게이트·배치 크기를 개정한다
+  - 이유: 명세는 산출물로 검증되기 전엔 추정이고, 30편을 틀린 명세로 쓰면 되돌리는 비용이 크다
+  - 목표: 3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar spec마다 1건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성
+  - 실행 문서: KANBAN/cards/KAN-001.3-Q6FYKP.md (단계 없음 · 보류 4 · 최근 09-17)
+  - 검토 문서: KANBAN/reviews/KAN-001.3-Q6FYKP.review.md (승인 0/9 · 검토 대기)
 
 ## 완료
