@@ -21,7 +21,23 @@
       "reason": "현재 33편은 용어 정의 절이 없고 DDD 가이드가 aggregate 경계를 정의하지 않은 채 경계를 암시하는 코드를 실어 기준 문서로 쓸 수 없다",
       "reason_hash": "d3da517303c3262350525234cda3899c49c5dff6",
       "goal": "authoring-kit spec 2종으로 33편을 다시 써 게이트 PASS, analyzer·인덱스가 새 가이드를 가리킨다",
-      "goal_hash": "896f5312ed1524abd2fff967ff1f0557e9070095"
+      "goal_hash": "896f5312ed1524abd2fff967ff1f0557e9070095",
+      "scope": [
+        "pattern-guide/**",
+        ".claude/**",
+        ".agents/**",
+        "scripts/**",
+        "KANBAN/batches/**",
+        "PATTERNS.md",
+        "README.md",
+        "Makefile",
+        "python/**",
+        "java/**",
+        "typescript/**",
+        "rust/**",
+        "analysis/**",
+        "디자인 패턴 가이드 템플릿 작성을 위한 참조 문서.md"
+      ]
     }
   },
   "order": [
