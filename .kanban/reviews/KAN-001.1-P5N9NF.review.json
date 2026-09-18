@@ -12,8 +12,8 @@
   "worktree": "/Users/centurio/orca/workspaces/design-pattern-guide/KAN-001-YXTC2C"
  },
  "inherited_md": "",
- "md_fp": "682fc53774a6a1082b8524fe3efe051739bf207b",
- "md_src_fp": "ebe5d8f7ebe1b03f187f2c3d79fc882deda4a8a4",
+ "md_fp": "6eebac8e837d9fbfc5a11674d186198eccfae003",
+ "md_src_fp": "7762d9850dede910d94e4baaa853e744b7fad8ac",
  "schema": 1,
  "target_md": "| 항목 | 값 |\n|---|---|\n| 브랜치 | `KAN-001-YXTC2C` |\n| 워크트리 | `/Users/centurio/orca/workspaces/design-pattern-guide/KAN-001-YXTC2C` |\n| 베이스 | `d64e679` |\n| 변경 훑기 | `git diff d64e679...HEAD` |\n\n**커밋 4건**\n\n```text\n2d6b55c research: KAN-001.1 S4 — 분석 패턴 10편 리서치 노트 + 회계 배경 확정안(잠정)\n326f944 research: KAN-001.1 S3 — GoF 행위 11패턴 리서치 노트\nee89ee2 research: KAN-001.1 S2 — GoF 생성·구조 12패턴 리서치 노트\nf2ecd5e research: KAN-001.1 S1 — 추가 패턴 후보 보고서\n```\n\n**변경 파일 5개 (+4711 −0)**\n\n| 파일 | 상태 | 추가 | 삭제 |\n|---|:--:|---:|---:|\n| `pattern-guide/research/accounting-context.md` | M | 165 | 0 |\n| `pattern-guide/research/analysis-patterns.md` | M | 1620 | 0 |\n| `pattern-guide/research/candidates.md` | M | 422 | 0 |\n| `pattern-guide/research/gof-behavioral.md` | M | 1303 | 0 |\n| `pattern-guide/research/gof-creational-structural.md` | M | 1201 | 0 |\n\n**롤백 태그 4개**\n\n```text\nkan/KAN-001.1-P5N9NF/S1\nkan/KAN-001.1-P5N9NF/S2\nkan/KAN-001.1-P5N9NF/S3\nkan/KAN-001.1-P5N9NF/S4\n```",
  "verdicts": [],
