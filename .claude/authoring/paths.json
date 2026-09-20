@@ -28,6 +28,8 @@
     "gates": "python3 scripts/check-guides.py --gates",
     "pointers": "python3 scripts/check-guides.py --pointers"
   },
-  "exemplars": {},
+  "exemplars": {
+    "analysis-guide": "pattern-guide/ddd-analysis-pattern-guide/account/account-guide_v1.0.0.md"
+  },
   "_layout": "가이드 한 편이 폴더 하나다 — dirs.content/<tracks[spec]>/<slug>/<slug>-guide_v<semver>.md. HTML·코드·도식은 같은 폴더에 둔다. 이전 버전 파일은 지우지 않고 남기며, 최신은 semver 가 가장 높은 것이다. 인덱스·기준 예시·분석 스킬은 모두 최신을 가리킨다."
 }
