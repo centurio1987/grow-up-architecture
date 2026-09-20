@@ -18,8 +18,8 @@ argument-hint: <pattern-kebab-name>
 
 | 대상 (`paths.json` 키) | spec | 캔버스 (`paths.json` `templates` 키) |
 | --- | --- | --- |
-| `pattern-guide/design-pattern-guide/**` (`dirs.gof`) | `gof-guide` | `gof-guide-canvas` |
-| `pattern-guide/ddd-analysis-pattern-guide/**` (`dirs.analysis`) | `analysis-guide` | `analysis-guide-canvas` |
+| `pattern-guide/design-pattern-guide/<패턴>/` (`dirs.content` · `dirs.tracks`) | `gof-guide` | `gof-guide-canvas` |
+| `pattern-guide/ddd-analysis-pattern-guide/<패턴>/` (`dirs.content` · `dirs.tracks`) | `analysis-guide` | `analysis-guide-canvas` |
 
 voice 는 둘 다 `ppangtolab-teacher` 다.
 

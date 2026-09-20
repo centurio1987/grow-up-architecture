@@ -1,6 +1,6 @@
 # GoF 디자인 패턴 가이드 — 항목별 작성 방법
 
-> **층: L2 (글 명세)** · 적용 voice: `ppangtolab-teacher` · 캔버스: `paths.json` 의 `templates.gof-guide-canvas` · 산출 위치: `dirs.gof`
+> **층: L2 (글 명세)** · 적용 voice: `ppangtolab-teacher` · 캔버스: `paths.json` 의 `templates.gof-guide-canvas` · 산출 위치: `dirs.content`/<계열>/<패턴>/
 > 출처: 구 `template.md`·구 `SKILL.md`·구 가이드(`strategy-pattern.md`) 역추출 + code_test `ds-guide` 계승 +
 > 루트 카드 KAN-001-YXTC2C 「전략」 절(결정 11건·새 골격·코드 검사 계약·HTML 버전) + 유저 요청서.
 > 문체(존댓말·도식·산문 연속 상한·기억법 등)는 voice 소유라 여기 쓰지 않는다.
@@ -56,6 +56,27 @@ voice 가 요구하는 `selfcheck`, L0 evidence 가 요구하는 `refs` 가 붙�
 > 한쪽만 고치지 않는다. 고칠 때는 두 파일을 함께 고치고 공유 블록 동일성 검사를 돌린다.
 > 트랙마다 다른 규칙은 이 블록 밖, 각 `spec.md` 의 트랙 전용 절에 있다.
 > 괄호 안의 `PG` 코드는 `spec.json` 의 `principles[]` 다 — 게이트는 그 문장으로 채점한다.
+
+### 산출 위치와 버저닝
+
+가이드 한 편이 **폴더 하나**를 갖는다. 그 폴더에 본문·렌더된 HTML·예시 코드·도식이 함께 산다.
+
+```text
+pattern-guide/<계열>/<패턴>/          ← 계열은 paths.json 의 dirs.tracks, 패턴은 kebab-case 슬러그
+  <패턴>-guide_v<major>.<minor>.<patch>.md     ← 본문(최신은 버전이 가장 높은 파일)
+  <패턴>-guide_v<major>.<minor>.<patch>.html   ← 렌더 산출물
+  code/      ← 예시 코드 실행 파일과 기대 출력
+  diagrams/  ← 도식 소스와 렌더 이미지
+```
+
+- **머리말(frontmatter)** 에 `pattern` · `slug` · `spec` · `spec_version` · `version` · `status` · `date` 를 둔다.
+  `status` 는 `draft`(집필·게이트 중) · `published`(게이트 통과) · `legacy`(구 골격, 검사 대상 밖)다.
+- **버전을 올리는 기준** — `major` 는 골격이 바뀔 때(명세의 절 구성이 바뀌거나 명세 major 가 올라 다시 쓸 때),
+  `minor` 는 내용이 늘거나 줄 때(절 보완 · 코드 교체 · 도식 추가), `patch` 는 뜻이 바뀌지 않는 정정(오탈자 · 근거 줄 · 링크).
+- **이전 버전 파일은 지우지 않는다.** 같은 폴더에 남겨 불변 이력으로 둔다. 되돌리기는 새 버전을 쓰는 일이지 옛 파일을 고치는 일이 아니다.
+- **최신을 가리킨다** — 인덱스·기준 예시(`paths.json` 의 `exemplars`)·분석 스킬·다른 가이드의 상호 링크는 모두 최신 파일명을 쓴다.
+  새 버전을 발행하면 그 자리들을 같이 고친다. `check-guides --pointers` 가 낡은 포인터를 잡는다.
+- **명세 판본과의 관계** — 머리말 `spec_version` 이 현재 명세 version 과 다르면 검사가 실패한다. 명세가 올라가면 그 판본으로 다시 쓰고 가이드 버전도 올린다.
 
 ### 리서치 노트를 입력으로 쓰는 법
 

@@ -20,14 +20,15 @@ description: 사용자가 직접 작성한 코드가 특정 디자인 패턴(Sin
 - **언어**: 파일 확장자로 판정 (`.py` `.ts` `.rs` `.java`). 그 외 확장자면 사용자에게 확인.
 
 ### 2. 평가 기준 로드 (우선순위 순)
-1. **가이드 문서** — `pattern-guide/design-pattern-guide/<pattern>-pattern.md` (`.claude/authoring/paths.json` 의 `dirs.gof`) 가 있으면 그 문서의 **최소 조건 절**(아래 「최소 조건 절 찾기」)을 평가 기준으로 사용한다. (가장 우선)
-   - `<pattern>` 은 영문 패턴명의 kebab-case 다. Singleton → `singleton-pattern.md`, Factory Method → `factory-method-pattern.md`, Chain of Responsibility → `chain-of-responsibility-pattern.md`.
+1. **가이드 문서** — `pattern-guide/design-pattern-guide/<pattern>/<pattern>-guide_v<버전>.md` (`paths.json` 의 `dirs.content` · `dirs.tracks`) 가 있으면 그 문서의 **최소 조건 절**(아래 「최소 조건 절 찾기」)을 평가 기준으로 사용한다. (가장 우선)
+   - `<pattern>` 은 영문 패턴명의 kebab-case 폴더다. Singleton → `singleton/`, Factory Method → `factory-method/`, Chain of Responsibility → `chain-of-responsibility/`. 폴더 안에 `<pattern>-guide_v<semver>.md` 가 여러 개면 **버전이 가장 높은 것**을 쓴다.
+   - 머리말 `status: legacy` 인 파일은 구 골격이라 기준으로 쓰지 않는다 — 그런 경우 내장 checklist 로 내려간다.
 2. **사용자가 제시한 기준 문서** — 그 문서의 최소 조건 절을 사용한다. 사용자가 기준 문서를 명시적으로 지정했으면 1보다 앞선다 — 지정했다는 것 자체가 기본 경로를 쓰지 말라는 뜻이다.
 3. **내장 checklist** — 위 두 가지 모두 없으면 같은 폴더의 `checklist.md` 의 해당 패턴 항목을, 항목이 없으면 그 문서의 「그 외 패턴에 대한 일반 원칙」을 사용한다.
 
 평가 기준의 출처(파일 경로 또는 "내장 checklist.md")를 리포트 메타에 반드시 명시한다. 사용자가 지정한 문서면 경로 뒤에 `(사용자 지정)` 을 붙인다.
 
-**분석 패턴은 이 스킬의 판정 대상이 아니다.** `pattern-guide/ddd-analysis-pattern-guide/` (`dirs.analysis` — Account · Transaction · Quantity 등) 가이드의 최소 조건은 개념적 책임 분리와 모델 불변식을 기준으로 쓰여 있어, 코드 구조로 ✅/❌ 를 매길 수 없다. 사용자가 분석 패턴을 대면 그 사실을 알리고 멈춘다. `checklist.md` 의 일반 원칙으로 대신 판정하지 않는다.
+**분석 패턴은 이 스킬의 판정 대상이 아니다.** `pattern-guide/ddd-analysis-pattern-guide/` (Account · Transaction · Quantity 등) 가이드의 최소 조건은 개념적 책임 분리와 모델 불변식을 기준으로 쓰여 있어, 코드 구조로 ✅/❌ 를 매길 수 없다. 사용자가 분석 패턴을 대면 그 사실을 알리고 멈춘다. `checklist.md` 의 일반 원칙으로 대신 판정하지 않는다.
 
 #### 최소 조건 절 찾기
 - 헤딩 레벨과 무관하게(`##` 또는 `###`) 헤딩 텍스트가 `디자인 패턴을 충족하는 최소 조건` 인 줄을 찾는다. 새 골격 가이드는 `### `(`## 패턴의 경계` 아래), 구 골격 가이드는 `## ` 다. `#` 로 시작하지 않는 줄(본문 속 언급·링크)은 헤딩이 아니다.

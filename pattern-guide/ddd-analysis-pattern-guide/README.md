@@ -4,7 +4,7 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 분석 패턴은 GoF의 구현 설계 패턴과 달리, 도메인을 개념적으로 모델링하는 단계에서 반복적으로 등장하는 객체 모델의 추상이다. 사람·조직·관계·측정·회계처럼 업무 시스템의 뼈대가 되는 구조를 다룬다.
 
-> GoF 디자인 패턴 인덱스: [../PATTERNS.md](../PATTERNS.md)
+> GoF 디자인 패턴 인덱스: [../PATTERNS.md](../../PATTERNS.md)
 
 ## 기반 추상 (Foundational)
 
@@ -12,9 +12,9 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Party (당사자) | 사람·조직을 행위 주체라는 공통 추상으로 묶음 | [party-pattern.md](party-pattern.md) |
-| Accountability (책임 관계) | 두 Party 사이의 책임·권한 관계를 객체로 명시화 | [accountability-pattern.md](accountability-pattern.md) |
-| Knowledge Level (지식 수준) | 운영 사실과 그 규칙·분류를 두 계층으로 분리 | [knowledge-level-pattern.md](knowledge-level-pattern.md) |
+| Party (당사자) | 사람·조직을 행위 주체라는 공통 추상으로 묶음 | [party-pattern.md](party/party-guide_v0.1.0.md) |
+| Accountability (책임 관계) | 두 Party 사이의 책임·권한 관계를 객체로 명시화 | [accountability-pattern.md](accountability/accountability-guide_v0.1.0.md) |
+| Knowledge Level (지식 수준) | 운영 사실과 그 규칙·분류를 두 계층으로 분리 | [knowledge-level-pattern.md](knowledge-level/knowledge-level-guide_v0.1.0.md) |
 
 ## 값 모델링 (Value)
 
@@ -22,8 +22,8 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-pattern.md](quantity-pattern.md) |
-| Range (범위) | 시작·끝 구간을 값 객체로 캡슐화 | [range-pattern.md](range-pattern.md) |
+| Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-pattern.md](quantity/quantity-guide_v1.0.0.md) |
+| Range (범위) | 시작·끝 구간을 값 객체로 캡슐화 | [range-pattern.md](range/range-guide_v0.1.0.md) |
 
 ## 관찰/측정 (Observation)
 
@@ -31,8 +31,8 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Measurement (측정) | 정량적 사실을 대상·항목·Quantity로 객체화 | [measurement-pattern.md](measurement-pattern.md) |
-| Observation (관찰) | 정성적(범주형) 사실을 현상 분류로 객체화 | [observation-pattern.md](observation-pattern.md) |
+| Measurement (측정) | 정량적 사실을 대상·항목·Quantity로 객체화 | [measurement-pattern.md](measurement/measurement-guide_v0.1.0.md) |
+| Observation (관찰) | 정성적(범주형) 사실을 현상 분류로 객체화 | [observation-pattern.md](observation/observation-guide_v0.1.0.md) |
 
 ## 회계/거래 (Accounting)
 
@@ -40,9 +40,9 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Account (계정) | 잔액을 항목(Entry)의 합으로 도출 | [account-pattern.md](account-pattern.md) |
-| Transaction (거래) | 합 0 균형으로 가치 보존을 보장하는 복식부기 거래 | [transaction-pattern.md](transaction-pattern.md) |
-| Posting Rule (전기 규칙) | 사건을 거래로 변환하는 회계 규칙을 객체화 | [posting-rule-pattern.md](posting-rule-pattern.md) |
+| Account (계정) | 잔액을 항목(Entry)의 합으로 도출 | [account-pattern.md](account/account-guide_v1.0.0.md) |
+| Transaction (거래) | 합 0 균형으로 가치 보존을 보장하는 복식부기 거래 | [transaction-pattern.md](transaction/transaction-guide_v0.1.0.md) |
+| Posting Rule (전기 규칙) | 사건을 거래로 변환하는 회계 규칙을 객체화 | [posting-rule-pattern.md](posting-rule/posting-rule-guide_v0.1.0.md) |
 | 심화: 객체 모델링 | Transaction과 Account의 관계 및 Entry 소속 딜레마 해소 가이드 | [account-transaction-entry-modeling.md](../consideration/account-transaction-entry-modeling.md) |
 
 ## 패턴 간 의존 관계

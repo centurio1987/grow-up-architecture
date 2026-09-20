@@ -7,8 +7,8 @@
   python3 scripts/render-guides.py --check (--all | <md…>) [--out-dir DIR]
 
 - 출력 경로는 pattern-guide/ 아래 하위 디렉토리를 미러링한다:
-  pattern-guide/design-pattern-guide/x.md → <out>/design-pattern-guide/x.html
-  (pattern-guide/ 밖의 md 는 <out>/<이름>.html)
+  pattern-guide/<track>/<slug>/<slug>-guide_v1.0.0.md → 같은 폴더의 <slug>-guide_v1.0.0.html
+  (--out-dir 를 주면 그 아래에 계열·패턴 폴더를 미러링한다)
 - `### 구현` 절에서 연속한 java · typescript(ts) · rust 펜스(`no-compile` 없음)를 탭 위젯 하나로 묶는다.
 - mermaid 펜스는 렌더 시점에 로컬 mmdc(scripts/node_modules)로 SVG 를 만들어 인라인한다.
   mmdc 가 없거나 실패하면 그 문서는 쓰지 않고 비-0 으로 끝난다(조용한 폴백 없음).
@@ -44,7 +44,8 @@ ROOT = SCRIPTS_DIR.parent
 GUIDE_ROOT = ROOT / "pattern-guide"
 DEFAULT_OUT_DIR = GUIDE_ROOT / "html"
 TARGET_DIRS = ("design-pattern-guide", "ddd-analysis-pattern-guide")
-TARGET_SUFFIX = "-pattern.md"
+TARGET_SUFFIX = ".md"
+GUIDE_RE = re.compile(r"^[a-z0-9-]+-guide_v\d+\.\d+\.\d+\.md$")   # 가이드 한 편 = 폴더 하나, 파일명에 semver
 
 RENDERER = Path(os.path.abspath(__file__))
 ASSET_CSS = SCRIPTS_DIR / "assets" / "guide.css"
@@ -114,27 +115,44 @@ def _real(p) -> Path:
 
 
 def is_render_target(md_path) -> bool:
-    """pattern-guide/{design-pattern-guide,ddd-analysis-pattern-guide}/*-pattern.md 인가(존재 여부 무관)."""
+    """pattern-guide/<track>/<slug>/<slug>-guide_v<semver>.md 인가(존재 여부 무관)."""
     p = _real(md_path)
     return (
-        p.parent.name in TARGET_DIRS
-        and p.parent.parent == _real(GUIDE_ROOT)
-        and p.name.endswith(TARGET_SUFFIX)
-        and not p.name.startswith(".")
+        bool(GUIDE_RE.match(p.name))
+        and p.parent.parent.name in TARGET_DIRS
+        and p.parent.parent.parent == _real(GUIDE_ROOT)
     )
 
 
+def _versions(folder: Path) -> list[Path]:
+    return sorted((f for f in folder.glob("*-guide_v*.md") if GUIDE_RE.match(f.name)),
+                  key=lambda f: tuple(int(x) for x in f.stem.split("_v")[-1].split(".")))
+
+
 def discover_targets() -> list[Path]:
+    """폴더마다 최신 한 편. 구본(status: legacy)은 건너뛴다."""
     found: list[Path] = []
     for sub in TARGET_DIRS:
-        found.extend(sorted((GUIDE_ROOT / sub).glob("*" + TARGET_SUFFIX)))
+        base = GUIDE_ROOT / sub
+        if not base.is_dir():
+            continue
+        for folder in sorted(x for x in base.iterdir() if x.is_dir()):
+            vs = _versions(folder)
+            if not vs:
+                continue
+            head = vs[-1].read_text(encoding="utf-8")[:400]
+            if "\nstatus: legacy" in head:
+                continue
+            found.append(vs[-1])
     return found
 
 
 def output_path(md_path, out_dir=None) -> Path:
-    """md 의 HTML 출력 경로. pattern-guide/ 아래면 하위 디렉토리를 미러링, 밖이면 <out>/<이름>.html."""
-    out = _abs(out_dir if out_dir is not None else DEFAULT_OUT_DIR)
+    """md 의 HTML 출력 경로. 기본은 **md 와 같은 폴더**(가이드 한 편 = 폴더 하나). --out-dir 를 주면 그 아래."""
     real_md = _real(md_path)
+    if out_dir is None:
+        return real_md.with_suffix(".html")
+    out = _abs(out_dir)
     real_root = _real(GUIDE_ROOT)
     try:
         rel = real_md.relative_to(real_root)
@@ -1035,7 +1053,7 @@ def _collect(args, parser) -> list[Path]:
     return list(dict.fromkeys(files))
 
 
-def run_check(files: list[Path], out_dir: Path) -> int:
+def run_check(files: list[Path], out_dir: Path | None) -> int:
     result = {"fresh": [], "stale": [], "missing": [], "errors": []}
     for md in files:
         out = output_path(md, out_dir)
@@ -1054,7 +1072,7 @@ def run_check(files: list[Path], out_dir: Path) -> int:
     return 1 if result["stale"] or result["missing"] or result["errors"] else 0
 
 
-def run_render(files: list[Path], out_dir: Path, force: bool, jobs: int) -> int:
+def run_render(files: list[Path], out_dir: Path | None, force: bool, jobs: int) -> int:
     result = {"written": [], "fresh": [], "errors": []}
     pending = []
     for md in files:
@@ -1079,7 +1097,7 @@ def run_render(files: list[Path], out_dir: Path, force: bool, jobs: int) -> int:
             result["errors"].append({"file": display_path(md), "error": "mermaid: " + failed[0]})
             continue
         try:
-            page = render_html(md, blocks, out, out_dir, fp, svgs)
+            page = render_html(md, blocks, out, out_dir or out.parent, fp, svgs)
             _write_atomic(out, page)
         except (OSError, RenderError) as exc:
             result["errors"].append({"file": display_path(md), "error": str(exc)})
@@ -1099,13 +1117,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("files", nargs="*", help="렌더할 가이드 md")
     parser.add_argument("--all", action="store_true", help="pattern-guide/{design-pattern-guide,ddd-analysis-pattern-guide}/*-pattern.md 전부")
-    parser.add_argument("--out-dir", default=None, help="출력 루트(기본 pattern-guide/html)")
+    parser.add_argument("--out-dir", default=None, help="출력 루트(기본: md 와 같은 폴더)")
     parser.add_argument("--check", action="store_true", help="쓰지 않고 fresh/stale/missing 만 보고")
     parser.add_argument("--force", action="store_true", help="지문이 같아도 다시 쓴다")
     parser.add_argument("--jobs", type=int, default=4, help="mermaid 병렬 렌더 수(기본 4)")
     args = parser.parse_args(argv)
     files = _collect(args, parser)
-    out_dir = _abs(args.out_dir) if args.out_dir else _abs(DEFAULT_OUT_DIR)
+    out_dir = _abs(args.out_dir) if args.out_dir else None   # 기본은 md 와 같은 폴더
     if args.check:
         return run_check(files, out_dir)
     return run_render(files, out_dir, args.force, args.jobs)

@@ -88,7 +88,7 @@ make java PATTERN=Singleton     # Java는 클래스명이므로 PascalCase
 
 ## 패턴 가이드 문서
 
-GoF 23개 패턴의 한국어 가이드가 `pattern-guide/` 폴더에 `<pattern>-pattern.md` 형태로 모두 작성되어 있다. 전체 목록과 한 줄 요약은 [PATTERNS.md](PATTERNS.md) 참조.
+GoF 23개 패턴과 분석 패턴 10개의 한국어 가이드가 `pattern-guide/<계열>/<패턴>/<패턴>-guide_v<버전>.md` 형태로 있다. 가이드 한 편이 폴더 하나를 갖고, 같은 폴더에 렌더된 HTML·예시 코드·도식이 함께 놓인다. 최신은 버전이 가장 높은 파일이다. 전체 목록과 한 줄 요약은 [PATTERNS.md](PATTERNS.md) 참조.
 
 새 가이드 추가나 기존 가이드 보강은 `.claude/skills/design-pattern-guide/` skill 이 담당한다. Cowork 에서 "X 패턴 가이드 작성" 처럼 요청하면 트리거된다.
 

@@ -6,7 +6,7 @@
 대상 가이드
     pattern-guide/design-pattern-guide/*-pattern.md       → spec `gof-guide`
     pattern-guide/ddd-analysis-pattern-guide/*-pattern.md → spec `analysis-guide`
-    (디렉토리는 .claude/authoring/paths.json 의 dirs.gof · dirs.analysis 를 읽는다)
+    (배치는 .claude/authoring/paths.json 의 dirs.content · dirs.tracks 를 읽는다 — 가이드 한 편 = 폴더 하나, 파일명에 semver)
 
 모드 (여러 개 동시 지정 가능 · 실패가 하나라도 있으면 종료코드 1 · --json 이면 기계 판독 출력)
     --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · mermaid 펜스 · 상대 링크 ·
@@ -16,6 +16,7 @@
     --spec-shared            두 spec.md 의 shared:pattern-guide-common 블록 1쌍씩 · 바이트 동일
     --resolve-hash <spec>    authoring.py resolve(worker) stdout sha256 앞 16자
     --gates [--spec] [--expect N]   gate-results.jsonl 파일별 마지막 기록: PASS · 해시 최신
+    --pointers                      인덱스·기준 예시가 폴더의 최신본을 가리키는가(버저닝 규약)
     --derived [--require-html]      가이드 md ↔ HTML 지문(render-guides.py 의 fingerprint) 대조
     --self-test              scripts/fixtures/check/ 로 각 모드가 통과할 것은 통과, 실패할 것은 실패하는지
 
@@ -51,12 +52,42 @@ FIXTURES = SCRIPT_PATH.parent / "fixtures" / "check"
 VOICE = "ppangtolab-teacher"
 
 DEFAULT_DIRS = {
-    "gof": "pattern-guide/design-pattern-guide",
-    "analysis": "pattern-guide/ddd-analysis-pattern-guide",
-    "html": "pattern-guide/html",
+    "content": "pattern-guide",
     "gate_results": "pattern-guide/gate-results.jsonl",
+    "index": "PATTERNS.md",
 }
-SPEC_OF_DIRKEY = {"gof": "gof-guide", "analysis": "analysis-guide"}
+DEFAULT_TRACKS = {"gof-guide": "design-pattern-guide", "analysis-guide": "ddd-analysis-pattern-guide"}
+SPEC_OF_DIRKEY = {"gof": "gof-guide", "analysis": "analysis-guide"}   # 구 배치(평면) 호환
+GUIDE_RE = re.compile(r"^(?P<slug>[a-z0-9-]+)-guide_v(?P<ver>\d+\.\d+\.\d+)\.md$")
+FRONT_KEYS = ("pattern", "slug", "spec", "version", "status")
+
+
+def parse_front(text: str) -> dict:
+    """가이드 머리말(frontmatter). 없으면 빈 dict."""
+    if not text.startswith("---\n"):
+        return {}
+    end = text.find("\n---", 4)
+    if end < 0:
+        return {}
+    meta = {}
+    for line in text[4:end].split("\n"):
+        if ":" in line:
+            k, v = line.split(":", 1)
+            meta[k.strip()] = v.strip()
+    return meta
+
+
+def semver(v: str) -> tuple:
+    try:
+        return tuple(int(x) for x in v.split("."))
+    except ValueError:
+        return (0, 0, 0)
+
+
+def guide_versions(folder: Path) -> list[Path]:
+    """폴더 안의 가이드 파일을 버전 오름차순으로."""
+    got = [f for f in folder.glob("*-guide_v*.md") if GUIDE_RE.match(f.name)]
+    return sorted(got, key=lambda f: semver(GUIDE_RE.match(f.name)["ver"]))
 
 MIN_COND_HEADING = "디자인 패턴을 충족하는 최소 조건"
 IMPL_HEADING = "구현"
@@ -77,7 +108,7 @@ BASIS_SOURCES = ["GoF", "원서", "원전", "Fowler", "Analysis Patterns", "eaaD
 BLANK_CELLS = {"-", "—", "–", "해당 없음", "해당없음", "N/A", "n/a", "NA", "없음", "미정", "TBD", "TODO", "?"}
 CELL_MIN = 8
 
-GATE_KEYS = ["file", "spec", "work", "resolve_hash", "rounds", "external", "verdict", "date"]
+GATE_KEYS = ["file", "spec", "version", "work", "resolve_hash", "rounds", "external", "verdict", "date"]
 # h_exit(이해 게이트 종료코드)는 2026-09-20 유저 결정으로 파이프라인에서 빠졌다. 옛 기록에 남아 있어도 검사하지 않는다.
 
 
@@ -149,11 +180,14 @@ class Ctx:
         self.plugin = Path(os.environ.get("CLAUDE_PLUGIN_ROOT") or DEFAULT_PLUGIN)
         self.args = args
         self.dirs = dict(DEFAULT_DIRS)
+        self.tracks = dict(DEFAULT_TRACKS)
         pj = self.project / ".claude/authoring/paths.json"
         if pj.exists():
             try:
-                self.dirs.update({k: v for k, v in json.loads(pj.read_text(encoding="utf-8")).get("dirs", {}).items()
-                                  if isinstance(v, str)})
+                _d = json.loads(pj.read_text(encoding="utf-8")).get("dirs", {})
+                self.dirs.update({k: v for k, v in _d.items() if isinstance(v, str)})
+                if isinstance(_d.get("tracks"), dict):
+                    self.tracks = {k: v for k, v in _d["tracks"].items() if isinstance(v, str)}
             except (OSError, json.JSONDecodeError) as e:
                 raise Fatal(f"paths.json 을 읽을 수 없습니다: {pj} — {e}")
         self.spec_overrides: dict[str, dict] = {}
@@ -179,22 +213,44 @@ class Ctx:
         if files:
             return [Path(f) if Path(f).is_absolute() else Path.cwd() / f for f in files]
         out: list[Path] = []
-        for key in ("gof", "analysis"):
-            d = self.project / self.dirs[key]
-            out.extend(sorted(d.glob("*-pattern.md")))
+        for track in self.tracks.values():
+            base = self.project / self.dirs["content"] / track
+            if not base.is_dir():
+                continue
+            for folder in sorted(p for p in base.iterdir() if p.is_dir()):
+                vs = guide_versions(folder)
+                if not vs:
+                    continue
+                latest = vs[-1]
+                # 구본(status: legacy)은 재집필 대상이라 명세 검사에서 뺀다.
+                if parse_front(latest.read_text(encoding="utf-8")).get("status") == "legacy":
+                    continue
+                out.append(latest)
         return out
+
+    def in_layout(self, path: Path) -> bool:
+        """<content>/<track>/<slug>/ 아래의 가이드인가."""
+        rp = path.resolve()
+        for track in self.tracks.values():
+            base = (self.project / self.dirs["content"] / track).resolve()
+            if base in rp.parents:
+                return True
+        return False
 
     def spec_id_for(self, path: Path) -> str | None:
         if self.args.spec:
             return self.args.spec
         rp = path.resolve()
-        for key, sid in SPEC_OF_DIRKEY.items():
-            d = (self.project / self.dirs[key]).resolve()
-            if rp.parent == d:
+        # 새 배치: <content>/<track>/<slug>/<slug>-guide_vX.Y.Z.md
+        for sid, track in self.tracks.items():
+            base = (self.project / self.dirs["content"] / track).resolve()
+            if base in rp.parents:
                 return sid
         for key, sid in SPEC_OF_DIRKEY.items():
-            if rp.parent.name == Path(self.dirs[key]).name:
-                return sid
+            if key in self.dirs:
+                d = (self.project / self.dirs[key]).resolve()
+                if rp.parent == d:
+                    return sid
         if len(self.spec_overrides) == 1:
             return next(iter(self.spec_overrides))
         return None
@@ -551,6 +607,38 @@ def check_context_table(md: Md) -> list[str]:
     return errs
 
 
+def check_version(ctx: "Ctx", path: Path, sid: str, text: str) -> list[str]:
+    """버저닝 규약 — 파일명 semver · 머리말 · spec 판본 · 폴더 안 최신 유일."""
+    errs = []
+    m = GUIDE_RE.match(path.name)
+    if not m:
+        return [f"파일명이 <slug>-guide_v<semver>.md 가 아닙니다: {path.name}"]
+    meta = parse_front(text)
+    if not meta:
+        return [f"머리말(frontmatter)이 없습니다 — {', '.join(FRONT_KEYS)} 를 답니다"]
+    for k in FRONT_KEYS:
+        if not meta.get(k):
+            errs.append(f"머리말에 {k} 가 없습니다")
+    if meta.get("version") and meta["version"] != m["ver"]:
+        errs.append(f"파일명 버전 {m['ver']} ≠ 머리말 version {meta['version']}")
+    if meta.get("slug") and meta["slug"] != m["slug"]:
+        errs.append(f"파일명 slug {m['slug']} ≠ 머리말 slug {meta['slug']}")
+    if path.parent.name != m["slug"]:
+        errs.append(f"폴더 이름 {path.parent.name} ≠ 파일 slug {m['slug']}")
+    if meta.get("spec") and meta["spec"] != sid:
+        errs.append(f"머리말 spec {meta['spec']} ≠ 이 폴더의 명세 {sid}")
+    cur = (ctx.spec(sid) or {}).get("version")
+    if cur and meta.get("spec_version") and meta["spec_version"] != cur:
+        errs.append(f"머리말 spec_version {meta['spec_version']} ≠ 현재 {sid} {cur} — 새 판본으로 다시 쓰거나 버전을 올립니다")
+    vs = guide_versions(path.parent)
+    if vs and vs[-1] != path:
+        errs.append(f"이 폴더의 최신은 {vs[-1].name} 입니다 — 최신본만 검사·발행 대상입니다")
+    dup = [f.name for f in vs if GUIDE_RE.match(f.name)["ver"] == m["ver"] and f != path]
+    if dup:
+        errs.append(f"같은 버전이 둘 이상입니다: {dup}")
+    return errs
+
+
 def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
     M = "all"
     plan = []
@@ -566,7 +654,14 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         if not p.exists():
             rep.add(M, "file", False, "파일이 없습니다", f)
             continue
-        md = Md(p.read_text(encoding="utf-8"))
+        raw = p.read_text(encoding="utf-8")
+        if ctx.in_layout(p):          # 버저닝 규약은 가이드 배치 안의 파일에만 건다(픽스처·임시 파일 제외)
+            verrs = check_version(ctx, p, sid, raw)
+            for e in verrs:
+                rep.add(M, "version", False, e, f)
+            if not verrs:
+                rep.add(M, "version", True, f"v{GUIDE_RE.match(p.name)['ver']} · spec {sid}", f)
+        md = Md(raw)
         errs = check_headings(md, spec)
         for e in errs:
             rep.add(M, "heading", False, e, f)
@@ -832,6 +927,47 @@ def mode_resolve_hash(ctx: Ctx, rep: Report, sid: str) -> None:
         rep.add("resolve-hash", "resolve", False, val)
 
 
+def mode_pointers(ctx: Ctx, rep: Report) -> None:
+    """포인터 신선도 — 인덱스와 기준 예시가 각 폴더의 **최신본**을 가리키는가."""
+    M = "pointers"
+    idx = ctx.project / ctx.dirs.get("index", "PATTERNS.md")
+    text = idx.read_text(encoding="utf-8") if idx.exists() else ""
+    if not idx.exists():
+        rep.add(M, "index", False, f"인덱스가 없습니다: {ctx.rel(idx)}")
+    listed = 0
+    for track in ctx.tracks.values():
+        base = ctx.project / ctx.dirs["content"] / track
+        if not base.is_dir():
+            continue
+        for folder in sorted(p for p in base.iterdir() if p.is_dir()):
+            vs = guide_versions(folder)
+            if not vs:
+                continue
+            latest = vs[-1]
+            olds = [f.name for f in vs[:-1] if f.name in text]
+            if olds:
+                rep.add(M, "index", False, f"인덱스가 낡은 판을 가리킵니다: {olds} (최신 {latest.name})", ctx.rel(idx))
+            elif latest.name in text:
+                listed += 1
+    rep.info(M, "index_latest", listed)
+    ex = {}
+    pj = ctx.project / ".claude/authoring/paths.json"
+    if pj.exists():
+        ex = json.loads(pj.read_text(encoding="utf-8")).get("exemplars", {}) or {}
+    for sid, rel in ex.items():
+        p = ctx.project / rel
+        if not p.exists():
+            rep.add(M, "exemplar", False, f"{sid} 기준 예시가 없습니다: {rel}")
+            continue
+        vs = guide_versions(p.parent)
+        if vs and vs[-1] != p:
+            rep.add(M, "exemplar", False, f"{sid} 기준 예시가 낡았습니다: {rel} (최신 {vs[-1].name})")
+        else:
+            rep.add(M, "exemplar", True, f"{sid} → {rel}")
+    if not ex:
+        rep.add(M, "exemplar", False, "paths.json 의 exemplars 가 비어 있습니다 — spec 마다 최신 통과본을 등록합니다")
+
+
 def mode_gates(ctx: Ctx, rep: Report) -> None:
     M = "gates"
     gp = Path(ctx.args.gate_file) if ctx.args.gate_file else ctx.project / ctx.dirs["gate_results"]
@@ -907,7 +1043,7 @@ def mode_derived(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         if not p.exists():
             rep.add(M, "file", False, "가이드 md 가 없습니다", f)
             continue
-        html = ctx.project / ctx.dirs["html"] / p.parent.name / (p.stem + ".html")
+        html = p.parent / (p.stem + ".html")
         if not html.exists():
             counts["missing"] += 1
             rep.add(M, "missing", not ctx.args.require_html, f"HTML 없음: {ctx.rel(html)}", f)
@@ -1048,7 +1184,7 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
                                         "16자 해시 없음")))
         if ok_hash:
             def rec(file, **kw):
-                base = {"file": file, "spec": "kanban-report", "work": "w", "resolve_hash": ok_hash,
+                base = {"file": file, "spec": "kanban-report", "version": "1.0.0", "work": "w", "resolve_hash": ok_hash,
                         "rounds": 1, "external": "ok", "verdict": "PASS", "date": "2026-09-17"}
                 base.update(kw)
                 return json.dumps(base, ensure_ascii=False)
@@ -1068,24 +1204,27 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
                  need({"gate-file"}, "gates")),
             ]
 
-        # derived: 가짜 렌더러를 둔 임시 프로젝트
+        # derived: 가짜 렌더러를 둔 임시 프로젝트(새 배치 — 가이드 한 편이 폴더 하나, HTML 은 같은 폴더)
         dp = tmp_root / "derived"
         gdir = dp / "pattern-guide/design-pattern-guide"
-        hdir = dp / "pattern-guide/html/design-pattern-guide"
         gdir.mkdir(parents=True)
-        hdir.mkdir(parents=True)
         (dp / "scripts").mkdir()
         (dp / "scripts/render-guides.py").write_text(
             "import hashlib\nfrom pathlib import Path\n"
             "def fingerprint(md_path):\n    return hashlib.sha256(Path(md_path).read_bytes()).hexdigest()[:16]\n",
             encoding="utf-8")
+        mds = {}
         for name in ("fresh", "stale", "nohtml"):
-            (gdir / f"{name}-pattern.md").write_text(f"# {name}\n", encoding="utf-8")
+            d = gdir / name
+            d.mkdir()
+            md = d / f"{name}-guide_v1.0.0.md"
+            md.write_text(f"# {name}\n", encoding="utf-8")
+            mds[name] = md
         fp = hashlib.sha256(b"# fresh\n").hexdigest()[:16]
-        (hdir / "fresh-pattern.html").write_text(f"<!doctype html><!-- guide-fp:{fp} -->\n", encoding="utf-8")
-        (hdir / "stale-pattern.html").write_text("<!doctype html><!-- guide-fp:0000000000000000 -->\n", encoding="utf-8")
-        fresh_md = str(gdir / "fresh-pattern.md")
-        nohtml_md = str(gdir / "nohtml-pattern.md")
+        mds["fresh"].with_suffix(".html").write_text(f"<!doctype html><!-- guide-fp:{fp} -->\n", encoding="utf-8")
+        mds["stale"].with_suffix(".html").write_text("<!doctype html><!-- guide-fp:0000000000000000 -->\n", encoding="utf-8")
+        fresh_md = str(mds["fresh"])
+        nohtml_md = str(mds["nohtml"])
         cases += [
             ("derived", "stale 은 실패", ["--derived", "--project", str(dp)], 1, need({"stale"}, "derived")),
             ("derived", "fresh + missing 은 통과", ["--derived", "--project", str(dp), fresh_md, nohtml_md], 0, None),
@@ -1144,6 +1283,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--spec-shared", action="store_true")
     ap.add_argument("--resolve-hash", metavar="SPEC_ID")
     ap.add_argument("--gates", action="store_true")
+    ap.add_argument("--pointers", action="store_true", help="인덱스·기준 예시가 최신본을 가리키는지")
     ap.add_argument("--derived", action="store_true")
     ap.add_argument("--require-html", action="store_true")
     ap.add_argument("--self-test", action="store_true")
@@ -1156,7 +1296,8 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     modes = {"all": args.all, "compile": args.compile, "links": args.links, "spec-shared": args.spec_shared,
-             "resolve-hash": bool(args.resolve_hash), "gates": args.gates, "derived": args.derived}
+             "resolve-hash": bool(args.resolve_hash), "gates": args.gates, "derived": args.derived,
+             "pointers": args.pointers}
     if args.self_test:
         return self_test({m for m, on in modes.items() if on}, args.json)
     if not any(modes.values()):
@@ -1179,6 +1320,8 @@ def main(argv: list[str] | None = None) -> int:
             mode_resolve_hash(ctx, rep, args.resolve_hash)
         if args.gates:
             mode_gates(ctx, rep)
+        if args.pointers:
+            mode_pointers(ctx, rep)
         if args.derived:
             mode_derived(ctx, rep, files)
     except Fatal as e:

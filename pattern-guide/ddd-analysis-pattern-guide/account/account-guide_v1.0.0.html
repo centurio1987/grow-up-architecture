@@ -1,0 +1,1789 @@
+<!doctype html>
+<!-- guide-fp:66040165c00c8886293ffbc4dbba1ca2ef501513d3fd4b41396ad07a504a9c6e -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="generator" content="scripts/render-guides.py">
+<title>Account — 잔액을 적어 두지 않고 Entry 의 합으로 설명하기</title>
+<style>
+/* pattern-guide HTML — render-guides.py 가 HTML 에 인라인한다. 외부 폰트·이미지 요청 없음. */
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --fg: #1c1e22;
+  --muted: #5a606b;
+  --border: #dcdfe4;
+  --border-strong: #b9bec7;
+  --accent: #1f4fb8;
+  --accent-soft: #e8eefb;
+  --code-bg: #f3f4f6;
+  --code-fg: #1c1e22;
+  --inline-code-bg: #eceef1;
+  --quote-fg: #454a54;
+  --quote-bar: #c5cad3;
+  --th-bg: #f1f2f4;
+  --focus: #1f4fb8;
+  --diagram-filter: none;
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR",
+    "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, "D2Coding", Consolas, "Cascadia Mono",
+    "Liberation Mono", "Noto Sans Mono CJK KR", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141619;
+    --surface: #1b1e22;
+    --fg: #e3e5e9;
+    --muted: #a1a7b1;
+    --border: #2d3138;
+    --border-strong: #464c56;
+    --accent: #8db0ff;
+    --accent-soft: #1f2a40;
+    --code-bg: #1c1f24;
+    --code-fg: #dfe2e7;
+    --inline-code-bg: #262a30;
+    --quote-fg: #b9bec7;
+    --quote-bar: #464c56;
+    --th-bg: #1f2227;
+    --focus: #8db0ff;
+    --diagram-filter: invert(0.88) hue-rotate(180deg);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141619;
+  --surface: #1b1e22;
+  --fg: #e3e5e9;
+  --muted: #a1a7b1;
+  --border: #2d3138;
+  --border-strong: #464c56;
+  --accent: #8db0ff;
+  --accent-soft: #1f2a40;
+  --code-bg: #1c1f24;
+  --code-fg: #dfe2e7;
+  --inline-code-bg: #262a30;
+  --quote-fg: #b9bec7;
+  --quote-bar: #464c56;
+  --th-bg: #1f2227;
+  --focus: #8db0ff;
+  --diagram-filter: invert(0.88) hue-rotate(180deg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.guide {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;
+}
+
+@media (min-width: 40rem) {
+  .guide {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ── 헤딩 ─────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.35;
+  font-weight: 700;
+  scroll-margin-top: 1rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.875rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 3.25rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+h5,
+h6 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* ── 본문 블록 ─────────────────────────────────────── */
+p,
+ul,
+ol,
+blockquote,
+.table-wrap,
+pre,
+.code-tabs,
+.mermaid-figure {
+  margin: 0 0 1.1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+li > ul,
+li > ol {
+  margin: 0.25rem 0 0.25rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+li > p {
+  margin: 0 0 0.6rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 3px solid var(--quote-bar);
+  color: var(--quote-fg);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── 코드 ─────────────────────────────────────────── */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--inline-code-bg);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 4;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+pre > code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ── 표 ───────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+th,
+td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+  min-width: 6rem;
+}
+
+th {
+  background: var(--th-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── mermaid 도식(렌더 시점 인라인 SVG) ───────────── */
+.mermaid-figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid-figure svg {
+  height: auto;
+  filter: var(--diagram-filter);
+}
+
+/* ── 세 언어 탭 ───────────────────────────────────── */
+.code-tabs__list {
+  display: none;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__list {
+  display: flex;
+}
+
+.code-tabs__tab {
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 1rem;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.9375rem/1 var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.code-tabs__tab:hover {
+  color: var(--fg);
+}
+
+.code-tabs__tab[aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.code-tabs__tab:focus-visible {
+  outline-offset: -2px;
+  border-radius: 6px 6px 0 0;
+}
+
+.code-tabs__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.code-tabs[data-enhanced] .code-tabs__label {
+  display: none;
+}
+
+.code-tabs__panel > pre {
+  margin-bottom: 1.1rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__panel > pre {
+  margin-bottom: 0;
+}
+
+.code-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── 꼬리말 ───────────────────────────────────────── */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ── 인쇄: 탭 패널 전부, 라이트 색 ───────────────── */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #ffffff !important;
+    --surface: #ffffff !important;
+    --fg: #000000 !important;
+    --muted: #444444 !important;
+    --border: #bbbbbb !important;
+    --accent: #000000 !important;
+    --code-bg: #f6f6f6 !important;
+    --code-fg: #000000 !important;
+    --inline-code-bg: #eeeeee !important;
+    --quote-fg: #222222 !important;
+    --quote-bar: #999999 !important;
+    --th-bg: #eeeeee !important;
+    --diagram-filter: none !important;
+  }
+
+  body {
+    font-size: 10.5pt;
+  }
+
+  .guide {
+    max-width: none;
+    padding: 0;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__list,
+  .code-tabs__list {
+    display: none !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__label,
+  .code-tabs__label {
+    display: block !important;
+  }
+
+  .code-tabs__panel,
+  .code-tabs__panel[hidden] {
+    display: block !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__panel > pre {
+    margin-bottom: 1.1rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow: visible;
+  }
+
+  .table-wrap,
+  .mermaid-figure {
+    overflow: visible;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="guide">
+<main>
+<hr>
+<p>pattern: Account
+slug: account
+spec: analysis-guide
+spec_version: 1.1.0
+version: 1.0.0
+status: draft
+date: 2026-09-20</p>
+<hr>
+<h1 id="account--잔액을-적어-두지-않고-entry-의-합으로-설명하기">Account — 잔액을 적어 두지 않고 Entry 의 합으로 설명하기</h1>
+<h2 id="한눈에-보는-개요">한눈에 보는 개요</h2>
+<p>작은 회사의 회계 프로그램이 계정마다 잔액 숫자 하나를 두고, 돈이 오갈 때마다 그 숫자를 고쳐 쓴다고 해 봅시다. 4월 1일에 매출 100,000원이 현금으로 들어왔고 4월 5일에 임대료 30,000원을 냈어요. 그런데 실제 임대료는 25,000원이어서, 담당자가 4월 6일에 현금 잔액에 5,000원을 더해 맞췄습니다.</p>
+<pre tabindex="0"><code class="language-text">Before — 잔액을 숫자 하나로 고쳐 쓰는 모델
+
+  실제로 일어난 일                  현금 잔액 칸
+  4/1  매출 100,000 입금            0       → 100,000
+  4/5  임대료 30,000 지급           100,000 →  70,000
+  4/6  담당자가 5,000 을 더함        70,000  →  75,000
+
+  시스템에 남는 것: 현금 잔액 = 75,000   (왼쪽 줄들은 어디에도 없음)
+  "4/5 마감 때 현금은 얼마였나요?"   → 계산할 재료가 없음
+  "4/6 의 +5,000 은 무엇이었나요?"    → 설명할 기록이 없음</code></pre>
+<p>마감 보고서를 다시 뽑거나 감사에서 5,000원의 출처를 물으면 숫자 하나로는 답할 수 없어요. 75,000 이 맞는 값인지 확인할 기준조차 없습니다.</p>
+<p>Account 패턴은 잔액을 저장해 두는 값으로 보지 않아요. 돈이 오갈 때마다 <strong>Entry</strong>(계정 하나에 금액 하나가 오간 기록) 한 건을 남기고, 잔액은 그 시점까지 이 계정에 기록된 Entry 금액의 합으로 정의합니다. 확정된 기록은 고치지 않고, 바로잡을 때도 Entry 를 새로 더합니다. 이 글의 예에서는 부호가 반대인 Entry 로 효과를 지운 뒤 올바른 Entry 를 남기는 방식(역분개)을 씁니다.</p>
+<pre tabindex="0"><code class="language-text">After — 잔액은 Entry 를 더해서 얻는 값
+
+  현금 계정의 Entry
+    4/1   +100,000   매출 입금
+    4/5    -30,000   임대료 지급 (금액이 틀림)
+    4/6    +30,000   4/5 기록을 되돌림
+    4/6    -25,000   올바른 임대료
+  ─────────────────────────────────────────────────────────
+  잔액(4/5) = +100,000 - 30,000                    = 70,000
+  잔액(4/6) = +100,000 - 30,000 + 30,000 - 25,000  = 75,000</code></pre>
+<blockquote>
+<p>기억법 — 잔액은 적어 두는 숫자가 아니라 Entry 를 더해서 얻는 답.</p>
+</blockquote>
+<p>이 글을 끝까지 읽으면 어떤 모델을 Account 패턴이라고 불러도 되는지 조건으로 판정할 수 있어요. 이 패턴을 DDD(Domain-Driven Design, 도메인 주도 설계)로 옮길 때 Entry 를 누가 소유할지 네 가지 선택지 가운데서 고르는 기준과, 그 선택을 Java · TypeScript · Rust 코드로 옮긴 모습도 함께 봅니다.</p>
+<p>분류는 Fowler 『Analysis Patterns』 6장 「Inventory and Accounting」의 회계 패턴이고, 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.0.0.html">Quantity</a>(단위를 가진 금액) · <a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v0.1.0.html">Transaction</a>(합이 0 인 Entry 묶음) · <a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v0.1.0.html">Posting Rule</a>(업무 사건에서 거래를 만드는 규칙)입니다.</p>
+<h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
+<h3 id="등장하는-개념과-정의">등장하는 개념과 정의</h3>
+<p>여기 나오는 이름은 분석 모델의 개념이에요. 개념이 맡는 책임과, 그 책임을 코드의 어느 객체가 수행하는지는 다른 문제입니다. 후자는 뒤의 「상황 설정」 표가 정해요.</p>
+<ul>
+<li><strong>Account</strong>(계정) — 금액 기록을 모으고 그 합을 알려 주는 개념입니다.
+<ul>
+<li>기본 책임(원서 그림 6.1 · eaaDev Account): 자기에게 속한 Entry 를 모으는 기준이 되어, 그 합인 잔액에 답합니다. 그러려면 식별자로 자기를 구별하고, 받을 금액의 통화를 정해야 해요.</li>
+<li>이 가이드의 예제가 더한 책임: AccountType 으로 분류되고, 열려 있는지 닫혀 있는지를 압니다. 최소 조건에서는 둘 다 선택으로 둡니다.</li>
+<li><strong>balance</strong>(잔액) — Account 의 파생 속성입니다. 어느 시점 t 의 balance 는 t 까지 그 Account 에 속한 Entry 금액의 합이에요. 저장된 사실이 아니라 Entry 에서 계산되는 값이라, 빨리 답하려고 계산해 둘 수는 있지만 계산해 둔 값이 Entry 합과 다르면 틀린 쪽은 계산해 둔 값입니다.</li>
+<li>협력: Entry 가 Account 에 속합니다(Account 1 — Entry 여럿). Fowler 는 이 패턴의 의도를 관련된 회계 Entry 를 모으고 요약 동작을 제공하는 것으로 적었어요(<a href="https://martinfowler.com/eaaDev/Account.html">eaaDev Account</a>).</li>
+</ul>
+</li>
+<li><strong>Entry</strong>(항목) — 계정 하나에 금액 하나가 오간 사실 한 건입니다.
+<ul>
+<li>책임: 어느 Account 에 얼마(Money)가 기록됐는지 담고, 기록이 확정된 뒤에는 바뀌지 않습니다.</li>
+<li>협력: 정확히 한 Account 에 속하고, balance 계산의 재료가 됩니다. 복식부기에서는 한 Transaction 에도 묶여요.</li>
+<li>금액·계정·날짜가 모두 같은 Entry 둘도 서로 다른 사실이에요. 같은 날 같은 금액을 두 번 입금하면 기록도 두 건입니다.</li>
+<li>원서 그림 6.1 의 Entry 는 금액과 함께 시각 둘(<code>whenCharged</code>, <code>whenBooked</code>)을 가집니다. 이 글의 예제는 거래 날짜 하나로 줄였어요.</li>
+</ul>
+</li>
+<li><strong>Transaction</strong>(거래) — 복식부기에서 업무 사건 하나가 만든 Entry 묶음이고, 묶인 Entry 금액의 합은 0 입니다.
+<ul>
+<li>책임: 날짜를 갖고, 합이 0 인지 확인하고, 정정 거래라면 되돌리는 원 거래를 가리킵니다.</li>
+<li>협력: Entry 2개 이상을 만들어 묶습니다. 원서도 §6.1 Account 다음 §6.2 에서 따로 도입하고, Fowler 는 Account 와 Transaction 이 모두 선택이라 Transaction 없이 쓰는 시스템도 있다고 적었어요(<a href="https://martinfowler.com/eaaDev/AccountingNarrative.html">eaaDev Patterns for Accounting</a>). 이 글은 예제 배경이 복식부기라서 Entry 가 어디서 오는지를 설명하는 만큼만 다루고, 거래의 규칙은 <a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v0.1.0.html">Transaction 가이드</a>가 맡습니다.</li>
+</ul>
+</li>
+<li><strong>Money</strong>(금액) — 금액과 통화를 묶은 값입니다. 이 가이드의 예제는 금액을 정수 최소 단위로 표현해요.
+<ul>
+<li>책임: 통화가 다른 금액끼리는 더하지 않습니다.</li>
+<li>협력: Entry 의 금액과 balance 의 값이 Money 예요. Fowler 는 금액을 단위를 가진 수량(Quantity)의 한 종류로 봅니다("Money is a kind of quantity", <a href="http://jaoo.dk/jaoo1999/schedule/MartinFowlerAnalysisPatterns.pdf">JAOO 1999 튜토리얼 슬라이드</a>).</li>
+</ul>
+</li>
+<li><strong>AccountType</strong>(계정 종류) — 자산·부채·자본·수익·비용처럼 계정을 나누는 분류입니다.
+<ul>
+<li>책임: 같은 종류의 계정이 공유하는 정의를 담습니다.</li>
+<li>협력: Account 마다 자기 AccountType 하나에 속합니다.</li>
+<li>Fowler 는 이렇게 매일 생기는 사실이 아니라 사실을 해석하는 타입·규칙을 지식 층위(knowledge level)라고 불러요. 원서는 계정 분류를 그림 6.28 에서 하위 타입으로, 그림 6.20 에서 지식 층위의 Account Type 으로 그렸습니다(<a href="https://martinfowler.com/apsupp/apchap6.pdf">apchap6.pdf</a>).</li>
+</ul>
+</li>
+</ul>
+<figure class="mermaid-figure">
+<svg id="account-guide-v1-0-0-mermaid1" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="classDiagram" style="max-width: 696.453px; background-color: transparent;" viewBox="0 0 696.453125 730" role="graphics-document document" aria-roledescription="classDiagram"><style>#account-guide-v1-0-0-mermaid1{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#000000;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#account-guide-v1-0-0-mermaid1 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#account-guide-v1-0-0-mermaid1 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#account-guide-v1-0-0-mermaid1 .error-icon{fill:#552222;}#account-guide-v1-0-0-mermaid1 .error-text{fill:#552222;stroke:#552222;}#account-guide-v1-0-0-mermaid1 .edge-thickness-normal{stroke-width:1px;}#account-guide-v1-0-0-mermaid1 .edge-thickness-thick{stroke-width:3.5px;}#account-guide-v1-0-0-mermaid1 .edge-pattern-solid{stroke-dasharray:0;}#account-guide-v1-0-0-mermaid1 .edge-thickness-invisible{stroke-width:0;fill:none;}#account-guide-v1-0-0-mermaid1 .edge-pattern-dashed{stroke-dasharray:3;}#account-guide-v1-0-0-mermaid1 .edge-pattern-dotted{stroke-dasharray:2;}#account-guide-v1-0-0-mermaid1 .marker{fill:#666;stroke:#666;}#account-guide-v1-0-0-mermaid1 .marker.cross{stroke:#666;}#account-guide-v1-0-0-mermaid1 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#account-guide-v1-0-0-mermaid1 p{margin:0;}#account-guide-v1-0-0-mermaid1 g.classGroup text{fill:#999;stroke:none;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:10px;}#account-guide-v1-0-0-mermaid1 g.classGroup text .title{font-weight:bolder;}#account-guide-v1-0-0-mermaid1 .cluster-label text{fill:#333;}#account-guide-v1-0-0-mermaid1 .cluster-label span{color:#333;}#account-guide-v1-0-0-mermaid1 .cluster-label span p{background-color:transparent;}#account-guide-v1-0-0-mermaid1 .cluster rect{fill:hsl(0, 0%, 98.9215686275%);stroke:#707070;stroke-width:1px;}#account-guide-v1-0-0-mermaid1 .cluster text{fill:#333;}#account-guide-v1-0-0-mermaid1 .cluster span{color:#333;}#account-guide-v1-0-0-mermaid1 .nodeLabel,#account-guide-v1-0-0-mermaid1 .edgeLabel{color:#111111;}#account-guide-v1-0-0-mermaid1 .noteLabel .nodeLabel,#account-guide-v1-0-0-mermaid1 .noteLabel .edgeLabel{color:#fff;}#account-guide-v1-0-0-mermaid1 .edgeLabel .label rect{fill:#eee;}#account-guide-v1-0-0-mermaid1 .label text{fill:#111111;}#account-guide-v1-0-0-mermaid1 .labelBkg{background:#eee;}#account-guide-v1-0-0-mermaid1 .edgeLabel .label span{background:#eee;}#account-guide-v1-0-0-mermaid1 .classTitle{font-weight:bolder;}#account-guide-v1-0-0-mermaid1 .node rect,#account-guide-v1-0-0-mermaid1 .node circle,#account-guide-v1-0-0-mermaid1 .node ellipse,#account-guide-v1-0-0-mermaid1 .node polygon,#account-guide-v1-0-0-mermaid1 .node path{fill:#eee;stroke:#999;stroke-width:1;}#account-guide-v1-0-0-mermaid1 .divider{stroke:#999;stroke-width:1;}#account-guide-v1-0-0-mermaid1 g.clickable{cursor:pointer;}#account-guide-v1-0-0-mermaid1 g.classGroup rect{fill:#eee;stroke:#999;}#account-guide-v1-0-0-mermaid1 g.classGroup line{stroke:#999;stroke-width:1;}#account-guide-v1-0-0-mermaid1 .classLabel .box{stroke:none;stroke-width:0;fill:#eee;opacity:0.5;}#account-guide-v1-0-0-mermaid1 .classLabel .label{fill:#999;font-size:10px;}#account-guide-v1-0-0-mermaid1 .relation{stroke:#666;stroke-width:1;fill:none;}#account-guide-v1-0-0-mermaid1 .dashed-line{stroke-dasharray:3;}#account-guide-v1-0-0-mermaid1 .dotted-line{stroke-dasharray:1 2;}#account-guide-v1-0-0-mermaid1 [id$="-compositionStart"],#account-guide-v1-0-0-mermaid1 .composition{fill:#666!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-compositionEnd"],#account-guide-v1-0-0-mermaid1 .composition{fill:#666!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-dependencyStart"],#account-guide-v1-0-0-mermaid1 .dependency{fill:#666!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-dependencyEnd"],#account-guide-v1-0-0-mermaid1 .dependency{fill:#666!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-extensionStart"],#account-guide-v1-0-0-mermaid1 .extension{fill:transparent!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-extensionEnd"],#account-guide-v1-0-0-mermaid1 .extension{fill:transparent!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-aggregationStart"],#account-guide-v1-0-0-mermaid1 .aggregation{fill:transparent!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-aggregationEnd"],#account-guide-v1-0-0-mermaid1 .aggregation{fill:transparent!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-lollipopStart"],#account-guide-v1-0-0-mermaid1 .lollipop{fill:#eee!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 [id$="-lollipopEnd"],#account-guide-v1-0-0-mermaid1 .lollipop{fill:#eee!important;stroke:#666!important;stroke-width:1;}#account-guide-v1-0-0-mermaid1 .edgeTerminals{font-size:11px;line-height:initial;}#account-guide-v1-0-0-mermaid1 .classTitleText{text-anchor:middle;font-size:18px;fill:#000000;}#account-guide-v1-0-0-mermaid1 .edgeLabel[data-look="neo"]{background-color:white;text-align:center;}#account-guide-v1-0-0-mermaid1 .edgeLabel[data-look="neo"] p{background-color:white;}#account-guide-v1-0-0-mermaid1 .edgeLabel[data-look="neo"] rect{opacity:0.5;background-color:white;fill:white;}#account-guide-v1-0-0-mermaid1 .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#account-guide-v1-0-0-mermaid1 .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#account-guide-v1-0-0-mermaid1 .node .neo-node{stroke:#999;}#account-guide-v1-0-0-mermaid1 [data-look="neo"].node rect,#account-guide-v1-0-0-mermaid1 [data-look="neo"].cluster rect,#account-guide-v1-0-0-mermaid1 [data-look="neo"].node polygon{stroke:url(#account-guide-v1-0-0-mermaid1-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#account-guide-v1-0-0-mermaid1 [data-look="neo"].swimlane.cluster rect{filter:none;}#account-guide-v1-0-0-mermaid1 [data-look="neo"].node path{stroke:url(#account-guide-v1-0-0-mermaid1-gradient);stroke-width:1px;}#account-guide-v1-0-0-mermaid1 [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#account-guide-v1-0-0-mermaid1 [data-look="neo"].node .neo-line path{stroke:#999;filter:none;}#account-guide-v1-0-0-mermaid1 [data-look="neo"].node circle{stroke:url(#account-guide-v1-0-0-mermaid1-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#account-guide-v1-0-0-mermaid1 [data-look="neo"].node circle .state-start{fill:#000000;}#account-guide-v1-0-0-mermaid1 [data-look="neo"].icon-shape .icon{fill:url(#account-guide-v1-0-0-mermaid1-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#account-guide-v1-0-0-mermaid1 [data-look="neo"].icon-shape .icon-neo path{stroke:url(#account-guide-v1-0-0-mermaid1-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#account-guide-v1-0-0-mermaid1 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-aggregationStart" class="marker aggregation classDiagram" refX="18" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L1,7 L9,1 Z"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-aggregationEnd" class="marker aggregation classDiagram" refX="1" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L1,7 L9,1 Z"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-aggregationStart-margin" class="marker aggregation classDiagram" refX="15" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L1,7 L9,1 Z" style="stroke-width: 2;"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-aggregationEnd-margin" class="marker aggregation classDiagram" refX="1" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L1,7 L9,1 Z" style="stroke-width: 2;"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-extensionStart" class="marker extension classDiagram" refX="18" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1,7 L18,13 V 1 Z"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-extensionEnd" class="marker extension classDiagram" refX="1" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse"><path d="M 1,1 V 13 L18,7 Z"/></marker></defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-extensionStart-margin" class="marker extension classDiagram" refX="18" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 20 14"><polygon points="10,7 18,13 18,1" style="stroke-width: 2; stroke-dasharray: 0;"/></marker><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-extensionEnd-margin" class="marker extension classDiagram" refX="9" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 20 14"><polygon points="10,1 10,13 18,7" style="stroke-width: 2; stroke-dasharray: 0;"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-compositionStart" class="marker composition classDiagram" refX="18" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L1,7 L9,1 Z"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-compositionEnd" class="marker composition classDiagram" refX="1" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L1,7 L9,1 Z"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-compositionStart-margin" class="marker composition classDiagram" refX="15" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><path viewBox="0 0 15 15" d="M 18,7 L9,13 L1,7 L9,1 Z" style="stroke-width: 0;"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-compositionEnd-margin" class="marker composition classDiagram" refX="3.5" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L1,7 L9,1 Z" style="stroke-width: 0;"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-dependencyStart" class="marker dependency classDiagram" refX="6" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><path d="M 5,7 L9,13 L1,7 L9,1 Z"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-dependencyEnd" class="marker dependency classDiagram" refX="13" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L14,7 L9,1 Z"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-dependencyStart-margin" class="marker dependency classDiagram" refX="4" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><path d="M 5,7 L9,13 L1,7 L9,1 Z" style="stroke-width: 0;"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-dependencyEnd-margin" class="marker dependency classDiagram" refX="16" refY="7" markerWidth="20" markerHeight="28" orient="auto" markerUnits="userSpaceOnUse"><path d="M 18,7 L9,13 L14,7 L9,1 Z" style="stroke-width: 0;"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-lollipopStart" class="marker lollipop classDiagram" refX="13" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><circle fill="transparent" cx="7" cy="7" r="6"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-lollipopEnd" class="marker lollipop classDiagram" refX="1" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><circle fill="transparent" cx="7" cy="7" r="6"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-lollipopStart-margin" class="marker lollipop classDiagram" refX="13" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><circle fill="transparent" cx="7" cy="7" r="6" stroke-width="2"/></marker></defs><defs><marker id="account-guide-v1-0-0-mermaid1_classDiagram-lollipopEnd-margin" class="marker lollipop classDiagram" refX="1" refY="7" markerWidth="190" markerHeight="240" orient="auto" markerUnits="userSpaceOnUse"><circle fill="transparent" cx="7" cy="7" r="6" stroke-width="2"/></marker></defs><g class="root"><g class="clusters"/><g class="edgePaths"><path d="M199.367,44L199.367,48.167C199.367,52.333,199.367,60.667,199.367,69C199.367,77.333,199.367,85.667,199.367,89.833L199.367,94" id="account-guide-v1-0-0-mermaid1-edgeNote0" class="edge-thickness-normal edge-pattern-dotted relation" style="fill: none;;;fill: none" data-edge="true" data-et="edge" data-id="edgeNote0" data-points="W3sieCI6MTk5LjM2NzE4NzUsInkiOjQ0fSx7IngiOjE5OS4zNjcxODc1LCJ5Ijo2OX0seyJ4IjoxOTkuMzY3MTg3NSwieSI6OTR9XQ==" data-look="classic"/><path d="M564.594,44L564.594,48.167C564.594,52.333,564.594,60.667,564.594,75C564.594,89.333,564.594,109.667,564.594,119.833L564.594,130" id="account-guide-v1-0-0-mermaid1-edgeNote1" class="edge-thickness-normal edge-pattern-dotted relation" style="fill: none;;;fill: none" data-edge="true" data-et="edge" data-id="edgeNote1" data-points="W3sieCI6NTY0LjU5Mzc1LCJ5Ijo0NH0seyJ4Ijo1NjQuNTkzNzUsInkiOjY5fSx7IngiOjU2NC41OTM3NSwieSI6MTMwfV0=" data-look="classic"/><path d="M179.03,310L177.869,316.167C176.707,322.333,174.385,334.667,173.224,347C172.063,359.333,172.063,371.667,172.063,377.833L172.063,384" id="account-guide-v1-0-0-mermaid1-id_Account_AccountType_1" class="edge-thickness-normal edge-pattern-solid relation" style=";;;" data-edge="true" data-et="edge" data-id="id_Account_AccountType_1" data-points="W3sieCI6MTc5LjAyOTkwMzAxNzI0MTQsInkiOjMxMH0seyJ4IjoxNzIuMDYyNSwieSI6MzQ3fSx7IngiOjE3Mi4wNjI1LCJ5IjozODR9XQ==" data-look="classic"/><path d="M312.468,310L318.925,316.167C325.383,322.333,338.299,334.667,365.03,351.602C391.762,368.538,432.309,390.075,452.582,400.844L472.855,411.613" id="account-guide-v1-0-0-mermaid1-id_Account_Entry_2" class="edge-thickness-normal edge-pattern-solid relation" style=";;;" data-edge="true" data-et="edge" data-id="id_Account_Entry_2" data-points="W3sieCI6MzEyLjQ2NzUxMDc3NTg2MjEsInkiOjMxMH0seyJ4IjozNTEuMjE0ODQzNzUsInkiOjM0N30seyJ4Ijo0NzIuODU1NDY4NzUsInkiOjQxMS42MTI3MTg5ODg2NDE0Nn1d" data-look="classic"/><path d="M564.594,274L564.594,286.167C564.594,298.333,564.594,322.667,562.638,341C560.682,359.333,556.77,371.667,554.814,377.833L552.858,384" id="account-guide-v1-0-0-mermaid1-id_Transaction_Entry_3" class="edge-thickness-normal edge-pattern-solid relation" style=";;;" data-edge="true" data-et="edge" data-id="id_Transaction_Entry_3" data-points="W3sieCI6NTY0LjU5Mzc1LCJ5IjoyNzR9LHsieCI6NTY0LjU5Mzc1LCJ5IjozNDd9LHsieCI6NTUyLjg1ODQwODUwNTE1NDcsInkiOjM4NH1d" data-look="classic"/><path d="M533.828,504L533.828,510.167C533.828,516.333,533.828,528.667,533.828,540C533.828,551.333,533.828,561.667,533.828,566.833L533.828,572" id="account-guide-v1-0-0-mermaid1-id_Entry_Money_4" class="edge-thickness-normal edge-pattern-solid relation" style=";;;" data-edge="true" data-et="edge" data-id="id_Entry_Money_4" data-points="W3sieCI6NTMzLjgyODEyNSwieSI6NTA0fSx7IngiOjUzMy44MjgxMjUsInkiOjU0MX0seyJ4Ijo1MzMuODI4MTI1LCJ5Ijo1Nzh9XQ==" data-look="classic" marker-end="url(#account-guide-v1-0-0-mermaid1_classDiagram-dependencyEnd)"/></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" data-id="edgeNote0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="edgeNote1" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(172.0625, 347)"><g class="label" data-id="id_Account_AccountType_1" transform="translate(-13.84375, -12)"><foreignObject width="27.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>분류</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(388.37767, 366.74004)"><g class="label" data-id="id_Account_Entry_2" transform="translate(-20.765625, -12)"><foreignObject width="41.53125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>모은다</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(564.59375, 347)"><g class="label" data-id="id_Transaction_Entry_3" transform="translate(-20.765625, -12)"><foreignObject width="41.53125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>묶는다</p></span></div></foreignObject></g></g><g class="edgeLabel" transform="translate(533.828125, 541)"><g class="label" data-id="id_Entry_Money_4" transform="translate(-13.84375, -12)"><foreignObject width="27.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"><p>금액</p></span></div></foreignObject></g></g><g class="edgeTerminals" transform="translate(161.0505062969408, 324.42190295274975)"><g class="inner" transform="translate(-2.0234375, -8.25)"><foreignObject width="4.046875" height="16.5" style="width: 9px; height: 12px;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5;"><span class="edgeLabel"><p>*</p></span></div></foreignObject></g></g><g class="edgeTerminals" transform="translate(314.76479151198646, 332.9340927423305)"><g class="inner" transform="translate(-2.890625, -8.25)"><foreignObject width="5.78125" height="16.5" style="width: 9px; height: 12px;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5;"><span class="edgeLabel"><p>1</p></span></div></foreignObject></g></g><g class="edgeTerminals" transform="translate(549.59375, 291.5)"><g class="inner" transform="translate(-9.8125, -8.25)"><foreignObject width="19.625" height="16.5" style="width: 36px; height: 12px;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5;"><span class="edgeLabel"><p>0..1</p></span></div></foreignObject></g></g><g class="edgeTerminals" transform="translate(182.0625, 361.5)"><g class="inner" transform="translate(-2.890625, -8.25)"/><foreignObject width="5.78125" height="16.5" style="width: 9px; height: 12px;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5;"><span class="edgeLabel"><p>1</p></span></div></foreignObject></g><g class="edgeTerminals" transform="translate(459.4370566414347, 385.1562446956748)"><g class="inner" transform="translate(-2.0234375, -8.25)"/><foreignObject width="4.046875" height="16.5" style="width: 9px; height: 12px;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5;"><span class="edgeLabel"><p>*</p></span></div></foreignObject></g><g class="edgeTerminals" transform="translate(567.4472193619534, 366.8538683059309)"><g class="inner" transform="translate(-8.9453125, -8.25)"/><foreignObject width="17.890625" height="16.5" style="width: 36px; height: 12px;"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5;"><span class="edgeLabel"><p>2..*</p></span></div></foreignObject></g></g><g class="nodes"><g class="node default" id="account-guide-v1-0-0-mermaid1-classId-Account-0" data-look="classic" transform="translate(199.3671875, 202)"><g class="basic label-container outer-path"><path d="M-125.6953125 -108 L125.6953125 -108 L125.6953125 108 L-125.6953125 108" stroke="none" stroke-width="0" fill="#eee" style=""/><path d="M-125.6953125 -108 C-31.834645710206757 -108, 62.026021079586485 -108, 125.6953125 -108 M-125.6953125 -108 C-61.510775254926884 -108, 2.6737619901462324 -108, 125.6953125 -108 M125.6953125 -108 C125.6953125 -48.635875565705845, 125.6953125 10.72824886858831, 125.6953125 108 M125.6953125 -108 C125.6953125 -30.71242087321349, 125.6953125 46.57515825357302, 125.6953125 108 M125.6953125 108 C69.00261077973101 108, 12.309909059462015 108, -125.6953125 108 M125.6953125 108 C61.942445291912094 108, -1.8104219161758124 108, -125.6953125 108 M-125.6953125 108 C-125.6953125 51.60928539500619, -125.6953125 -4.781429209987621, -125.6953125 -108 M-125.6953125 108 C-125.6953125 60.71029806396438, -125.6953125 13.42059612792876, -125.6953125 -108" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="annotation-group text" transform="translate(0, -84)"/><g class="label-group text" transform="translate(-30.40625, -84)"><g class="label" style="font-weight: bolder" transform="translate(0,-12)"><foreignObject width="60.8125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 105px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>Account</p></span></div></foreignObject></g></g><g class="members-group text" transform="translate(-113.6953125, -36)"><g class="label" style="" transform="translate(0,-12)"><foreignObject width="41.53125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 92px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>식별자</p></span></div></foreignObject></g><g class="label" style="" transform="translate(0,12)"><foreignObject width="27.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 78px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>이름</p></span></div></foreignObject></g><g class="label" style="" transform="translate(0,36)"><foreignObject width="27.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 78px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>통화</p></span></div></foreignObject></g><g class="label" style="" transform="translate(0,60)"><foreignObject width="92.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 141px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>열림 또는 닫힘</p></span></div></foreignObject></g></g><g class="methods-group text" transform="translate(-113.6953125, 84)"><g class="label" style="" transform="translate(0,-12)"><foreignObject width="196.984375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 235px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>/balance(기준 시점) : Money</p></span></div></foreignObject></g></g><g class="divider" style=""><path d="M-125.6953125 -60 C-42.28752117778211 -59.99966821439216, 41.12027014443578 -59.99933642878431, 125.6953125 -59.999 M-125.6953125 -60 C-40.497071926140876 -59.99966109221227, 44.70116864771825 -59.99932218442455, 125.6953125 -59.999" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="divider" style=""><path d="M-125.6953125 60 C-63.86147134119902 60.00024596717224, -2.027630182398042 60.00049193434448, 125.6953125 60.001 M-125.6953125 60 C-46.79791296254675 60.00031384384178, 32.09948657490651 60.00062768768356, 125.6953125 60.001" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g></g><g class="node default" id="account-guide-v1-0-0-mermaid1-classId-AccountType-1" data-look="classic" transform="translate(172.0625, 444)"><g class="basic label-container outer-path"><path d="M-60.2265625 -60 L60.2265625 -60 L60.2265625 60 L-60.2265625 60" stroke="none" stroke-width="0" fill="#eee" style=""/><path d="M-60.2265625 -60 C-26.163971659226384 -60, 7.898619181547232 -60, 60.2265625 -60 M-60.2265625 -60 C-28.954584969999697 -60, 2.317392560000606 -60, 60.2265625 -60 M60.2265625 -60 C60.2265625 -30.382530543579026, 60.2265625 -0.7650610871580525, 60.2265625 60 M60.2265625 -60 C60.2265625 -29.46774992891893, 60.2265625 1.0645001421621387, 60.2265625 60 M60.2265625 60 C30.78371481375482 60, 1.3408671275096395 60, -60.2265625 60 M60.2265625 60 C25.895671003483315 60, -8.43522049303337 60, -60.2265625 60 M-60.2265625 60 C-60.2265625 21.865664826204444, -60.2265625 -16.26867034759111, -60.2265625 -60 M-60.2265625 60 C-60.2265625 14.437162545870535, -60.2265625 -31.12567490825893, -60.2265625 -60" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="annotation-group text" transform="translate(0, -36)"/><g class="label-group text" transform="translate(-48.2265625, -36)"><g class="label" style="font-weight: bolder" transform="translate(0,-12)"><foreignObject width="96.453125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 138px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>AccountType</p></span></div></foreignObject></g></g><g class="members-group text" transform="translate(-48.2265625, 12)"><g class="label" style="" transform="translate(0,-12)"><foreignObject width="27.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 78px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>이름</p></span></div></foreignObject></g></g><g class="methods-group text" transform="translate(-48.2265625, 60)"/><g class="divider" style=""><path d="M-60.2265625 -12 C-29.42006702493368 -11.999744244946115, 1.386428450132641 -11.99948848989223, 60.2265625 -11.999 M-60.2265625 -12 C-30.225177612574058 -11.99975092896189, -0.22379272514811532 -11.999501857923779, 60.2265625 -11.999" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="divider" style=""><path d="M-60.2265625 36 C-28.251651727623056 36.0002654552198, 3.7232590447538882 36.0005309104396, 60.2265625 36.001 M-60.2265625 36 C-13.536544738182805 36.000387619812784, 33.15347302363439 36.00077523962557, 60.2265625 36.001" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g></g><g class="node default" id="account-guide-v1-0-0-mermaid1-classId-Entry-2" data-look="classic" transform="translate(533.828125, 444)"><g class="basic label-container outer-path"><path d="M-60.97265625 -60 L60.97265625 -60 L60.97265625 60 L-60.97265625 60" stroke="none" stroke-width="0" fill="#eee" style=""/><path d="M-60.97265625 -60 C-36.46175311384648 -60, -11.950849977692954 -60, 60.97265625 -60 M-60.97265625 -60 C-25.881272504314666 -60, 9.210111241370669 -60, 60.97265625 -60 M60.97265625 -60 C60.97265625 -12.447414752776929, 60.97265625 35.10517049444614, 60.97265625 60 M60.97265625 -60 C60.97265625 -24.764098455309963, 60.97265625 10.471803089380074, 60.97265625 60 M60.97265625 60 C29.186130897294326 60, -2.6003944554113474 60, -60.97265625 60 M60.97265625 60 C21.37656161703488 60, -18.21953301593024 60, -60.97265625 60 M-60.97265625 60 C-60.97265625 15.167522472046102, -60.97265625 -29.664955055907797, -60.97265625 -60 M-60.97265625 60 C-60.97265625 16.936145442495544, -60.97265625 -26.127709115008912, -60.97265625 -60" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="annotation-group text" transform="translate(0, -36)"/><g class="label-group text" transform="translate(-20.1328125, -36)"><g class="label" style="font-weight: bolder" transform="translate(0,-12)"><foreignObject width="40.265625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 86px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>Entry</p></span></div></foreignObject></g></g><g class="members-group text" transform="translate(-48.97265625, 12)"><g class="label" style="" transform="translate(0,-12)"><foreignObject width="77.8125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 127px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>금액 Money</p></span></div></foreignObject></g></g><g class="methods-group text" transform="translate(-48.97265625, 60)"/><g class="divider" style=""><path d="M-60.97265625 -12 C-17.072330761698346 -11.99963999989349, 26.827994726603308 -11.999279999786982, 60.97265625 -11.999 M-60.97265625 -12 C-30.5037374574549 -11.99975014276344, -0.03481866490979968 -11.999500285526883, 60.97265625 -11.999" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="divider" style=""><path d="M-60.97265625 36 C-20.327299533432324 36.000333308069685, 20.318057183135352 36.00066661613937, 60.97265625 36.001 M-60.97265625 36 C-24.324671784524206 36.00030052802944, 12.323312680951588 36.00060105605888, 60.97265625 36.001" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g></g><g class="node default" id="account-guide-v1-0-0-mermaid1-classId-Transaction-3" data-look="classic" transform="translate(564.59375, 202)"><g class="basic label-container outer-path"><path d="M-77.35546875 -72 L77.35546875 -72 L77.35546875 72 L-77.35546875 72" stroke="none" stroke-width="0" fill="#eee" style=""/><path d="M-77.35546875 -72 C-23.436956804447988 -72, 30.481555141104025 -72, 77.35546875 -72 M-77.35546875 -72 C-42.796809415909365 -72, -8.23815008181873 -72, 77.35546875 -72 M77.35546875 -72 C77.35546875 -17.570028957835035, 77.35546875 36.85994208432993, 77.35546875 72 M77.35546875 -72 C77.35546875 -17.843579220362898, 77.35546875 36.312841559274204, 77.35546875 72 M77.35546875 72 C37.8336397995632 72, -1.6881891508735976 72, -77.35546875 72 M77.35546875 72 C22.669575729693847 72, -32.01631729061231 72, -77.35546875 72 M-77.35546875 72 C-77.35546875 21.49162625666245, -77.35546875 -29.0167474866751, -77.35546875 -72 M-77.35546875 72 C-77.35546875 25.321857200692158, -77.35546875 -21.356285598615685, -77.35546875 -72" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="annotation-group text" transform="translate(0, -48)"/><g class="label-group text" transform="translate(-42.8359375, -48)"><g class="label" style="font-weight: bolder" transform="translate(0,-12)"><foreignObject width="85.671875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 128px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>Transaction</p></span></div></foreignObject></g></g><g class="members-group text" transform="translate(-65.35546875, 0)"><g class="label" style="" transform="translate(0,-12)"><foreignObject width="27.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 78px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>날짜</p></span></div></foreignObject></g><g class="label" style="" transform="translate(0,12)"><foreignObject width="87.875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 137px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>되돌리는 거래</p></span></div></foreignObject></g></g><g class="methods-group text" transform="translate(-65.35546875, 72)"/><g class="divider" style=""><path d="M-77.35546875 -24 C-26.864453345743378 -23.999673642883817, 23.626562058513244 -23.999347285767637, 77.35546875 -23.999 M-77.35546875 -24 C-44.94948600228953 -23.999790538514784, -12.543503254579065 -23.99958107702957, 77.35546875 -23.999" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="divider" style=""><path d="M-77.35546875 48 C-22.384784810912358 48.0003553122024, 32.585899128175285 48.0007106244048, 77.35546875 48.001 M-77.35546875 48 C-26.840521914436422 48.000326511800985, 23.674424921127155 48.00065302360197, 77.35546875 48.001" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g></g><g class="node default" id="account-guide-v1-0-0-mermaid1-classId-Money-4" data-look="classic" transform="translate(533.828125, 650)"><g class="basic label-container outer-path"><path d="M-54.1328125 -72 L54.1328125 -72 L54.1328125 72 L-54.1328125 72" stroke="none" stroke-width="0" fill="#eee" style=""/><path d="M-54.1328125 -72 C-12.92078597523384 -72, 28.29124054953232 -72, 54.1328125 -72 M-54.1328125 -72 C-21.784311296626754 -72, 10.564189906746492 -72, 54.1328125 -72 M54.1328125 -72 C54.1328125 -23.985604706768093, 54.1328125 24.028790586463813, 54.1328125 72 M54.1328125 -72 C54.1328125 -19.972838609088043, 54.1328125 32.05432278182391, 54.1328125 72 M54.1328125 72 C18.008299751659393 72, -18.116212996681213 72, -54.1328125 72 M54.1328125 72 C26.57115070862891 72, -0.9905110827421808 72, -54.1328125 72 M-54.1328125 72 C-54.1328125 28.49568922136517, -54.1328125 -15.008621557269663, -54.1328125 -72 M-54.1328125 72 C-54.1328125 16.859255940017412, -54.1328125 -38.281488119965175, -54.1328125 -72" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="annotation-group text" transform="translate(0, -48)"/><g class="label-group text" transform="translate(-24.078125, -48)"><g class="label" style="font-weight: bolder" transform="translate(0,-12)"><foreignObject width="48.15625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 96px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>Money</p></span></div></foreignObject></g></g><g class="members-group text" transform="translate(-42.1328125, 0)"><g class="label" style="" transform="translate(0,-12)"><foreignObject width="60.1875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 110px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>정수 금액</p></span></div></foreignObject></g><g class="label" style="" transform="translate(0,12)"><foreignObject width="27.6875" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 78px; text-align: center;"><span class="nodeLabel markdown-node-label" style=""><p>통화</p></span></div></foreignObject></g></g><g class="methods-group text" transform="translate(-42.1328125, 72)"/><g class="divider" style=""><path d="M-54.1328125 -24 C-15.513445924882461 -23.99964329059593, 23.105920650235078 -23.999286581191857, 54.1328125 -23.999 M-54.1328125 -24 C-31.700480070385133 -23.999792802817794, -9.268147640770266 -23.99958560563559, 54.1328125 -23.999" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g><g class="divider" style=""><path d="M-54.1328125 48 C-20.785754735527618 48.000308011501936, 12.561303028944764 48.00061602300387, 54.1328125 48.001 M-54.1328125 48 C-21.715252481737316 48.0002994261569, 10.702307536525367 48.0005988523138, 54.1328125 48.001" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style=""/></g></g><g class="node undefined" id="account-guide-v1-0-0-mermaid1-note0" data-look="classic" transform="translate(199.3671875, 26)"><g class="basic label-container outer-path"><path d="M-191.3671875 -18 L191.3671875 -18 L191.3671875 18 L-191.3671875 18" stroke="none" stroke-width="0" fill="#666" style="fill:#666 !important;stroke:#999 !important"/><path d="M-191.3671875 -18 C-100.00637311406257 -18, -8.645558728125138 -18, 191.3671875 -18 M-191.3671875 -18 C-55.527830637044644 -18, 80.31152622591071 -18, 191.3671875 -18 M191.3671875 -18 C191.3671875 -8.28544652717316, 191.3671875 1.429106945653679, 191.3671875 18 M191.3671875 -18 C191.3671875 -7.5214229349811, 191.3671875 2.9571541300378, 191.3671875 18 M191.3671875 18 C41.639515071246876 18, -108.08815735750625 18, -191.3671875 18 M191.3671875 18 C68.103992554343 18, -55.15920239131401 18, -191.3671875 18 M-191.3671875 18 C-191.3671875 5.806338381582872, -191.3671875 -6.387323236834256, -191.3671875 -18 M-191.3671875 18 C-191.3671875 10.1005042958781, -191.3671875 2.2010085917562012, -191.3671875 -18" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style="fill:#666 !important;stroke:#999 !important"/></g><g class="label noteLabel" style="text-align:left !important;white-space:nowrap !important" transform="translate(-185.3671875, -12)"><rect/><foreignObject width="370.734375" height="24"><div style="text-align: center; white-space: break-spaces; display: table; line-height: 1.5; max-width: 200px; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span style="text-align:left !important;white-space:nowrap !important" class="nodeLabel markdown-node-label"><p>balance(t) = t 까지 이 Account 에 속한 Entry 금액의 합</p></span></div></foreignObject></g></g><g class="node undefined" id="account-guide-v1-0-0-mermaid1-note1" data-look="classic" transform="translate(564.59375, 26)"><g class="basic label-container outer-path"><path d="M-123.859375 -18 L123.859375 -18 L123.859375 18 L-123.859375 18" stroke="none" stroke-width="0" fill="#666" style="fill:#666 !important;stroke:#999 !important"/><path d="M-123.859375 -18 C-36.140669634861325 -18, 51.57803573027735 -18, 123.859375 -18 M-123.859375 -18 C-50.154216879199225 -18, 23.55094124160155 -18, 123.859375 -18 M123.859375 -18 C123.859375 -9.741162365360967, 123.859375 -1.4823247307219347, 123.859375 18 M123.859375 -18 C123.859375 -6.875726188373262, 123.859375 4.248547623253476, 123.859375 18 M123.859375 18 C66.39701209050725 18, 8.934649181014493 18, -123.859375 18 M123.859375 18 C62.5340858982856 18, 1.2087967965712068 18, -123.859375 18 M-123.859375 18 C-123.859375 10.427176597979724, -123.859375 2.8543531959594493, -123.859375 -18 M-123.859375 18 C-123.859375 3.92849290495057, -123.859375 -10.14301419009886, -123.859375 -18" stroke="#999" stroke-width="1.3" fill="none" stroke-dasharray="0 0" style="fill:#666 !important;stroke:#999 !important"/></g><g class="label noteLabel" style="text-align:left !important;white-space:nowrap !important" transform="translate(-117.859375, -12)"><rect/><foreignObject width="235.71875" height="24"><div style="text-align: center; white-space: break-spaces; display: table; line-height: 1.5; max-width: 200px; width: 200px;" xmlns="http://www.w3.org/1999/xhtml"><span style="text-align:left !important;white-space:nowrap !important" class="nodeLabel markdown-node-label"><p>복식부기에서 묶인 Entry 금액 합 = 0</p></span></div></foreignObject></g></g></g></g></g><defs><filter id="account-guide-v1-0-0-mermaid1-drop-shadow" height="130%" width="130%"><feDropShadow dx="4" dy="4" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"/></filter></defs><defs><filter id="account-guide-v1-0-0-mermaid1-drop-shadow-small" height="150%" width="150%"><feDropShadow dx="2" dy="2" stdDeviation="0" flood-opacity="0.06" flood-color="#000000"/></filter></defs><linearGradient id="account-guide-v1-0-0-mermaid1-gradient" gradientUnits="objectBoundingBox" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="hsl(0, 0%, 83.3333333333%)" stop-opacity="1"/><stop offset="100%" stop-color="hsl(0, 0%, 88.9215686275%)" stop-opacity="1"/></linearGradient></svg>
+</figure>
+<p>그림에서 Entry 는 Account 와 Transaction 양쪽에 연관돼 있어요. 원서 그림 6.1 은 Account 쪽에 <code>balance = sum(entries.amount)</code> 제약을, 그림 6.2·6.3 은 Transaction 쪽에 <code>Sum(entries.amount) = 0</code> 제약을 둡니다. 분석 모델은 연관만 정할 뿐 누가 Entry 를 소유하는지는 정하지 않아요. 소유는 설계가 정합니다. 뒤의 코드에서 Account 클래스에 Entry 목록이 없는 것도 이 연관을 식별자 참조로 옮겼기 때문이지, 연관이 사라져서가 아닙니다.</p>
+<pre tabindex="0"><code class="language-text">개념을 개요의 숫자에 대 보면
+
+  AccountType(자산) ◀── Account 1010 현금 (KRW, 열림)
+                                  ▲ 속함
+  T1 4/1   Entry #1 현금 +100,000   Entry #2 매출 -100,000     묶음 합 = 0
+  T2 4/5   Entry #1 임대료 +30,000  Entry #2 현금  -30,000     묶음 합 = 0
+                                  │
+  현금의 balance(4/5) = +100,000 - 30,000 = 70,000 KRW</code></pre>
+<h3 id="동작-절차">동작 절차</h3>
+<p>개요의 4월 거래로 따라가 볼게요. 금액의 방향은 부호로 적습니다. 자산·비용 계정이 늘면 +, 부채·자본·수익 계정이 늘면 − 예요. hledger 매뉴얼도 posting(hledger 에서 Entry 에 해당하는 거래 한 줄)의 양수 금액을 차변(debit), 음수를 대변(credit)으로 읽고, 부채·자본·수익 잔액은 보통 음수라고 적습니다(<a href="https://hledger.org/hledger.html">hledger manual</a>).</p>
+<pre tabindex="0"><code class="language-text">날짜  거래  Entry (순번 계정 금액)                메모
+4/1   T1    #1 현금 +100,000   #2 매출 -100,000
+4/5   T2    #1 임대료 +30,000  #2 현금 -30,000    금액이 틀림 (실제 25,000)
+4/6   T3    #1 임대료 -30,000  #2 현금 +30,000    T2 를 되돌리는 역분개
+4/6   T4    #1 임대료 +25,000  #2 현금 -25,000    올바른 금액</code></pre>
+<ol>
+<li><strong>Account 열기.</strong> 현금·매출·임대료 계정이 식별자, AccountType, 통화(KRW)를 갖고 열린 상태로 생깁니다.
+<ul>
+<li>왜 먼저인가: Entry 는 Account 에 속하는 기록이라 속할 대상이 먼저 있어야 해요. 통화도 계정이 정해 두어야 3단계에서 Entry 금액과 대조할 기준이 생깁니다.</li>
+</ul>
+</li>
+<li><strong>Transaction 이 Entry 를 만들어 묶기.</strong> 복식부기 원장에서는 4/1 매출 사건 하나가 T1 을 만들고, T1 이 Entry #1(현금 +100,000)과 #2(매출 −100,000)를 묶습니다. 합은 +100,000 − 100,000 = 0 이에요.
+<ul>
+<li>왜 Transaction 이 맡는가: 합이 0 이라는 조건은 두 계정에 걸친 규칙이라서, 계정 하나만 보는 Account 는 판정할 수 없습니다.</li>
+</ul>
+</li>
+<li><strong>Account 가 Entry 를 받을 수 있는지 확인.</strong> Entry 마다 속할 Account 가 열려 있는지, Entry 금액의 통화가 계정 통화와 같은지 봅니다. 여기서 거절된 거래는 만들어졌어도 원장에 없는 거래예요.
+<ul>
+<li>왜 Account 가 맡는가: 열림/닫힘과 통화는 Account 만 아는 사실이에요.</li>
+<li>순서를 바꾸면: 4단계(확정)를 먼저 하고 확인을 뒤에 하면 닫힌 계정에 Entry 가 남습니다. 그 거래를 되돌리는 역분개도 같은 닫힌 계정을 가리키므로 이 확인에서 거절돼요. 계정을 다시 열거나 정정만 허용하는 규칙을 따로 두지 않으면 지울 방법이 없습니다.</li>
+</ul>
+</li>
+<li><strong>Entry 확정.</strong> 확인을 통과한 Transaction 이 원장(모든 거래가 확정돼 쌓이는 장부)에 기록됩니다. 이 일을 전기(posting)라고 불러요. 이후 어떤 단계도 확정된 Entry 를 고치거나 지우지 않습니다.
+<ul>
+<li>왜 고치지 않는가: 확정된 Entry 가 바뀌어서 4/5 잔액이 달라지는 일이 없어야 하기 때문입니다.</li>
+<li>주의할 점: 4/5 날짜의 새 거래를 4/7 에 전기하면 기존 Entry 를 고치지 않아도 4/5 잔액이 달라져요. 이런 뒤늦은 전기를 막는 기간 마감 규칙은 이 예제에 없습니다.</li>
+</ul>
+</li>
+<li><strong>잔액 계산.</strong> 묻는 방식에 따라 두 갈래로 나뉘어집니다.
+<ul>
+<li>5-a 어느 시점의 잔액: 그 날짜까지의 Entry 가운데 이 Account 에 속한 것만 더합니다. 4/5 현금 = +100,000(T1 #1) − 30,000(T2 #2) = 70,000 이에요.</li>
+<li>5-b 지금 잔액을 자주 물을 때: 매번 처음부터 더하지 않고, 새로 확정된 Entry 만 이전 결과에 더해 둡니다. 이 값은 반영한 위치까지의 Entry 합과 같아야 해요. 아직 반영하지 않은 Entry 가 있으면 그만큼 늦은 값입니다. 뒤의 코드는 반영 위치를 날짜가 아니라 전기 순번으로 세서, 5/1 날짜의 거래를 4/6 에 전기하면 계산해 둔 값에는 바로 들어가지만 4/6 기준 Entry 합에는 들어가지 않아요.</li>
+<li>왜 Entry 가 기준인가: 더해 둔 값은 Entry 로 다시 만들 수 있지만, Entry 는 더해 둔 값으로 다시 만들 수 없습니다. 원천이 한쪽에만 있어야 둘이 어긋났을 때 무엇을 고칠지가 정해져요.</li>
+</ul>
+</li>
+<li><strong>틀린 기록을 역분개로 정정.</strong> T2 금액이 틀렸다는 걸 알게 돼도 T2 는 그대로 둡니다. T2 의 Entry 부호를 뒤집은 T3(역분개)과 올바른 금액의 T4 를 새로 만들어 3·4단계를 다시 거쳐요.
+<ul>
+<li>결과: 4/6 현금 = 70,000(4/5 까지의 합) + 30,000(T3 #2) − 25,000(T4 #2) = 75,000 입니다. 4/5 현금은 여전히 70,000 이에요. T3·T4 의 날짜가 4/6 이라 4/5 까지의 합에 들어가지 않으니까요.</li>
+<li>왜 고치지 않는가: T2 #2 의 −30,000 을 −25,000 으로 고치면 4/5 현금이 75,000 으로 바뀝니다. 4/5 에 70,000 으로 이미 낸 보고서와 지금 계산이 어긋나는데, 어느 쪽이 맞는지 보여 줄 기록이 남지 않아요.</li>
+</ul>
+</li>
+<li><strong>Account 닫기.</strong> 닫힌 계정은 3단계에서 새 Entry 를 거절합니다. 이미 확정된 Entry 와 5단계 계산은 그대로예요.
+<ul>
+<li>왜 이렇게 나누는가: 닫힘은 앞으로 들어올 기록을 막는 규칙입니다. 지난 Entry 까지 지우면 확정된 Entry 는 그대로 남는다는 4단계와 부딪혀요.</li>
+</ul>
+</li>
+</ol>
+<p>잠깐, 확인 하나만 해 볼까요? 4/6 기준으로 임대료 계정의 잔액은 얼마일까요? 표에서 임대료에 속한 Entry 만 골라 더하면 됩니다.</p>
+<pre tabindex="0"><code class="language-text">임대료의 Entry:  T2 #1 +30,000   T3 #1 -30,000   T4 #1 +25,000
+잔액(4/6) = +30,000 - 30,000 + 25,000 = 25,000</code></pre>
+<p>여기서 헷갈리기 쉬운 포인트는 5-b 처럼 잔액을 계산해 두는 순간 Account 패턴에서 벗어난다고 생각하는 것입니다. Fowler 도 Entry 가 많으면 현재 잔액을 필드에 캐시할 수 있다고 적었어요(<a href="https://martinfowler.com/eaaDev/Account.html">eaaDev Account</a>). 갈리는 지점은 기준입니다. 캐시가 Entry 합과 다를 때 캐시를 다시 계산하면 Account 패턴이고, Entry 를 캐시에 맞춰 고치면 잔액 필드 모델이에요.</p>
+<h2 id="사용-목적">사용 목적</h2>
+<p>코드나 요구서에서 아래 단서가 보이면 Account 패턴을 꺼낼 때입니다.</p>
+<ul>
+<li><strong>잔액 칸을 고치는 코드가 여러 곳에 흩어져 있고, 잔액이 왜 이 금액이냐는 문의에 로그를 뒤져 답하는 상황.</strong> 예를 들어 <code>UPDATE account SET balance = balance - ?</code> 가 결제·환불·수수료 코드에 따로 들어 있는 경우예요. 잔액의 이유를 모델이 모르니 로그가 대신 답하고 있습니다.</li>
+<li><strong>요구서에 과거 시점과 기간이 나오는 경우.</strong> 3월 31일 기준 잔액, 1분기 입금 합계, 지난달 말 창고 재고 같은 문장이요. 현재 숫자 하나로는 계산할 수 없습니다.</li>
+<li><strong>정정을 행 수정·삭제로 하다가 원래 값이 무엇이었는지 답하지 못한 경험.</strong> 감사나 분쟁에서 수정 전 값을 물을 때 드러납니다.</li>
+<li><strong>돈이 아닌 수량이 같은 모양으로 들어오고 나가는 도메인.</strong> Fowler 는 냉장고의 맥주병과 창고 네트워크를 예로 들며 돈 이외에도 Account 를 쓴다고 적었어요(<a href="https://martinfowler.com/eaaDev/Account.html">eaaDev Account</a>).</li>
+</ul>
+<p>쓰지 말아야 할 경우도 분명합니다.</p>
+<ul>
+<li><strong>현재 값만 필요할 때.</strong> 게시글 조회수처럼 지금 몇인지만 묻는 값은 필드 하나로 충분하다고 Fowler 도 적었습니다. Account 로 만들면 증가 한 번마다 Entry 가 쌓이고 조회 때 합산이나 캐시 동기화를 챙겨야 하는데, 그렇게 해서 새로 답할 수 있는 질문은 없어요.</li>
+<li><strong>값이 시점마다 바뀌지만 변화를 더해서 값을 얻지는 않을 때.</strong> 직원의 주소나 월급처럼 그 날짜에 무엇이었는지만 묻는다면 Temporal Property(시점을 받아 그때의 값을 돌려주는 속성)로 충분합니다(<a href="https://martinfowler.com/eaaDev/Account.html">eaaDev Account</a>, <a href="https://martinfowler.com/eaaDev/TemporalProperty.html">eaaDev Temporal Property</a>). 월급은 금액이라 더할 수는 있지만, 올해 월급은 인상분 기록의 합이 아니라 그 날짜부터 정해진 값이에요. Account 로 만들면 정해진 값을 적는 대신 이전 값과의 차이를 계산해 Entry 로 넣어야 합니다.</li>
+<li><strong>더할 양이 없는 이력일 때.</strong> 소스 코드 버전 이력에 계정 비유를 쓰는 것을 Fowler 는 "stretching the analogy a little too far"라고 적었습니다(<a href="https://martinfowler.com/eaaDev/Account.html">eaaDev Account</a>). 커밋 기록을 Entry 로, 그 시점의 코드를 balance 로 옮겨 보면 어디서 맞지 않는지 보입니다.</li>
+</ul>
+<pre tabindex="0"><code class="language-text">모델에 보이는 모양으로 나란히 놓기 — 쓰지 말아야 할 세 경우와 Account 가 맞는 경우
+
+조회수 — 필드로 충분
+  모양      Post { viewCount } · view() 가 viewCount 에 1 을 더함
+  묻는 것   지금 몇인가 → 필드 하나로 답이 끝남. 과거 값이나 변경 한 건을 묻는 코드가 없음
+
+월급 이력 — Temporal Property
+  모양      Employee { salaryAt(날짜) } · 기록: 2025-01-01 부터 3,000,000 / 2026-01-01 부터 3,200,000
+  묻는 것   그 날짜의 값 → 그 날짜가 든 기간의 값을 찾아 돌려줌. 기록끼리 더하는 코드가 없음
+
+소스 코드 이력 — Account 가 맞지 않음
+  모양      기록: "3행 추가" · "그 3행 중 2행 삭제" · "파일 이름 변경"
+  묻는 것   그 시점의 코드 → 기록을 정해진 순서대로 적용. 순서를 바꾸면 없는 행을 지우게 됨
+            기록끼리의 덧셈, 0, 단위가 없어 balance 를 합으로 정의할 수 없음
+
+창고 재고 — Account
+  모양      한 계정에 속한 Entry: +10개 · -3개 · +5개
+  묻는 것   그날의 재고와 그 이유 → Entry 를 더함: 0 + 10 - 3 + 5 = 12개, 어느 Entry 때문인지도 답함</code></pre>
+<p>넷을 가르는 질문은 하나예요. 현재 값이 한 계정에 속한 기록들의 합으로 정의되는가. 조회수는 합을 물을 과거가 없고, 월급은 기간마다 정해진 값이라 합이 아니며, 코드 이력은 기록끼리 더할 수 없어요. 모델에서는 기록 값 타입에 단위를 확인하는 덧셈과 0 이 있는지, 조회 코드가 기록을 더하는지 아니면 기간을 찾거나 순서대로 적용하는지를 보면 됩니다.</p>
+<pre tabindex="0"><code class="language-text">단서                                          먼저 떠올릴 패턴
+잔액의 이유 · 과거 시점 잔액 · 합산되는 양      Account
+돈이 어디서 와서 어디로 갔는지 짝 맞추기         Transaction (Account 와 함께)
+날짜마다 정해진 값, 변화를 더해 얻지 않음         Temporal Property
+금액이 아닌 상태 변경까지 기록에서 재구성        Event Sourcing (Account 와 겹쳐 쓸 수 있음)</code></pre>
+<h2 id="패턴의-경계">패턴의 경계</h2>
+<h3 id="디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</h3>
+<p>아래 조건은 클래스 모양이 아니라 개념이 맡는 책임과 모델이 늘 지키는 불변식으로 판정해요. Entry 를 누가 소유하든 같은 기준으로 판정할 수 있어야 하기 때문입니다. 조건마다 근거가 원서 그림인지, Fowler 의 후속 초안(eaaDev)인지, 이 가이드의 정책인지를 괄호로 밝혔어요.</p>
+<ol>
+<li>[필수] 잔액은 Entry 의 합으로 정의됩니다 — 어느 시점의 잔액이든 그 시점까지 확정된 Entry 가운데 그 Account 에 속한 것의 금액 합과 같아요. 잔액을 계산해 둔 값이 있어도 기준은 이 합이고, 계산해 둔 값은 반영한 위치까지의 합과 같아야 합니다. 오래된 Entry 를 합이 같은 한 건으로 정리했다면 정리한 구간 안쪽 시점만 예외예요. (근거: 원서 그림 6.1 의 <code>balance = sum(entries.amount)</code>, 정리는 eaaDev Account)
+빠지면: 개요의 Before 처럼 잔액 숫자를 고쳐 쓰는 필드가 됩니다. 4/5 마감 때 현금이 얼마였는지, +5,000 이 무엇이었는지 답할 재료가 없어요. Fowler 도 현재 값만 필요하면 필드로 충분하다고 했는데, 그건 Account 패턴이 아니라 속성 하나입니다.</li>
+<li>[필수] Account 는 Entry 를 모으는 기준을 책임집니다 — 모든 Entry 는 정확히 한 Account 에 속하고, 한 Account 의 잔액은 그 Account 에 속한 Entry 만 더해요. 속한다는 말은 Account 가 Entry 목록을 들고 있다는 뜻이 아니라 Entry 마다 속한 Account 가 하나로 정해진다는 뜻이고, 목록에 담든 식별자로 가리키든 같습니다. (근거: 원서 그림 6.1 의 Account 1 — Entry 여럿)
+빠지면: Entry 에 <code>"현금"</code> 같은 분류 문자열만 붙은 기록 목록이 됩니다. <code>"현금"</code> 과 <code>"현금 "</code> 이 서로 다른 묶음으로 더해지고, 통화나 열림/닫힘처럼 묶음 전체에 걸리는 사실을 둘 곳이 없어요. Fowler 가 Account 없이 Entry 만 쓰는 선택지로 따로 적은 모양입니다(<a href="https://martinfowler.com/eaaDev/AccountingEntry.html">eaaDev Accounting Entry</a>).</li>
+<li>[필수] 확정된 Entry 를 고치거나 지워서 정정하지 않습니다 — 값의 변화와 정정은 Entry 를 새로 더해서 기록해요. (근거: eaaDev Account 가 이 패턴을 현재 값·과거 값·변경 이력이 모두 필요할 때 쓴다고 적은 것, eaaDev Accounting Entry 의 확정 뒤 변경 금지 규칙. 정정 방식을 역분개로 정한 것은 이 가이드의 정책)
+빠지면: T2 #2 의 −30,000 을 −25,000 으로 고치는 모델이 됩니다. 4/5 현금 잔액이 70,000 에서 75,000 으로 바뀌어 4/5 에 낸 보고서와 어긋나고, 수정 전 값이 남지 않으니 어느 쪽이 맞는지도 보일 수 없어요. 이력이 사라진 거죠. 변경 이력이 없으니 Temporal Property 나 필드와 다를 것이 없습니다. Fowler 는 확정(booked) 전 변경을 허용하는 규칙도 흔하다고 적었고 오래된 Entry 정리도 적었으므로, 이 조건이 막는 것은 확정된 Entry 를 정정하려고 고치거나 지우는 일뿐입니다.</li>
+<li>[필수] 금액은 단위를 가진 값이고, 한 잔액으로 더하는 금액은 단위가 같습니다 — 돈이면 통화를 가진 Money 이고, 통화가 다른 금액은 한 잔액에 더하지 않아요. 단위가 하나로 고정된 모델이면 그것으로 충족하고, 여러 통화를 받는 계정이면 통화별로 따로 더합니다(eaaDev 가 말하는 Money Bag, 통화별 금액 묶음). (근거: 원서 그림 6.1 에서 amount 와 balance 가 Quantity, eaaDev Account 의 계정 통화)
+빠지면: 현금(KRW) 잔액 70,000 에 USD 100 이 숫자 100 으로 더해져 70,100 이 됩니다. 합은 나오지만 어느 통화의 금액도 아니에요.</li>
+<li>[선택] 계정 열림/닫힘 — 닫힌 Account 는 새 Entry 를 받지 않고, 이미 확정된 Entry 와 잔액은 그대로 둡니다. (근거: 이 가이드의 정책, <a href="../../research/accounting-context.md">회계 배경 확정안</a> I5 의 계정 유효)</li>
+<li>[선택] 계정 분류 — AccountType 으로 계정 종류를 나눕니다. 이 가이드는 자산·부채·자본·수익·비용을 예로 써요. (근거: 원서 그림 6.20 의 지식 층위 Account Type, 분류 예는 그림 6.28 의 Asset · Liability · Income · Expense)</li>
+<li>[선택] 기간 잔액 — 시점 하나가 아니라 기간 안의 Entry 합을 돌려줍니다. (근거: eaaDev Account 의 <code>balance(DateRange)</code>)</li>
+<li>[선택] 잔액 캐시 — 현재 잔액을 계산해 두고 새 Entry 만 더합니다. 반영한 위치까지의 Entry 합과 같게 유지하고 Entry 에서 다시 만들 수 있는 한 패턴 안이에요. (근거: eaaDev Account 의 현재 잔액 캐시)</li>
+</ol>
+<h3 id="비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</h3>
+<p>Account 와 닮아 보이거나 같은 단서에서 떠오르는 넷을 구분 기준부터 모았어요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>대상</th><th>구분 기준</th><th>Account 를 고르면 얻는 것</th><th>포기하는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>필드가 원천인 잔액 모델 (감사·과거 잔액이 필요한 곳에 쓰면 안티패턴)</td><td>잔액과 기록이 어긋날 때 무엇을 고치는가 — 기록으로 잔액을 다시 계산하면 Account, 필드를 기준으로 두면 이 모델</td><td>어느 시점의 잔액이든 기록에서 다시 계산하고, 계산해 둔 값이 틀렸는지 판정하는 능력</td><td>조회 때 합산 비용, 또는 캐시를 Entry 와 맞추는 일</td></tr>
+<tr><td>Temporal Property</td><td>현재 값을 변화 기록의 합으로 얻는가(합산 책임), 시점마다 정해진 값을 찾아 돌려주는가(시점 조회 책임). 값이 금액이어도 합으로 정의되지 않으면 Temporal Property</td><td>변경 한 건 한 건과 그 합을 함께 다루는 모델</td><td>Temporal Property 의 단순함(기간별 값만 적고 찾음), 그리고 변화를 모두 Entry 로 남기는 저장</td></tr>
+<tr><td>Transaction (함께 쓰는 짝)</td><td>규칙이 한 계정의 Entry 합(= 잔액)에 걸리는가, 한 사건의 Entry 합(= 0)에 걸리는가</td><td>Transaction 없이 Account 만 두면 계정별 잔액과 내역에 답하는 가벼운 모델</td><td>Transaction 없이 Account 만 두면 돈이 어디서 와서 어디로 갔는지 짝을 맞추는 검증이 없음. 둘은 대체 관계가 아니라 함께 쓰는 관계</td></tr>
+<tr><td>Event Sourcing</td><td>저장된 원천이 무엇인가 — 계정 이름·열림/닫힘 같은 현재 상태까지 이벤트에서 다시 만들면 Event Sourcing, 현재 상태는 그대로 저장하고 금액 결과만 Entry 로 모아 더하면 Account</td><td>계정·금액 질문에 맞춘 좁은 모델, 합산 하나로 끝나는 잔액</td><td>금액이 아닌 상태 변경의 이력(계정 이름 변경 등). 필요하면 Event Sourcing 과 겹쳐 씀</td></tr>
+</tbody>
+</table>
+</div>
+<p>Event Sourcing 은 애플리케이션 상태의 모든 변경을 이벤트 순서대로 저장하는 패턴이에요(<a href="https://martinfowler.com/eaaDev/EventSourcing.html">eaaDev Event Sourcing</a>). 금액 이벤트를 더해 잔액을 만드는 것도 이벤트 재생의 한 형태라서 둘은 겹칠 수 있고, Fowler 도 Account 가 사건의 금전적 결과를 추적하므로 Event Sourcing 과 잘 맞는다고 적었습니다(<a href="https://martinfowler.com/eaaDev/AccountingNarrative.html">eaaDev Patterns for Accounting</a>). 표의 대상마다 모델이나 코드에서 무엇을 보면 갈리는지 모아 볼게요. 필드가 원천인 모델은 바로 아래 코드로 따로 봅니다.</p>
+<pre tabindex="0"><code class="language-text">Temporal Property 와 Account — 조회 코드가 하는 일
+  Temporal Property   salaryAt(날짜) 가 그 날짜가 든 기간의 값을 찾아 돌려줌 (사용 목적의 월급 이력)
+  Account             balanceAsOf(계정, 날짜) 가 그 날짜까지의 Entry 를 더함
+  확인할 곳           조회가 기록을 더하는가, 기간을 찾는가
+
+Transaction 과 Account — 짝을 검사하는 코드가 있는가
+  Account 만 둔 단식 기록   현금 계정에 Entry(-30,000) 한 건. 임대료 쪽 +30,000 이 빠져도 알아챌 코드가 없음
+  Transaction 을 함께 둠    T2 = {임대료 +30,000, 현금 -30,000}. Transaction.create 가 합 0 을 검사
+  확인할 곳                 여러 계정의 Entry 를 한 묶음으로 만들고 합을 검사하는 생성 코드가 있는가
+
+Account 만 쓰는 모델 (이 가이드의 코드)
+  저장소에 있는 것   Account(1010, 현금, 열림) ← 현재 상태를 그대로 저장
+                     Transaction T1~T4 와 그 Entry
+  잔액               Entry 의 합. TransactionPosted 는 읽기 모델에 알리는 용도
+  계정 이름 이력     물을 수 없음. 이름을 바꾸면 현재 값만 남음
+
+Event Sourcing 을 겹쳐 쓴 모델 (예시 이벤트 이름)
+  저장소에 있는 것   AccountOpened(1010, 현금) · AccountRenamed(1010, 보통예금)
+                     AmountPosted(1010, +100,000) · AccountClosed(1010)
+  Account 객체       이벤트를 순서대로 적용해 이름·열림/닫힘·잔액을 모두 다시 만듦
+  확인할 곳          Account 의 현재 상태를 저장하는 테이블이나 필드가 있는가
+                     없고 이벤트만 있으면 Event Sourcing</code></pre>
+<p>가장 헷갈리는 쌍은 첫 줄이에요. 잔액 필드 옆에 변경 로그를 쌓으면 기록이 있으니 Account 처럼 보입니다. 갈리는 곳은 로그의 유무가 아니라 원천이 어디냐예요. 아래 코드에서 원천은 필드이고 로그는 부산물입니다.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-java">// Account 패턴처럼 보이지만 잔액의 원천이 필드인 모델
+class CashAccount {
+    private long balance;
+    private final List&lt;String&gt; log = new ArrayList&lt;&gt;();
+
+    void deposit(long amount) {
+        balance += amount;
+        log.add("deposit " + amount);
+    }
+
+    void withdraw(long amount) {
+        balance -= amount;
+        log.add("withdraw " + amount);
+    }
+
+    void adjust(long delta) {      // 정정: 필드만 고치고 로그는 남기지 않음
+        balance += delta;
+    }
+}</code></pre>
+<p><code>adjust(5000)</code> 한 번이면 필드와 로그가 달라집니다.</p>
+<pre tabindex="0"><code class="language-text">필드가 원천인 잔액 모델
+  로그   deposit 100000 · withdraw 30000         로그 합 = 70,000
+  필드   balance = 75,000                         (adjust(5000) 이후)
+  → 필드가 맞는지 확인할 독립적인 기록이 없음 (로그는 adjust 를 모름)
+
+Account 패턴
+  Entry  +100,000 · -30,000 · +30,000 · -25,000   Entry 합 = 75,000
+  캐시   75,000                                   → 다르면 캐시를 다시 계산</code></pre>
+<p><code>adjust</code> 가 로그를 남기도록 고치는 것만으로는 부족해요. 모든 변경을 필드와 같은 원자 단위로 기록하고, 둘이 어긋나면 기록으로 필드를 다시 계산한다는 규칙까지 두면 조건 8 의 잔액 캐시, 즉 Account 패턴이 됩니다. 그 규칙이 없는 한 필드 모델이 얻는 것은 조회 한 번에 숫자 하나를 읽는 단순함이고, 그 대신 과거 시점의 잔액과 정정의 흔적을 믿을 근거를 포기합니다. 구현 예시의 <code>AccountBalance</code> 도 필드에 금액을 더해 가는 모양은 같지만, 원천이 아니라서 <code>rebuildBalance</code> 로 버리고 이벤트에서 다시 만들 수 있다는 점이 다릅니다.</p>
+<h2 id="구현-예시">구현 예시</h2>
+<h3 id="상황-설정">상황 설정</h3>
+<p>예시 도메인은 작은 회사의 총계정원장(General Ledger, 모든 계정의 거래를 모아 두는 장부)이에요. 청구·결제 같은 다른 시스템에서 일어난 업무 사건이 거래로 들어오면, 이 원장은 거래를 전기하고 계정별 잔액을 알려 줍니다. 배경은 Account · Transaction · Posting Rule 세 가이드가 함께 쓰는 <a href="../../research/accounting-context.md">회계 배경 확정안</a>을 따릅니다.</p>
+<pre tabindex="0"><code class="language-text">고정된 것
+  · 계정마다 통화 하나, 금액은 정수 최소 단위 (KRW 는 1원)
+  · 방향은 부호 (자산·비용 +, 부채·자본·수익 -)
+  · 전기된 거래와 그 Entry 는 바꾸지 않음, 정정은 역분개 한 가지
+  · 결제 승인이나 잔액 한도 판단은 이 원장이 하지 않음
+변하는 것
+  · 계정이 새로 열리거나 닫힘
+  · 거래는 계속 쌓임 (Entry 수는 줄지 않음)
+  · 잔액 조회가 방금 전기한 거래를 아직 반영하지 않았을 수 있음</code></pre>
+<p>고정된 것의 마지막 줄이 경계를 가릅니다. 잔액이 음수가 되면 안 된다는 규칙은 결제를 승인하는 쪽의 것이라 이 원장에는 없어요(확정안 2절). 그래서 잔액을 전기와 같은 순간에 맞출 필요가 없고, 조금 늦게 따라와도 됩니다. 그 규칙이 원장으로 들어오면 경계가 달라지는데, 그 경우는 「상황이 달라지면」에서 봅니다.</p>
+<pre tabindex="0"><code class="language-text">예시 타입               개념
+────────────────────    ──────────────────────────────────────────────────
+Account                 Account
+AccountId               Account 의 식별자
+AccountTypeId           AccountType 의 식별자 (AccountType 자체는 코드에 없음)
+Entry                   Entry (Transaction 안에서만 쓰임)
+AccountAmount           계정 id + 금액 값 (거래를 만들 때의 입력, 이벤트의 내용)
+Transaction             Transaction
+TransactionId           Transaction 의 식별자
+Money                   Money
+balanceAsOf             Account 의 balance 정의 그대로 Entry 를 더하는 조회
+AccountBalance          Account 의 balance 를 전기 순번 기준 반영 위치까지 계산해 둔 값 (날짜와 무관)
+rebuildBalance          읽기 모델을 버리고 이벤트에서 다시 만드는 작업 (구현 전용)
+TransactionPosted       전기가 끝났음을 알리는 이벤트 (구현 전용)
+GeneralLedger           저장소와 전기 서비스를 메모리로 흉내 낸 것 (구현 전용)</code></pre>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>항목</th><th>이 가이드의 설정</th></tr>
+</thead>
+<tbody>
+<tr><td>bounded context</td><td>총계정원장 전기 컨텍스트 — 다른 컨텍스트의 업무 사건을 균형 잡힌 거래로 전기하고 계정별 잔액을 파생</td></tr>
+<tr><td>불변식의 위치</td><td>① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → <code>Transaction</code> root 의 Factory <code>Transaction.create</code>, 동기 ② 전기된 Entry 는 불변 → <code>Transaction</code> root, 생성 뒤 상태를 바꾸는 메서드가 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 <code>Account</code> root 의 <code>checkPostable</code> 을 호출, 동기 (계정 닫기와 같은 순간에 일어난 전기의 경합은 허용, 통화가 다른 금액의 덧셈은 <code>Money</code> 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 <code>AccountBalance</code> 읽기 모델이 <code>TransactionPosted</code> 이벤트로 반영 위치(<code>lastAppliedSeq</code>)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제)</td></tr>
+<tr><td>root·entity·VO 배정</td><td><code>Account</code> = aggregate root (식별자·이름·계정 종류 id·통화·열림/닫힘만, Entry 목록과 잔액 필드 없음) · <code>Transaction</code> = 별도 aggregate root · <code>Entry</code> = <code>Transaction</code> 안의 불변 child entity (식별자 = 거래 id + 순번 <code>seq</code>, 같은 거래 안에서는 <code>seq</code> 로 비교) · <code>Money</code> · <code>AccountAmount</code> = VO · <code>AccountBalance</code> = 읽기 모델 (aggregate 아님) · <code>TransactionPosted</code> = 값만 담는 도메인 이벤트</td></tr>
+<tr><td>타 aggregate 참조 방식</td><td>id 참조 — <code>Entry</code> → <code>Account</code> 는 <code>AccountId</code>, 역분개 <code>Transaction</code> → 원 <code>Transaction</code> 은 <code>TransactionId</code>, <code>AccountBalance</code> → <code>Account</code> 는 <code>AccountId</code>, <code>Account</code> → 지식 층위의 계정 종류는 <code>AccountTypeId</code>. 어느 aggregate 도 다른 aggregate 의 객체를 필드나 메서드 시그니처에 두지 않음</td></tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><strong>Bounded Context</strong>: 한 모델의 용어와 규칙이 같은 뜻으로 통하는 경계예요. 이 가이드에서 잔액과 전기는 총계정원장 안에서의 뜻입니다.</li>
+<li><strong>Aggregate</strong>: 함께 일관성을 지켜야 하는 객체 묶음이고, 저장과 동시 수정의 단위입니다.</li>
+<li><strong>Aggregate Root</strong>(root): 바깥에서 aggregate 에 접근할 때 거치는 객체예요. 바깥에서는 root 만 참조하고, 안쪽 객체는 root 의 메서드로만 바뀝니다.</li>
+<li><strong>Entity</strong>: 속성이 같아도 식별자로 구별되는 객체입니다. child entity 는 다른 root 안에 들어 있는 entity 예요.</li>
+<li><strong>Value Object</strong>(VO): 식별자 없이 값으로 같음을 판단하는 불변 객체입니다.</li>
+<li><strong>Factory</strong>(팩토리): 불변식을 검사한 뒤에만 aggregate 를 만들어 돌려주는 생성 책임이에요. 여기서는 <code>Transaction.create</code> 와 <code>reverse</code> 입니다.</li>
+<li><strong>Repository</strong>(저장소): aggregate 를 식별자로 찾아오고 저장하는 창구입니다. 여기서는 <code>GeneralLedger</code> 가 메모리로 흉내 내요.</li>
+<li><strong>도메인 서비스</strong>: 한 aggregate 에 속하지 않고 여러 aggregate 를 식별자로 찾아 함께 다루는 작업이에요. 여기서는 전기 서비스, 즉 <code>GeneralLedger.post</code> 입니다.</li>
+<li><strong>읽기 모델</strong>: 조회를 빠르게 하려고 aggregate 밖에 계산해 둔 데이터예요. 규칙을 지키는 곳이 아니라 결과를 보여 주는 곳입니다.</li>
+<li><strong>도메인 이벤트</strong>: 이미 일어난 일을 알리는 불변 메시지입니다.</li>
+<li><strong>동기 / 결과적 일관성</strong>: 동기는 저장과 같은 순간에 검사하거나 맞추는 것이고, 결과적 일관성은 잠시 어긋남을 허용하고 뒤이어 맞추는 것이에요.</li>
+</ul>
+<p>정의는 <a href="https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf">Evans 의 DDD Reference</a>와 Vernon 의 「Effective Aggregate Design」(<a href="https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_1.pdf">Part I</a> · <a href="https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf">Part II</a>)을 한 줄로 줄인 것입니다.</p>
+<p>표의 네 칸은 <a href="../../research/accounting-context.md">회계 배경 확정안</a>의 2절(bounded context), 3절(불변식 I1 · I2 · I4 · I5), 4절(배정), 5절(참조)에서 가져왔어요. ③에는 I5(계정 유효)에 계정 통화 대조를 붙였는데, Fowler 의 Account 코드도 Entry 를 받을 때 통화가 같은지 확인합니다(<a href="https://martinfowler.com/eaaDev/Account.html">eaaDev Account</a>). 확정안의 I3(같은 원천 사건을 같은 규칙으로 두 번 전기하지 않음)은 원천 사건과 Posting Rule 을 키로 쓰는 규칙이라 Transaction · Posting Rule 가이드가 맡고, 이 표에는 Account 가 관여하는 불변식만 올렸습니다.</p>
+<pre tabindex="0"><code class="language-text">참조 칸을 뒤집어 보기 — Entry 가 AccountId 대신 Account 객체를 들고,
+저장소는 거래를 저장할 때 참조를 따라 객체 그래프를 함께 저장한다고 가정
+(객체 참조 자체가 두 aggregate 를 합치지는 않지만, 이런 저장 경로가 생길 수 있음)
+
+Entry 가 Account 객체를 들 때
+  09:00  요청 A  현금 Account(열림)를 읽어 T8 의 Entry 에 넣음
+  09:01  요청 B  현금 Account 를 닫고 저장                 → 저장소의 현금: 닫힘
+  09:02  요청 A  T8 저장. Entry 가 든 현금 Account(열림)도 함께 저장
+                                                        → 저장소의 현금: 열림
+  결과   누구도 계정을 다시 열지 않았는데 닫힌 계정이 열림
+
+Entry 가 AccountId 를 들 때
+  09:02  요청 A  T8 저장 직전에 저장소에서 현금 Account 를 새로 읽어 checkPostable → 닫힘이라 거절
+                 T8 저장은 Transaction 하나만 씀. 현금 Account 는 건드리지 않음</code></pre>
+<p>코드에 있는 id 참조 네 곳을 모두 같은 방식으로(시간표와 같은 저장 전제에서) 뒤집어 보면, 각각 어느 행과 어긋나고 무엇이 가능해지는지가 이렇습니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>코드의 id 참조</th><th>객체 참조로 바꾸면</th><th>어긋나는 상황 설정 행</th><th>가능해지는 잘못된 변경</th></tr>
+</thead>
+<tbody>
+<tr><td><code>AccountAmount.accountId: AccountId</code> (Entry → Account)</td><td>Entry 가 <code>Account</code> 객체를 듦</td><td>참조 칸, 배정 칸(Account 는 별도 root 이고 <code>close()</code> 로만 바뀜), 불변식 ③</td><td>위 시간표처럼 T8 저장이 옛 현금 Account(열림)를 함께 써서 닫힘이 되돌려짐. 거래 쪽 코드에서 Entry 가 든 Account 의 <code>close()</code> 를 부를 수도 있어, 전기 한 번이 aggregate 둘을 고침</td></tr>
+<tr><td><code>Transaction.reverses: TransactionId</code> (역분개 → 원 거래)</td><td>T3 가 <code>Transaction</code> 객체 T2 를 듦</td><td>참조 칸, 불변식 ②(전기된 거래는 불변)</td><td>객체로 이어지면 원 거래 쪽에 되돌림 표시(T2 가 T3 을 가리키는 필드)를 적기 쉬워짐. 확정안은 이 표시를 원 거래에 쓰지 않고 역분개 거래가 있는지로 알아냄(I2). 표시를 쓰는 순간 T3 전기가 이미 전기된 T2 까지 고치고, 4/5 에 전기되어 보고서에 쓰인 T2 와 저장소의 T2 가 달라짐. 그래프를 함께 읽으면 T3 하나를 읽을 때 되돌림 사슬 전체가 딸려 옴</td></tr>
+<tr><td><code>Account.accountTypeId: AccountTypeId</code> (Account → 계정 종류)</td><td>Account 가 계정 종류 객체를 듦</td><td>참조 칸, 배정 칸(계정 종류는 지식 층위라 계정과 따로 바뀜)</td><td>계정을 닫는 저장이 들고 있던 옛 계정 종류 정의까지 함께 써서, 같은 시각 종류 이름을 고친 요청의 결과를 덮음</td></tr>
+<tr><td><code>AccountBalance.accountId: AccountId</code> (읽기 모델 → Account)</td><td>읽기 모델이 <code>Account</code> 객체를 듦</td><td>불변식 ④(잔액은 aggregate 경계 밖 읽기 모델), 참조 칸</td><td>읽기 모델 갱신 코드가 <code>close()</code> 같은 변경 메서드에 닿아, 결과를 보여 주는 곳이 규칙을 바꾸는 곳이 됨. 붙든 Account 사본이 오래되면 닫힌 계정이 열린 것으로 보이고, 그 사본을 저장하면 닫힘이 되돌려짐</td></tr>
+</tbody>
+</table>
+</div>
+<p>네 행의 모양은 같아요. 객체 참조가 곧 규칙 위반은 아니지만, 참조를 따라가면 다른 aggregate 를 읽은 순간의 사본으로 고치거나 함께 저장하는 경로가 열립니다. id 로만 가리키면 다른 aggregate 가 필요할 때마다 저장소에서 지금 값을 새로 읽어야 해서 그 경로가 코드에 남지 않아요(<a href="https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf">Vernon Part II</a>의 id 참조 규칙).</p>
+<h3 id="구현">구현</h3>
+<div class="code-tabs" id="account-guide-v1-0-0-tabs1">
+<div class="code-tabs__list" role="tablist" aria-label="구현 예시 언어">
+<button type="button" class="code-tabs__tab" role="tab" id="account-guide-v1-0-0-tabs1-tab-java" aria-controls="account-guide-v1-0-0-tabs1-panel-java" aria-selected="true" tabindex="0" data-lang="java">Java</button>
+<button type="button" class="code-tabs__tab" role="tab" id="account-guide-v1-0-0-tabs1-tab-typescript" aria-controls="account-guide-v1-0-0-tabs1-panel-typescript" aria-selected="false" tabindex="-1" data-lang="typescript">TypeScript</button>
+<button type="button" class="code-tabs__tab" role="tab" id="account-guide-v1-0-0-tabs1-tab-rust" aria-controls="account-guide-v1-0-0-tabs1-panel-rust" aria-selected="false" tabindex="-1" data-lang="rust">Rust</button>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="account-guide-v1-0-0-tabs1-panel-java" aria-labelledby="account-guide-v1-0-0-tabs1-tab-java">
+<p class="code-tabs__label" aria-hidden="true">Java</p>
+<pre tabindex="0"><code class="language-java">import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+record AccountId(String value) {}
+record AccountTypeId(String value) {}
+record TransactionId(String value) {}
+
+// VO: 식별자 없이 값으로 같음을 판단. 금액은 정수 최소 단위(KRW 는 원)
+record Money(long minor, String currency) {
+    static Money zero(String currency) { return new Money(0, currency); }
+    Money plus(Money other) {
+        if (!currency.equals(other.currency)) throw new IllegalArgumentException("통화가 다른 금액은 더할 수 없습니다");
+        return new Money(Math.addExact(minor, other.minor), currency);
+    }
+    Money negate() { return new Money(Math.negateExact(minor), currency); }
+    @Override public String toString() { return minor + " " + currency; }
+}
+
+// VO: 계정 id 와 금액 한 쌍 — 거래를 만들 때의 입력이자 이벤트에 담는 값
+record AccountAmount(AccountId accountId, Money amount) {}
+
+// aggregate root: Entry 목록도 잔액 필드도 없다
+final class Account {
+    private final AccountId id;
+    private final String name;
+    private final AccountTypeId accountTypeId;
+    private final String currency;
+    private boolean closed = false;
+    Account(AccountId id, String name, AccountTypeId accountTypeId, String currency) {
+        this.id = id; this.name = name; this.accountTypeId = accountTypeId; this.currency = currency;
+    }
+    void close() { closed = true; }
+
+    // 이 계정이 이 금액의 Entry 를 받을 수 있는가 — 열림/닫힘과 통화는 Account 만 안다
+    void checkPostable(Money amount) {
+        if (closed) throw new IllegalStateException(name + " 계정은 닫혀 있습니다");
+        if (!currency.equals(amount.currency())) throw new IllegalArgumentException(name + " 계정의 통화는 " + currency + " 입니다");
+    }
+    AccountId id() { return id; }
+    String name() { return name; }
+    AccountTypeId accountTypeId() { return accountTypeId; }
+    String currency() { return currency; }
+}
+
+// Transaction 안의 불변 child entity: 같은 거래 안에서만 seq 로 비교한다(값이 같아도 seq 가 다르면 다른 사실)
+final class Entry {
+    final int seq;
+    final AccountAmount line;
+    Entry(int seq, AccountAmount line) { this.seq = seq; this.line = line; }
+    @Override public boolean equals(Object o) { return o instanceof Entry other &amp;&amp; seq == other.seq; }
+    @Override public int hashCode() { return Integer.hashCode(seq); }
+}
+
+// aggregate root: 만들 때 균형을 검사하고, 만든 뒤에는 바꾸는 메서드가 없다
+final class Transaction {
+    private final TransactionId id;
+    private final LocalDate date;
+    private final TransactionId reverses;
+    private final List&lt;Entry&gt; entries;
+    private Transaction(TransactionId id, LocalDate date, TransactionId reverses, List&lt;Entry&gt; entries) {
+        this.id = id; this.date = date; this.reverses = reverses; this.entries = entries;
+    }
+    static Transaction create(TransactionId id, LocalDate date, List&lt;AccountAmount&gt; lines) {
+        return build(id, date, null, lines);
+    }
+
+    // 역분개: 원 거래를 고치지 않고, 부호를 뒤집은 거래를 새로 만든다
+    Transaction reverse(TransactionId newId, LocalDate newDate) {
+        List&lt;AccountAmount&gt; negated = new ArrayList&lt;&gt;();
+        for (Entry e : entries) negated.add(new AccountAmount(e.line.accountId(), e.line.amount().negate()));
+        return build(newId, newDate, id, negated);
+    }
+    private static Transaction build(TransactionId id, LocalDate date, TransactionId reverses, List&lt;AccountAmount&gt; lines) {
+        if (lines.size() &lt; 2) throw new IllegalArgumentException("Entry 는 2개 이상이어야 합니다");
+        Map&lt;String, Long&gt; sums = new TreeMap&lt;&gt;();
+        List&lt;Entry&gt; entries = new ArrayList&lt;&gt;();
+        for (AccountAmount line : lines) {
+            sums.merge(line.amount().currency(), line.amount().minor(), Math::addExact);
+            entries.add(new Entry(entries.size() + 1, line));
+        }
+        sums.forEach((currency, sum) -&gt; {
+            if (sum != 0) throw new IllegalArgumentException(currency + " 합이 0 이 아닙니다: " + sum);
+        });
+        return new Transaction(id, date, reverses, List.copyOf(entries));
+    }
+    TransactionId id() { return id; }
+    LocalDate date() { return date; }
+    Optional&lt;TransactionId&gt; reverses() { return Optional.ofNullable(reverses); }
+    // Entry 객체는 내보내지 않고 값(AccountAmount)의 수정 불가 목록만 내보낸다
+    List&lt;AccountAmount&gt; lines() { return entries.stream().map(e -&gt; e.line).toList(); }
+}
+
+// 도메인 이벤트: Entry 객체가 아니라 값만 담는다
+record TransactionPosted(long position, List&lt;AccountAmount&gt; lines) {
+    TransactionPosted { lines = List.copyOf(lines); }
+}
+
+// 읽기 모델(aggregate 아님): 전기 순번 lastAppliedSeq 까지 반영한 잔액(날짜와 무관). 이벤트가 순서대로 온다는 전제
+final class AccountBalance {
+    private final AccountId accountId;
+    private Money balance;
+    private long lastAppliedSeq = 0;
+    AccountBalance(AccountId accountId, String currency) { this.accountId = accountId; this.balance = Money.zero(currency); }
+    void apply(TransactionPosted event) {
+        if (event.position() &lt;= lastAppliedSeq) return; // 이미 반영한 이벤트는 건너뛴다
+        Money next = balance;
+        for (AccountAmount line : event.lines()) if (line.accountId().equals(accountId)) next = next.plus(line.amount());
+        balance = next; // 합을 다 구한 뒤에 잔액과 반영 위치를 함께 바꾼다
+        lastAppliedSeq = event.position();
+    }
+    Money balance() { return balance; }
+}
+
+// 저장소(Repository)와 전기 서비스(도메인 서비스)를 메모리에서 흉내 낸 것
+final class GeneralLedger {
+    private final Map&lt;AccountId, Account&gt; accounts = new HashMap&lt;&gt;();
+    private final List&lt;Transaction&gt; transactions = new ArrayList&lt;&gt;();
+    private final List&lt;TransactionPosted&gt; events = new ArrayList&lt;&gt;();
+    private final Map&lt;AccountId, AccountBalance&gt; balances = new HashMap&lt;&gt;();
+    void add(Account account) {
+        if (accounts.putIfAbsent(account.id(), account) != null) throw new IllegalArgumentException("이미 있는 계정입니다");
+    }
+    void closeAccount(AccountId id) { account(id).close(); }
+    Account account(AccountId id) {
+        Account account = accounts.get(id);
+        if (account == null) throw new IllegalArgumentException("없는 계정입니다: " + id.value());
+        return account;
+    }
+    Transaction transaction(TransactionId id) {
+        for (Transaction t : transactions) if (t.id().equals(id)) return t;
+        throw new IllegalArgumentException("없는 거래입니다: " + id.value());
+    }
+    void post(Transaction tx) {
+        for (Transaction t : transactions) if (t.id().equals(tx.id())) throw new IllegalArgumentException("이미 있는 거래 id 입니다");
+        for (AccountAmount line : tx.lines()) account(line.accountId()).checkPostable(line.amount()); // 저장 전에, 동기로
+        transactions.add(tx);
+        events.add(new TransactionPosted(events.size() + 1, tx.lines()));
+    }
+
+    // 단순한 배달자: 전달 위치를 기억하지 않아 이미 보낸 이벤트도 다시 보낸다. 이벤트 하나를 계정마다 한 번씩 전한다
+    void deliverEvents() {
+        for (TransactionPosted event : events) {
+            Map&lt;AccountId, String&gt; touched = new LinkedHashMap&lt;&gt;();
+            for (AccountAmount line : event.lines()) touched.putIfAbsent(line.accountId(), line.amount().currency());
+            touched.forEach((id, currency) -&gt; balances.computeIfAbsent(id, k -&gt; new AccountBalance(k, currency)).apply(event));
+        }
+    }
+    // 읽기 모델은 원천이 아니므로 버리고 이벤트에서 다시 만들 수 있다
+    void rebuildBalance(AccountId id) {
+        balances.remove(id);
+        deliverEvents();
+    }
+    Money balance(AccountId id) {
+        AccountBalance b = balances.get(id);
+        return b != null ? b.balance() : Money.zero(account(id).currency());
+    }
+
+    // 정의 그대로: date 까지의 Entry 중 이 계정에 속한 것의 합
+    Money balanceAsOf(AccountId id, LocalDate date) {
+        Money sum = Money.zero(account(id).currency());
+        for (Transaction tx : transactions) {
+            if (tx.date().isAfter(date)) continue;
+            for (AccountAmount line : tx.lines()) if (line.accountId().equals(id)) sum = sum.plus(line.amount());
+        }
+        return sum;
+    }
+}
+
+public class AccountExample {
+    static final String KRW = "KRW";
+    static AccountAmount line(AccountId id, long minor) { return new AccountAmount(id, new Money(minor, KRW)); }
+    static String rejection(Runnable action) {
+        try { action.run(); return "통과(예상과 다름)"; } catch (RuntimeException e) { return e.getMessage(); }
+    }
+    public static void main(String[] args) {
+        GeneralLedger ledger = new GeneralLedger();
+        AccountId cash = new AccountId("1010"), suspense = new AccountId("2990");
+        AccountId sales = new AccountId("4010"), rent = new AccountId("5010");
+        ledger.add(new Account(cash, "현금", new AccountTypeId("자산"), KRW));
+        ledger.add(new Account(suspense, "가수금", new AccountTypeId("부채"), KRW));
+        ledger.add(new Account(sales, "매출", new AccountTypeId("수익"), KRW));
+        ledger.add(new Account(rent, "임대료", new AccountTypeId("비용"), KRW));
+        LocalDate apr1 = LocalDate.of(2026, 4, 1), apr5 = LocalDate.of(2026, 4, 5), apr6 = LocalDate.of(2026, 4, 6);
+
+        ledger.post(Transaction.create(new TransactionId("T1"), apr1, List.of(line(cash, 100_000), line(sales, -100_000))));
+        System.out.println("T1 전기 직후 현금: 읽기 모델 " + ledger.balance(cash) + " / Entry 합 " + ledger.balanceAsOf(cash, apr1));
+        ledger.deliverEvents();
+        System.out.println("이벤트 전달 후 현금: 읽기 모델 " + ledger.balance(cash));
+
+        ledger.post(Transaction.create(new TransactionId("T2"), apr5, List.of(line(rent, 30_000), line(cash, -30_000))));
+        Transaction t3 = ledger.transaction(new TransactionId("T2")).reverse(new TransactionId("T3"), apr6);
+        ledger.post(t3);
+        ledger.post(Transaction.create(new TransactionId("T4"), apr6, List.of(line(rent, 25_000), line(cash, -25_000))));
+        ledger.deliverEvents();
+
+        System.out.println("T3 이 되돌리는 거래: " + t3.reverses().map(TransactionId::value).orElse("없음"));
+        System.out.println("현금 4/5 기준 Entry 합: " + ledger.balanceAsOf(cash, apr5));
+        System.out.println("현금 4/6 기준 Entry 합: " + ledger.balanceAsOf(cash, apr6));
+        boolean same = ledger.balance(cash).equals(ledger.balanceAsOf(cash, apr6));
+        System.out.println("현금 읽기 모델: " + ledger.balance(cash) + " (Entry 합과 같음: " + same + ")");
+        Account salesAccount = ledger.account(sales);
+        System.out.println(salesAccount.name() + "(" + salesAccount.accountTypeId().value() + ") 읽기 모델: " + ledger.balance(sales));
+
+        ledger.closeAccount(suspense);
+        System.out.println("거절(불균형): " + rejection(() -&gt; Transaction.create(new TransactionId("T5"), apr6, List.of(line(cash, 100_000), line(sales, -90_000)))));
+        System.out.println("거절(닫힌 계정): " + rejection(() -&gt; ledger.post(Transaction.create(new TransactionId("T6"), apr6, List.of(line(cash, 50_000), line(suspense, -50_000))))));
+        ledger.rebuildBalance(cash);
+        System.out.println("현금 읽기 모델을 이벤트로 다시 만든 값: " + ledger.balance(cash));
+    }
+}</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="account-guide-v1-0-0-tabs1-panel-typescript" aria-labelledby="account-guide-v1-0-0-tabs1-tab-typescript">
+<p class="code-tabs__label" aria-hidden="true">TypeScript</p>
+<pre tabindex="0"><code class="language-typescript">type AccountId = string &amp; { readonly __brand: "AccountId" };
+type AccountTypeId = string &amp; { readonly __brand: "AccountTypeId" };
+type TransactionId = string &amp; { readonly __brand: "TransactionId" };
+
+// VO: 식별자 없이 값으로 같음을 판단. 금액은 정수 최소 단위(KRW 는 원)
+class Money {
+  constructor(readonly minor: number, readonly currency: string) {
+    if (!Number.isSafeInteger(minor)) throw new Error(`금액이 안전한 정수 범위를 벗어났습니다: ${minor}`);
+    Object.freeze(this);
+  }
+  static zero(currency: string): Money { return new Money(0, currency); }
+  plus(other: Money): Money {
+    if (this.currency !== other.currency) throw new Error("통화가 다른 금액은 더할 수 없습니다");
+    return new Money(this.minor + other.minor, this.currency);
+  }
+  negate(): Money { return new Money(-this.minor, this.currency); }
+  equals(other: Money): boolean { return this.minor === other.minor &amp;&amp; this.currency === other.currency; }
+  toString(): string { return `${this.minor} ${this.currency}`; }
+}
+
+// VO: 계정 id 와 금액 한 쌍 — 거래를 만들 때의 입력이자 이벤트에 담는 값
+class AccountAmount {
+  constructor(readonly accountId: AccountId, readonly amount: Money) { Object.freeze(this); }
+  equals(other: AccountAmount): boolean { return this.accountId === other.accountId &amp;&amp; this.amount.equals(other.amount); }
+}
+
+// aggregate root: Entry 목록도 잔액 필드도 없다
+class Account {
+  private closed = false;
+  constructor(
+    readonly id: AccountId,
+    readonly name: string,
+    readonly accountTypeId: AccountTypeId,
+    readonly currency: string,
+  ) {}
+  close(): void { this.closed = true; }
+
+  // 이 계정이 이 금액의 Entry 를 받을 수 있는가 — 열림/닫힘과 통화는 Account 만 안다
+  checkPostable(amount: Money): void {
+    if (this.closed) throw new Error(`${this.name} 계정은 닫혀 있습니다`);
+    if (this.currency !== amount.currency) throw new Error(`${this.name} 계정의 통화는 ${this.currency} 입니다`);
+  }
+}
+
+// Transaction 안의 불변 child entity: 같은 거래 안에서만 seq 로 비교한다(값이 같아도 seq 가 다르면 다른 사실)
+class Entry {
+  constructor(readonly seq: number, readonly line: AccountAmount) { Object.freeze(this); }
+  sameAs(other: Entry): boolean { return this.seq === other.seq; }
+}
+
+// aggregate root: 만들 때 균형을 검사하고, 만든 뒤에는 바꾸는 메서드가 없다
+class Transaction {
+  private constructor(
+    readonly id: TransactionId,
+    readonly date: string, // YYYY-MM-DD 형식을 전제로 문자열 비교가 날짜 순서와 같다
+    readonly reverses: TransactionId | undefined,
+    private readonly entries: readonly Entry[],
+  ) {
+    Object.freeze(this);
+  }
+  static create(id: TransactionId, date: string, lines: readonly AccountAmount[]): Transaction {
+    return Transaction.build(id, date, undefined, lines);
+  }
+
+  // 역분개: 원 거래를 고치지 않고, 부호를 뒤집은 거래를 새로 만든다
+  reverse(newId: TransactionId, newDate: string): Transaction {
+    const negated = this.entries.map((e) =&gt; new AccountAmount(e.line.accountId, e.line.amount.negate()));
+    return Transaction.build(newId, newDate, this.id, negated);
+  }
+  private static build(id: TransactionId, date: string, reverses: TransactionId | undefined, lines: readonly AccountAmount[]): Transaction {
+    if (lines.length &lt; 2) throw new Error("Entry 는 2개 이상이어야 합니다");
+    const sums = new Map&lt;string, Money&gt;();
+    const entries = lines.map((line, i) =&gt; {
+      const currency = line.amount.currency;
+      sums.set(currency, (sums.get(currency) ?? Money.zero(currency)).plus(line.amount));
+      return new Entry(i + 1, line);
+    });
+    for (const sum of sums.values()) {
+      if (sum.minor !== 0) throw new Error(`${sum.currency} 합이 0 이 아닙니다: ${sum.minor}`);
+    }
+    return new Transaction(id, date, reverses, Object.freeze(entries));
+  }
+
+  // Entry 객체는 내보내지 않고 값(AccountAmount)의 읽기 전용 목록만 내보낸다
+  lines(): readonly AccountAmount[] { return this.entries.map((e) =&gt; e.line); }
+}
+
+// 도메인 이벤트: Entry 객체가 아니라 값만 담는다
+interface TransactionPosted {
+  readonly position: number;
+  readonly lines: readonly AccountAmount[];
+}
+
+// 읽기 모델(aggregate 아님): 전기 순번 lastAppliedSeq 까지 반영한 잔액(날짜와 무관). 이벤트가 순서대로 온다는 전제
+class AccountBalance {
+  private lastAppliedSeq = 0;
+  constructor(readonly accountId: AccountId, private current: Money) {}
+  apply(event: TransactionPosted): void {
+    if (event.position &lt;= this.lastAppliedSeq) return; // 이미 반영한 이벤트는 건너뛴다
+    let next = this.current;
+    for (const line of event.lines) if (line.accountId === this.accountId) next = next.plus(line.amount);
+    this.current = next; // 합을 다 구한 뒤에 잔액과 반영 위치를 함께 바꾼다
+    this.lastAppliedSeq = event.position;
+  }
+  get balance(): Money { return this.current; }
+}
+
+// 저장소(Repository)와 전기 서비스(도메인 서비스)를 메모리에서 흉내 낸 것
+class GeneralLedger {
+  private readonly accounts = new Map&lt;AccountId, Account&gt;();
+  private readonly transactions: Transaction[] = [];
+  private readonly events: TransactionPosted[] = [];
+  private readonly balances = new Map&lt;AccountId, AccountBalance&gt;();
+  add(account: Account): void {
+    if (this.accounts.has(account.id)) throw new Error("이미 있는 계정입니다");
+    this.accounts.set(account.id, account);
+  }
+  closeAccount(id: AccountId): void { this.account(id).close(); }
+  account(id: AccountId): Account {
+    const account = this.accounts.get(id);
+    if (account === undefined) throw new Error(`없는 계정입니다: ${id}`);
+    return account;
+  }
+  transaction(id: TransactionId): Transaction {
+    const tx = this.transactions.find((t) =&gt; t.id === id);
+    if (tx === undefined) throw new Error(`없는 거래입니다: ${id}`);
+    return tx;
+  }
+  post(tx: Transaction): void {
+    if (this.transactions.some((t) =&gt; t.id === tx.id)) throw new Error("이미 있는 거래 id 입니다");
+    for (const line of tx.lines()) this.account(line.accountId).checkPostable(line.amount); // 저장 전에, 동기로
+    this.transactions.push(tx);
+    this.events.push(Object.freeze({ position: this.events.length + 1, lines: Object.freeze([...tx.lines()]) }));
+  }
+
+  // 단순한 배달자: 전달 위치를 기억하지 않아 이미 보낸 이벤트도 다시 보낸다. 이벤트 하나를 계정마다 한 번씩 전한다
+  deliverEvents(): void {
+    for (const event of this.events) {
+      const touched = new Map&lt;AccountId, string&gt;();
+      for (const line of event.lines) if (!touched.has(line.accountId)) touched.set(line.accountId, line.amount.currency);
+      for (const [id, currency] of touched) {
+        const b = this.balances.get(id) ?? new AccountBalance(id, Money.zero(currency));
+        this.balances.set(id, b);
+        b.apply(event);
+      }
+    }
+  }
+  // 읽기 모델은 원천이 아니므로 버리고 이벤트에서 다시 만들 수 있다
+  rebuildBalance(id: AccountId): void {
+    this.balances.delete(id);
+    this.deliverEvents();
+  }
+  balance(id: AccountId): Money {
+    return this.balances.get(id)?.balance ?? Money.zero(this.account(id).currency);
+  }
+
+  // 정의 그대로: date 까지의 Entry 중 이 계정에 속한 것의 합
+  balanceAsOf(id: AccountId, date: string): Money {
+    let sum = Money.zero(this.account(id).currency);
+    for (const tx of this.transactions) {
+      if (tx.date &gt; date) continue;
+      for (const line of tx.lines()) if (line.accountId === id) sum = sum.plus(line.amount);
+    }
+    return sum;
+  }
+}
+
+const KRW = "KRW";
+const line = (accountId: AccountId, minor: number): AccountAmount =&gt; new AccountAmount(accountId, new Money(minor, KRW));
+const tid = (value: string) =&gt; value as TransactionId;
+
+function rejection(action: () =&gt; unknown): string {
+  try { action(); return "통과(예상과 다름)"; } catch (e) { return e instanceof Error ? e.message : String(e); }
+}
+
+function main(): void {
+  const ledger = new GeneralLedger();
+  const cash = "1010" as AccountId, suspense = "2990" as AccountId;
+  const sales = "4010" as AccountId, rent = "5010" as AccountId;
+  ledger.add(new Account(cash, "현금", "자산" as AccountTypeId, KRW));
+  ledger.add(new Account(suspense, "가수금", "부채" as AccountTypeId, KRW));
+  ledger.add(new Account(sales, "매출", "수익" as AccountTypeId, KRW));
+  ledger.add(new Account(rent, "임대료", "비용" as AccountTypeId, KRW));
+
+  ledger.post(Transaction.create(tid("T1"), "2026-04-01", [line(cash, 100_000), line(sales, -100_000)]));
+  console.log(`T1 전기 직후 현금: 읽기 모델 ${ledger.balance(cash)} / Entry 합 ${ledger.balanceAsOf(cash, "2026-04-01")}`);
+  ledger.deliverEvents();
+  console.log(`이벤트 전달 후 현금: 읽기 모델 ${ledger.balance(cash)}`);
+
+  ledger.post(Transaction.create(tid("T2"), "2026-04-05", [line(rent, 30_000), line(cash, -30_000)]));
+  const t3 = ledger.transaction(tid("T2")).reverse(tid("T3"), "2026-04-06");
+  ledger.post(t3);
+  ledger.post(Transaction.create(tid("T4"), "2026-04-06", [line(rent, 25_000), line(cash, -25_000)]));
+  ledger.deliverEvents();
+
+  console.log(`T3 이 되돌리는 거래: ${t3.reverses ?? "없음"}`);
+  console.log(`현금 4/5 기준 Entry 합: ${ledger.balanceAsOf(cash, "2026-04-05")}`);
+  console.log(`현금 4/6 기준 Entry 합: ${ledger.balanceAsOf(cash, "2026-04-06")}`);
+  const same = ledger.balance(cash).equals(ledger.balanceAsOf(cash, "2026-04-06"));
+  console.log(`현금 읽기 모델: ${ledger.balance(cash)} (Entry 합과 같음: ${same})`);
+  const salesAccount = ledger.account(sales);
+  console.log(`${salesAccount.name}(${salesAccount.accountTypeId}) 읽기 모델: ${ledger.balance(sales)}`);
+
+  ledger.closeAccount(suspense);
+  console.log(`거절(불균형): ${rejection(() =&gt; Transaction.create(tid("T5"), "2026-04-06", [line(cash, 100_000), line(sales, -90_000)]))}`);
+  console.log(`거절(닫힌 계정): ${rejection(() =&gt; ledger.post(Transaction.create(tid("T6"), "2026-04-06", [line(cash, 50_000), line(suspense, -50_000)])))}`);
+  ledger.rebuildBalance(cash);
+  console.log(`현금 읽기 모델을 이벤트로 다시 만든 값: ${ledger.balance(cash)}`);
+}
+
+main();</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="account-guide-v1-0-0-tabs1-panel-rust" aria-labelledby="account-guide-v1-0-0-tabs1-tab-rust">
+<p class="code-tabs__label" aria-hidden="true">Rust</p>
+<pre tabindex="0"><code class="language-rust">mod ledger {
+    use std::collections::{BTreeMap, HashMap};
+    use std::fmt;
+
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    pub struct AccountId(pub &amp;'static str);
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    pub struct AccountTypeId(pub &amp;'static str);
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    pub struct TransactionId(pub &amp;'static str);
+
+    // VO: 식별자 없이 값으로 같음을 판단. 금액은 정수 최소 단위(KRW 는 원)
+    #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+    pub struct Money { minor: i64, currency: &amp;'static str }
+
+    impl Money {
+        pub fn new(minor: i64, currency: &amp;'static str) -&gt; Money { Money { minor, currency } }
+        pub fn plus(self, other: Money) -&gt; Result&lt;Money, String&gt; {
+            if self.currency != other.currency { return Err("통화가 다른 금액은 더할 수 없습니다".into()); }
+            Ok(Money::new(self.minor.checked_add(other.minor).ok_or("금액 오버플로")?, self.currency))
+        }
+        pub fn negate(self) -&gt; Result&lt;Money, String&gt; {
+            Ok(Money::new(self.minor.checked_neg().ok_or("금액 오버플로")?, self.currency))
+        }
+    }
+
+    impl fmt::Display for Money {
+        fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result { write!(f, "{} {}", self.minor, self.currency) }
+    }
+
+    // VO: 계정 id 와 금액 한 쌍 — 거래를 만들 때의 입력이자 이벤트에 담는 값
+    #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+    pub struct AccountAmount { pub account_id: AccountId, pub amount: Money }
+
+    // aggregate root: Entry 목록도 잔액 필드도 없다
+    pub struct Account {
+        id: AccountId,
+        name: &amp;'static str,
+        account_type_id: AccountTypeId,
+        currency: &amp;'static str,
+        closed: bool,
+    }
+
+    impl Account {
+        pub fn new(id: AccountId, name: &amp;'static str, account_type_id: AccountTypeId, currency: &amp;'static str) -&gt; Account {
+            Account { id, name, account_type_id, currency, closed: false }
+        }
+        pub fn close(&amp;mut self) { self.closed = true; }
+        // 이 계정이 이 금액의 Entry 를 받을 수 있는가 — 열림/닫힘과 통화는 Account 만 안다
+        pub fn check_postable(&amp;self, amount: Money) -&gt; Result&lt;(), String&gt; {
+            if self.closed { return Err(format!("{} 계정은 닫혀 있습니다", self.name)); }
+            if self.currency != amount.currency { return Err(format!("{} 계정의 통화는 {} 입니다", self.name, self.currency)); }
+            Ok(())
+        }
+        pub fn name(&amp;self) -&gt; &amp;'static str { self.name }
+        pub fn account_type_id(&amp;self) -&gt; AccountTypeId { self.account_type_id }
+    }
+
+    // Transaction 안의 불변 child entity: 같은 거래 안에서만 seq 로 비교한다(값이 같아도 seq 가 다르면 다른 사실)
+    struct Entry { seq: u32, line: AccountAmount }
+    impl PartialEq for Entry {
+        fn eq(&amp;self, other: &amp;Entry) -&gt; bool { self.seq == other.seq }
+    }
+
+    // aggregate root: 만들 때 균형을 검사하고, 만든 뒤에는 바꾸는 메서드가 없다
+    pub struct Transaction {
+        id: TransactionId,
+        date: &amp;'static str, // YYYY-MM-DD 형식을 전제로 문자열 비교가 날짜 순서와 같다
+        reverses: Option&lt;TransactionId&gt;,
+        entries: Vec&lt;Entry&gt;,
+    }
+
+    impl Transaction {
+        pub fn create(id: TransactionId, date: &amp;'static str, lines: &amp;[AccountAmount]) -&gt; Result&lt;Transaction, String&gt; {
+            Transaction::build(id, date, None, lines)
+        }
+
+        // 역분개: 원 거래를 고치지 않고, 부호를 뒤집은 거래를 새로 만든다
+        pub fn reverse(&amp;self, new_id: TransactionId, new_date: &amp;'static str) -&gt; Result&lt;Transaction, String&gt; {
+            let mut negated = Vec::new();
+            for e in &amp;self.entries {
+                negated.push(AccountAmount { account_id: e.line.account_id, amount: e.line.amount.negate()? });
+            }
+            Transaction::build(new_id, new_date, Some(self.id), &amp;negated)
+        }
+        fn build(id: TransactionId, date: &amp;'static str, reverses: Option&lt;TransactionId&gt;, lines: &amp;[AccountAmount]) -&gt; Result&lt;Transaction, String&gt; {
+            if lines.len() &lt; 2 { return Err("Entry 는 2개 이상이어야 합니다".into()); }
+            let mut sums: BTreeMap&lt;&amp;'static str, i64&gt; = BTreeMap::new();
+            let mut entries = Vec::new();
+            for (i, line) in lines.iter().enumerate() {
+                let sum = sums.entry(line.amount.currency).or_insert(0);
+                *sum = sum.checked_add(line.amount.minor).ok_or("금액 오버플로")?;
+                entries.push(Entry { seq: i as u32 + 1, line: *line });
+            }
+            for (currency, sum) in &amp;sums {
+                if *sum != 0 { return Err(format!("{} 합이 0 이 아닙니다: {}", currency, sum)); }
+            }
+            Ok(Transaction { id, date, reverses, entries })
+        }
+        pub fn reverses(&amp;self) -&gt; Option&lt;TransactionId&gt; { self.reverses }
+        // Entry 는 내보내지 않고 값(AccountAmount)의 사본만 내보낸다
+        pub fn lines(&amp;self) -&gt; Vec&lt;AccountAmount&gt; { self.entries.iter().map(|e| e.line).collect() }
+    }
+
+    // 도메인 이벤트: Entry 객체가 아니라 값만 담는다
+    pub struct TransactionPosted { position: u64, lines: Vec&lt;AccountAmount&gt; }
+
+    // 읽기 모델(aggregate 아님): 전기 순번 last_applied_seq 까지 반영한 잔액(날짜와 무관). 이벤트가 순서대로 온다는 전제
+    pub struct AccountBalance { account_id: AccountId, balance: Money, last_applied_seq: u64 }
+
+    impl AccountBalance {
+        fn apply(&amp;mut self, event: &amp;TransactionPosted) -&gt; Result&lt;(), String&gt; {
+            if event.position &lt;= self.last_applied_seq { return Ok(()); } // 이미 반영한 이벤트는 건너뛴다
+            let mut next = self.balance;
+            for line in event.lines.iter().filter(|l| l.account_id == self.account_id) {
+                next = next.plus(line.amount)?;
+            }
+            self.balance = next; // 합을 다 구한 뒤에 잔액과 반영 위치를 함께 바꾼다
+            self.last_applied_seq = event.position;
+            Ok(())
+        }
+    }
+
+    // 저장소(Repository)와 전기 서비스(도메인 서비스)를 메모리에서 흉내 낸 것
+    #[derive(Default)]
+    pub struct GeneralLedger {
+        accounts: HashMap&lt;AccountId, Account&gt;,
+        transactions: Vec&lt;Transaction&gt;,
+        events: Vec&lt;TransactionPosted&gt;,
+        balances: HashMap&lt;AccountId, AccountBalance&gt;,
+    }
+
+    impl GeneralLedger {
+        pub fn add(&amp;mut self, account: Account) -&gt; Result&lt;(), String&gt; {
+            if self.accounts.contains_key(&amp;account.id) { return Err("이미 있는 계정입니다".into()); }
+            self.accounts.insert(account.id, account);
+            Ok(())
+        }
+        pub fn account(&amp;self, id: AccountId) -&gt; Result&lt;&amp;Account, String&gt; {
+            self.accounts.get(&amp;id).ok_or(format!("없는 계정입니다: {}", id.0))
+        }
+        pub fn close_account(&amp;mut self, id: AccountId) -&gt; Result&lt;(), String&gt; {
+            self.accounts.get_mut(&amp;id).ok_or(format!("없는 계정입니다: {}", id.0))?.close();
+            Ok(())
+        }
+        pub fn transaction(&amp;self, id: TransactionId) -&gt; Result&lt;&amp;Transaction, String&gt; {
+            self.transactions.iter().find(|t| t.id == id).ok_or(format!("없는 거래입니다: {}", id.0))
+        }
+        pub fn post(&amp;mut self, tx: Transaction) -&gt; Result&lt;(), String&gt; {
+            if self.transactions.iter().any(|t| t.id == tx.id) { return Err("이미 있는 거래 id 입니다".into()); }
+            for line in tx.lines() { self.account(line.account_id)?.check_postable(line.amount)?; } // 저장 전에, 동기로
+            let lines = tx.lines();
+            self.transactions.push(tx);
+            self.events.push(TransactionPosted { position: self.events.len() as u64 + 1, lines });
+            Ok(())
+        }
+
+        // 단순한 배달자: 전달 위치를 기억하지 않아 이미 보낸 이벤트도 다시 보낸다
+        pub fn deliver_events(&amp;mut self) -&gt; Result&lt;(), String&gt; {
+            for event in &amp;self.events {
+                let mut touched: Vec&lt;(AccountId, &amp;'static str)&gt; = Vec::new();
+                for line in &amp;event.lines {
+                    if !touched.iter().any(|(id, _)| *id == line.account_id) { touched.push((line.account_id, line.amount.currency)); }
+                }
+                for (id, currency) in touched {
+                    let b = self.balances.entry(id).or_insert(AccountBalance { account_id: id, balance: Money::new(0, currency), last_applied_seq: 0 });
+                    b.apply(event)?;
+                }
+            }
+            Ok(())
+        }
+        // 읽기 모델은 원천이 아니므로 버리고 이벤트에서 다시 만들 수 있다
+        pub fn rebuild_balance(&amp;mut self, id: AccountId) -&gt; Result&lt;(), String&gt; {
+            self.balances.remove(&amp;id);
+            self.deliver_events()
+        }
+        pub fn balance(&amp;self, id: AccountId) -&gt; Result&lt;Money, String&gt; {
+            match self.balances.get(&amp;id) {
+                Some(b) =&gt; Ok(b.balance),
+                None =&gt; Ok(Money::new(0, self.account(id)?.currency)),
+            }
+        }
+
+        // 정의 그대로: date 까지의 Entry 중 이 계정에 속한 것의 합
+        pub fn balance_as_of(&amp;self, id: AccountId, date: &amp;str) -&gt; Result&lt;Money, String&gt; {
+            let mut sum = Money::new(0, self.account(id)?.currency);
+            for tx in self.transactions.iter().filter(|t| t.date &lt;= date) {
+                for line in tx.lines().iter().filter(|l| l.account_id == id) {
+                    sum = sum.plus(line.amount)?;
+                }
+            }
+            Ok(sum)
+        }
+    }
+}
+
+use ledger::{Account, AccountAmount, AccountId, AccountTypeId, GeneralLedger, Money, Transaction, TransactionId};
+
+const KRW: &amp;str = "KRW";
+
+fn line(account_id: AccountId, minor: i64) -&gt; AccountAmount {
+    AccountAmount { account_id, amount: Money::new(minor, KRW) }
+}
+
+fn main() -&gt; Result&lt;(), String&gt; {
+    let mut ledger = GeneralLedger::default();
+    let (cash, suspense, sales, rent) = (AccountId("1010"), AccountId("2990"), AccountId("4010"), AccountId("5010"));
+    ledger.add(Account::new(cash, "현금", AccountTypeId("자산"), KRW))?;
+    ledger.add(Account::new(suspense, "가수금", AccountTypeId("부채"), KRW))?;
+    ledger.add(Account::new(sales, "매출", AccountTypeId("수익"), KRW))?;
+    ledger.add(Account::new(rent, "임대료", AccountTypeId("비용"), KRW))?;
+
+    ledger.post(Transaction::create(TransactionId("T1"), "2026-04-01", &amp;[line(cash, 100_000), line(sales, -100_000)])?)?;
+    println!("T1 전기 직후 현금: 읽기 모델 {} / Entry 합 {}", ledger.balance(cash)?, ledger.balance_as_of(cash, "2026-04-01")?);
+    ledger.deliver_events()?;
+    println!("이벤트 전달 후 현금: 읽기 모델 {}", ledger.balance(cash)?);
+
+    ledger.post(Transaction::create(TransactionId("T2"), "2026-04-05", &amp;[line(rent, 30_000), line(cash, -30_000)])?)?;
+    let t3 = ledger.transaction(TransactionId("T2"))?.reverse(TransactionId("T3"), "2026-04-06")?;
+    let reversed = t3.reverses().map_or("없음", |id| id.0);
+    ledger.post(t3)?;
+    ledger.post(Transaction::create(TransactionId("T4"), "2026-04-06", &amp;[line(rent, 25_000), line(cash, -25_000)])?)?;
+    ledger.deliver_events()?;
+
+    println!("T3 이 되돌리는 거래: {}", reversed);
+    println!("현금 4/5 기준 Entry 합: {}", ledger.balance_as_of(cash, "2026-04-05")?);
+    println!("현금 4/6 기준 Entry 합: {}", ledger.balance_as_of(cash, "2026-04-06")?);
+    let same = ledger.balance(cash)? == ledger.balance_as_of(cash, "2026-04-06")?;
+    println!("현금 읽기 모델: {} (Entry 합과 같음: {})", ledger.balance(cash)?, same);
+    let sales_account = ledger.account(sales)?;
+    println!("{}({}) 읽기 모델: {}", sales_account.name(), sales_account.account_type_id().0, ledger.balance(sales)?);
+
+    ledger.close_account(suspense)?;
+    let unbalanced = Transaction::create(TransactionId("T5"), "2026-04-06", &amp;[line(cash, 100_000), line(sales, -90_000)]);
+    println!("거절(불균형): {}", unbalanced.err().unwrap_or_default());
+    let to_closed = Transaction::create(TransactionId("T6"), "2026-04-06", &amp;[line(cash, 50_000), line(suspense, -50_000)])?;
+    println!("거절(닫힌 계정): {}", ledger.post(to_closed).err().unwrap_or_default());
+    ledger.rebuild_balance(cash)?;
+    println!("현금 읽기 모델을 이벤트로 다시 만든 값: {}", ledger.balance(cash)?);
+    Ok(())
+}</code></pre>
+</div>
+</div>
+<p>세 언어 모두 같은 시나리오를 돌리고, 실행하면 아래 10줄을 똑같이 출력합니다(Java 21 · TypeScript 를 tsc 로 변환한 뒤 Node · Rust 2021 에서 실행해 확인).</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>출력</th><th>무엇을 보이는가</th></tr>
+</thead>
+<tbody>
+<tr><td><code>T1 전기 직후 현금: 읽기 모델 0 KRW / Entry 합 100000 KRW</code></td><td>조건 1 의 잔액은 Entry 합 100000 이고, 0 은 아직 반영 전인 계산해 둔 값 — 결과적 일관성</td></tr>
+<tr><td><code>이벤트 전달 후 현금: 읽기 모델 100000 KRW</code></td><td>이벤트를 받은 뒤 Entry 합과 같아짐</td></tr>
+<tr><td><code>T3 이 되돌리는 거래: T2</code></td><td>역분개는 원 거래를 <code>TransactionId</code> 로 가리키는 새 거래</td></tr>
+<tr><td><code>현금 4/5 기준 Entry 합: 70000 KRW</code></td><td>정정 뒤에도 4/5 잔액은 그대로</td></tr>
+<tr><td><code>현금 4/6 기준 Entry 합: 75000 KRW</code></td><td>동작 절차 6단계의 계산과 같음</td></tr>
+<tr><td><code>현금 읽기 모델: 75000 KRW (Entry 합과 같음: true)</code></td><td>표 ④ — 이벤트가 두 번 전달돼도 읽기 모델 = Entry 합</td></tr>
+<tr><td><code>매출(수익) 읽기 모델: -100000 KRW</code></td><td>수익 계정은 − 방향으로 늘어남, 계정 종류는 <code>AccountTypeId</code> 로만 앎</td></tr>
+<tr><td><code>거절(불균형): KRW 합이 0 이 아닙니다: 10000</code></td><td>표 ① — Factory <code>Transaction.create</code> 가 검사</td></tr>
+<tr><td><code>거절(닫힌 계정): 가수금 계정은 닫혀 있습니다</code></td><td>표 ③ — <code>closeAccount</code> 로 닫은 뒤, 전기 서비스가 저장 전에 부른 <code>checkPostable</code></td></tr>
+<tr><td><code>현금 읽기 모델을 이벤트로 다시 만든 값: 75000 KRW</code></td><td>읽기 모델은 원천이 아니라 버리고 다시 만들 수 있음 — 필드가 원천인 모델과 갈리는 곳</td></tr>
+</tbody>
+</table>
+</div>
+<p>여기서 가장 중요한 줄은 <code>Account</code> 의 선언부입니다. 세 언어의 필드를 좁혀 보면 어디에도 <code>Entry</code> 목록이나 잔액이 없어요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>언어</th><th><code>Account</code> 가 가진 것</th></tr>
+</thead>
+<tbody>
+<tr><td>Java</td><td><code>AccountId id</code> · <code>String name</code> · <code>AccountTypeId accountTypeId</code> · <code>String currency</code> · <code>boolean closed</code></td></tr>
+<tr><td>TypeScript</td><td><code>id: AccountId</code> · <code>name</code> · <code>accountTypeId: AccountTypeId</code> · <code>currency</code> · <code>private closed</code></td></tr>
+<tr><td>Rust</td><td><code>id: AccountId</code> · <code>name</code> · <code>account_type_id: AccountTypeId</code> · <code>currency</code> · <code>closed: bool</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>이 표가 상황 설정의 배정 칸이 코드에 드러나는 자리이고, Account 개념의 요약 책임(잔액에 답하기)은 <code>balanceAsOf</code>(Rust <code>balance_as_of</code>)와 <code>AccountBalance</code> 가 대신 수행합니다. 나머지 핵심 줄은 다섯 곳이에요.</p>
+<ul>
+<li><strong>합 0 검사</strong> — Java <code>sums.merge(...)</code> 와 <code>if (sum != 0)</code>, TypeScript <code>sums.set(currency, (...).plus(line.amount))</code> 와 <code>if (sum.minor !== 0)</code>, Rust <code>*sum = sum.checked_add(...)</code> 와 <code>if *sum != 0</code>. <code>create</code> 와 <code>reverse</code> 가 함께 쓰는 <code>build</code> 안에 있어서, 불균형 거래 객체는 아예 만들어지지 않습니다. 이 줄이 없으면 T5 가 만들어지고, 그대로 전기하면 현금에는 +100,000, 매출에는 −90,000 만 기록돼 합이 +10,000 인 거래가 원장에 남아요.</li>
+<li><strong>저장 전 계정 확인</strong> — <code>GeneralLedger.post</code> 의 <code>checkPostable</code> 반복문(Rust <code>self.account(line.account_id)?.check_postable(line.amount)?</code>). 이 줄을 저장 뒤로 옮기면 거절 메시지는 똑같이 나오지만 T6 이 이미 저장된 뒤라 닫힌 가수금 계정의 Entry 합이 −50,000 이 됩니다. T6 을 역분개하려 해도 그 거래가 같은 닫힌 계정을 가리키니 올바른 순서의 확인에서 거절돼요(두 경우 모두 코드를 바꿔 실행해 확인). 계정은 저장소의 <code>closeAccount</code>(Rust <code>close_account</code>)가 root 의 <code>close()</code> 를 부르는 길로만 닫히고, 저장된 Account 를 통째로 바꿔 끼우는 길은 열어 두지 않았어요.</li>
+<li><strong>이미 반영한 이벤트 건너뛰기</strong> — <code>AccountBalance.apply</code> 의 첫 줄, Java <code>if (event.position() &lt;= lastAppliedSeq) return;</code> · TypeScript <code>if (event.position &lt;= this.lastAppliedSeq) return;</code> · Rust <code>if event.position &lt;= self.last_applied_seq</code>. 예시의 배달자는 전달 위치를 기억하지 않아 이미 보낸 이벤트도 다시 보내는데, 이 줄 덕분에 같은 이벤트가 한 번만 더해집니다. 같은 메서드는 합을 <code>next</code> 에 먼저 모은 뒤 잔액과 반영 위치를 함께 바꿔서, 도중에 덧셈이 실패해도 절반만 반영된 채 위치가 남지 않아요. 배달자는 이벤트 하나를 계정마다 한 번만 전하므로, 한 거래에 같은 계정의 Entry 가 둘이어도 이 줄에 기대지 않습니다. 이 건너뛰기는 이벤트가 전기 순서대로 온다는 전제에서만 안전해요. T1·T2 만 전기하고 거꾸로 전달하도록 바꿔 실행하면 T2(2번)가 먼저 반영돼 T1(1번)이 건너뛰어지고, 현금 읽기 모델은 −30,000, Entry 합은 70,000 이 됩니다.</li>
+<li><strong>Entry 를 밖으로 내보내지 않기</strong> — <code>Transaction.lines()</code> 는 Entry 객체가 아니라 <code>AccountAmount</code> 값만 돌려줍니다(Java <code>toList()</code> 의 수정 불가 목록, TypeScript 는 얼린 값의 읽기 전용 배열이고 <code>Transaction</code> 자체도 <code>Object.freeze</code>, Rust 는 값 사본 <code>Vec&lt;AccountAmount&gt;</code>). <code>TransactionPosted</code> 도 이 값만 담고, 받은 목록을 복사하거나(Java compact 생성자의 <code>List.copyOf</code>) 얼려서(TypeScript <code>Object.freeze</code>) 보관하므로 root 바깥에서 child entity 를 붙잡는 곳이 없습니다. <code>AccountAmount</code> 는 VO 라 값으로 비교해요 — Java <code>record</code> 의 <code>equals</code>, TypeScript <code>equals</code> 메서드, Rust <code>#[derive(PartialEq, Eq)]</code>. 이 예제의 이벤트는 읽기 모델이 쓰는 전기 순번과 값만 담았고, 거래를 되짚는 소비자가 생기면 <code>TransactionId</code> 도 담아야 합니다.</li>
+<li><strong>읽기 모델 다시 만들기</strong> — <code>rebuildBalance</code>(Rust <code>rebuild_balance</code>)는 읽기 모델을 버리고 이벤트를 처음부터 다시 전달합니다. 마지막 출력의 75,000 이 그 결과이고, 원천이 Transaction 과 이벤트 쪽에 있기 때문에 가능한 작업이에요.</li>
+</ul>
+<p>표의 참조 칸은 필드 타입에서 확인할 수 있어요. <code>Entry</code> 의 값 <code>AccountAmount</code> 는 <code>AccountId</code> 를, <code>Transaction</code> 의 <code>reverses</code> 는 <code>TransactionId</code> 를 들고, 정정할 원 거래는 저장소 역할의 <code>ledger.transaction(...)</code> 이 id 로 찾아옵니다. 저장소는 같은 id 의 거래나 계정을 두 번 받지 않아서, 거래 id + <code>seq</code> 가 Entry 하나만 가리킨다는 식별 규칙도 지켜집니다. TypeScript 와 Rust 의 날짜는 <code>YYYY-MM-DD</code> 형식을 전제로 한 문자열 비교이고 형식 검사는 하지 않아요.</p>
+<h3 id="상황이-달라지면">상황이 달라지면</h3>
+<p>분석 모델에서 Entry 는 Account 와 Transaction 양쪽에 연관돼 있었어요. DDD 로 옮기면 한 Entry 를 두 root 가 함께 가질 수 없는데, 왜 안 되는지는 개요의 숫자로 확인할 수 있습니다.</p>
+<pre tabindex="0"><code class="language-text">T2 의 Entry #2 (현금 -30,000) 를 Transaction T2 와 Account 현금이 함께 가진다면
+
+  전기 T2 = T2 저장 + 현금 저장                       aggregate 둘을 한 번에
+  T2 저장 성공, 현금 저장 직전에 실패
+    거래 쪽 Entry 로 더한 현금(4/5)  = +100,000 - 30,000 =  70,000
+    계정 쪽 목록으로 더한 현금(4/5)  = +100,000          = 100,000
+    → 같은 Entry 가 한쪽에만 있어 두 합이 어긋나고, 어느 쪽이 맞는지 정한 규칙이 없음
+  같은 시각 T4 도 현금에 전기          → 현금 aggregate 하나를 두 요청이 동시에 고침</code></pre>
+<p>그래서 한쪽을 골라야 하고, 무엇을 고를지는 한 트랜잭션에서 함께 지켜야 할 규칙이 어디 있느냐로 정해집니다. 아래 표의 네 가지 소속 가운데 이 가이드는 첫 행을 골랐어요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>상황</th><th>경계</th><th>이유</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>이 가이드</strong> — 복식부기 원장이라 거래마다 Entry 합 = 0 을 지켜야 하고, 잔액 조회는 조금 늦어도 됨</td><td>Entry 를 Transaction 이 가진다 — <code>Transaction</code> root 안의 불변 child entity. <code>Account</code> 는 Entry 도 잔액도 없는 별도 root, 잔액은 읽기 모델</td><td>균형은 한 거래 안 Entry 들 사이의 규칙이라 Transaction 한 경계에서 동기로 지킴. 전기 한 번이 aggregate 하나만 저장하므로 같은 계정의 잔액을 두고 두 전기가 경합하지 않음. 대가는 잔액 반영의 지연, 그리고 계정 닫기와 같은 순간의 전기는 막지 못함(확정안 I5 가 허용)</td></tr>
+<tr><td>거래 균형 규칙이 없는 단식 기록이고, 계정 단위 규칙이 그 계정의 Entry 전체에 걸리며, Entry 수가 작게 제한됨 (예: 사용 횟수가 정해진 선불권)</td><td>Entry 를 Account 가 가진다 — <code>Account</code> root 안의 child (원서 그림 6.1 과 eaaDev Account 코드가 그린 모양)</td><td>계정 단위 규칙을 한 경계에서 지킴. Entry 가 계속 쌓이는 원장에서는 aggregate 가 끝없이 커져(Vernon Part I) Entry 한 건을 더할 때도 큰 경계를 불러오고 잠그기 쉽고, 복식부기라면 거래 하나가 Account 둘을 함께 고쳐야 해서 지양 (<a href="../../consideration/Account%EC%99%80%20Entry%EC%9D%98%20%EA%B4%80%EA%B3%84%20%EC%84%A4%EA%B3%84.md">Account와 Entry의 관계 설계</a> 시나리오 1)</td></tr>
+<tr><td>거래 균형이 없는 단식 기록 (포인트 적립 내역, 활동 기록)이고 Entry 끼리 묶어 지킬 생성 규칙이 없음</td><td>Entry 가 홀로 존재한다 — Entry 가 자기 root (크기 1 aggregate), <code>AccountId</code> 로 계정을 가리킴</td><td>함께 지킬 규칙이 없으니 가장 작은 경계로 충분. 복식부기라면 균형 규칙이 여러 Entry aggregate 에 걸쳐 경계 밖으로 나가서, 여러 aggregate 를 원자적으로 묶는 장치 없이는 지킬 곳이 없음 (같은 문서 시나리오 2)</td></tr>
+<tr><td>잔액이 음수가 되면 안 된다는 규칙을 전기 순간에 지켜야 함</td><td>Entry 는 별도 entity 로 존재하고, Account 가 그에 대한 VO 를 가진다 — ④-a: Account 가 요약 VO(잔액·예약액)만 가짐</td><td>한도 검사에 필요한 것은 Entry 전체가 아니라 현재 잔액이라 요약 VO 로 충분. 대가는 전기 한 번에 Account 와 Transaction 두 aggregate 를 함께 고치는 것 — 트랜잭션 하나에서 aggregate 인스턴스 하나만 고친다는 Vernon 규칙의 예외로 받아들이거나, 잔액을 먼저 예약한 뒤 확정하는 두 단계로 나눔 (<a href="https://docs.tigerbeetle.com/reference/transfer/">TigerBeetle Transfer</a>의 pending → post/void)</td></tr>
+<tr><td>계정 안에서 최근 내역을 바로 보며 규칙을 검사하고 싶음 (예: 최근 N건 기준 한도)</td><td>Entry 는 별도 entity 로 존재하고, Account 가 그에 대한 VO 를 가진다 — ④-b: Account 가 Entry 내역을 투영한 VO 목록을 가짐</td><td>지양(확정안 8절). 투영이라는 점은 이 가이드의 읽기 모델과 같지만, Account 안에 두고 한도 규칙에 쓰면 늦어서는 안 되므로 전기마다 Transaction 과 Account 를 함께 고쳐야 함. 한쪽만 반영되면 위 도식처럼 두 합이 70,000 과 100,000 으로 어긋남. 최근 N건만 두면 목록 크기는 N 으로 묶이지만 이 동시 갱신 부담은 남음. <a href="../../consideration/account-transaction-entry-modeling.md">account-transaction-entry-modeling</a>의 <code>List&lt;AccountLedger&gt;</code> 가 이 형태이고, 그쪽은 건수 제한이 없음</td></tr>
+</tbody>
+</table>
+</div>
+<p>표의 이유 칸이 말하는 보장이 경계를 옮기면 어느 동작에서 빠지는지, 「상황 설정」 표의 불변식 네 개로 모두 따라가 볼게요. 여러 aggregate 를 한 저장으로 원자적으로 묶는 장치는 쓰지 않는다고 전제합니다(트랜잭션 하나에 aggregate 하나라는 Vernon 규칙). 그런 장치를 쓰면 부분 실패는 없어지지만 그 장치의 잠금과 비용이 대신 붙어요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>불변식</th><th>경계를 이렇게 바꾸면</th><th>이 동작에서</th><th>이렇게 깨지거나 막힘 (개요 숫자)</th></tr>
+</thead>
+<tbody>
+<tr><td>① 합 0 · Entry 2개 이상</td><td>Entry 가 홀로 존재</td><td>T2 전기 = Entry aggregate 두 건 저장</td><td>두 건을 함께 볼 root 가 없음. 임대료 +30,000 만 저장되고 멈추면 짝 없는 Entry 1건이 확정돼, 4/5 기준 임대료 30,000 · 현금 100,000 그대로</td></tr>
+<tr><td>①</td><td>Entry 를 Account 가 가짐</td><td>T2 전기 = 임대료 Account · 현금 Account 두 건 저장</td><td>위와 같은 부분 실패. 합 0 을 한 번에 검사할 root 가 없음</td></tr>
+<tr><td>① · ③</td><td>Account 와 Transaction 을 한 aggregate(원장 전체)로 합침</td><td>T2 전기와 가수금 닫기가 같은 순간에 옴</td><td>합 0 과 계정 열림은 한 경계에서 함께 지켜지지만, 서로 관계없는 두 요청이 같은 aggregate 를 고쳐 한쪽은 충돌 후 다시 시도. 모든 전기와 계정 변경이 한 줄로 늘어섬</td></tr>
+<tr><td>② 전기된 Entry 불변</td><td>Entry 가 홀로 존재</td><td>전기가 끝난 T2 에 속한다는 Entry 를 나중에 한 건 더 저장</td><td>각 Entry 는 스스로 바뀌지 않아도, T2 라는 묶음이 닫혔다는 것을 지킬 root 가 없어 막을 곳이 없음. 4/7 에 T2 소속 현금 −5,000 을 더하면 4/5 현금이 65,000 으로 바뀌고 T2 합은 −5,000. 역분개도 T2 의 다리를 조회로 모으므로 언제 모으느냐에 따라 다른 T3 이 만들어짐</td></tr>
+<tr><td>②</td><td>Entry 를 Account 가 가짐</td><td>Account 의 오래된 Entry 정리(합이 같은 한 건으로 바꿈, <a href="https://martinfowler.com/eaaDev/Account.html">eaaDev Account</a>)</td><td>현금이 4/5 이전 Entry 를 +70,000 한 건으로 정리하면 합은 그대로지만 T2 #2 가 사라져, T2 를 되돌릴 현금 다리를 찾을 수 없음. 전기된 Entry 가 남는다는 보장을 Transaction 이 할 수 없음</td></tr>
+<tr><td>③ 계정 존재 · 열림 · 통화</td><td>이 가이드 그대로</td><td><code>checkPostable</code> 통과 직후 다른 요청이 가수금을 닫음</td><td>닫힌 가수금에 전기가 확정될 수 있음. 확정안 I5 가 허용한 경합이고, 막으려면 아래 두 행이나 위 합친 행의 비용을 치러야 함</td></tr>
+<tr><td>③</td><td>Entry 를 Account 가 가짐</td><td>T2 전기</td><td>열림·통화 확인이 각 Account 안에서 Entry 추가와 함께 끝나 닫기와의 경합은 사라짐. 대가는 ① 둘째 행의 부분 실패이고, 이를 막으려고 두 계정을 한 저장으로 묶으면 T2 가 두 계정을 함께 잠가 같은 시각 현금을 쓰는 T4 가 기다림</td></tr>
+<tr><td>③</td><td>Entry 가 홀로 존재</td><td>T2 의 Entry 를 한 건씩 확인하고 저장</td><td>#1(임대료) 확인·저장 뒤 #2 확인 전에 현금이 닫히면 #2 만 거절돼, ③ 을 지키다가 ① 이 깨짐</td></tr>
+<tr><td>④ 잔액 = Entry 합</td><td>Account 가 요약 VO(잔액)를 가짐 (④-a)</td><td>T2 전기</td><td>잔액이 전기와 같은 순간 맞지만, 전기 한 번이 Transaction · 임대료 Account · 현금 Account 셋을 고쳐 원자적으로 묶거나 예약 두 단계를 거쳐야 함. T2 와 T4 가 현금 잔액 VO 를 두고 경합</td></tr>
+<tr><td>④</td><td>이 가이드 그대로</td><td>이벤트가 전기 순서와 다르게 도착</td><td>건너뛰기가 위치만 보고 판단해, 2번을 먼저 반영하면 1번은 영영 빠짐. T1 · T2 만 전기하고 거꾸로 전달하면 현금 읽기 모델 −30,000 · Entry 합 70,000 (코드를 바꿔 실행해 확인). 이벤트 순서 보장이 이 경계의 전제</td></tr>
+</tbody>
+</table>
+</div>
+<p>소속 표의 ④-a 행이 이 가이드와 가장 가까운 선택지예요. 원장에 잔액 하한 규칙이 들어오면 경계가 이렇게 바뀝니다.</p>
+<pre tabindex="0"><code class="language-text">Before — 이 가이드 (Entry 를 Transaction 이 가진다)
+  전기 1회  = Transaction 저장 1건
+  잔액      = AccountBalance 읽기 모델, 이벤트로 늦게 맞춰짐
+  잔액 하한 = 검사할 곳 없음
+
+After — ④-a (Account 가 요약 VO 를 가진다)
+  전기 1회  = Transaction 저장 + Account 의 잔액 VO 갱신 (aggregate 둘)
+  잔액      = Account 안, 전기와 같은 순간
+  잔액 하한 = Account root 가 전기 전에 검사</code></pre>
+<h3 id="실제-사례">실제 사례</h3>
+<ul>
+<li><strong>TigerBeetle</strong> — <a href="https://docs.tigerbeetle.com/reference/account/">Account</a> · <a href="https://docs.tigerbeetle.com/coding/data-modeling/">Data Modeling</a> 문서
+<ul>
+<li>Account ↔ TigerBeetle 의 account. 계정 필드는 만든 뒤 사용자가 바꿀 수 없고, <code>debits_pending</code> · <code>debits_posted</code> · <code>credits_pending</code> · <code>credits_posted</code> 네 누적값만 이체가 오갈 때 TigerBeetle 이 갱신합니다.</li>
+<li>잔액 ↔ <code>debits_posted</code> 와 <code>credits_posted</code> 의 차이. 합을 계정에 누적해 두는 형태라 「상황이 달라지면」의 ④-a 에 해당해요.</li>
+<li>잔액 하한 ↔ <code>flags.debits_must_not_exceed_credits</code>. <code>debits_pending + debits_posted + amount &gt; credits_posted</code> 가 되는 이체를 거절해, 하한을 전기 순간에 지킵니다.</li>
+</ul>
+</li>
+<li><strong>Apache OFBiz</strong> — <a href="https://github.com/apache/ofbiz-framework/blob/trunk/applications/datamodel/entitydef/accounting-entitymodel.xml">accounting-entitymodel.xml</a>
+<ul>
+<li>Account ↔ <code>GlAccount</code>. <code>glAccountId</code> 로 식별하고, <code>glAccountTypeId</code> 가 AccountType 에, <code>parentGlAccountId</code> 가 계정 계층에 해당합니다.</li>
+<li>Transaction ↔ <code>AcctgTrans</code>, Entry ↔ <code>AcctgTransEntry</code>. <code>AcctgTransEntry</code> 의 기본 키가 (<code>acctgTransId</code>, <code>acctgTransEntrySeqId</code>) 라서 Entry 가 거래 id + 순번으로 식별되고, <code>glAccountId</code> 로 계정을 가리켜요. 이 가이드의 첫 행과 식별·연관 구조가 같습니다. 수정 진입점이나 트랜잭션 경계까지 같은지는 데이터 모델만으로는 알 수 없어요.</li>
+<li>Money ↔ <code>amount</code> + <code>currencyUomId</code>. 방향은 부호가 아니라 <code>debitCreditFlag</code> 로 적는 점이 이 가이드와 다릅니다.</li>
+</ul>
+</li>
+<li><strong>hledger</strong> — <a href="https://hledger.org/hledger.html">hledger manual</a>
+<ul>
+<li>Transaction ↔ transaction, Entry ↔ posting, Account ↔ account. 매뉴얼은 "The posting amounts in a transaction must sum up to zero" 라고 적습니다.</li>
+<li>잔액 ↔ posting 금액을 더해 계산하는 계정 잔액. posting 금액 뒤에 <code>= EXPECTEDBALANCE</code> 꼴의 balance assertion 을 적으면 그 지점의 계정 잔액이 기대한 값인지 확인해요. 조건 1 의 합을 사람이 적어 둔 값과 대조하는 장치입니다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="스스로-점검하기">스스로 점검하기</h2>
+<p><strong>1. 경계 판정.</strong> 아래 포인트 지갑 모델이 Account 패턴인지 최소 조건 1~4 로 판정해 보세요.</p>
+<pre tabindex="0"><code class="language-java">class PointWallet {
+    private final String walletId;
+    private long points;                                    // 현재 포인트
+    private final List&lt;PointHistory&gt; history = new ArrayList&lt;&gt;();
+
+    void earn(long amount, String reason) {
+        points += amount;
+        history.add(new PointHistory(amount, reason, LocalDate.now()));
+    }
+
+    void cancelEarn(int index) {                            // 적립 취소: 내역을 지우고 포인트를 뺀다
+        points -= history.get(index).amount();
+        history.remove(index);
+    }
+}</code></pre>
+<blockquote>
+<p>풀이 — 조건 2 는 지갑 하나가 내역을 모으는 기준이라 충족하고, 조건 4 는 포인트라는 단위 하나만 쓰니 충족합니다. 조건 1 도 지금 시점만 보면 지켜져요. <code>earn</code> 과 <code>cancelEarn</code> 이 필드와 내역 합을 함께 움직이니까요. 갈리는 곳은 조건 3 입니다. <code>cancelEarn</code> 이 내역을 지워서 정정하므로, 취소 전 날짜의 포인트를 다시 계산하면 그때 보여 준 값과 달라져요. 그래서 이 가이드의 최소 조건으로는 Account 패턴이 아닙니다. 취소를 부호가 반대인 내역 추가로 바꾸면 조건 3 을 충족합니다.</p>
+</blockquote>
+<p><strong>2. 비교 판별.</strong> 요구가 두 가지 있습니다. 어느 쪽이 Account 이고 어느 쪽이 Temporal Property 인지, 구분 기준을 근거로 골라 보세요.</p>
+<ul>
+<li>(가) 급여 계좌의 월말 잔액을 보고하고, 이의가 들어오면 어느 입금이 문제였는지 찾아내는 일</li>
+<li>(나) 직원 등급이 날짜마다 무엇이었는지 조회하는 일</li>
+</ul>
+<blockquote>
+<p>풀이 — 구분 기준은 현재 값을 변화 기록의 합으로 얻는지, 시점마다 정해진 값을 찾아 돌려주는지입니다. (가)는 입금과 출금을 더해 잔액을 얻고 그 한 건 한 건을 되짚으니 Account 예요. (나)는 날짜가 든 기간의 등급을 찾아 돌려주면 되고, 등급은 변화를 더해서 얻는 값이 아니라 Temporal Property 입니다.</p>
+</blockquote>
+<p><strong>3. 책임 옮기기.</strong> 구현 예시에서 <code>AccountBalance.apply</code> 의 첫 줄(이미 반영한 이벤트 건너뛰기)을 지웠다고 해 봅시다. 시나리오를 그대로 돌리면 현금과 매출의 읽기 모델은 얼마가 되고, 현금의 대조 결과는 어떻게 바뀔까요? <code>deliverEvents</code> 가 두 번 호출된다는 점부터 따라가 보세요.</p>
+<pre tabindex="0"><code class="language-text">deliverEvents 1회차   보내는 이벤트: T1               현금 ?   매출 ?
+T2 · T3 · T4 전기
+deliverEvents 2회차   보내는 이벤트: T1 T2 T3 T4      현금 ?   매출 ?</code></pre>
+<blockquote>
+<p>풀이 — 첫 전달에서 T1 이 반영돼 현금은 100,000 입니다. 두 번째 전달은 T1~T4 를 모두 다시 보내는데 건너뛰는 줄이 없으니 T1 이 한 번 더 더해져요. 현금 = 100,000 + 100,000 − 30,000 + 30,000 − 25,000 = 175,000, 매출 = −100,000 − 100,000 = −200,000 이 됩니다. 출력의 대조는 <code>Entry 합과 같음: false</code> 로 바뀌어요(줄을 지운 코드로 실행해 확인). 조건 1 의 합(75,000)은 그대로인데 계산해 둔 값만 틀어졌으니, 고칠 쪽은 읽기 모델입니다. 실제로 마지막 줄처럼 현금 읽기 모델을 버리고 이벤트에서 다시 만들면, 새 읽기 모델은 이벤트를 한 번씩만 받으므로 75,000 으로 돌아와요.</p>
+</blockquote>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li>Martin Fowler, 『Analysis Patterns: Reusable Object Models』, Addison-Wesley, 1997 — Chapter 6 「Inventory and Accounting」 §6.1 Account, §6.2 Transactions. 절 단위 쪽은 확인하지 못했고 6장은 95쪽에서 시작합니다. 장·절 위치는 <a href="https://www.pearson.de/media/muster/toc/toc_9780134271439.pdf">Pearson 목차 PDF</a>로 확인. — 패턴 이름과 원전 위치</li>
+<li><a href="https://martinfowler.com/apsupp/apchap6.pdf">UML Diagrams for Chapter 6 (apchap6.pdf)</a> — 그림 6.1 (Account 1 — Entry 여럿, <code>balance = sum(entries.amount)</code>, Entry 의 <code>whenCharged</code> · <code>whenBooked</code>), 그림 6.2 · 6.3 (Transaction 쪽 <code>Sum(entries.amount) = 0</code>), 그림 6.20 · 6.28 (계정 종류와 분류). 개념 정의, 최소 조건 근거, 「상황이 달라지면」 도입의 근거</li>
+<li><a href="https://martinfowler.com/eaaDev/Account.html">Account (eaaDev)</a> — 의도문, 현재 값만이면 필드 · 현재와 과거 값만이면 Temporal Property, 잔액 캐시와 오래된 Entry 정리, 계정 통화 확인과 Money Bag, 돈 이외의 사용, "stretching the analogy a little too far"</li>
+<li><a href="https://martinfowler.com/eaaDev/AccountingEntry.html">Accounting Entry (eaaDev)</a> — Account 없이 쓰는 Entry, 확정 전 변경 허용과 확정 뒤 불변 (최소 조건 2 · 3)</li>
+<li><a href="https://martinfowler.com/eaaDev/AccountingNarrative.html">Patterns for Accounting (eaaDev)</a> — Account 와 Transaction 이 모두 선택, Account 와 Event Sourcing 의 관계 (개념 정의, 비교 표)</li>
+<li><a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property (eaaDev)</a> — 시점을 받아 그때 값을 돌려주는 속성 (사용 목적, 비교 표)</li>
+<li><a href="https://martinfowler.com/eaaDev/EventSourcing.html">Event Sourcing (eaaDev)</a> — 상태의 모든 변경을 이벤트 순서대로 저장 (비교 표)</li>
+<li><a href="http://jaoo.dk/jaoo1999/schedule/MartinFowlerAnalysisPatterns.pdf">Analysis Patterns 튜토리얼 슬라이드 (Fowler, JAOO 1999)</a> — "Money is a kind of quantity" (Money 정의)</li>
+<li><a href="../../research/accounting-context.md">회계 배경 확정안</a> — 상황 설정 표 네 칸, 「상황이 달라지면」의 Entry 소속 네 가지와 ④-a · ④-b 구분</li>
+<li><a href="../../consideration/Account%EC%99%80%20Entry%EC%9D%98%20%EA%B4%80%EA%B3%84%20%EC%84%A4%EA%B3%84.md">Account와 Entry의 관계 설계</a> — 시나리오 1 · 2 · 3, 요약 VO 하이브리드 (「상황이 달라지면」 둘째 · 셋째 · 넷째 행)</li>
+<li><a href="../../consideration/account-transaction-entry-modeling.md">account-transaction-entry-modeling</a> — <code>List&lt;AccountLedger&gt;</code> 모델 (「상황이 달라지면」 다섯째 행)</li>
+<li><a href="https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf">Domain-Driven Design Reference (Evans, 2015)</a> — Entity · Value Object · Aggregate · Factory · Repository · Domain Event 정의, 바깥은 root 만 참조 (상황 설정 용어 정의)</li>
+<li><a href="https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_1.pdf">Effective Aggregate Design Part I (Vernon)</a> — 작은 aggregate, 계속 커지는 컬렉션, 트랜잭션 하나에 aggregate 인스턴스 하나 (용어 정의, 「상황이 달라지면」 둘째 · 넷째 행)</li>
+<li><a href="https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf">Effective Aggregate Design Part II (Vernon)</a> — id 참조, 경계 밖 결과적 일관성 (용어 정의, 참조 칸, id 참조를 뒤집어 본 표)</li>
+<li><a href="https://docs.tigerbeetle.com/reference/account/">TigerBeetle: Account</a> · <a href="https://docs.tigerbeetle.com/coding/data-modeling/">Data Modeling</a> · <a href="https://docs.tigerbeetle.com/reference/transfer/">Transfer</a> — 불변 계정 필드, 네 누적값(<code>debits_pending</code> · <code>debits_posted</code> · <code>credits_pending</code> · <code>credits_posted</code>), 한도 flag, pending → post/void (실제 사례, ④-a)</li>
+<li><a href="https://github.com/apache/ofbiz-framework/blob/trunk/applications/datamodel/entitydef/accounting-entitymodel.xml">OFBiz accounting-entitymodel.xml</a> — <code>GlAccount</code> · <code>AcctgTrans</code> · <code>AcctgTransEntry</code> 필드와 기본 키 (실제 사례)</li>
+<li><a href="https://hledger.org/hledger.html">hledger manual</a> — posting(거래 한 줄)의 양수 금액 = 차변 · 음수 = 대변, 부채·자본·수익 잔액은 보통 음수, balanced transaction, balance assertion (동작 절차의 부호 규약, 실제 사례)</li>
+</ul>
+</main>
+<footer class="guide-footer">
+<p>원본은 <code>pattern-guide/ddd-analysis-pattern-guide/account/account-guide_v1.0.0.md</code>입니다. 이 HTML 은 원본 md 에서 생성한 파생물이라, 고칠 곳이 있으면 md 를 고친 뒤 다시 렌더합니다.</p>
+</footer>
+</div>
+<script>
+/* pattern-guide HTML — 세 언어 코드 탭. render-guides.py 가 HTML 에 인라인한다.
+ * JS 가 없으면 모든 패널이 보인다(마크업 기본값). 초기화하면서 선택 안 된 패널에 hidden 을 건다.
+ * 키보드: ←/→ 이웃 탭, Home/End 처음/끝 탭(WAI-ARIA APG Tabs, 자동 활성화).
+ */
+(function () {
+  "use strict";
+
+  var STORE_KEY = "pattern-guide:code-lang";
+  var widgets = [];
+
+  function readPref() {
+    try {
+      return window.localStorage.getItem(STORE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writePref(lang) {
+    try {
+      window.localStorage.setItem(STORE_KEY, lang);
+    } catch (e) {
+      /* 저장소를 못 쓰면 이번 페이지 안에서만 유지한다 */
+    }
+  }
+
+  function select(widget, tab, moveFocus) {
+    widget.tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+    if (moveFocus) tab.focus();
+  }
+
+  function tabForLang(widget, lang) {
+    for (var i = 0; i < widget.tabs.length; i++) {
+      if (widget.tabs[i].getAttribute("data-lang") === lang) return widget.tabs[i];
+    }
+    return null;
+  }
+
+  function activate(widget, tab, moveFocus) {
+    select(widget, tab, moveFocus);
+    var lang = tab.getAttribute("data-lang");
+    if (!lang) return;
+    writePref(lang);
+    widgets.forEach(function (other) {
+      if (other === widget) return;
+      var match = tabForLang(other, lang);
+      if (match) select(other, match, false);
+    });
+  }
+
+  function init(root) {
+    var list = root.querySelector(".code-tabs__list");
+    if (!list) return;
+    var tabs = Array.prototype.slice.call(list.querySelectorAll(".code-tabs__tab"));
+    if (!tabs.length) return;
+    var widget = { root: root, tabs: tabs };
+    widgets.push(widget);
+
+    list.addEventListener("click", function (event) {
+      var tab = event.target.closest(".code-tabs__tab");
+      if (tab && tabs.indexOf(tab) !== -1) activate(widget, tab, false);
+    });
+
+    list.addEventListener("keydown", function (event) {
+      var current = event.target.closest(".code-tabs__tab");
+      var index = tabs.indexOf(current);
+      if (index === -1) return;
+      var next = null;
+      switch (event.key) {
+        case "ArrowRight":
+          next = tabs[(index + 1) % tabs.length];
+          break;
+        case "ArrowLeft":
+          next = tabs[(index - 1 + tabs.length) % tabs.length];
+          break;
+        case "Home":
+          next = tabs[0];
+          break;
+        case "End":
+          next = tabs[tabs.length - 1];
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      activate(widget, next, true);
+    });
+
+    var initial = tabForLang(widget, readPref());
+    if (!initial) {
+      initial = tabs.filter(function (t) {
+        return t.getAttribute("aria-selected") === "true";
+      })[0] || tabs[0];
+    }
+    select(widget, initial, false);
+    root.setAttribute("data-enhanced", "");
+  }
+
+  function boot() {
+    Array.prototype.forEach.call(document.querySelectorAll(".code-tabs"), init);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>
