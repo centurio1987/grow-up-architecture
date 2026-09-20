@@ -9,7 +9,7 @@
     (배치는 .claude/authoring/paths.json 의 dirs.content · dirs.tracks 를 읽는다 — 가이드 한 편 = 폴더 하나, 파일명에 semver)
 
 모드 (여러 개 동시 지정 가능 · 실패가 하나라도 있으면 종료코드 1 · --json 이면 기계 판독 출력)
-    --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · mermaid 펜스 · 상대 링크 ·
+    --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · 펜스·도식 · 상대 링크 ·
                              최소 조건 [필수]/[선택] · (analysis) 상황 설정 표
     --compile [files]        `### 구현` 절 펜스 3개(java → typescript → rust) 컴파일. 도구가 없으면 실패
     --links [files]          상대 링크 해소
@@ -470,13 +470,35 @@ def check_fences(md: Md) -> list[str]:
     for f in md.fences:
         if f["end"] is None:
             errors.append(f"L{f['start'] + 1} 펜스 '{f['marker']}{f['info']}' 가 닫히지 않았습니다")
-        elif f["lang"] == "mermaid" and not "".join(f["body"]).strip():
-            errors.append(f"L{f['start'] + 1} mermaid 펜스가 비어 있습니다")
+        elif f["lang"] == "mermaid":
+            errors.append(
+                f"L{f['start'] + 1} mermaid 펜스는 쓰지 않습니다 — 도식은 viz 컴포넌트(diagrams/*.tsx)로 저작하고 "
+                "렌더한 이미지를 ![](diagrams/….png) 로 싣습니다")
     return errors
 
 
 LINK = re.compile(r"\]\(\s*(<[^>]*>|[^)\s]+)(?:\s+(?:\"[^\"]*\"|'[^']*'))?\s*\)")
 INLINE_CODE = re.compile(r"(`+)(?:(?!\1).)+?\1")
+
+
+IMG = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)\)")
+
+
+def check_images(md: Md, path: Path) -> list[str]:
+    """본문이 가리키는 도식 이미지가 실제로 있는가. 외부 이미지는 싣지 않는다."""
+    errors = []
+    for i, line in enumerate(md.lines):
+        if md.masked[i]:
+            continue
+        for alt, dest in IMG.findall(line):
+            if dest.startswith(("http://", "https://")):
+                errors.append(f"L{i + 1} 외부 이미지는 싣지 않습니다: {dest}")
+                continue
+            if not alt.strip():
+                errors.append(f"L{i + 1} 도식에 대체 텍스트가 없습니다: {dest}")
+            if not (path.parent / dest).exists():
+                errors.append(f"L{i + 1} 도식 이미지가 없습니다: {dest}")
+    return errors
 
 
 def check_links(md: Md, path: Path) -> tuple[int, list[str]]:
@@ -674,6 +696,11 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         errs = check_fences(md)
         for e in errs:
             rep.add(M, "mermaid", False, e, f)
+        ierrs = check_images(md, p)
+        for e in ierrs:
+            rep.add(M, "diagram", False, e, f)
+        if not ierrs:
+            rep.add(M, "diagram", True, f"도식 {len(IMG.findall(p.read_text(encoding='utf-8')))}개", f)
         if not errs:
             rep.add(M, "mermaid", True, "", f)
         n, errs = check_links(md, p)

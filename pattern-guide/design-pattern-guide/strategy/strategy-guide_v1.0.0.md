@@ -50,25 +50,7 @@ After : 배송비 계산을 객체로 떼어 내고, 어느 객체를 쓸지는 
 - **Context** — Client 의 요청을 받는 객체입니다. ConcreteStrategy 하나를 Strategy 타입 참조로 받아 두고, 요청을 처리하다 바뀌는 계산이 나오면 그 참조에 넘겨요. 이렇게 일을 넘기는 것을 위임이라 하고, 전략을 받아 두는 일을 이 글에서는 설치라고 부릅니다. 계산에 쓸 값을 인자로 넘길 수도 있고, 자기 자신을 넘겨 전략이 필요한 값을 묻게 할 수도 있어요. 배송비 예에서는 상품 금액에 배송비를 더해 총액을 내는 결제 객체가 Context 입니다.
 - **Client** — ConcreteStrategy 군에서 하나를 골라 만들고, Context 에 설치한 뒤에는 Context 에게만 요청합니다. 원서의 참여자 목록에는 없고 협력 설명에만 나오는 역할이에요. 배송비 예에서는 요금제 설정을 읽어 어떤 배송비 객체를 넣을지 정하는 조립 코드가 Client 입니다.
 
-```mermaid
-classDiagram
-    class Client
-    class Context {
-        -strategy : Strategy
-        +request()
-    }
-    class Strategy {
-        <<interface>>
-        +algorithm(data)
-    }
-    class ConcreteStrategy {
-        +algorithm(data)
-    }
-    Client ..> ConcreteStrategy : 골라서 만든다
-    Client ..> Context : 전략을 설치하고 요청한다
-    Context o-- Strategy : 계산을 위임한다
-    Strategy <|.. ConcreteStrategy : 구현한다
-```
+![Strategy 구조 — Context 는 연산 모양만 알고 방법은 밖에 산다](diagrams/strategy-structure.png)
 
 그림에서 Context 의 화살표가 Strategy 로만 향하고 ConcreteStrategy 를 직접 가리키지 않는다는 점을 봐 두세요. ConcreteStrategy 를 아는 쪽은 그것을 만드는 Client 뿐입니다. 뒤에 나오는 최소 조건 2·3번이 바로 이 두 화살표를 코드에서 확인하는 조건이에요.
 
@@ -78,18 +60,7 @@ classDiagram
 
 원서의 협력 설명을 요청 하나가 처리되는 순서로 펼치면 다섯 단계가 됩니다. 2단계와 4단계에는 갈래가 있어요.
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Context
-    participant Strategy as Strategy 타입 참조 (실제 객체는 ConcreteStrategy)
-    Client->>Client: 1. ConcreteStrategy 를 골라 만든다
-    Client->>Context: 2. 전략을 설치한다
-    Client->>Context: 3. 요청한다
-    Context->>Strategy: 4. 전략을 호출한다 (필요한 데이터는 세 방식 중 하나로)
-    Strategy-->>Context: 5. 결과를 돌려준다
-    Context-->>Client: 결과로 마무리한 응답
-```
+![Strategy 협력 — 고르는 일은 밖에서, 쓰는 일은 연산 모양으로](diagrams/strategy-flow.png)
 
 1. Client 가 ConcreteStrategy 군에서 하나를 골라 객체를 만듭니다. 이 일을 Client 가 맡는 이유는 요금제나 프로모션 같은 요구를 아는 쪽만 어떤 계산이 맞는지 판단할 수 있어서예요. 선택을 Context 가 하면 고르는 조건문이 Context 안에 남고, 방법이 늘 때마다 Context 를 고치게 됩니다.
 2. Client 가 만든 객체를 Context 에 설치합니다. 생성자 인자나 setter(필드 값을 바꾸는 메서드)로 넘겨 두면 Context 는 Strategy 타입으로 받으니 어떤 ConcreteStrategy 가 들어왔는지 몰라도 돼요. 이렇게 미리 설치하는 방식에서는 이 단계가 3단계보다 늦으면 요청이 왔을 때 위임할 대상이 없습니다.

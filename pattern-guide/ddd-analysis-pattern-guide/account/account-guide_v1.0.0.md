@@ -77,36 +77,7 @@ After — 잔액은 Entry 를 더해서 얻는 값
   - 협력: Account 마다 자기 AccountType 하나에 속합니다.
   - Fowler 는 이렇게 매일 생기는 사실이 아니라 사실을 해석하는 타입·규칙을 지식 층위(knowledge level)라고 불러요. 원서는 계정 분류를 그림 6.28 에서 하위 타입으로, 그림 6.20 에서 지식 층위의 Account Type 으로 그렸습니다([apchap6.pdf](https://martinfowler.com/apsupp/apchap6.pdf)).
 
-```mermaid
-classDiagram
-    class Account {
-        식별자
-        이름
-        통화
-        열림 또는 닫힘
-        /balance(기준 시점) Money
-    }
-    class AccountType {
-        이름
-    }
-    class Entry {
-        금액 Money
-    }
-    class Transaction {
-        날짜
-        되돌리는 거래
-    }
-    class Money {
-        정수 금액
-        통화
-    }
-    Account "*" -- "1" AccountType : 분류
-    Account "1" -- "*" Entry : 모은다
-    Transaction "0..1" -- "2..*" Entry : 묶는다
-    Entry --> Money : 금액
-    note for Account "balance(t) = t 까지 이 Account 에 속한 Entry 금액의 합"
-    note for Transaction "복식부기에서 묶인 Entry 금액 합 = 0"
-```
+![Account 모델 — 잔액은 저장된 값이 아니라 Entry 합이다](diagrams/account-model.png)
 
 그림에서 Entry 는 Account 와 Transaction 양쪽에 연관돼 있어요. 원서 그림 6.1 은 Account 쪽에 `balance = sum(entries.amount)` 제약을, 그림 6.2·6.3 은 Transaction 쪽에 `Sum(entries.amount) = 0` 제약을 둡니다. 분석 모델은 연관만 정할 뿐 누가 Entry 를 소유하는지는 정하지 않아요. 소유는 설계가 정합니다. 뒤의 코드에서 Account 클래스에 Entry 목록이 없는 것도 이 연관을 식별자 참조로 옮겼기 때문이지, 연관이 사라져서가 아닙니다.
 

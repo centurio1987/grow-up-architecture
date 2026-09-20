@@ -38,3 +38,7 @@ java/bin/
 
 # manage-kanban 다중 세션 잠금(로컬 전용)
 .kanban/locks/
+
+# viz 도구(도식 렌더) — 설치물과 작업 디렉터리
+node_modules/
+.work/

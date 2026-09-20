@@ -1,0 +1,46 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "design-pattern-guide",
+      "dependencies": {
+        "@centurio1987/bbangto-ui-style-guide-catalog": "0.3.1",
+        "@centurio1987/bbangto-ui-tokens": "1.3.0",
+        "@centurio1987/bbangto-ui-visualization": "0.3.0",
+        "@centurio1987/bbangto-ui-visualization-style-guide-catalog": "0.3.0",
+      },
+      "devDependencies": {
+        "@types/react": "^19.2.17",
+        "playwright": "^1.61.1",
+        "react": "^19.2.7",
+        "react-dom": "^19.2.7",
+      },
+    },
+  },
+  "packages": {
+    "@centurio1987/bbangto-ui-core": ["@centurio1987/bbangto-ui-core@1.1.2", "https://npm.pkg.github.com/download/@centurio1987/bbangto-ui-core/1.1.2/18ae01eaf9322c88abc520c641b6e0d61c949199", { "dependencies": { "@centurio1987/bbangto-ui-tokens": "1.3.0" }, "peerDependencies": { "react": "^18.2.0 || ^19.0.0", "react-dom": "^18.2.0 || ^19.0.0" } }, "sha512-s+GsEpbcE+U/3aSUvDuovZPgNyCo+S24x58ZK1G3Btzg0qdYqEn51aKCSOT+a40yM3tBI11FU6b2NZBCRqx7rA=="],
+
+    "@centurio1987/bbangto-ui-style-guide-catalog": ["@centurio1987/bbangto-ui-style-guide-catalog@0.3.1", "https://npm.pkg.github.com/download/@centurio1987/bbangto-ui-style-guide-catalog/0.3.1/ec68cf919a6f3d631f4512ed9b65c52f846c8795", { "dependencies": { "@centurio1987/bbangto-ui-core": "1.1.2", "@centurio1987/bbangto-ui-tokens": "1.3.0" }, "peerDependencies": { "react": "^18.2.0 || ^19.0.0", "react-dom": "^18.2.0 || ^19.0.0" } }, "sha512-QBhX0ULtRqHjH4OtOwD8Zz1ny22hlSthCGB/bl0cOaJdgtE8dovp/8MJ0I72K3aB2mwsCCbkXi7TpKy0hJCJyA=="],
+
+    "@centurio1987/bbangto-ui-tokens": ["@centurio1987/bbangto-ui-tokens@1.3.0", "https://npm.pkg.github.com/download/@centurio1987/bbangto-ui-tokens/1.3.0/8ce595c470521f82b8d8747ecbc4bd623153c7c8", {}, "sha512-UsJbTa8EmlTbUBNV+3RfMQeUgi7lbj0wL5Qhb/eF/G/JKUsZNY0niWa1kqBJ2sjfng+jz3hqXWPf4/UWbh/jSg=="],
+
+    "@centurio1987/bbangto-ui-visualization": ["@centurio1987/bbangto-ui-visualization@0.3.0", "https://npm.pkg.github.com/download/@centurio1987/bbangto-ui-visualization/0.3.0/67d718585841c7330e4b776e363184c79d7055f6", { "dependencies": { "@centurio1987/bbangto-ui-tokens": "1.3.0" }, "peerDependencies": { "react": "^18.2.0 || ^19.0.0", "react-dom": "^18.2.0 || ^19.0.0" } }, "sha512-o4HNtVV2B9ata6A5reEvzpTaGRkKxR2gadC2ozzzWznI1ksElDQYumAC8DK2bYlRZ12j2X7agWnKrBEtupWnhQ=="],
+
+    "@centurio1987/bbangto-ui-visualization-style-guide-catalog": ["@centurio1987/bbangto-ui-visualization-style-guide-catalog@0.3.0", "https://npm.pkg.github.com/download/@centurio1987/bbangto-ui-visualization-style-guide-catalog/0.3.0/186cc7e95dba104529e29d4217ba92429cc0f191", { "dependencies": { "@centurio1987/bbangto-ui-tokens": "1.3.0", "@centurio1987/bbangto-ui-visualization": "0.3.0" }, "peerDependencies": { "react": "^18.2.0 || ^19.0.0", "react-dom": "^18.2.0 || ^19.0.0" } }, "sha512-2mRQHEWxXPt9smp0p88UJ8jSKT+PIxCUoPbpJNRRnhYlhZrOsji7blooPQKv9eydBZHa+OhurFYt2YYlACnslA=="],
+
+    "@types/react": ["@types/react@19.3.0", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-N0rFCuH9YoxG9/m61l9MfpJKfmLOVU0em7ipIz6TRgSSkvReLB9vL85GB+yr8Bs5leqpvg96JSwF4ZS1s4viQg=="],
+
+    "csstype": ["csstype@3.2.3", "", {}, "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ=="],
+
+    "playwright": ["playwright@1.63.0", "", { "dependencies": { "playwright-core": "1.63.0" }, "bin": { "playwright": "cli.js" } }, "sha512-+7ziBLidS4NaNCdt57SUDT+wYmmd5fmiQejUic/kb+YsYSCPyOOE9sebzMjNmQrsnNpDJqd4WHvV/8lfKfUDUg=="],
+
+    "playwright-core": ["playwright-core@1.63.0", "", { "bin": { "playwright-core": "cli.js" } }, "sha512-rYCsBF/M5HjUch52bbtVONEFjv6Xu8sm8h72dNlR5bzIE1fvC/bxgspzkjSfU+MweEMmPM8KJebG6nnyxo5mCg=="],
+
+    "react": ["react@19.3.0", "", {}, "sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog=="],
+
+    "react-dom": ["react-dom@19.3.0", "", { "dependencies": { "scheduler": "^0.28.0" }, "peerDependencies": { "react": "^19.3.0" } }, "sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q=="],
+
+    "scheduler": ["scheduler@0.28.0", "", {}, "sha512-juorfCmIkIw8tT+p5BXSm6PJjQF/ycEYmKyzURCIt/RaZIhL+PulbQ9Yu2z1HdOJDdqDTlxA1+xKBmHXJsczAw=="],
+  }
+}

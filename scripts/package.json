@@ -1,8 +1,0 @@
-{
-  "name": "design-pattern-guide-scripts",
-  "private": true,
-  "description": "Render-time tooling for pattern-guide HTML (mermaid -> inline SVG)",
-  "devDependencies": {
-    "@mermaid-js/mermaid-cli": "^11.17.0"
-  }
-}

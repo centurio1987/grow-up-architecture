@@ -56,27 +56,7 @@ ConversionRatio   from kg ──▶ to g,  number = 1000
 - **CompoundUnit** — 원서 §3.3 의 합성 단위로, m/s² 처럼 여러 단위에 지수를 붙여 곱한 Unit 의 한 종류입니다. 원서 그림은 구성 단위 참조가 둘 이상이거나, 하나라면 지수가 음수이거나 1보다 커야 한다는 제약을 겁니다(Figure 3.4). 참조 하나에 지수 1 짜리는 원래 단위 하나와 같은 모양이라 합성 단위로 세지 않는 셈이에요. Quantity 끼리 곱하거나 나눈 결과의 단위가 이 개념으로 표현됩니다.
 - **Money** — 단위 자리에 통화가 오는 Quantity 로, 금전이라는 도메인 의미를 가집니다. Fowler 의 튜토리얼 슬라이드가 Money 를 Quantity 의 한 종류로 적어서, 아래 그림도 일반화 화살표로 그렸습니다. 개념의 포함 관계를 옮긴 것이지 코드에서 상속으로 구현하라는 뜻은 아니에요. 통화마다 기본 소수 자릿수가 있어서, Java 21 에서 [`Currency`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Currency.html)`.getInstance("KRW").getDefaultFractionDigits()` 를 실행하면 원화(KRW)는 0, 미국 달러(USD)로 바꾸면 2 가 나옵니다. 이 값은 자릿수만 알려 줄 뿐 언제 어떤 방식으로 반올림할지는 정하지 않아요. 정산·지급처럼 금액을 확정하는 시점에 10,000원을 셋으로 나누면 3,333.33…원을 원 단위로 맞춰야 하고, 3,333원 셋을 더하면 9,999원이라 남는 1원을 누구에게 붙일지 규칙이 필요합니다. PoEAA 는 이런 규칙 없이 금액을 다루면 반올림 오차로 잔돈을 잃기 쉽다고 적습니다.
 
-```mermaid
-classDiagram
-    class Quantity {
-        amount : Number
-        plus(Quantity) Quantity
-        minus(Quantity) Quantity
-    }
-    class Unit {
-        symbol : String
-    }
-    class ConversionRatio {
-        number : Number
-    }
-    class CompoundUnit
-    class Money
-    Quantity "*" --> "1" Unit : unit
-    ConversionRatio "*" --> "1" Unit : from
-    ConversionRatio "*" --> "1" Unit : to
-    Unit <|-- CompoundUnit
-    Quantity <|-- Money
-```
+![Quantity 모델 — 수치와 단위가 한 값이고 환산 근거는 모델 안에 있다](diagrams/quantity-model.png)
 
 그림에는 개념과 연관·다중도만 있습니다. CompoundUnit 이 어떤 단위를 몇 제곱으로 묶는지(원서 Figure 3.4 의 지수를 가진 단위 참조)는 Quantity 중심으로 줄이느라 뺐어요. 이 개념들을 코드에서 어느 묶음에 넣을지는 뒤의 구현 예시가 상황 설정 표로 정합니다.
 

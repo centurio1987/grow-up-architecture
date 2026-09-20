@@ -10,8 +10,8 @@
   pattern-guide/<track>/<slug>/<slug>-guide_v1.0.0.md → 같은 폴더의 <slug>-guide_v1.0.0.html
   (--out-dir 를 주면 그 아래에 계열·패턴 폴더를 미러링한다)
 - `### 구현` 절에서 연속한 java · typescript(ts) · rust 펜스(`no-compile` 없음)를 탭 위젯 하나로 묶는다.
-- mermaid 펜스는 렌더 시점에 로컬 mmdc(scripts/node_modules)로 SVG 를 만들어 인라인한다.
-  mmdc 가 없거나 실패하면 그 문서는 쓰지 않고 비-0 으로 끝난다(조용한 폴백 없음).
+- 도식은 viz 컴포넌트를 렌더한 이미지를 본문이 가리키고, 렌더러가 그것을 data URI 로 박는다.
+  이미지가 없으면 그 문서는 쓰지 않고 비-0 으로 끝난다(조용한 폴백 없음).
 - CSS·JS 는 scripts/assets/ 에서 읽어 인라인한다. 외부 요청 0.
 - HTML 앞 2KB 안에 `<!-- guide-fp:<hex> -->` 지문을 박는다. 지문 입력은 fingerprint() 참고.
   다른 스크립트가 importlib 로 fingerprint()·output_path()·read_embedded_fingerprint() 를 불러 쓴다
@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures
+import base64
 import hashlib
 import html
 import json
@@ -50,11 +51,8 @@ GUIDE_RE = re.compile(r"^[a-z0-9-]+-guide_v\d+\.\d+\.\d+\.md$")   # 가이드 �
 RENDERER = Path(os.path.abspath(__file__))
 ASSET_CSS = SCRIPTS_DIR / "assets" / "guide.css"
 ASSET_JS = SCRIPTS_DIR / "assets" / "guide-tabs.js"
-PACKAGE_LOCK = SCRIPTS_DIR / "package-lock.json"
 PUPPETEER_CONFIG = SCRIPTS_DIR / "puppeteer-config.json"
 NODE_MODULES = SCRIPTS_DIR / "node_modules"
-MMDC = NODE_MODULES / ".bin" / "mmdc"
-CACHE_DIR = SCRIPTS_DIR / ".cache" / "mermaid"
 
 FP_RE = re.compile(r"<!-- guide-fp:([0-9a-f]{64}) -->")
 FP_SCAN_BYTES = 2048
@@ -74,15 +72,33 @@ class RenderError(Exception):
 
 
 # ── 지문 · 경로 계약(검사기와 공유) ───────────────────────────────────
+IMG_RE = re.compile(r"!\[[^\]]*\]\(([^)\s]+)\)")
+
+
+def referenced_images(md_path) -> list[Path]:
+    """md 가 가리키는 **로컬 이미지**. HTML 에 data URI 로 박히므로 지문 입력이기도 하다."""
+    md = Path(md_path)
+    try:
+        text = md.read_text(encoding="utf-8")
+    except OSError:
+        return []
+    out = []
+    for dest in IMG_RE.findall(text):
+        if dest.startswith(("http://", "https://", "data:")):
+            continue
+        out.append((md.parent / dest).resolve())
+    return sorted(set(out))
+
+
 def fingerprint_inputs(md_path) -> list[tuple[str, Path]]:
-    """지문 입력 목록. md + 렌더러 + CSS + 탭 JS + package-lock(mermaid-cli 버전 고정)."""
-    return [
+    """지문 입력 목록. md + 렌더러 + CSS + 탭 JS + 본문이 가리키는 도식 이미지."""
+    base = [
         ("md", Path(md_path)),
         ("renderer", RENDERER),
         ("css", ASSET_CSS),
         ("js", ASSET_JS),
-        ("package-lock", PACKAGE_LOCK),
     ]
+    return base + [(f"img:{p.name}", p) for p in referenced_images(md_path)]
 
 
 def fingerprint(md_path) -> str:
@@ -567,10 +583,6 @@ def iter_blocks(blocks: list[dict]):
             yield from b["items"]
 
 
-def mermaid_sources(blocks: list[dict]) -> list[str]:
-    return [b["code"] for b in iter_blocks(blocks) if b["t"] == "code" and b["lang"] == "mermaid"]
-
-
 # ── 인라인 ───────────────────────────────────────────────────────────
 PH_OPEN, PH_CLOSE = "\ue000", "\ue001"
 PH_RE = re.compile(PH_OPEN + r"(\d+)" + PH_CLOSE)
@@ -599,8 +611,9 @@ def _attr(s: str) -> str:
 class Inline:
     """인라인 마크다운 → HTML. href 는 rewrite(href) 로 바꾼다."""
 
-    def __init__(self, rewrite=None):
+    def __init__(self, rewrite=None, image=None):
         self.rewrite = rewrite or (lambda href: href)
+        self.image = image or (lambda dest, alt, title: f'<a href="{_attr(dest)}">{_attr(alt)}</a>')
 
     def render(self, text: str) -> str:
         store: list[str] = []
@@ -675,8 +688,11 @@ class Inline:
                         label = self._fragment(text[open_at + 1 : close])
                         href = _attr(self.rewrite(dest))
                         title_attr = f' title="{_attr(title)}"' if title else ""
-                        # 이미지도 <img> 로 불러오지 않고 링크로 둔다(외부·이미지 요청 0)
-                        out.append(ph(f'<a href="{href}"{title_attr}>{label}</a>'))
+                        if is_image:
+                            # 도식은 data URI 로 박는다 — 외부·파일 요청 0 을 지키면서 그림을 보인다.
+                            out.append(ph(self.image(dest, text[open_at + 1 : close], title)))
+                        else:
+                            out.append(ph(f'<a href="{href}"{title_attr}>{label}</a>'))
                         i = end
                         continue
             out.append(c)
@@ -760,11 +776,28 @@ class DocumentRenderer:
         self.out_root = None  # 링크 대상 HTML 경로 계산용 — render_file 이 채운다
         self.svgs = svgs
         self.doc_id = re.sub(r"[^a-z0-9]+", "-", _abs(md_path).stem.lower()).strip("-") or "guide"
-        self.inline = Inline(self.rewrite_href)
+        self.inline = Inline(self.rewrite_href, self.image_tag)
         self.used_ids: set[str] = set()
         self.tab_count = 0
-        self.mermaid_count = 0
         self.title: str | None = None
+
+    # 도식 이미지 — 로컬 파일을 data URI 로 박는다(외부·파일 요청 0). 없으면 렌더 실패.
+    def image_tag(self, dest: str, alt: str, title: str | None) -> str:
+        if dest.startswith(("http://", "https://")):
+            raise RenderError(f"외부 이미지는 싣지 않는다: {dest}")
+        if dest.startswith("data:"):
+            src = dest
+        else:
+            path = Path(os.path.normpath(os.path.join(self.md_dir, unquote(dest.partition("#")[0]))))
+            if not path.exists():
+                raise RenderError(f"도식 이미지가 없다: {dest} (기대 경로 {path})")
+            mime = {".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+                    ".svg": "image/svg+xml", ".webp": "image/webp"}.get(path.suffix.lower())
+            if mime is None:
+                raise RenderError(f"이미지 형식을 모른다: {path.name}")
+            src = f"data:{mime};base64," + base64.b64encode(path.read_bytes()).decode("ascii")
+        cap = f"<figcaption>{_attr(title or alt)}</figcaption>" if (title or alt) else ""
+        return f'<figure class="diagram-figure"><img src="{src}" alt="{_attr(alt)}" />{cap}</figure>'
 
     # 링크
     def rewrite_href(self, href: str) -> str:
@@ -815,7 +848,9 @@ class DocumentRenderer:
             return f"<blockquote>\n{self.blocks(b['children'])}</blockquote>\n"
         if t == "code":
             if b["lang"] == "mermaid":
-                return self.mermaid(b)
+                raise RenderError(
+                    "mermaid 는 이 저장소에서 쓰지 않는다 — 도식은 viz 컴포넌트로 저작하고 "
+                    "렌더한 이미지를 ![](diagrams/….png) 로 싣는다")
             return self.code(b)
         if t == "tabs":
             return self.tabs(b["items"])
@@ -834,14 +869,6 @@ class DocumentRenderer:
         pre_cls = ' class="code-block--no-compile"' if NO_COMPILE in b["flags"] else ""
         tab = ' tabindex="0"' if focusable else ""
         return f"<pre{pre_cls}{tab}><code{cls}>{_esc(b['code'])}</code></pre>\n"
-
-    def mermaid(self, b: dict) -> str:
-        svg = self.svgs.get(b["code"])
-        if svg is None:
-            raise RenderError("mermaid SVG 가 없다(렌더 실패)")
-        self.mermaid_count += 1
-        svg_id = f"{self.doc_id}-mermaid{self.mermaid_count}"
-        return f'<figure class="mermaid-figure">\n{svg.replace(MERMAID_ID_PLACEHOLDER, svg_id)}\n</figure>\n'
 
     def tabs(self, items: list[dict]) -> str:
         self.tab_count += 1
@@ -959,83 +986,6 @@ def render_html(md_path: Path, blocks: list[dict], out_html: Path, out_root: Pat
     )
 
 
-# ── mermaid ──────────────────────────────────────────────────────────
-def mermaid_versions() -> dict[str, str]:
-    versions = {}
-    for name, rel in (("mermaid-cli", "@mermaid-js/mermaid-cli"), ("mermaid", "mermaid")):
-        pkg = NODE_MODULES / rel / "package.json"
-        try:
-            versions[name] = json.loads(pkg.read_text(encoding="utf-8"))["version"]
-        except (FileNotFoundError, KeyError, json.JSONDecodeError) as exc:
-            raise RenderError(
-                f"{rel} 가 설치돼 있지 않다({exc.__class__.__name__}). "
-                "PUPPETEER_SKIP_DOWNLOAD=1 npm ci --prefix scripts 로 설치하세요"
-            ) from exc
-    return versions
-
-
-def mermaid_cache_key(source: str, versions: dict[str, str]) -> str:
-    h = hashlib.sha256()
-    h.update(f"mermaid-cli={versions['mermaid-cli']}\0mermaid={versions['mermaid']}\0".encode())
-    h.update(f"args={' '.join(MERMAID_ARGS)}\0id={MERMAID_ID_PLACEHOLDER}\0".encode())
-    h.update(source.encode("utf-8"))
-    return h.hexdigest()
-
-
-def render_mermaid(source: str, versions: dict[str, str]) -> str:
-    cached = CACHE_DIR / f"{mermaid_cache_key(source, versions)}.svg"
-    if cached.is_file():
-        return cached.read_text(encoding="utf-8")
-    if not MMDC.exists():
-        raise RenderError(f"mmdc 가 없다: {display_path(MMDC)} — PUPPETEER_SKIP_DOWNLOAD=1 npm ci --prefix scripts")
-    with tempfile.TemporaryDirectory(prefix="render-guides-") as td:
-        src, dst = Path(td) / "diagram.mmd", Path(td) / "diagram.svg"
-        src.write_text(source, encoding="utf-8")
-        cmd = [str(MMDC), "-p", str(PUPPETEER_CONFIG), "-i", str(src), "-o", str(dst),
-               *MERMAID_ARGS, "-I", MERMAID_ID_PLACEHOLDER, "-q"]
-        try:
-            proc = subprocess.run(cmd, capture_output=True, text=True, timeout=MERMAID_TIMEOUT_SEC, cwd=ROOT)
-        except (OSError, subprocess.TimeoutExpired) as exc:
-            raise RenderError(f"mmdc 실행 실패: {exc}") from exc
-        if proc.returncode != 0:
-            detail = " | ".join([ln.strip() for ln in (proc.stderr or proc.stdout).splitlines() if ln.strip()][:3])
-            raise RenderError(f"mmdc 종료코드 {proc.returncode}: {detail}")
-        try:
-            svg = dst.read_text(encoding="utf-8")
-        except FileNotFoundError as exc:
-            raise RenderError("mmdc 가 SVG 를 만들지 않았다") from exc
-    start = svg.find("<svg")
-    if start < 0 or "</svg>" not in svg or MERMAID_ID_PLACEHOLDER not in svg:
-        raise RenderError("mmdc 출력이 SVG 가 아니다")
-    svg = svg[start:].strip()
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    tmp = cached.with_name(cached.name + f".{os.getpid()}.tmp")
-    tmp.write_text(svg, encoding="utf-8")
-    os.replace(tmp, cached)
-    return svg
-
-
-def render_mermaid_all(sources: list[str], jobs: int) -> tuple[dict[str, str], dict[str, str]]:
-    """{source: svg}, {source: 오류} — 서로 다른 소스만 병렬로 렌더한다."""
-    unique = list(dict.fromkeys(sources))
-    if not unique:
-        return {}, {}
-    try:
-        versions = mermaid_versions()
-    except RenderError as exc:
-        return {}, {s: str(exc) for s in unique}
-    svgs, errors = {}, {}
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, min(jobs, len(unique)))) as pool:
-        futures = {pool.submit(render_mermaid, s, versions): s for s in unique}
-        for fut in concurrent.futures.as_completed(futures):
-            s = futures[fut]
-            try:
-                svgs[s] = fut.result()
-            except RenderError as exc:
-                errors[s] = str(exc)
-    return svgs, errors
-
-
 # ── CLI ──────────────────────────────────────────────────────────────
 def _write_atomic(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -1088,14 +1038,9 @@ def run_render(files: list[Path], out_dir: Path | None, force: bool, jobs: int) 
             continue
         pending.append((md, out, fp, blocks))
 
-    all_sources = [s for _, _, _, blocks in pending for s in mermaid_sources(blocks)]
-    svgs, mermaid_errors = render_mermaid_all(all_sources, jobs)
+    svgs: dict[str, str] = {}
 
     for md, out, fp, blocks in pending:
-        failed = [mermaid_errors[s] for s in mermaid_sources(blocks) if s in mermaid_errors]
-        if failed:
-            result["errors"].append({"file": display_path(md), "error": "mermaid: " + failed[0]})
-            continue
         try:
             page = render_html(md, blocks, out, out_dir or out.parent, fp, svgs)
             _write_atomic(out, page)
@@ -1113,14 +1058,14 @@ def run_render(files: list[Path], out_dir: Path | None, force: bool, jobs: int) 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="render-guides.py",
-        description="패턴 가이드 md → 자립형 HTML(세 언어 탭 · mermaid 인라인 SVG · 지문)",
+        description="패턴 가이드 md → 자립형 HTML(세 언어 탭 · 도식 data URI · 지문)",
     )
     parser.add_argument("files", nargs="*", help="렌더할 가이드 md")
     parser.add_argument("--all", action="store_true", help="pattern-guide/{design-pattern-guide,ddd-analysis-pattern-guide}/*-pattern.md 전부")
     parser.add_argument("--out-dir", default=None, help="출력 루트(기본: md 와 같은 폴더)")
     parser.add_argument("--check", action="store_true", help="쓰지 않고 fresh/stale/missing 만 보고")
     parser.add_argument("--force", action="store_true", help="지문이 같아도 다시 쓴다")
-    parser.add_argument("--jobs", type=int, default=4, help="mermaid 병렬 렌더 수(기본 4)")
+    parser.add_argument("--jobs", type=int, default=4, help="문서 병렬 처리 수(기본 4)")
     args = parser.parse_args(argv)
     files = _collect(args, parser)
     out_dir = _abs(args.out_dir) if args.out_dir else None   # 기본은 md 와 같은 폴더

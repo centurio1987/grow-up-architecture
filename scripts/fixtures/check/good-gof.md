@@ -4,12 +4,7 @@
 
 주문 금액에 할인을 매기는 코드를 떠올려 봅시다. 할인 방식이 늘어날 때마다 `if` 분기를 덧붙이면 결제 클래스가 모든 할인 규칙을 알게 돼요. 전략 패턴은 할인 계산을 인터페이스 뒤의 부품으로 떼어 내고, 결제 클래스는 그 부품을 받아 호출만 하게 만듭니다.
 
-```mermaid
-flowchart LR
-  A[결제 클래스 안의 할인 분기] --> B[할인 전략 인터페이스]
-  B --> C[정액 할인]
-  B --> D[정률 할인]
-```
+![예시 도식 — 구조 한 장](diagrams/sample.png)
 
 분류는 행위 패턴이고, 전략 객체를 고르는 쪽에서 팩토리 메서드와 자주 함께 쓰여요.
 
@@ -21,20 +16,7 @@ flowchart LR
 - **Strategy**: 계산 방법이 지켜야 할 약속이에요. 예시의 `DiscountPolicy` 인터페이스가 맡아요.
 - **ConcreteStrategy**: 약속을 실제로 구현한 계산 방법이고, 예시에는 `FixedDiscount` 와 `RateDiscount` 가 있어요.
 
-```mermaid
-classDiagram
-  class Checkout {
-    -policy DiscountPolicy
-    +pay(amount) long
-  }
-  class DiscountPolicy {
-    <<interface>>
-    +discount(amount) long
-  }
-  Checkout --> DiscountPolicy
-  DiscountPolicy <|.. FixedDiscount
-  DiscountPolicy <|.. RateDiscount
-```
+![예시 도식 — 구조 한 장](diagrams/sample.png)
 
 ### 동작 절차
 

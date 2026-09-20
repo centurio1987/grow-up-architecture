@@ -1,0 +1,24 @@
+{
+  "name": "design-pattern-guide",
+  "private": true,
+  "type": "module",
+  "description": "패턴 가이드 도식(viz) 저작·렌더 도구. 도식은 React 컴포넌트로 쓰고 Playwright 실제 마운트로 굽는다.",
+  "scripts": {
+    "viz": "bun run scripts/render-viz.ts",
+    "viz:lint": "bun run scripts/lint-diagrams.ts",
+    "viz:rolebox": "bun run scripts/audit-rolebox.ts",
+    "viz:contrast": "bun test viz/style-guide/audit.test.ts"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "playwright": "^1.61.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "dependencies": {
+    "@centurio1987/bbangto-ui-style-guide-catalog": "0.3.1",
+    "@centurio1987/bbangto-ui-tokens": "1.3.0",
+    "@centurio1987/bbangto-ui-visualization": "0.3.0",
+    "@centurio1987/bbangto-ui-visualization-style-guide-catalog": "0.3.0"
+  }
+}

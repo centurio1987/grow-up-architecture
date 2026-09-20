@@ -4,11 +4,7 @@
 
 잔액을 숫자 필드 하나로 두면 언제 왜 그 값이 됐는지 되짚을 수 없어요. Account 패턴은 금액이 오간 기록을 남기고, 잔액은 그 기록을 합산한 결과로 봅니다.
 
-```mermaid
-flowchart LR
-  A[입금 기록] --> C[잔액 = 기록의 합]
-  B[출금 기록] --> C
-```
+![예시 도식 — 구조 한 장](diagrams/sample.png)
 
 분류는 회계 계열 분석 패턴이고, Transaction 패턴과 함께 쓰여요.
 
@@ -20,17 +16,7 @@ flowchart LR
 - **Entry**: 금액 하나가 계정에 오간 사실이에요. 한 번 남기면 고치지 않습니다.
 - **Balance**: 특정 시점까지의 Entry 금액을 더한 값이에요.
 
-```mermaid
-classDiagram
-  class Account {
-    +id AccountId
-  }
-  class Entry {
-    +accountId AccountId
-    +amount long
-  }
-  Entry ..> Account : id 로 가리킴
-```
+![예시 도식 — 구조 한 장](diagrams/sample.png)
 
 ### 동작 절차
 
