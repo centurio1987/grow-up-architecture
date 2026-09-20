@@ -4,7 +4,7 @@ slug: strategy
 spec: gof-guide
 spec_version: 1.2.0
 version: 1.0.0
-status: draft
+status: published
 date: 2026-09-20
 ---
 
