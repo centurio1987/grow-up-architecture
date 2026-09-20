@@ -3,7 +3,7 @@
   "schema_version": 1,
   "id": "gof-guide",
   "label": "가이드 — GoF 디자인 패턴",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "source": {
     "origin": "extracted",
     "refs": [
@@ -384,10 +384,8 @@
     "rubric": "default",
     "max_rounds": 3,
     "external_review": {
-      "enabled": true,
-      "axes": "scripts/review-axes-pattern.md",
-      "failure_policy": "hard-fail",
-      "redact": "none"
+      "enabled": false,
+      "_note": "외부 모델 비평은 이 파이프라인에서 쓰지 않는다(2026-09-20 유저 결정). 계승 원본(code_test)도 경로 바인딩과 축 파일이 없어 실행하지 않는다. 사실 주장 검증은 품질 게이트 채점이 실행·원문 대조로 진다."
     }
   }
 }

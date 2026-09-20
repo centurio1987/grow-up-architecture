@@ -108,7 +108,8 @@ BASIS_SOURCES = ["GoF", "원서", "원전", "Fowler", "Analysis Patterns", "eaaD
 BLANK_CELLS = {"-", "—", "–", "해당 없음", "해당없음", "N/A", "n/a", "NA", "없음", "미정", "TBD", "TODO", "?"}
 CELL_MIN = 8
 
-GATE_KEYS = ["file", "spec", "version", "work", "resolve_hash", "rounds", "external", "verdict", "date"]
+GATE_KEYS = ["file", "spec", "version", "work", "resolve_hash", "rounds", "verdict", "date"]
+# external(외부 검토 응답 도구)은 2026-09-20 유저 결정으로 파이프라인에서 빠졌다. 옛 기록에 남아 있어도 검사하지 않는다.
 # h_exit(이해 게이트 종료코드)는 2026-09-20 유저 결정으로 파이프라인에서 빠졌다. 옛 기록에 남아 있어도 검사하지 않는다.
 
 

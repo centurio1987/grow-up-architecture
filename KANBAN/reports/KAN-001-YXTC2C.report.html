@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<!-- kanban-fp:3fefe38e8180cb79e24c1ab83c2ba00c7d666522 voiced -->
+<!-- kanban-fp:35f7f3bc07ecf746ee3c281cb1b67602888e9ef6 voiced -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KAN-001-YXTC2C 실행 계획</title>
 <style>
@@ -472,7 +472,7 @@ Quantity ──▶ analysis-guide : 값 객체에서 「상황 설정」 표가 
 <p>뒤 세 장이 본체예요. .4는 GoF 22편, .5는 분석 패턴 8편을 씁니다. 편마다 work 하나이고, 착수할 때 <code>resolve --frozen</code>(규칙 층을 병합하는 명령 <code>resolve</code>를 lock과 어긋나면 실패하는 옵션으로 실행)이 통과해야 써요. .6은 인덱스 3종을 새 경로로 맞추고(PATTERNS.md의 GoF 링크 23개가 전부 옛 경로를 가리켜요) HTML 33편을 한 번에 렌더한 뒤, 루트 검증 전부를 돌려 검토서를 냅니다.</p>
 <p>편 하나가 지나는 길은 아래 그림이에요. <code>check-guides</code>는 .2가 만드는 가이드 검사기(구조 · 컴파일 · 링크를 봅니다)이고, <code>gate-results.jsonl</code>은 편마다 게이트 결과를 한 줄씩 쌓는 기록 파일입니다.</p>
 <pre>편 하나 = work 하나
-resolve --frozen ──▶ 집필 ──▶ 기계 검사 ──▶ 외부 검토 ──▶ 품질 게이트 ──▶ gate-results.jsonl
+resolve --frozen ──▶ 집필 ──▶ 기계 검사 ──▶ 품질 게이트 ──▶ gate-results.jsonl
 (lock 불일치면 중단)            (종료코드 0)     (라운드 ≤ 3)     (--all --compile 0)   (1줄 기록)</pre>
 <p>여기서 헷갈리기 쉬운 포인트는 .4 · .5 · .6의 배치 문서가 .1~.3보다 한참 늦게 생겼다는 점이에요. 빠뜨린 게 아닙니다. 배치 크기를 .3 회고에서 실측으로 정했으니, 그 전에 만들면 근거 없는 크기로 자르게 돼요. 그래서 .3의 마지막 work(S4 회고)가 크기를 정하고 세 카드의 배치 문서를 만들었습니다.</p>
 <h3>두 가지 수행안 — 단일 에이전트와 오케스트레이션</h3>
@@ -507,7 +507,7 @@ b7: S19 … S22  → 커밋·태그                   워커는 커밋 안 함 �
        S1 ──tag──▶ S2 ──tag──▶ S3 ──tag──▶ …       되돌릴 때는 태그 지점으로
        (덮어쓴 33편은 여기에만 있음)                    (경로는 그대로, 내용만 복구)</pre>
 <p>다음은 <code>lock --update</code>예요. 규칙 판본을 바꾸는 명령이라 .3 회고 한 자리에서만, 사유를 커밋에 적고 실행합니다. 마지막은 .6의 stale(현 상태와 어긋난 낡은 것) 처분이에요. 4언어 실행 하니스와 <code>analysis/</code>는 기본이 유지 + README 표 개정이고, 삭제는 별도 카드로 뺍니다. 삭제는 되돌리기 어렵고 범위가 늘기 때문이에요.</p>
-<p>루트 독립성은 첫 절에서 말씀드린 대로 확인된 겹침이 없어요. 루트가 한 장이라 비교 상대가 없기 때문입니다. 대신 카드 밖에서 막힐 것이 둘 있어요. 외부 검토는 외부 모델 도구 둘(codex · agy)에 묶여 있어서, 둘 다 응답하지 못하면 검토를 받지 못한 편이 됩니다(통과로 치지 않아요). 그리고 .1의 유저 결정 4건이 늦으면 .2의 분석 spec이 확정안 없이 만들어져요. 그래서 .1은 확정안과 후보 보고서를 먼저 내밀고, 답을 기다리는 동안 나머지 노트를 씁니다.</p>
+<p>루트 독립성은 첫 절에서 말씀드린 대로 확인된 겹침이 없어요. 루트가 한 장이라 비교 상대가 없기 때문입니다. 대신 카드 밖에서 막힐 것이 둘 있어요. 기계 검사는 세 언어 툴체인(JDK 21 · 로컬 tsc · rustc)과 도식 렌더용 브라우저에 묶여 있어서, 하나라도 없으면 그 편은 검사를 통과할 수 없습니다(도구가 없으면 조용히 넘어가지 않고 비-0 으로 끝나요). 그리고 .1의 유저 결정 4건이 늦으면 .2의 분석 spec이 확정안 없이 만들어져요. 그래서 .1은 확정안과 후보 보고서를 먼저 내밀고, 답을 기다리는 동안 나머지 노트를 씁니다.</p>
 <h3>무엇이 되면 끝인가 — 검증 세 층</h3>
 <p>검증은 세 층이에요. 결정론적 명령(전부 종료코드 0), work 단위로만 도는 외부 모델 호출, 사람만 판정하는 7건. 실행 위치는 루트 워크트리이고, <code>PLUGIN</code>은 authoring-kit 0.3.0의 캐시 경로예요.</p>
 <pre>1. 결정론적 (기계가 판정)      규칙 층 → 가이드 층 → 인덱스·저장소 층        전부 종료코드 0
@@ -538,13 +538,13 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py validate .            #
 for c in KAN-001.1-P5N9NF KAN-001.2-4NWK0T KAN-001.3-Q6FYKP KAN-001.4-BJT8JD KAN-001.5-6HF35H KAN-001.6-HB5NH9; do
   python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card $c
 done</pre>
-<p>work 단위 층은 편마다 돌아요. <code>python3 scripts/check-guides.py --all --compile --run &lt;가이드&gt;</code> 로 기계 검사를 돌리고(헤딩·플레이스홀더·문체·도식·링크·최소 조건 근거·세 언어 컴파일·실행 출력 대조), <code>bash $PLUGIN/scripts/review-external.sh --axes scripts/review-axes-pattern.md</code> 뒤에 같은 파일을 붙여 외부 검토를 받습니다. 통과를 가르는 것은 기계 검사이고, 외부 검토가 내는 말은 다음 라운드의 보완 지시예요. 결과는 <code>pattern-guide/gate-results.jsonl</code>에 한 줄씩 남고, 위의 <code>--gates</code>가 그 33건을 셉니다.</p>
+<p>work 단위 층은 편마다 돌아요. <code>python3 scripts/check-guides.py --all --compile --run &lt;가이드&gt;</code> 로 기계 검사를 돌리고(헤딩·플레이스홀더·문체·도식·링크·최소 조건 근거·세 언어 컴파일·실행 출력 대조), 그 뒤에 품질 게이트(루브릭 채점)를 돌립니다. 통과를 가르는 것은 이 둘뿐이고, 본문이 코드·원전·실행 결과에 대해 단정한 자리는 채점이 직접 돌려 보거나 원문과 대조해 판정해요. 결과는 <code>pattern-guide/gate-results.jsonl</code>에 한 줄씩 남고, 위의 <code>--gates</code>가 그 33건을 셉니다.</p>
 <p>사람만 판정하는 것은 일곱 가지예요. ① 분석 10편의 상황 설정 표가 배경 확정안 · DDD 원칙과 맞는가 ② 비교 절이 PATTERNS.md의 빠른 비교 페어를 전부 다루는가 ③ 개요가 직관적인가(파일럿으로) ④ 존댓말 voice(문체 규칙 묶음, 여기서는 <code>ppangtolab-teacher</code>) 승인 ⑤ 기존 절 넷의 처분 ⑥ 추가 패턴 채택과 처분 셋(consideration 문서1 · <code>.agents</code> · 4언어 하니스와 <code>analysis/</code>) ⑦ analyzer가 기준 출처로 가이드 경로를 찍는가. 이 일곱은 .6이 만드는 검토서의 판단 항목으로 들어가요.</p>
 <pre>하위 6장 전부 완료  ──┐
 결정론적 검증 전부 0 ──┼──▶ 검토서 승인 ──▶ main 병합 ──▶ 워크트리 · 브랜치 정리 ──▶ 끝
 work 단위 게이트 33건 ┘</pre>
 <p>완료 조건은 그림 그대로예요. 하위 6장 전부 완료, 결정론적 검증 전부 0, 검토서 승인. 셋이 다 되면 main에 병합하고 워크트리와 브랜치를 정리합니다.</p>
-<p>잠깐, 확인 두 가지만 해 볼까요? 하나. 회고가 배치 크기를 2로 확정했으니 .4의 배치는 몇 개일까요? 11개예요. 루트 배치는 그대로 2개입니다. 루트는 하위 카드 단위로 묶으니까요. 또 하나. 외부 검토 도구 둘이 모두 응답하지 못하면 그 편은 끝난 걸까요? 아니에요. 검토를 받지 못한 것이라 완성으로 치지 않고, 원인을 보고한 뒤 다시 돌립니다.</p></section>
+<p>잠깐, 확인 두 가지만 해 볼까요? 하나. 회고가 배치 크기를 2로 확정했으니 .4의 배치는 몇 개일까요? 11개예요. 루트 배치는 그대로 2개입니다. 루트는 하위 카드 단위로 묶으니까요. 또 하나. 품질 게이트가 3라운드를 다 써도 필수 항목이 남으면 그 편은 끝난 걸까요? 아니에요. 자동 통과는 없고, 그대로 멈춰 사람에게 넘깁니다.</p></section>
 <h2>요청서</h2>
 <p class="meta">자유 형식 · 유저 <code>KANBAN/requests/doing/KAN-001-YXTC2C.request.md</code></p>
 <section class="card"><h2>KAN-001-YXTC2C 요청서 — 전체 가이드 재집필</h2>
@@ -592,7 +592,7 @@ work 단위 게이트 33건 ┘</pre>
 <li><strong>7. stale 정리 포함</strong> — 근거 · 버린 대안: SKILL.md 2종·<code>.agents</code> → .2, PATTERNS.md(GoF 링크 23/23 깨짐)·README·DDD README·루트 참조 문서·4언어 하니스 처분 → .6</li>
 <li><strong>8. 추가 패턴 후보는 .1이 보고, 유저가 고르면 .7 신설</strong> — 근거 · 버린 대안: GoF 계열(Null Object·Specification 등)과 분석 계열(Fowler 나머지 장·PoEAA Money 등) 둘 다 후보. DDD 전술 용어 기준선 1편 신설 여부도 같은 보고에</li>
 <li><strong>9. 집필 work = 가이드 1편, 착수마다 <code>resolve --frozen</code> 통과 전제</strong> — 근거 · 버린 대안: code_test 실측(1세션 1가이드). 게이트 결과는 <code>pattern-guide/gate-results.jsonl</code>에 work마다 1줄(file · spec · 버전 · resolve 해시 · 라운드 · 외부 검토 · 날짜). <code>check-guides --gates</code>가 33건 존재 · verdict PASS · resolve 해시 = 현재 lock을 검사(낡은 PASS 검출)</li>
-<li><strong>10. 예시 코드: Java · TypeScript · Rust 세 언어, 블록마다 컴파일 검사(유저 결정). md는 나열, HTML 버전은 탭으로 묶는다</strong> — 근거 · 버린 대안: 컴파일은 하한이지 정확성 검증이 아니다 — 옳음은 품질 게이트·외부 검토 축·analyzer 스팟체크가 진다(실행 검증은 유저 결정으로 범위 밖). HTML은 md의 파생물이고 .3(파일럿 3편)·.6(33편)에서만 그린다</li>
+<li><strong>10. 예시 코드: Java · TypeScript · Rust 세 언어, 블록마다 컴파일 검사(유저 결정). md는 나열, HTML 버전은 탭으로 묶는다</strong> — 근거 · 버린 대안: 컴파일은 하한이지 정확성 검증이 아니다 — 옳음은 예시 코드 실행 대조와 품질 게이트 채점이 진다(실행 검증은 유저 결정으로 범위 밖). HTML은 md의 파생물이고 .3(파일럿 3편)·.6(33편)에서만 그린다</li>
 <li><strong>11. 기존 절 넷의 처분(유저 결정) — 「어떨 때 사용하나」→ 새 <code>## 사용 목적</code> 절, 「장점과 단점, 한계점」→ 비교 절로 흡수, 「정보 표」→ 삭제(활용성 별점은 근거 없는 수치), 「Class Diagram」→ 개념 정의 직후로 이동</strong> — 근거 · 버린 대안: 「사용 목적」은 ds-guide의 <code>when.clue</code>(&quot;언제 이걸 꺼내야 하는가&quot;)를 계승</li>
 </ul>
 <h4>새 골격 (<code>gof-guide</code>)</h4>
@@ -629,7 +629,7 @@ work 단위 게이트 33건 ┘</pre>
 </ul>
 <ul>
 <li>병렬 폭은 하위 카드 <strong>안</strong>에서만 쓴다. 하위 카드 사이는 .1 → .6 엄격 순차다(.2의 분석 spec에 .1의 회계 확정안이 들어가고, .3은 .2의 파이프라인 위에서만, .4·.5는 .3이 고친 spec 1.1로 쓴다).</li>
-<li>가이드 1편은 외부 모델 호출 1회(외부 검토)를 쓴다(2026-09-20 정성 게이트 제거 뒤). 동시 호출이 한도에 걸릴 수 있어 폭은 .3에서 실측한 값을 넘기지 않는다.</li>
+<li>가이드 1편은 외부 모델 CLI 를 부르지 않는다(2026-09-20 정성 게이트·외부 검토 제거). 비용은 집필·채점 워커의 토큰과 컴파일·실행 시간뿐이다.</li>
 <li>가이드 1편의 예시 코드는 Java · TypeScript · Rust 세 블록이라 옛 가이드(Java 1블록)보다 코드가 3배다. 크기 3이 무거우면 회고가 2로 내린다.</li>
 <li>오케스트레이션에서 워커는 커밋하지 않는다. 메인이 work 순서대로 <code>doc-step done</code> → 커밋 → 태그를 남기고, 같은 파일을 두 워커가 만지지 않으며, 비교 쌍은 배치 끝에 메인이 교차 확인한다.</li>
 </ul>
@@ -637,14 +637,14 @@ work 단위 게이트 33건 ┘</pre>
 <ol>
 <li>플러그인 프로젝트 스코프 설치(<code>claude plugin install authoring-kit@centurio87-plugins --scope project</code>) — 계획 리포트 집필에도 필요.</li>
 <li>orca 브랜치 접두사 none — <code>orca worktree create</code> 반환의 <code>branch == refs/heads/KAN-001-YXTC2C</code> 확인.</li>
-<li><code>codex login</code> · <code>agy</code> 1회 — 외부 검토가 의존한다. 두 도구가 모두 응답하지 못하면 검토를 받지 못한 것이다.</li>
+<li>외부 CLI(codex · agy) 의존 없음 — 파이프라인이 부르지 않는다. 필요한 것은 세 언어 툴체인(JDK 21 · 로컬 tsc · rustc)과 도식 렌더용 Playwright 다.</li>
 <li>전역 principles 레포(my-claude-env)의 미커밋 변경 확인 — <code>lock</code> revision 안정성.</li>
 <li>voice <code>used_by.projects</code>에 이 프로젝트 추가 — 전역 파일이라 카드 밖, 유저가 한다.</li>
 </ol>
 <h4>리스크</h4>
 <ul>
 <li><strong>정성 게이트는 통과 조건이 아니다</strong>(2026-09-20 유저 결정) — code_test 의 이해 게이트는 판정 문구가 수치 대조·실행값에 걸려 있는데, 패턴 가이드용으로 옮기며 그 자리를 &quot;설명이 얇은가&quot; 같은 정성 판단으로 바꿨다. 같은 파일·같은 모델에서도 판정이 흔들려(회고 3.1) 게이트 구실을 못 했다. 대응: 파이프라인에서 제거하고 통과는 기계 검사로만 가른다. 외부 검토는 &quot;실행됐는가&quot;만 게이트가 보고, 응답 내용은 집필 라운드의 입력이다.</li>
-<li><strong>외부 검토 축 <code>review-axes/guide.md</code>가 알고리즘용</strong> — 대응: 패턴 전용 축 파일을 .2 S4에서 만든다. fallback 없음</li>
+<li><strong>외부 모델 비평은 쓰지 않는다</strong>(2026-09-20 유저 결정) — 계승 원본도 경로 바인딩과 축 파일이 없어 실행하지 않는다. 사실 주장 검증은 품질 게이트 채점이 실행·원문 대조로 진다.</li>
 <li><strong>voice <code>max_prose_run=2</code>가 GoF 설명에 도식 강제</strong> — 대응: mermaid·코드·표가 끊는 것으로 세어지는지 파일럿에서 확인</li>
 <li><strong>33편 × 3라운드 = 세션 다수</strong> — 대응: <code>resume</code> 규율 + 배치 종료 3종(doc-step done·태그·커밋) 강제</li>
 <li><strong>파일럿 회고가 spec을 크게 바꿈</strong> — 대응: .3 S4 완료 기준에 파일럿 3편 <code>--frozen</code> 재통과 + 재검사</li>

@@ -2,7 +2,7 @@
 pattern: Quantity
 slug: quantity
 spec: analysis-guide
-spec_version: 1.2.0
+spec_version: 1.3.0
 version: 1.0.0
 status: published
 date: 2026-09-20
