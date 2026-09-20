@@ -67,6 +67,6 @@
   - 이유: 명세는 산출물로 검증되기 전엔 추정이고, 30편을 틀린 명세로 쓰면 되돌리는 비용이 크다
   - 목표: 3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar spec마다 1건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성
   - 실행 문서: KANBAN/cards/KAN-001.3-Q6FYKP.md (6/6 · 최근 09-20)
-  - 검토 문서: KANBAN/reviews/KAN-001.3-Q6FYKP.review.md (승인 7/13 · 반려 6 · 철회 4 · 추가 의견 총 27 · 검토 대기)
+  - 검토 문서: KANBAN/reviews/KAN-001.3-Q6FYKP.review.md (승인 7/13 · 반려 6 · 철회 4 · 추가 의견 총 28 · 검토 대기)
 
 ## 완료
