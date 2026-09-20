@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 24,
+  "next_seq": 26,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -64,7 +64,7 @@
       ]
     },
     "KAN-001.2-4NWK0T": {
-      "col": "doing",
+      "col": "review",
       "title": "authoring-kit 정착",
       "verbatim": "",
       "생성": "ai",
@@ -86,11 +86,16 @@
       "scope": [
         ".claude/**",
         ".agents/skills/**",
-        "scripts/**"
+        "scripts/**",
+        "viz/**",
+        "assets/fonts/**",
+        "package.json",
+        ".npmrc",
+        ".gitignore"
       ]
     },
     "KAN-001.3-Q6FYKP": {
-      "col": "doing",
+      "col": "review",
       "title": "파일럿 3편과 회고",
       "verbatim": "",
       "생성": "ai",
@@ -110,22 +115,19 @@
       "memo_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "parent": "KAN-001-YXTC2C",
       "scope": [
-        "pattern-guide/design-pattern-guide/strategy-pattern.md",
-        "pattern-guide/ddd-analysis-pattern-guide/account-pattern.md",
-        "pattern-guide/ddd-analysis-pattern-guide/quantity-pattern.md",
-        "pattern-guide/html/**",
+        "pattern-guide/design-pattern-guide/strategy/**",
+        "pattern-guide/ddd-analysis-pattern-guide/account/**",
+        "pattern-guide/ddd-analysis-pattern-guide/quantity/**",
         "pattern-guide/gate-results.jsonl",
         "pattern-guide/gate-logs/**",
         ".claude/authoring/**",
         ".claude/authoring.lock.json",
+        "KANBAN/batches/**",
         "KANBAN/cards/KAN-001.4-BJT8JD.md",
         "KANBAN/cards/KAN-001.5-6HF35H.md",
         "KANBAN/cards/KAN-001.6-HB5NH9.md",
-        "KANBAN/batches/**",
         "scripts/check-guides.py",
         "scripts/comprehension-gate.sh",
-        "scripts/test-comprehension-gate.sh",
-        "scripts/fixtures/gate/**",
         "scripts/fixtures/check/**",
         ".claude/skills/design-pattern-guide/*-canvas.md",
         ".agents/skills/design-pattern-guide/*-canvas.md"
@@ -222,11 +224,31 @@
     "KAN-001.5-6HF35H",
     "KAN-001.6-HB5NH9",
     "KAN-001-YXTC2C",
+    "KAN-001.1-P5N9NF",
     "KAN-001.2-4NWK0T",
-    "KAN-001.3-Q6FYKP",
-    "KAN-001.1-P5N9NF"
+    "KAN-001.3-Q6FYKP"
   ],
   "recent": [
+    {
+      "seq": 25,
+      "t": "2026-09-20T18:27",
+      "a": "ai",
+      "id": "KAN-001.3-Q6FYKP",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "doing",
+      "to": "review"
+    },
+    {
+      "seq": 24,
+      "t": "2026-09-20T18:27",
+      "a": "ai",
+      "id": "KAN-001.2-4NWK0T",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "doing",
+      "to": "review"
+    },
     {
       "seq": 23,
       "t": "2026-09-20T17:12",
