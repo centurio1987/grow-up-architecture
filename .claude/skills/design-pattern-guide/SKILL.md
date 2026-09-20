@@ -71,6 +71,9 @@ python3 "$PLUGIN/scripts/authoring.py" resolve --voice ppangtolab-teacher --spec
   노트의 「미해결 질문」 또는 해당 패턴 절에 되먹인다. 다음 편이 같은 조사를 되풀이하지 않게 하려는 것이다.
 - **구 가이드**(같은 경로의 기존 파일)는 최소 조건의 취지와 참고 자료를 확인하는 데만 읽는다.
   문장을 복사하지 않는다 — voice 가 바뀌어 전부 다시 쓴다.
+- **재사용 자산 확인** — 같은 주제의 기존 가이드 폴더(`diagrams/` 의 도식 컴포넌트, `code/` 의 예시)에 쓸 것이 있으면 가져다 쓴다. 새로 만들지 않는다.
+  가져온 것도 검사 면제가 아니다 — 도식 검사와 실행 대조를 그대로 지난다.
+- **본문에 실을 수치는 실행에서 확정한다** — `code/` 의 세 언어를 돌려 나온 출력이 정본이고, 손으로 적은 값은 쓰지 않는다.
 - 본문에 실을 사실·수치·출처와, 조건부 절을 쓸지(출처가 확인된 사용처가 있는지 등)를 여기서 확정한다.
 
 ### 2. 집필 — `authoring-write` 에 위임
@@ -86,6 +89,8 @@ Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide>
   집필 서브에이전트 프롬프트에는 `authoring.py resolve --voice ppangtolab-teacher --spec <id> --profile worker`
   출력 **전문**을 넘긴다. 요약해서 넘기지 않는다.
 - **이 스킬이 본문을 직접 쓰지 않는다.**
+- 산출물은 본문 하나가 아니다 — 가이드 폴더에 `code/`(공개 클래스 이름의 `.java` · `main.ts` · `main.rs` · `expected-output.txt`)와
+  `diagrams/`(도식 컴포넌트 `.tsx` 와 렌더한 이미지)가 함께 선다. 본문 펜스는 `code/` 에서 가져오고, 도식은 이미지로 싣는다.
 - `authoring-write` 의 외부 검토·품질 게이트 단계는 아래 3단계 순서로 돈다. 기계 검사가 그 앞에 온다.
 
 ### 3. 게이트 — 순서 고정
@@ -109,16 +114,21 @@ Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide>
 
 ### 4. 발행 — 3단계를 전부 통과한 뒤에만
 
-1. **HTML** — `commands.render` → `commands.derived`(낡은 HTML 이 없어야 한다).
-   작업 카드가 HTML 을 일괄 렌더로 미뤘으면 건너뛰고 그 사실을 보고에 적는다.
-2. **게이트 기록** — `paths.json` `dirs.gate_results`(jsonl) 에 work 하나당 한 줄을 덧붙인다.
+1. **도식** — 바뀐 도식이 있으면 `bun run scripts/render-viz.ts --module <diagrams/X.tsx> --out <diagrams/x.png>` 로 다시 굽고
+   `bun run scripts/lint-diagrams.ts` 를 돌린다.
+2. **HTML** — `commands.render` → `commands.derived`(낡은 HTML 이 없어야 한다). 출력은 md 와 같은 폴더다.
+3. **인덱스 등록** — `paths.json` 의 `dirs.index`(`PATTERNS.md`)에 이 편을 **손으로 끼워 넣는다.** 분류·비교 페어 구조가 뜻을 담고 있으므로
+   **인덱스 전체를 알파벳순으로 다시 만드는 것은 금지**다. 새 버전을 냈으면 인덱스가 가리키는 파일명도 그 자리에서 고친다.
+   분석 패턴은 `pattern-guide/ddd-analysis-pattern-guide/README.md` 가 인덱스다.
+4. **포인터 점검** — `commands.pointers`. 인덱스·기준 예시가 최신본을 가리키는지 본다.
+5. **게이트 기록** — `paths.json` `dirs.gate_results`(jsonl) 에 work 하나당 한 줄을 덧붙인다.
 
 ```bash
 RESOLVE_HASH=$(python3 scripts/check-guides.py --resolve-hash <spec>)
 python3 - "$RESOLVE_HASH" <<'PY'
 import json, sys
 row = {
-  "file": "<대상 경로>", "spec": "<spec>", "work": "<카드id/S번호, 카드 밖이면 ->",
+  "file": "<대상 경로>", "spec": "<spec>", "version": "<가이드 버전>", "work": "<카드id/S번호, 카드 밖이면 ->",
   "resolve_hash": sys.argv[1], "rounds": 1,
   "external": "<응답한 도구, 예: codex+agy>", "verdict": "PASS", "date": "YYYY-MM-DD",
 }
@@ -127,13 +137,15 @@ with open("pattern-guide/gate-results.jsonl", "a", encoding="utf-8") as f:
 PY
 ```
 
-- `rounds` = 품질 게이트 라운드 수 · `verdict` = `PASS` | `FAIL`.
+- `rounds` = 품질 게이트 라운드 수 · `verdict` = `PASS` | `FAIL` · `version` = 이 판본의 semver.
 - 기록 경로는 `dirs.gate_results` 값을 쓴다(위 예시는 현재 값이다).
 - 3라운드 미통과로 멈출 때도 `verdict: "FAIL"` 로 한 줄 남긴다. 낡은 PASS 와 구분하려는 것이다.
 
 ### 5. 완료 보고
 
-- 산출 경로(md · HTML, HTML 을 건너뛰었으면 사유)
+- 산출 경로(md · HTML · `code/` · `diagrams/`, 건너뛴 것이 있으면 사유)
+- **인덱스 삽입 위치**(어느 절·어느 줄에 넣었는가)
+- 가이드 버전과 앞 판본(`supersedes`)
 - spec · voice · **resolve 해시**
 - 게이트 판정 — 기계 검사 결과와 도구 버전 · 예시 코드 실행 대조 · 외부 검토(응답한 도구, 빠진 도구) · 품질 게이트 PASS/FAIL 과 라운드 N/3
 - **생략한 조건부 절과 사유**

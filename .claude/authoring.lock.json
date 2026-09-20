@@ -28,8 +28,8 @@
     "yundeok": "sha256:b35dc23799c2187a"
   },
   "specs": {
-    "analysis-guide": "sha256:308dbf61d4be4a1a",
-    "gof-guide": "sha256:1fc2ecbb5e8f5822",
+    "analysis-guide": "sha256:39984c2fe83b487d",
+    "gof-guide": "sha256:1577a531dfadaa63",
     "kanban-report": "sha256:851b2f82a97be7d3"
   }
 }
