@@ -207,9 +207,9 @@ Account 와 닮아 보이거나 같은 단서에서 떠오르는 넷을 구분 �
 | 필드가 원천인 잔액 모델 (감사·과거 잔액이 필요한 곳에 쓰면 안티패턴) | 잔액과 기록이 어긋날 때 무엇을 고치는가 — 기록으로 잔액을 다시 계산하면 Account, 필드를 기준으로 두면 이 모델 | 어느 시점의 잔액이든 기록에서 다시 계산하고, 계산해 둔 값이 틀렸는지 판정하는 능력 | 조회 때 합산 비용, 또는 캐시를 Entry 와 맞추는 일 |
 | Temporal Property | 현재 값을 변화 기록의 합으로 얻는가(합산 책임), 시점마다 정해진 값을 찾아 돌려주는가(시점 조회 책임). 값이 금액이어도 합으로 정의되지 않으면 Temporal Property | 변경 한 건 한 건과 그 합을 함께 다루는 모델 | Temporal Property 의 단순함(기간별 값만 적고 찾음), 그리고 변화를 모두 Entry 로 남기는 저장 |
 | Transaction (함께 쓰는 짝) | 규칙이 한 계정의 Entry 합(= 잔액)에 걸리는가, 한 사건의 Entry 합(= 0)에 걸리는가 | Transaction 없이 Account 만 두면 계정별 잔액과 내역에 답하는 가벼운 모델 | Transaction 없이 Account 만 두면 돈이 어디서 와서 어디로 갔는지 짝을 맞추는 검증이 없음. 둘은 대체 관계가 아니라 함께 쓰는 관계 |
-| Event Sourcing | 저장된 원천이 무엇인가 — 계정 이름·열림/닫힘 같은 현재 상태까지 이벤트에서 다시 만들면 Event Sourcing, 현재 상태는 그대로 저장하고 금액 결과만 Entry 로 모아 더하면 Account | 계정·금액 질문에 맞춘 좁은 모델, 합산 하나로 끝나는 잔액 | 금액이 아닌 상태 변경의 이력(계정 이름 변경 등). 필요하면 Event Sourcing 과 겹쳐 씀 |
+| Event Sourcing | 원천이 무엇인가 — 계정 이름·열림/닫힘 같은 상태의 변경까지 모두 이벤트로 저장되고 재생으로 그 상태를 다시 만들 수 있으면 Event Sourcing(현재 상태 테이블이나 스냅숏이 함께 있어도 원천이 이벤트면 그렇습니다), 그런 상태 변경은 이벤트로 남기지 않고 금액 결과만 Entry 로 모아 더하면 Account | 계정·금액 질문에 맞춘 좁은 모델, 합산 하나로 끝나는 잔액 | 금액이 아닌 상태 변경의 이력(계정 이름 변경 등). 필요하면 Event Sourcing 과 겹쳐 씀 |
 
-Event Sourcing 은 애플리케이션 상태의 모든 변경을 이벤트 순서대로 저장하는 패턴이에요([eaaDev Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)). 금액 이벤트를 더해 잔액을 만드는 것도 이벤트 재생의 한 형태라서 둘은 겹칠 수 있고, Fowler 도 Account 가 사건의 금전적 결과를 추적하므로 Event Sourcing 과 잘 맞는다고 적었습니다([eaaDev Patterns for Accounting](https://martinfowler.com/eaaDev/AccountingNarrative.html)). 표의 대상마다 모델이나 코드에서 무엇을 보면 갈리는지 모아 볼게요. 필드가 원천인 모델은 바로 아래 코드로 따로 봅니다.
+Event Sourcing 은 애플리케이션 상태의 모든 변경을 이벤트 순서대로 저장하는 패턴이에요([eaaDev Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)). 가르는 기준은 상태를 저장해 둔 자리가 있느냐가 아니라 원천이 어디냐입니다. Fowler 는 같은 글에서 현재 상태를 이벤트와 함께 두는 구현과 중간 지점을 저장해 두는 스냅숏을 명시적으로 다뤄요. 그 둘은 이벤트를 재생해 언제든 다시 만들 수 있으니 원천이 아니고, 이 글이 뒤에서 읽기 모델을 두고 버리고 다시 만들 수 있으니 원천이 아니라고 말하는 것과 같은 잣대입니다. 금액 이벤트를 더해 잔액을 만드는 것도 이벤트 재생의 한 형태라서 둘은 겹칠 수 있고, Fowler 도 Account 가 사건의 금전적 결과를 추적하므로 Event Sourcing 과 잘 맞는다고 적었습니다([eaaDev Patterns for Accounting](https://martinfowler.com/eaaDev/AccountingNarrative.html)). 표의 대상마다 모델이나 코드에서 무엇을 보면 갈리는지 모아 볼게요. 필드가 원천인 모델은 바로 아래 코드로 따로 봅니다.
 
 ```text
 Temporal Property 와 Account — 조회 코드가 하는 일
@@ -223,7 +223,8 @@ Transaction 과 Account — 짝을 검사하는 코드가 있는가
   확인할 곳                 여러 계정의 Entry 를 한 묶음으로 만들고 합을 검사하는 생성 코드가 있는가
 
 Account 만 쓰는 모델 (이 가이드의 코드)
-  저장소에 있는 것   Account(1010, 현금, 열림) ← 현재 상태를 그대로 저장
+  저장소에 있는 것   Account(1010, 현금, 열림) ← 상태를 바로 고쳐 저장
+                     이름 변경·닫힘은 이벤트로 남지 않아 재생할 재료가 없음
                      Transaction T1~T4 와 그 Entry
   잔액               Entry 의 합. TransactionPosted 는 읽기 모델에 알리는 용도
   계정 이름 이력     물을 수 없음. 이름을 바꾸면 현재 값만 남음
@@ -232,8 +233,10 @@ Event Sourcing 을 겹쳐 쓴 모델 (예시 이벤트 이름)
   저장소에 있는 것   AccountOpened(1010, 현금) · AccountRenamed(1010, 보통예금)
                      AmountPosted(1010, +100,000) · AccountClosed(1010)
   Account 객체       이벤트를 순서대로 적용해 이름·열림/닫힘·잔액을 모두 다시 만듦
-  확인할 곳          Account 의 현재 상태를 저장하는 테이블이나 필드가 있는가
-                     없고 이벤트만 있으면 Event Sourcing
+  확인할 곳          이름 변경·닫힘 같은 상태 변경이 전부 이벤트로 남고
+                     그 이벤트 재생만으로 현재 상태를 다시 만들 수 있는가
+                     빠르게 읽으려고 둔 상태 테이블이나 스냅숏이 있는지는 기준이 아님
+                     — 버리고 재생으로 다시 만들 수 있으면 원천이 아니니까
 ```
 
 가장 헷갈리는 쌍은 첫 줄이에요. 잔액 필드 옆에 변경 로그를 쌓으면 기록이 있으니 Account 처럼 보입니다. 갈리는 곳은 로그의 유무가 아니라 원천이 어디냐예요. 아래 코드에서 원천은 필드이고 로그는 부산물입니다.
@@ -316,7 +319,7 @@ GeneralLedger           저장소와 전기 서비스를 메모리로 흉내 낸
 | 항목 | 이 가이드의 설정 |
 | --- | --- |
 | bounded context | 총계정원장 전기 컨텍스트 — 다른 컨텍스트의 업무 사건을 균형 잡힌 거래로 전기하고 계정별 잔액을 파생 |
-| 불변식의 위치 | ① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → `Transaction` root 의 Factory `Transaction.create`, 동기 ② 전기된 Entry 는 불변 → `Transaction` root, 생성 뒤 상태를 바꾸는 메서드가 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 `Account` root 의 `checkPostable` 을 호출, 동기 (계정 닫기와 같은 순간에 일어난 전기의 경합은 허용, 통화가 다른 금액의 덧셈은 `Money` 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 `AccountBalance` 읽기 모델이 `TransactionPosted` 이벤트로 반영 위치(`lastAppliedSeq`)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제) |
+| 불변식의 위치 | ① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → `Transaction` root 의 Factory `Transaction.create`, 동기 ② 전기된 Transaction 과 그 Entry 는 수정·삭제하지 않음 — 각 Entry 의 값뿐 아니라 그 거래에 어떤 Entry 가 속하는지(거래 구성)도 전기 뒤에 바뀌지 않음 → `Transaction` root, 생성 뒤 상태를 바꾸는 메서드가 없어 Entry 를 더하거나 뺄 수 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 `Account` root 의 `checkPostable` 을 호출, 동기 (계정 닫기와 같은 순간에 일어난 전기의 경합은 허용, 통화가 다른 금액의 덧셈은 `Money` 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 `AccountBalance` 읽기 모델이 `TransactionPosted` 이벤트로 반영 위치(`lastAppliedSeq`)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제) |
 | root·entity·VO 배정 | `Account` = aggregate root (식별자·이름·계정 종류 id·통화·열림/닫힘만, Entry 목록과 잔액 필드 없음) · `Transaction` = 별도 aggregate root · `Entry` = `Transaction` 안의 불변 child entity (식별자 = 거래 id + 순번 `seq`, 같은 거래 안에서는 `seq` 로 비교) · `Money` · `AccountAmount` = VO · `AccountBalance` = 읽기 모델 (aggregate 아님) · `TransactionPosted` = 값만 담는 도메인 이벤트 |
 | 타 aggregate 참조 방식 | id 참조 — `Entry` → `Account` 는 `AccountId`, 역분개 `Transaction` → 원 `Transaction` 은 `TransactionId`, `AccountBalance` → `Account` 는 `AccountId`, `Account` → 지식 층위의 계정 종류는 `AccountTypeId`. 어느 aggregate 도 다른 aggregate 의 객체를 필드나 메서드 시그니처에 두지 않음 |
 
@@ -1113,7 +1116,7 @@ T2 의 Entry #2 (현금 -30,000) 를 Transaction T2 와 Account 현금이 함께
 | **이 가이드** — 복식부기 원장이라 거래마다 Entry 합 = 0 을 지켜야 하고, 잔액 조회는 조금 늦어도 됨 | Entry 를 Transaction 이 가진다 — `Transaction` root 안의 불변 child entity. `Account` 는 Entry 도 잔액도 없는 별도 root, 잔액은 읽기 모델 | 균형은 한 거래 안 Entry 들 사이의 규칙이라 Transaction 한 경계에서 동기로 지킴. 전기 한 번이 aggregate 하나만 저장하므로 같은 계정의 잔액을 두고 두 전기가 경합하지 않음. 대가는 잔액 반영의 지연, 그리고 계정 닫기와 같은 순간의 전기는 막지 못함(확정안 I5 가 허용) |
 | 거래 균형 규칙이 없는 단식 기록이고, 계정 단위 규칙이 그 계정의 Entry 전체에 걸리며, Entry 수가 작게 제한됨 (예: 사용 횟수가 정해진 선불권) | Entry 를 Account 가 가진다 — `Account` root 안의 child (원서 그림 6.1 과 eaaDev Account 코드가 그린 모양) | 계정 단위 규칙을 한 경계에서 지킴. Entry 가 계속 쌓이는 원장에서는 aggregate 가 끝없이 커져(Vernon Part I) Entry 한 건을 더할 때도 큰 경계를 불러오고 잠그기 쉽고, 복식부기라면 거래 하나가 Account 둘을 함께 고쳐야 해서 지양 ([Account와 Entry의 관계 설계](<../../consideration/Account와 Entry의 관계 설계.md>) 시나리오 1) |
 | 거래 균형이 없는 단식 기록 (포인트 적립 내역, 활동 기록)이고 Entry 끼리 묶어 지킬 생성 규칙이 없음 | Entry 가 홀로 존재한다 — Entry 가 자기 root (크기 1 aggregate), `AccountId` 로 계정을 가리킴 | 함께 지킬 규칙이 없으니 가장 작은 경계로 충분. 복식부기라면 균형 규칙이 여러 Entry aggregate 에 걸쳐 경계 밖으로 나가서, 여러 aggregate 를 원자적으로 묶는 장치 없이는 지킬 곳이 없음 (같은 문서 시나리오 2) |
-| 잔액이 음수가 되면 안 된다는 규칙을 전기 순간에 지켜야 함 | Entry 는 별도 entity 로 존재하고, Account 가 그에 대한 VO 를 가진다 — ④-a: Account 가 요약 VO(잔액·예약액)만 가짐 | 한도 검사에 필요한 것은 Entry 전체가 아니라 현재 잔액이라 요약 VO 로 충분. 대가는 전기 한 번에 Account 와 Transaction 두 aggregate 를 함께 고치는 것 — 트랜잭션 하나에서 aggregate 인스턴스 하나만 고친다는 Vernon 규칙의 예외로 받아들이거나, 잔액을 먼저 예약한 뒤 확정하는 두 단계로 나눔 ([TigerBeetle Transfer](https://docs.tigerbeetle.com/reference/transfer/)의 pending → post/void) |
+| 잔액이 음수가 되면 안 된다는 규칙을 전기 순간에 지켜야 함 | Entry 는 별도 entity 로 존재하고, Account 가 그에 대한 VO 를 가진다 — ④-a: Account 가 요약 VO(잔액·예약액)만 가짐 | 한도 검사에 필요한 것은 Entry 전체가 아니라 현재 잔액이라 요약 VO 로 충분. 대가는 전기 한 번에 `Transaction` 과 `Account` 두 종류의 aggregate 를 함께 고치는 것 — T2 처럼 계정 둘이 걸린 거래라면 인스턴스로는 셋(T2 · 임대료 · 현금)입니다. 트랜잭션 하나에서 aggregate 인스턴스 하나만 고친다는 Vernon 규칙의 예외로 받아들이거나, 잔액을 먼저 예약한 뒤 확정하는 두 단계로 나눔 ([TigerBeetle Transfer](https://docs.tigerbeetle.com/reference/transfer/)의 pending → post/void) |
 | 계정 안에서 최근 내역을 바로 보며 규칙을 검사하고 싶음 (예: 최근 N건 기준 한도) | Entry 는 별도 entity 로 존재하고, Account 가 그에 대한 VO 를 가진다 — ④-b: Account 가 Entry 내역을 투영한 VO 목록을 가짐 | 지양(확정안 8절). 투영이라는 점은 이 가이드의 읽기 모델과 같지만, Account 안에 두고 한도 규칙에 쓰면 늦어서는 안 되므로 전기마다 Transaction 과 Account 를 함께 고쳐야 함. 한쪽만 반영되면 위 도식처럼 두 합이 70,000 과 100,000 으로 어긋남. 최근 N건만 두면 목록 크기는 N 으로 묶이지만 이 동시 갱신 부담은 남음. [account-transaction-entry-modeling](../../consideration/account-transaction-entry-modeling.md)의 `List<AccountLedger>` 가 이 형태이고, 그쪽은 건수 제한이 없음 |
 
 표의 이유 칸이 말하는 보장이 경계를 옮기면 어느 동작에서 빠지는지, 「상황 설정」 표의 불변식 네 개로 모두 따라가 볼게요. 여러 aggregate 를 한 저장으로 원자적으로 묶는 장치는 쓰지 않는다고 전제합니다(트랜잭션 하나에 aggregate 하나라는 Vernon 규칙). 그런 장치를 쓰면 부분 실패는 없어지지만 그 장치의 잠금과 비용이 대신 붙어요.
@@ -1123,12 +1126,12 @@ T2 의 Entry #2 (현금 -30,000) 를 Transaction T2 와 Account 현금이 함께
 | ① 합 0 · Entry 2개 이상 | Entry 가 홀로 존재 | T2 전기 = Entry aggregate 두 건 저장 | 두 건을 함께 볼 root 가 없음. 임대료 +30,000 만 저장되고 멈추면 짝 없는 Entry 1건이 확정돼, 4/5 기준 임대료 30,000 · 현금 100,000 그대로 |
 | ① | Entry 를 Account 가 가짐 | T2 전기 = 임대료 Account · 현금 Account 두 건 저장 | 위와 같은 부분 실패. 합 0 을 한 번에 검사할 root 가 없음 |
 | ① · ③ | Account 와 Transaction 을 한 aggregate(원장 전체)로 합침 | T2 전기와 가수금 닫기가 같은 순간에 옴 | 합 0 과 계정 열림은 한 경계에서 함께 지켜지지만, 서로 관계없는 두 요청이 같은 aggregate 를 고쳐 한쪽은 충돌 후 다시 시도. 모든 전기와 계정 변경이 한 줄로 늘어섬 |
-| ② 전기된 Entry 불변 | Entry 가 홀로 존재 | 전기가 끝난 T2 에 속한다는 Entry 를 나중에 한 건 더 저장 | 각 Entry 는 스스로 바뀌지 않아도, T2 라는 묶음이 닫혔다는 것을 지킬 root 가 없어 막을 곳이 없음. 4/7 에 T2 소속 현금 −5,000 을 더하면 4/5 현금이 65,000 으로 바뀌고 T2 합은 −5,000. 역분개도 T2 의 다리를 조회로 모으므로 언제 모으느냐에 따라 다른 T3 이 만들어짐 |
+| ② 전기된 거래·Entry 불변 (거래 구성 포함) | Entry 가 홀로 존재 | 전기가 끝난 T2 에 속한다는 Entry 를 나중에 한 건 더 저장 | 각 Entry 는 스스로 바뀌지 않아도, T2 라는 묶음이 닫혔다는 것을 지킬 root 가 없어 막을 곳이 없음. 4/7 에 T2 소속 현금 −5,000 을 더하면 4/5 현금이 65,000 으로 바뀌고 T2 합은 −5,000. 역분개도 T2 의 다리를 조회로 모으므로 언제 모으느냐에 따라 다른 T3 이 만들어짐 |
 | ② | Entry 를 Account 가 가짐 | Account 의 오래된 Entry 정리(합이 같은 한 건으로 바꿈, [eaaDev Account](https://martinfowler.com/eaaDev/Account.html)) | 현금이 4/5 이전 Entry 를 +70,000 한 건으로 정리하면 합은 그대로지만 T2 #2 가 사라져, T2 를 되돌릴 현금 다리를 찾을 수 없음. 전기된 Entry 가 남는다는 보장을 Transaction 이 할 수 없음 |
 | ③ 계정 존재 · 열림 · 통화 | 이 가이드 그대로 | `checkPostable` 통과 직후 다른 요청이 가수금을 닫음 | 닫힌 가수금에 전기가 확정될 수 있음. 확정안 I5 가 허용한 경합이고, 막으려면 아래 두 행이나 위 합친 행의 비용을 치러야 함 |
 | ③ | Entry 를 Account 가 가짐 | T2 전기 | 열림·통화 확인이 각 Account 안에서 Entry 추가와 함께 끝나 닫기와의 경합은 사라짐. 대가는 ① 둘째 행의 부분 실패이고, 이를 막으려고 두 계정을 한 저장으로 묶으면 T2 가 두 계정을 함께 잠가 같은 시각 현금을 쓰는 T4 가 기다림 |
 | ③ | Entry 가 홀로 존재 | T2 의 Entry 를 한 건씩 확인하고 저장 | #1(임대료) 확인·저장 뒤 #2 확인 전에 현금이 닫히면 #2 만 거절돼, ③ 을 지키다가 ① 이 깨짐 |
-| ④ 잔액 = Entry 합 | Account 가 요약 VO(잔액)를 가짐 (④-a) | T2 전기 | 잔액이 전기와 같은 순간 맞지만, 전기 한 번이 Transaction · 임대료 Account · 현금 Account 셋을 고쳐 원자적으로 묶거나 예약 두 단계를 거쳐야 함. T2 와 T4 가 현금 잔액 VO 를 두고 경합 |
+| ④ 잔액 = Entry 합 | Account 가 요약 VO(잔액)를 가짐 (④-a) | T2 전기 | 잔액이 전기와 같은 순간 맞지만, 전기 한 번이 `Transaction` 과 `Account` 두 종류 — T2 에서는 인스턴스 셋(T2 · 임대료 · 현금) — 을 고쳐 원자적으로 묶거나 예약 두 단계를 거쳐야 함. T2 와 T4 가 현금 잔액 VO 를 두고 경합 |
 | ④ | 이 가이드 그대로 | 이벤트가 전기 순서와 다르게 도착 | 건너뛰기가 위치만 보고 판단해, 2번을 먼저 반영하면 1번은 영영 빠짐. T1 · T2 만 전기하고 거꾸로 전달하면 현금 읽기 모델 −30,000 · Entry 합 70,000 (코드를 바꿔 실행해 확인). 이벤트 순서 보장이 이 경계의 전제 |
 
 소속 표의 ④-a 행이 이 가이드와 가장 가까운 선택지예요. 원장에 잔액 하한 규칙이 들어오면 경계가 이렇게 바뀝니다.
@@ -1140,7 +1143,8 @@ Before — 이 가이드 (Entry 를 Transaction 이 가진다)
   잔액 하한 = 검사할 곳 없음
 
 After — ④-a (Account 가 요약 VO 를 가진다)
-  전기 1회  = Transaction 저장 + Account 의 잔액 VO 갱신 (aggregate 둘)
+  전기 1회  = Transaction 저장 + 걸린 계정마다 Account 의 잔액 VO 갱신
+              (aggregate 종류 둘, T2 는 인스턴스 셋: T2 · 임대료 · 현금)
   잔액      = Account 안, 전기와 같은 순간
   잔액 하한 = Account root 가 전기 전에 검사
 ```
@@ -1208,7 +1212,7 @@ deliverEvents 2회차   보내는 이벤트: T1 T2 T3 T4      현금 ?   매출 
 - [Accounting Entry (eaaDev)](https://martinfowler.com/eaaDev/AccountingEntry.html) — Account 없이 쓰는 Entry, 확정 전 변경 허용과 확정 뒤 불변 (최소 조건 2 · 3)
 - [Patterns for Accounting (eaaDev)](https://martinfowler.com/eaaDev/AccountingNarrative.html) — Account 와 Transaction 이 모두 선택, Account 와 Event Sourcing 의 관계 (개념 정의, 비교 표)
 - [Temporal Property (eaaDev)](https://martinfowler.com/eaaDev/TemporalProperty.html) — 시점을 받아 그때 값을 돌려주는 속성 (사용 목적, 비교 표)
-- [Event Sourcing (eaaDev)](https://martinfowler.com/eaaDev/EventSourcing.html) — 상태의 모든 변경을 이벤트 순서대로 저장 (비교 표)
+- [Event Sourcing (eaaDev)](https://martinfowler.com/eaaDev/EventSourcing.html) — 상태의 모든 변경을 이벤트 순서대로 저장, 현재 상태를 이벤트와 함께 두는 구현과 스냅숏 (비교 표의 구분 기준)
 - [Analysis Patterns 튜토리얼 슬라이드 (Fowler, JAOO 1999)](http://jaoo.dk/jaoo1999/schedule/MartinFowlerAnalysisPatterns.pdf) — "Money is a kind of quantity" (Money 정의)
 - [회계 배경 확정안](../../research/accounting-context.md) — 상황 설정 표 네 칸, 「상황이 달라지면」의 Entry 소속 네 가지와 ④-a · ④-b 구분
 - [Account와 Entry의 관계 설계](<../../consideration/Account와 Entry의 관계 설계.md>) — 시나리오 1 · 2 · 3, 요약 VO 하이브리드 (「상황이 달라지면」 둘째 · 셋째 · 넷째 행)
