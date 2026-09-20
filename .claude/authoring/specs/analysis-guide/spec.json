@@ -337,6 +337,12 @@
       "text": "구현 분량 — `example.impl` 의 세 펜스가 각각 250줄 이하다. 넘으면 시나리오를 줄인다"
     },
     {
+      "code": "PG29",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "코드 정본 — 예시 코드는 가이드 폴더의 `code/` 에 실행 파일로 있고(공개 클래스 이름의 .java · main.ts · main.rs · expected-output.txt), 본문 펜스가 그 파일과 글자 단위로 같으며, 본문이 싣는 실행 출력이 expected-output.txt 와 같다. 세 언어가 같은 출력을 내지 않거나 본문 수치가 실행에서 오지 않으면 미흡"
+    },
+    {
       "code": "AG1",
       "level": "MUST",
       "axis": "structure",

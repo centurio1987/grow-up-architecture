@@ -830,6 +830,117 @@ def compile_block(ctx: Ctx, tools: dict, lang: str, code: str) -> tuple[bool, st
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def run_block(ctx: Ctx, tools: dict, lang: str, src_path: Path) -> tuple[bool, str]:
+    """코드 파일 하나를 컴파일하고 실행해 stdout 을 돌려준다. (ok, 출력 또는 오류)"""
+    tmp = Path(tempfile.mkdtemp(prefix=f"check-guides-run-{lang}-")).resolve()
+    try:
+        code = src_path.read_text(encoding="utf-8")
+        if lang == "java":
+            m = JAVA_PUBLIC.search(code)
+            cls = m.group(1) if m else "Main"
+            rc, out = _run(["javac", "-encoding", "UTF-8", "-d", str(tmp / "out"), str(src_path)])
+            if rc != 0:
+                return False, f"컴파일 실패(exit {rc}):\n{out[:1500]}"
+            rc, out = _run(["java", "-Dfile.encoding=UTF-8", "-cp", str(tmp / "out"), cls])
+        elif lang == "typescript":
+            opts = dict(tools["_ts_options"])
+            opts.update({"typeRoots": [str(ctx.project / "typescript/node_modules/@types")],
+                         "noEmit": False, "outDir": str(tmp / "js"), "module": "commonjs", "target": "es2022",
+                         "moduleResolution": "node", "verbatimModuleSyntax": False})
+            (tmp / "tsconfig.json").write_text(
+                json.dumps({"compilerOptions": opts, "include": [str(src_path)]}), encoding="utf-8")
+            rc, out = _run([str(ctx.project / "typescript/node_modules/.bin/tsc"), "-p", str(tmp / "tsconfig.json")])
+            if rc != 0:
+                return False, f"컴파일 실패(exit {rc}):\n{out[:1500]}"
+            js = next(iter(sorted((tmp / "js").rglob("*.js"))), None)
+            if js is None:
+                return False, "tsc 가 JavaScript 를 내지 않았습니다"
+            rc, out = _run(["node", str(js)])
+        elif lang == "rust":
+            rc, out = _run(["rustc", "--edition", tools["rust_edition"], "-o", str(tmp / "a"), str(src_path)],
+                           cwd=str(tmp))
+            if rc != 0:
+                return False, f"컴파일 실패(exit {rc}):\n{out[:1500]}"
+            rc, out = _run([str(tmp / "a")])
+        else:
+            return False, f"알 수 없는 언어: {lang}"
+        if rc != 0:
+            return False, f"실행 실패(exit {rc}):\n{out[:1500]}"
+        return True, out
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def mode_run(ctx: Ctx, rep: Report, files: list[Path]) -> None:
+    """예시 코드는 본문 밖 실행 파일이 정본이다 — 세 언어가 같은 출력을 내고, 본문 펜스와 기대 출력이 그것과 같아야 한다."""
+    M = "run"
+    tools, terrs = toolchain(ctx)
+    rep.info(M, "tools", {k: v for k, v in tools.items() if not k.startswith("_")})
+    rep.info(M, "files", len(files))
+    for e in terrs:
+        rep.add(M, "toolchain", False, e)
+    if terrs:
+        return
+    for p in files:
+        f = ctx.rel(p)
+        code = p.parent / "code"
+        if not code.is_dir():
+            rep.add(M, "code-dir", False, f"예시 코드 폴더가 없습니다: {ctx.rel(code)}", f)
+            continue
+        javas = sorted(code.glob("*.java"))
+        srcs = {"java": javas[0] if len(javas) == 1 else None,
+                "typescript": code / "main.ts" if (code / "main.ts").exists() else None,
+                "rust": code / "main.rs" if (code / "main.rs").exists() else None}
+        missing = [k for k, v in srcs.items() if v is None]
+        if missing:
+            rep.add(M, "code-dir", False,
+                    f"코드 파일이 없거나 여럿입니다: {missing} (java 는 공개 클래스 이름으로 한 개)", f)
+            continue
+        exp_path = code / "expected-output.txt"
+        if not exp_path.exists():
+            rep.add(M, "expected", False, f"기대 출력 파일이 없습니다: {ctx.rel(exp_path)}", f)
+            continue
+        expected = exp_path.read_text(encoding="utf-8")
+        rep.add(M, "code-dir", True, f"{javas[0].name} · main.ts · main.rs · expected-output.txt", f)
+        # 본문 펜스 = 코드 파일
+        md = Md(p.read_text(encoding="utf-8"))
+        rng = md.section(3, IMPL_HEADING)
+        blocks = [b for b in md.fences_in(rng) if "no-compile" not in b["info"]] if rng else []
+        if len(blocks) != 3:
+            rep.add(M, "fence-sync", False, f"'### {IMPL_HEADING}' 의 펜스가 3개가 아닙니다 — {len(blocks)}개", f)
+        else:
+            for (lang, src), b in zip(srcs.items(), blocks):
+                fence = "\n".join(b["body"]).rstrip("\n") + "\n"
+                if fence != src.read_text(encoding="utf-8").rstrip("\n") + "\n":
+                    rep.add(M, "fence-sync", False,
+                            f"본문 {lang} 펜스가 {ctx.rel(src)} 와 다릅니다 — 본문은 코드 파일에서 가져옵니다", f)
+                else:
+                    rep.add(M, "fence-sync", True, f"{lang} 펜스 = {src.name}", f)
+        # 실행 대조
+        outs = {}
+        for lang, src in srcs.items():
+            ok, out = run_block(ctx, tools, lang, src)
+            if not ok:
+                rep.add(M, f"run:{lang}", False, f"{ctx.rel(src)} {out}", f)
+                continue
+            outs[lang] = out
+            if out.rstrip("\n") != expected.rstrip("\n"):
+                rep.add(M, f"run:{lang}", False,
+                        f"{ctx.rel(src)} 출력이 기대 출력과 다릅니다\n--- 실행\n{out[:800]}\n--- 기대\n{expected[:800]}", f)
+            else:
+                rep.add(M, f"run:{lang}", True, f"{src.name} 출력 {len(out.splitlines())}줄 일치", f)
+        if len(outs) == 3 and len({v.rstrip() for v in outs.values()}) > 1:
+            rep.add(M, "same-output", False, "세 언어의 출력이 서로 다릅니다", f)
+        # 본문이 그 출력을 싣고 있는가
+        body_fences = [b for b in md.fences if b["end"] is not None]
+        want = expected.rstrip("\n")
+        if any("\n".join(b["body"]).rstrip("\n") == want for b in body_fences):
+            rep.add(M, "output-fence", True, "본문에 기대 출력 펜스가 있습니다", f)
+        else:
+            rep.add(M, "output-fence", False,
+                    "본문에 실행 출력을 그대로 담은 펜스가 없습니다 — 수치는 실행에서 가져옵니다", f)
+
+
 def mode_compile(ctx: Ctx, rep: Report, files: list[Path]) -> None:
     M = "compile"
     tools, terrs = toolchain(ctx)
@@ -1282,6 +1393,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--links", action="store_true")
     ap.add_argument("--spec-shared", action="store_true")
     ap.add_argument("--resolve-hash", metavar="SPEC_ID")
+    ap.add_argument("--run", action="store_true", help="예시 코드 실행·출력 대조")
     ap.add_argument("--gates", action="store_true")
     ap.add_argument("--pointers", action="store_true", help="인덱스·기준 예시가 최신본을 가리키는지")
     ap.add_argument("--derived", action="store_true")
@@ -1295,7 +1407,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args(argv)
 
-    modes = {"all": args.all, "compile": args.compile, "links": args.links, "spec-shared": args.spec_shared,
+    modes = {"all": args.all, "compile": args.compile, "run": args.run, "links": args.links, "spec-shared": args.spec_shared,
              "resolve-hash": bool(args.resolve_hash), "gates": args.gates, "derived": args.derived,
              "pointers": args.pointers}
     if args.self_test:
@@ -1312,6 +1424,8 @@ def main(argv: list[str] | None = None) -> int:
             mode_all(ctx, rep, files)
         if args.compile:
             mode_compile(ctx, rep, files)
+        if args.run:
+            mode_run(ctx, rep, files)
         if args.links:
             mode_links(ctx, rep, files)
         if args.spec_shared:

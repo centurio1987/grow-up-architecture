@@ -67,7 +67,7 @@
 
 ### 구현
 
-<!-- @write: example.impl — 아래 세 펜스를 이 순서 그대로 채운다: java, typescript, rust. 세 펜스 사이에 산문·헤딩을 끼우지 않는다(HTML 파생본에서 탭 하나로 묶인다). 펜스마다 단독 파일로 컴파일돼야 한다(Java 21 · TypeScript strict · Rust 2021 edition). 표준 라이브러리만, 생략 표기 없음, 빈 펜스 금지. 세 펜스 모두 같은 시나리오를 같은 개념·타입 이름으로 구현하고 진입점(Java main · TypeScript 최상위 호출 · Rust fn main)을 갖는다. 상황 설정 표와 1:1 — root 타입은 표의 root 뿐, entity 는 식별자, VO 는 식별자 없이 불변, 불변식의 위치 칸이 가리킨 root 메서드가 그 불변식을 검사한다. aggregate 타입의 필드·메서드 시그니처에 다른 aggregate 타입 금지(id 타입으로만). aggregate 안의 변경은 root 메서드로만. 펜스마다 250줄 이하(PG16·PG17·PG18·PG19·PG28·AG6·AG7·AG8). -->
+<!-- @write: example.impl — 아래 세 펜스를 이 순서 그대로 채운다: java, typescript, rust. 세 펜스 사이에 산문·헤딩을 끼우지 않는다(HTML 파생본에서 탭 하나로 묶인다). 펜스마다 단독 파일로 컴파일돼야 한다(Java 21 · TypeScript strict · Rust 2021 edition). 표준 라이브러리만, 생략 표기 없음, 빈 펜스 금지. 세 펜스 모두 같은 시나리오를 같은 개념·타입 이름으로 구현하고 진입점(Java main · TypeScript 최상위 호출 · Rust fn main)을 갖는다. 상황 설정 표와 1:1 — root 타입은 표의 root 뿐, entity 는 식별자, VO 는 식별자 없이 불변, 불변식의 위치 칸이 가리킨 root 메서드가 그 불변식을 검사한다. aggregate 타입의 필드·메서드 시그니처에 다른 aggregate 타입 금지(id 타입으로만). aggregate 안의 변경은 root 메서드로만. 펜스마다 250줄 이하. 코드의 정본은 가이드 폴더의 code/ 실행 파일이고 본문 펜스는 거기서 가져오며, 실행 출력은 code/expected-output.txt 와 같은 펜스로 싣는다(PG16·PG17·PG18·PG19·PG28·PG29·AG6·AG7·AG8). -->
 
 ```java
 ```
