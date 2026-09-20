@@ -70,6 +70,13 @@ CONTEXT_KEYWORDS = [
     ("root 또는 배정", lambda s: "root" in s.lower() or "배정" in s),
     ("참조", lambda s: "참조" in s),
 ]
+# PG27 — [필수] 조건의 근거로 인정하는 원전 표기. 여기 없는 말로 근거를 대면 검사가 막는다.
+BASIS_SOURCES = ["GoF", "원서", "원전", "Fowler", "Analysis Patterns", "eaaDev", "apsupp",
+                 "martinfowler", "Evans", "Vernon", "DDD Reference"]
+# AG3 — 상황 설정 표에서 칸을 채우지 않은 것으로 보는 말들.
+BLANK_CELLS = {"-", "—", "–", "해당 없음", "해당없음", "N/A", "n/a", "NA", "없음", "미정", "TBD", "TODO", "?"}
+CELL_MIN = 8
+
 GATE_KEYS = ["file", "spec", "work", "resolve_hash", "rounds", "external", "verdict", "date"]
 # h_exit(이해 게이트 종료코드)는 2026-09-20 유저 결정으로 파이프라인에서 빠졌다. 옛 기록에 남아 있어도 검사하지 않는다.
 
@@ -453,23 +460,45 @@ def check_min_conditions(md: Md) -> tuple[bool, list[str], int]:
     errors = []
     count = 0
     for i, ind, body in items:
+        mark = re.match(r"^(\*\*|__)?\[(필수|선택)\]", body.strip())
         if ind != top:
+            # PG27 — 표기를 하위 항목으로 내리면 검사에서 빠진다. 그 자체가 오류다.
+            if mark:
+                errors.append(f"L{i + 1} [{mark.group(2)}] 표기가 하위 항목에 있습니다 — 조건은 최상위 항목이어야 합니다(PG8·PG27)")
             continue
         count += 1
-        m = re.match(r"^(\*\*|__)?\[(필수|선택)\]", body.strip())
-        if not m:
+        if not mark:
             errors.append(f"L{i + 1} 최소 조건 항목이 [필수]/[선택] 으로 시작하지 않습니다: '{body.strip()[:60]}'")
             continue
-        if m.group(2) != "필수":
+        if mark.group(2) != "필수":
             continue
-        # PG27 — [필수] 조건은 원전 근거 괄호를 단다. 항목 범위 = 이 줄부터 다음 최상위 항목(또는 절 끝) 전까지.
+        # PG27 — 근거는 **그 조건의 본체 줄이나 '빠지면:' 줄**에만 인정한다.
+        # 하위 [선택] 항목에 달린 근거를 끌어다 쓰는 우회를 막는다.
         nxt = next((j for j in tops if j > i), rng[1])
-        span = "\n".join(md.lines[k] for k in range(i, nxt) if not md.masked[k])
-        basis = re.search(r"\(근거:\s*([^)]*)", span)
+        own = []
+        for k in range(i, nxt):
+            if md.masked[k]:
+                continue
+            lm = LIST_ITEM.match(md.lines[k])
+            if k != i and lm and len(lm.group(1).expandtabs(4)) > top:
+                if re.match(r"^(\*\*|__)?빠지면", lm.group(3).strip()):
+                    own.append(md.lines[k])
+                continue
+            own.append(md.lines[k])
+        span = "\n".join(own)
+        basis = re.search(r"\(근거:\s*([^)]*)\)", span)
+        head = body.strip()[:60]
         if not basis:
-            errors.append(f"L{i + 1} [필수] 조건에 (근거: …) 괄호가 없습니다(PG27): '{body.strip()[:60]}'")
-        elif basis.group(1).startswith("이 가이드"):
-            errors.append(f"L{i + 1} [필수] 조건의 근거가 이 가이드의 정책입니다 — [선택] 으로 내립니다(PG27): '{body.strip()[:60]}'")
+            errors.append(f"L{i + 1} [필수] 조건에 (근거: …) 괄호가 없습니다(PG27) — 조건 본체나 '빠지면:' 줄에 답니다: '{head}'")
+            continue
+        text = basis.group(1).strip()
+        if not text:
+            errors.append(f"L{i + 1} [필수] 조건의 근거가 비어 있습니다(PG27): '{head}'")
+        elif re.match(r"^(이|본|우리)\s*(가이드|글|예제|문서)", text) or "가이드의 정책" in text:
+            errors.append(f"L{i + 1} [필수] 조건의 근거가 이 가이드의 정책입니다 — [선택] 으로 내립니다(PG27): '{head}'")
+        elif not any(tok in text for tok in BASIS_SOURCES):
+            errors.append(
+                f"L{i + 1} [필수] 조건의 근거가 원전을 가리키지 않습니다(PG27) — 허용: {', '.join(BASIS_SOURCES)}: '{text[:50]}'")
     return True, errors, count
 
 
@@ -488,6 +517,7 @@ def check_context_table(md: Md) -> list[str]:
         return [f"'### {CONTEXT_HEADING}' 절이 없습니다"]
     sep = re.compile(r"^\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?$")
     labels: list[str] = []
+    rows: list[tuple[str, str]] = []
     found = False
     i = rng[0]
     while i < rng[1]:
@@ -498,7 +528,9 @@ def check_context_table(md: Md) -> list[str]:
             while j < rng[1] and md.lines[j].strip().startswith("|"):
                 cells = _cells(md.lines[j])
                 if cells:
-                    labels.append(re.sub(r"[*_`]", "", cells[0]))
+                    lb = re.sub(r"[*_`]", "", cells[0])
+                    labels.append(lb)
+                    rows.append((lb, cells[1] if len(cells) > 1 else ""))
                 j += 1
             i = j
             continue
@@ -508,7 +540,15 @@ def check_context_table(md: Md) -> list[str]:
     missing = [name for name, pred in CONTEXT_KEYWORDS if not any(pred(lb) for lb in labels)]
     if missing:
         return [f"상황 설정 표의 행 라벨에 없는 항목: {missing} (행 라벨: {labels})"]
-    return []
+    # AG3 — 라벨만 보면 칸을 비워도 통과한다. 값 칸이 실제로 채워졌는지 본다.
+    errs = []
+    for lb, val in rows:
+        plain = re.sub(r"[*_`]", "", val).strip()
+        if not plain or plain in BLANK_CELLS:
+            errs.append(f"상황 설정 표 '{lb}' 칸이 비어 있습니다(AG3): '{val[:30]}'")
+        elif len(plain) < CELL_MIN:
+            errs.append(f"상황 설정 표 '{lb}' 칸이 너무 짧습니다(AG3, {CELL_MIN}자 이상): '{plain}'")
+    return errs
 
 
 def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
@@ -938,6 +978,17 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
          lambda d, o: (lambda a, b: (a[0] and b[0], a[1] + " · " + b[1]))(
              need({"heading", "min-conditions", "links", "mermaid"}, "all")(d, o),
              contains("all", "필수 절 누락", "순서가 틀립니다", "spec 에 없는 헤딩", "[필수]/[선택]")(d, o))),
+        ("all", "min-bypass 실패(근거 우회 4종: 하위 항목 근거 · 빈 근거 · 원전 아닌 근거 · 하위 [필수])",
+         ["--all", *gof_spec, str(fx / "min-bypass-gof.md")], 1,
+         lambda d, o: (lambda *r: (all(x[0] for x in r), " · ".join(x[1] for x in r)))(
+             need({"min-conditions"}, "all")(d, o),
+             contains("all", "(근거: …) 괄호가 없습니다", "근거가 비어 있습니다",
+                      "근거가 원전을 가리키지 않습니다", "표기가 하위 항목에 있습니다")(d, o))),
+        ("all", "context-blank 실패(상황 설정 표 칸이 비거나 짧음)",
+         ["--all", *ana_spec, str(fx / "context-blank-analysis.md")], 1,
+         lambda d, o: (lambda *r: (all(x[0] for x in r), " · ".join(x[1] for x in r)))(
+             need({"context-table"}, "all")(d, o),
+             contains("all", "칸이 비어 있습니다")(d, o))),
         ("all", "min-basis 실패([필수] 근거 괄호 없음 · 근거가 가이드 정책)",
          ["--all", *gof_spec, str(fx / "min-basis-gof.md")], 1,
          lambda d, o: (lambda a, b: (a[0] and b[0], a[1] + " · " + b[1]))(

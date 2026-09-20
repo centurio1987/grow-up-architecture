@@ -59,7 +59,7 @@ classDiagram
 
 | 항목 | 이 가이드의 전제 |
 | --- | --- |
-| bounded context | 가계부 회계 |
+| bounded context | 가계부 회계 — 한 사람의 수입과 지출을 기록한다 |
 | 불변식의 위치 | Entry 금액 합 = 잔액, Account 경계 밖에서 계산 |
 | root · entity · VO 배정 | Entry 는 root, Money 는 VO |
 | 다른 aggregate 참조 방식 | Entry 가 Account 를 id 로 참조 |

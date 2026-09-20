@@ -328,7 +328,7 @@
       "code": "PG27",
       "level": "MUST",
       "axis": "evidence",
-      "text": "[필수] 근거 — `boundary.minimum` 의 `[필수]` 조건마다 `(근거: …)` 괄호가 있고, 그 근거가 원전(GoF 원서의 의도·활용성·구조·참여자·협력·결과, Fowler Analysis Patterns, 저자 공개 보충 자료)에서 그 조건을 패턴의 성립 요건으로 적은 자리다. 원전이 흔한 규칙·구현 선택지로 적은 것이나 이 가이드 예제의 정책을 `[필수]` 로 올렸거나, 근거 괄호가 없으면 미흡"
+      "text": "[필수] 근거 — `boundary.minimum` 의 `[필수]` 조건마다 **그 조건의 본체 줄이나 `빠지면:` 줄에** `(근거: …)` 괄호가 있고, 그 근거가 원전(GoF 원서의 의도·활용성·구조·참여자·협력·결과·구현·예제 코드, Fowler Analysis Patterns, 저자 공개 보충 자료 eaaDev·apsupp, DDD 원전 Evans·Vernon)에서 그 조건을 패턴의 성립 요건으로 적은 자리다. 하위 항목에 달린 근거·빈 근거·원전을 가리키지 않는 근거는 미흡이고, 원전이 흔한 규칙·구현 선택지로 적은 것이나 이 가이드 예제의 정책을 `[필수]` 로 올려도 미흡이다. `[필수]`·`[선택]` 표기는 최상위 항목에만 둔다"
     },
     {
       "code": "PG28",
@@ -352,7 +352,7 @@
       "code": "AG3",
       "level": "MUST",
       "axis": "structure",
-      "text": "상황 설정 표 — `example.context` 에 헤더가 `| 항목 | 이 가이드의 설정 |` 인 표가 있고, 행이 정확히 4개이며 라벨이 순서대로 `bounded context` · `불변식의 위치` · `root·entity·VO 배정` · `타 aggregate 참조 방식` 이다. 빈 칸이 있거나 `bounded context` 칸이 한 줄을 넘으면 미흡"
+      "text": "상황 설정 표 — `example.context` 에 헤더가 `| 항목 | 이 가이드의 설정 |` 인 표가 있고, 행이 정확히 4개이며 라벨이 순서대로 `bounded context` · `불변식의 위치` · `root·entity·VO 배정` · `타 aggregate 참조 방식` 이다. 값 칸을 비우거나 `-`·`해당 없음`·`미정` 으로 채우면 미흡이고, `bounded context` 칸이 한 줄을 넘어도 미흡이다"
     },
     {
       "code": "AG4",
