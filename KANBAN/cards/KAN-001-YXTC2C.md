@@ -44,7 +44,7 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 - **6. voice `ppangtolab-teacher` 그대로** — 근거 · 버린 대안: 요청이 code_test 계승. 단정체 → 존댓말 전환은 33편 톤 변경이므로 파일럿 .3 S2(Account) 완료 시 유저 승인 게이트
 - **7. stale 정리 포함** — 근거 · 버린 대안: SKILL.md 2종·`.agents` → .2, PATTERNS.md(GoF 링크 23/23 깨짐)·README·DDD README·루트 참조 문서·4언어 하니스 처분 → .6
 - **8. 추가 패턴 후보는 .1이 보고, 유저가 고르면 .7 신설** — 근거 · 버린 대안: GoF 계열(Null Object·Specification 등)과 분석 계열(Fowler 나머지 장·PoEAA Money 등) 둘 다 후보. DDD 전술 용어 기준선 1편 신설 여부도 같은 보고에
-- **9. 집필 work = 가이드 1편, 착수마다 `resolve --frozen` 통과 전제** — 근거 · 버린 대안: code_test 실측(1세션 1가이드). 게이트 결과는 `pattern-guide/gate-results.jsonl`에 work마다 1줄(file · spec · resolve 해시 · H축 종료코드 · 라운드 · 외부 검토 · 날짜). `check-guides --gates`가 33건 존재 · H축 0 · resolve 해시 = 현재 lock을 검사(낡은 PASS 검출)
+- **9. 집필 work = 가이드 1편, 착수마다 `resolve --frozen` 통과 전제** — 근거 · 버린 대안: code_test 실측(1세션 1가이드). 게이트 결과는 `pattern-guide/gate-results.jsonl`에 work마다 1줄(file · spec · 버전 · resolve 해시 · 라운드 · 외부 검토 · 날짜). `check-guides --gates`가 33건 존재 · verdict PASS · resolve 해시 = 현재 lock을 검사(낡은 PASS 검출)
 - **10. 예시 코드: Java · TypeScript · Rust 세 언어, 블록마다 컴파일 검사(유저 결정). md는 나열, HTML 버전은 탭으로 묶는다** — 근거 · 버린 대안: 컴파일은 하한이지 정확성 검증이 아니다 — 옳음은 품질 게이트·외부 검토 축·analyzer 스팟체크가 진다(실행 검증은 유저 결정으로 범위 밖). HTML은 md의 파생물이고 .3(파일럿 3편)·.6(33편)에서만 그린다
 - **11. 기존 절 넷의 처분(유저 결정) — 「어떨 때 사용하나」→ 새 `## 사용 목적` 절, 「장점과 단점, 한계점」→ 비교 절로 흡수, 「정보 표」→ 삭제(활용성 별점은 근거 없는 수치), 「Class Diagram」→ 개념 정의 직후로 이동** — 근거 · 버린 대안: 「사용 목적」은 ds-guide의 `when.clue`("언제 이걸 꺼내야 하는가")를 계승
 
@@ -88,7 +88,7 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 - **합계** — work: **48** / 단일 에이전트(순차) 배치: **23** / 오케스트레이션(병렬) 배치 · 폭: **23**
 
 - 병렬 폭은 하위 카드 **안**에서만 쓴다. 하위 카드 사이는 .1 → .6 엄격 순차다(.2의 분석 spec에 .1의 회계 확정안이 들어가고, .3은 .2의 파이프라인 위에서만, .4·.5는 .3이 고친 spec 1.1로 쓴다).
-- 가이드 1편은 외부 모델 호출 2회(이해 게이트 1 · 외부 검토 1)를 쓴다. 폭 4면 동시 8회라 호출 한도에 걸릴 수 있어, 폭은 .3에서 실측한 값을 넘기지 않는다.
+- 가이드 1편은 외부 모델 호출 1회(외부 검토)를 쓴다(2026-09-20 정성 게이트 제거 뒤). 동시 호출이 한도에 걸릴 수 있어 폭은 .3에서 실측한 값을 넘기지 않는다.
 - 가이드 1편의 예시 코드는 Java · TypeScript · Rust 세 블록이라 옛 가이드(Java 1블록)보다 코드가 3배다. 크기 3이 무거우면 회고가 2로 내린다.
 - 오케스트레이션에서 워커는 커밋하지 않는다. 메인이 work 순서대로 `doc-step done` → 커밋 → 태그를 남기고, 같은 파일을 두 워커가 만지지 않으며, 비교 쌍은 배치 끝에 메인이 교차 확인한다.
 
@@ -96,13 +96,13 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 
 1. 플러그인 프로젝트 스코프 설치(`claude plugin install authoring-kit@centurio87-plugins --scope project`) — 계획 리포트 집필에도 필요.
 2. orca 브랜치 접두사 none — `orca worktree create` 반환의 `branch == refs/heads/KAN-001-YXTC2C` 확인.
-3. `codex login` · `agy` 1회 — 이해 게이트·외부 검토가 둘 다 의존.
+3. `codex login` · `agy` 1회 — 외부 검토가 의존한다. 두 도구가 모두 응답하지 못하면 검토를 받지 못한 것이다.
 4. 전역 principles 레포(my-claude-env)의 미커밋 변경 확인 — `lock` revision 안정성.
 5. voice `used_by.projects`에 이 프로젝트 추가 — 전역 파일이라 카드 밖, 유저가 한다.
 
 ### 리스크
 
-- **이해 게이트가 플러그인에 없고(code_test 안에만) 질문·FAIL 기준이 알고리즘 전용** — 대응: `scripts/comprehension-gate.sh`로 복사한 뒤 질문과 FAIL 판정 문구를 함께 교체. exit 0은 기존 가이드로, exit 3은 결함 주입본으로 실측
+- **정성 게이트는 통과 조건이 아니다**(2026-09-20 유저 결정) — code_test 의 이해 게이트는 판정 문구가 수치 대조·실행값에 걸려 있는데, 패턴 가이드용으로 옮기며 그 자리를 "설명이 얇은가" 같은 정성 판단으로 바꿨다. 같은 파일·같은 모델에서도 판정이 흔들려(회고 3.1) 게이트 구실을 못 했다. 대응: 파이프라인에서 제거하고 통과는 기계 검사로만 가른다. 외부 검토는 "실행됐는가"만 게이트가 보고, 응답 내용은 집필 라운드의 입력이다.
 - **외부 검토 축 `review-axes/guide.md`가 알고리즘용** — 대응: 패턴 전용 축 파일을 .2 S4에서 만든다. fallback 없음
 - **voice `max_prose_run=2`가 GoF 설명에 도식 강제** — 대응: mermaid·코드·표가 끊는 것으로 세어지는지 파일럿에서 확인
 - **33편 × 3라운드 = 세션 다수** — 대응: `resume` 규율 + 배치 종료 3종(doc-step done·태그·커밋) 강제
@@ -137,7 +137,7 @@ python3 $PLUGIN/scripts/authoring.py resolve --voice ppangtolab-teacher --spec a
 python3 scripts/check-guides.py --spec-shared  # 두 spec.md 공유 블록: 마커 존재·파일당 1쌍·내용 동일
 python3 scripts/check-guides.py --all          # 33편: 헤딩 순서·placeholder(final 0)·scan_ai_style B+·mermaid·상대 링크·[필수]/[선택]
 python3 scripts/check-guides.py --compile      # 구현 절 33×3 블록: javac(21) / 로컬 tsc --noEmit / rustc(edition 고정) 전부 0, 도구 버전 출력
-python3 scripts/check-guides.py --gates        # gate-results.jsonl: 33건 존재 · H축 0 · resolve 해시 = 현재 lock
+python3 scripts/check-guides.py --gates        # gate-results.jsonl: 33건 존재 · verdict PASS · resolve 해시 = 현재 lock
 python3 scripts/render-guides.py --all && python3 scripts/check-guides.py --derived   # html 33편 fresh
 grep -l '^### 디자인 패턴을 충족하는 최소 조건' pattern-guide/design-pattern-guide/*.md | wc -l   # 23
 python3 scripts/check-guides.py --links PATTERNS.md README.md pattern-guide/ddd-analysis-pattern-guide/README.md
@@ -146,7 +146,7 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py validate .            #
 python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <각 하위>
 ```
 
-**work 단위로만 실행**(외부 모델 호출): `bash scripts/comprehension-gate.sh <f>` 종료코드 0(2·3은 완성 아님) · `bash $PLUGIN/scripts/review-external.sh --axes scripts/review-axes-pattern.md <f>`. 결과는 `pattern-guide/gate-results.jsonl`에 남고 발행 카드는 `--gates`로 센다.
+**work 단위로만 실행**(외부 모델 호출): `bash $PLUGIN/scripts/review-external.sh --axes scripts/review-axes-pattern.md <f>`. 결과는 `pattern-guide/gate-results.jsonl`에 남고 발행 카드는 `--gates`로 센다.
 
 **사람만 판정할 것(검토서 판단 항목)**: ① 분석 10편의 상황 설정 표가 배경 확정안·DDD 원칙과 일치하는가 ② 비교 절의 대상 선정(PATTERNS.md "빠른 비교 페어" 전부 포함?) ③ 개요가 직관적인가(파일럿으로) ④ 존댓말 voice 승인 ⑤ 기존 절 넷 처분 ⑥ 추가 패턴 채택·문서1 처분·`.agents` 처분·4언어 하니스와 `analysis/` 처분(기본 유지) ⑦ analyzer 실행 시 기준 출처가 가이드 경로인가.
 
@@ -162,3 +162,7 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <
 - 2026-09-17T13:56 · s:548f6b02 — `전략` 섹션 교체
 - 2026-09-17T14:37 · s:548f6b02 — 결정: .2의 work를 .1과 병렬로 착수한다. .2(도구·spec)는 .1 산출물 내용에 기대지 않고 파일도 겹치지 않는다(.1=pattern-guide/research, .2=.claude·scripts). analysis-guide spec은 회계 배경 확정안을 경로(research/accounting-context.md)로만 참조한다. .3은 .1·.2가 모두 선 뒤에만 착수한다.
 - 2026-09-17T17:04 · s:548f6b02 — `전략` 섹션 교체
+- 2026-09-20T17:16 · s:548f6b02 — `전략` 섹션 교체
+- 2026-09-20T17:16 · s:548f6b02 — `검증` 섹션 교체
+- 2026-09-20T17:17 · s:548f6b02 — `전략` 섹션 교체
+- 2026-09-20T17:17 · s:548f6b02 — `전략` 섹션 교체

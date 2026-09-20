@@ -15,7 +15,7 @@
     --links [files]          상대 링크 해소
     --spec-shared            두 spec.md 의 shared:pattern-guide-common 블록 1쌍씩 · 바이트 동일
     --resolve-hash <spec>    authoring.py resolve(worker) stdout sha256 앞 16자
-    --gates [--spec] [--expect N]   gate-results.jsonl 파일별 마지막 기록: h_exit 0 · PASS · 해시 최신
+    --gates [--spec] [--expect N]   gate-results.jsonl 파일별 마지막 기록: PASS · 해시 최신
     --derived [--require-html]      가이드 md ↔ HTML 지문(render-guides.py 의 fingerprint) 대조
     --self-test              scripts/fixtures/check/ 로 각 모드가 통과할 것은 통과, 실패할 것은 실패하는지
 
@@ -70,7 +70,8 @@ CONTEXT_KEYWORDS = [
     ("root 또는 배정", lambda s: "root" in s.lower() or "배정" in s),
     ("참조", lambda s: "참조" in s),
 ]
-GATE_KEYS = ["file", "spec", "work", "resolve_hash", "h_exit", "rounds", "external", "verdict", "date"]
+GATE_KEYS = ["file", "spec", "work", "resolve_hash", "rounds", "external", "verdict", "date"]
+# h_exit(이해 게이트 종료코드)는 2026-09-20 유저 결정으로 파이프라인에서 빠졌다. 옛 기록에 남아 있어도 검사하지 않는다.
 
 
 class Fatal(Exception):
@@ -824,8 +825,6 @@ def mode_gates(ctx: Ctx, rep: Report) -> None:
         rep.info(M, "spec", spec_filter)
     for f, (n, rec) in sorted(selected.items()):
         problems = []
-        if rec["h_exit"] != 0:
-            problems.append(f"h_exit={rec['h_exit']} (0 이어야 함)")
         if rec["verdict"] != "PASS":
             problems.append(f"verdict={rec['verdict']!r} (PASS 여야 함)")
         ok, cur = ctx.resolve_hash(str(rec["spec"]))
@@ -998,22 +997,22 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
                                         "16자 해시 없음")))
         if ok_hash:
             def rec(file, **kw):
-                base = {"file": file, "spec": "kanban-report", "work": "w", "resolve_hash": ok_hash, "h_exit": 0,
+                base = {"file": file, "spec": "kanban-report", "work": "w", "resolve_hash": ok_hash,
                         "rounds": 1, "external": "ok", "verdict": "PASS", "date": "2026-09-17"}
                 base.update(kw)
                 return json.dumps(base, ensure_ascii=False)
             good = tmp_root / "gates-good.jsonl"
-            good.write_text("\n".join([rec("a.md", verdict="FAIL", h_exit=3), rec("a.md"), rec("b.md")]) + "\n",
+            good.write_text("\n".join([rec("a.md", verdict="FAIL"), rec("a.md"), rec("b.md")]) + "\n",
                             encoding="utf-8")
             bad = tmp_root / "gates-bad.jsonl"
-            bad.write_text("\n".join([rec("a.md"), rec("b.md", resolve_hash="0" * 16), rec("c.md", h_exit=3),
+            bad.write_text("\n".join([rec("a.md"), rec("b.md", resolve_hash="0" * 16),
                                       rec("d.md", verdict="FAIL")]) + "\n", encoding="utf-8")
             cases += [
                 ("gates", "마지막 기록 기준 통과 + expect 2", ["--gates", "--gate-file", str(good), "--expect", "2"], 0, None),
                 ("gates", "expect 불일치", ["--gates", "--gate-file", str(good), "--expect", "3"], 1,
                  need({"expect"}, "gates")),
-                ("gates", "낡은 PASS · h_exit · verdict 실패", ["--gates", "--gate-file", str(bad)], 1,
-                 contains("gates", "낡은 PASS", "h_exit=3", "verdict='FAIL'")),
+                ("gates", "낡은 PASS · verdict 실패", ["--gates", "--gate-file", str(bad)], 1,
+                 contains("gates", "낡은 PASS", "verdict='FAIL'")),
                 ("gates", "기록 파일 없음", ["--gates", "--gate-file", str(tmp_root / "none.jsonl")], 1,
                  need({"gate-file"}, "gates")),
             ]

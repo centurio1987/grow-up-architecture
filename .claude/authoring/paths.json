@@ -17,7 +17,6 @@
   "commands": {
     "check": "python3 scripts/check-guides.py --all {file}",
     "compile": "python3 scripts/check-guides.py --compile {file}",
-    "comprehension_gate": "bash scripts/comprehension-gate.sh {file}",
     "external_review": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/review-external.sh --axes scripts/review-axes-pattern.md {file}",
     "render": "python3 scripts/render-guides.py {file}",
     "derived": "python3 scripts/check-guides.py --derived",

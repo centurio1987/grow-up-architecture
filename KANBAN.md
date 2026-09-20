@@ -11,14 +11,14 @@
   - 목적: 나머지 GoF 22편을 gof-guide spec으로 다시 쓴다
   - 이유: 요청서의 재집필 본체이고 analyzer가 읽는 최소 조건이 여기서 갱신된다
   - 목표: 22편 게이트 PASS, 헤딩·placeholder·mermaid·컴파일 검사 0 오류, analyzer 스팟체크 통과
-  - 실행 문서: KANBAN/cards/KAN-001.4-BJT8JD.md (0/22 · 최근 09-17)
+  - 실행 문서: KANBAN/cards/KAN-001.4-BJT8JD.md (0/22 · 최근 09-20)
 - `KAN-001.5-6HF35H` 분석 패턴 8편 재집필 — 생성:ai · 최종:ai · 갱신:2026-09-17
   - 상위: `KAN-001-YXTC2C` (진행 중)
   - 짧은 제목: 분석 패턴 8편 재집필
   - 목적: 나머지 8편을 analysis-guide spec으로 다시 쓰고 consideration 2편과 정합시킨다
   - 이유: 회계 3부작이 aggregate 경계 정의 없이 쓰여 독자를 오도한다
   - 목표: 8편 PASS, 회계 3부작 동일 배경 인용, consideration 교차 참조·모순 0
-  - 실행 문서: KANBAN/cards/KAN-001.5-6HF35H.md (0/9 · 최근 09-17)
+  - 실행 문서: KANBAN/cards/KAN-001.5-6HF35H.md (0/9 · 최근 09-20)
 - `KAN-001.6-HB5NH9` 인덱스·stale 정리·최종 검증 — 생성:ai · 최종:ai · 갱신:2026-09-17
   - 상위: `KAN-001-YXTC2C` (진행 중)
   - 짧은 제목: 인덱스·stale 정리·최종 검증
@@ -36,8 +36,8 @@
   - 이유: 현재 33편은 용어 정의 절이 없고 DDD 가이드가 aggregate 경계를 정의하지 않은 채 경계를 암시하는 코드를 실어 기준 문서로 쓸 수 없다
   - 목표: authoring-kit spec 2종으로 33편을 다시 써 게이트 PASS, analyzer·인덱스가 새 가이드를 가리킨다
   - 요청서: KANBAN/requests/doing/KAN-001-YXTC2C.request.md (자유 형식 · 유저)
-  - 실행 문서: KANBAN/cards/KAN-001-YXTC2C.md (0/6 · 최근 09-17)
-  - 계획 리포트: KANBAN/reports/KAN-001-YXTC2C.report.html
+  - 실행 문서: KANBAN/cards/KAN-001-YXTC2C.md (0/6 · 최근 09-20)
+  - 계획 리포트: KANBAN/reports/KAN-001-YXTC2C.report.html (낡음)
   - 원문:
     ```text
     전체 가이드 재집필을 수행해라.
@@ -48,7 +48,7 @@
   - 목적: spec 2종·paths·lock·이해 게이트·외부 검토 축·검사기·렌더러·진입 스킬을 세워 규칙 정본을 플러그인으로 옮긴다
   - 이유: 규칙이 SKILL.md 산문에 있으면 33편이 갈라지고, 게이트가 없으면 통과 기준이 없다
   - 목표: 규칙 정본이 spec 2종으로 서고 게이트·검사기·렌더러가 동작해 파일럿을 받을 수 있다
-  - 실행 문서: KANBAN/cards/KAN-001.2-4NWK0T.md (6/12 · 최근 09-20)
+  - 실행 문서: KANBAN/cards/KAN-001.2-4NWK0T.md (7/12 · 최근 09-20)
   - 검토 문서: KANBAN/reviews/KAN-001.2-4NWK0T.review.md (승인 5/10 · 반려 5 · 추가 의견 총 16 · 검토 대기)
 - `KAN-001.3-Q6FYKP` 파일럿 3편과 회고 — 생성:ai · 최종:ai · 갱신:2026-09-20
   - 상위: `KAN-001-YXTC2C` (진행 중)

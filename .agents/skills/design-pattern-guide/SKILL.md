@@ -1,6 +1,6 @@
 ---
 name: design-pattern-guide
-description: 디자인 패턴 가이드 1편을 authoring-kit 명세(gof-guide · analysis-guide)로 집필·재집필하는 진입 스킬. 사전 확인 → 리서치 노트 → authoring-write 위임 → 기계 검사·이해 게이트·외부 검토·품질 게이트 → HTML 발행·게이트 기록까지 끌고 간다. 트리거 — "디자인 패턴 가이드", "Singleton/Strategy/Observer/... 패턴 가이드 작성/재집필", "분석 패턴 가이드", "Account/Quantity/Transaction 패턴 가이드", "design pattern guide", "패턴 가이드 문서". 여러 패턴을 요청하면 패턴마다 1편씩 따로 돈다. 이미 있는 코드가 패턴에 맞는지 판정하는 일은 design-pattern-analyzer 가 맡는다.
+description: 디자인 패턴 가이드 1편을 authoring-kit 명세(gof-guide · analysis-guide)로 집필·재집필하는 진입 스킬. 사전 확인 → 리서치 노트 → authoring-write 위임 → 기계 검사·외부 검토·품질 게이트 → 발행·게이트 기록까지 끌고 간다. 트리거 — "디자인 패턴 가이드", "Singleton/Strategy/Observer/... 패턴 가이드 작성/재집필", "분석 패턴 가이드", "Account/Quantity/Transaction 패턴 가이드", "design pattern guide", "패턴 가이드 문서". 여러 패턴을 요청하면 패턴마다 1편씩 따로 돈다. 이미 있는 코드가 패턴에 맞는지 판정하는 일은 design-pattern-analyzer 가 맡는다.
 argument-hint: <pattern-kebab-name>
 ---
 
@@ -86,25 +86,26 @@ Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide>
   집필 서브에이전트 프롬프트에는 `authoring.py resolve --voice ppangtolab-teacher --spec <id> --profile worker`
   출력 **전문**을 넘긴다. 요약해서 넘기지 않는다.
 - **이 스킬이 본문을 직접 쓰지 않는다.**
-- `authoring-write` 의 외부 검토·품질 게이트 단계는 아래 3단계 순서로 돈다. 기계 검사와 이해 게이트가 그 앞에 온다.
+- `authoring-write` 의 외부 검토·품질 게이트 단계는 아래 3단계 순서로 돈다. 기계 검사가 그 앞에 온다.
 
 ### 3. 게이트 — 순서 고정
 
 `{file}` 은 대상 경로다. 명령은 `paths.json` `commands` 에서 읽는다. 스킬에 명령을 새로 박지 않는다.
 
-1. **기계 검사** — `commands.check` → `commands.compile`. 비-0 이면 고치고 다시 돈다.
-   `compile` 출력의 도구 버전은 완료 보고에 옮긴다.
-2. **이해 게이트** — `commands.comprehension_gate`.
-   - 종료코드 **0 만 통과**다. **3 = 미통과**, **2 = 두 모델 모두 사용 불가(미실행)** — 2·3 은 둘 다 **완성 아님**이다.
-   - 3 이면 출력의 `근거 없음`·`결론만 있음` 항목이 그대로 보완 지시다. 2 면 원인(`codex login`, 터미널에서 `agy` 1회 실행)을 안내하고 재시도 여부를 묻는다.
-   - stdout 은 요약하지 않고 그대로 보여준다.
-   - 질문을 바꾸거나 답을 본문에 베껴 넣어 통과시키는 것은 게이트 무력화다.
-3. **외부 검토** — `commands.external_review` (`CLAUDE_PLUGIN_ROOT="$PLUGIN"` 을 붙여 실행).
-   실패 정책은 spec 의 `gate.external_review.failure_policy` 를 따른다. 한쪽 도구만 응답했으면 빠진 쪽을 보고에 남긴다.
-4. **품질 게이트** — `Skill(authoring-kit:authoring-gate) <file> --spec <id>`.
-   **최대 3라운드, 자동 통과 금지.** 3라운드에도 MUST 가 남으면 멈추고 사람에게 넘긴다.
+> **게이트에는 정성 판정을 두지 않는다**(2026-09-20 유저 결정). 통과 여부는 기계가 재현할 수 있는 검사로만 가른다.
+> 외부 모델이 내는 말(외부 검토)은 **집필 라운드의 입력**이지 통과 조건이 아니다 — 게이트가 보는 것은 "검토가 실행됐는가"뿐이다.
+> 옛 이해 게이트(외부 모델 둘이 본문만 읽고 다섯 질문에 답하던 시험)는 이 결정으로 파이프라인에서 빠졌다.
 
-게이트에서 본문이 바뀌면 1·2 를 다시 돈다. 설명의 유도·근거·비교를 건드린 보완이면 특히 그렇다.
+1. **기계 검사** — `commands.check` → `commands.compile` → `commands.run`. 비-0 이면 고치고 다시 돈다.
+   `compile` 의 도구 버전과 `run` 의 출력 대조 결과는 완료 보고에 옮긴다.
+2. **외부 검토** — `commands.external_review` (`CLAUDE_PLUGIN_ROOT="$PLUGIN"` 을 붙여 실행).
+   두 도구가 모두 응답하지 못하면 검토를 받지 못한 것이므로 완성으로 보지 않는다. 한쪽만 응답했으면 빠진 쪽을 보고에 남긴다.
+   응답 내용은 다음 라운드의 보완 지시이고, 그 지적을 반영했는지는 품질 게이트가 판정한다.
+3. **품질 게이트** — `Skill(authoring-kit:authoring-gate) <file> --spec <id>`.
+   **최대 3라운드, 자동 통과 금지.** 3라운드에도 MUST 가 남으면 멈추고 사람에게 넘긴다.
+   **마지막 라운드의 외부 검토는 채점 입력이다** — 채점이 먼저 끝나도 그 지적을 확인하기 전에는 닫지 않는다.
+
+게이트에서 본문이나 예시 코드가 바뀌면 1 을 다시 돈다.
 
 ### 4. 발행 — 3단계를 전부 통과한 뒤에만
 
@@ -118,7 +119,7 @@ python3 - "$RESOLVE_HASH" <<'PY'
 import json, sys
 row = {
   "file": "<대상 경로>", "spec": "<spec>", "work": "<카드id/S번호, 카드 밖이면 ->",
-  "resolve_hash": sys.argv[1], "h_exit": 0, "rounds": 1,
+  "resolve_hash": sys.argv[1], "rounds": 1,
   "external": "<응답한 도구, 예: codex+agy>", "verdict": "PASS", "date": "YYYY-MM-DD",
 }
 with open("pattern-guide/gate-results.jsonl", "a", encoding="utf-8") as f:
@@ -126,7 +127,7 @@ with open("pattern-guide/gate-results.jsonl", "a", encoding="utf-8") as f:
 PY
 ```
 
-- `h_exit` = 이해 게이트의 **마지막** 종료코드 · `rounds` = 품질 게이트 라운드 수 · `verdict` = `PASS` | `FAIL`.
+- `rounds` = 품질 게이트 라운드 수 · `verdict` = `PASS` | `FAIL`.
 - 기록 경로는 `dirs.gate_results` 값을 쓴다(위 예시는 현재 값이다).
 - 3라운드 미통과로 멈출 때도 `verdict: "FAIL"` 로 한 줄 남긴다. 낡은 PASS 와 구분하려는 것이다.
 
@@ -134,7 +135,7 @@ PY
 
 - 산출 경로(md · HTML, HTML 을 건너뛰었으면 사유)
 - spec · voice · **resolve 해시**
-- 게이트 판정 — 기계 검사 결과와 도구 버전 · 이해 게이트 종료코드 · 외부 검토(응답한 도구, 빠진 도구) · 품질 게이트 PASS/FAIL 과 라운드 N/3
+- 게이트 판정 — 기계 검사 결과와 도구 버전 · 예시 코드 실행 대조 · 외부 검토(응답한 도구, 빠진 도구) · 품질 게이트 PASS/FAIL 과 라운드 N/3
 - **생략한 조건부 절과 사유**
 - 리서치 노트에 되먹인 내용(있으면)
 
@@ -145,7 +146,7 @@ PY
 - `~/.claude/authoring/voices/ppangtolab-teacher/` — voice (전역, 여러 프로젝트가 함께 쓴다)
 - `../../authoring/paths.json` — 경로(`dirs`) · 캔버스(`templates`) · 명령(`commands`)
 - `../../authoring.lock.json` — 이 프로젝트가 서 있는 규칙 조합
-- `scripts/comprehension-gate.sh` · `scripts/review-axes-pattern.md` — 이해 게이트 · 외부 검토 축
+- `scripts/review-axes-pattern.md` — 외부 검토 축
 - `../design-pattern-analyzer/` — 최소 조건 절을 평가 기준으로 읽는 쪽
 - `KANBAN/cards/KAN-001-YXTC2C.md` 「전략」 — 이 체계를 고른 결정 기록
 
@@ -157,5 +158,5 @@ PY
 - 조건부 절은 해당 없으면 **절 자체를 지우고**, 생략 사유는 **게이트 보고에만** 남긴다.
   독자용 문서에 "해당 없음" 을 남기지 않는다.
 - 본문에 싣는 수치·경로·실행 결과는 **실제로 확인한 것만** 쓴다.
-- **자동 통과 금지** — 품질 게이트 3라운드 소진, 이해 게이트 2·3, 외부 검토 도구 둘 다 실패는 모두 "완성"이 아니다.
+- **자동 통과 금지** — 품질 게이트 3라운드 소진, 외부 검토 도구 둘 다 실패, 기계 검사 비-0 은 모두 "완성"이 아니다.
 - 재집필 지시가 없는 구 가이드는 건드리지 않는다. 구 골격이 남아 있는 것 자체는 위반이 아니다.

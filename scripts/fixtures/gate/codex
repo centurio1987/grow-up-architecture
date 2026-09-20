@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-# 가짜 codex — test-comprehension-gate.sh 전용. FAKE_CODEX=pass|fail|limit
-out=""; while [ $# -gt 0 ]; do [ "$1" = "-o" ] && { out="$2"; shift; }; shift; done
-cat >/dev/null
-case "${FAKE_CODEX:-pass}" in
-  limit) echo "ERROR: You've hit your usage limit. try again at 7:46 PM."; exit 1 ;;
-  fail)  printf '[Q3] 판정: FAIL(결론만 있음)\nVERDICT: FAIL\n' >"$out" ;;
-  *)     printf '[Q1] 판정: PASS\nVERDICT: PASS\n' >"$out" ;;
-esac
