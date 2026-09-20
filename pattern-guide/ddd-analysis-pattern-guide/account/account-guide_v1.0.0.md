@@ -57,9 +57,9 @@ After — 잔액은 Entry 를 더해서 얻는 값
 여기 나오는 이름은 분석 모델의 개념이에요. 개념이 맡는 책임과, 그 책임을 코드의 어느 객체가 수행하는지는 다른 문제입니다. 후자는 뒤의 「상황 설정」 표가 정해요.
 
 - **Account**(계정) — 금액 기록을 모으고 그 합을 알려 주는 개념입니다.
-  - 기본 책임(원서 그림 6.1 · eaaDev Account): 자기에게 속한 Entry 를 모으는 기준이 되어, 그 합인 잔액에 답합니다. 그러려면 식별자로 자기를 구별하고, 받을 금액의 통화를 정해야 해요.
+  - 기본 책임(원서 그림 6.1 · eaaDev Account): 자기에게 속한 Entry 를 모으는 기준이 되어, 그 합인 잔액에 답합니다. 그러려면 식별자로 자기를 구별해야 하고, 받을 금액의 통화는 보통 계정마다 하나를 정합니다(eaaDev). 여러 통화를 받는 계정이면 통화별로 나눠 더해요(최소 조건 4).
   - 이 가이드의 예제가 더한 책임: AccountType 으로 분류되고, 열려 있는지 닫혀 있는지를 압니다. 최소 조건에서는 둘 다 선택으로 둡니다.
-  - **balance**(잔액) — Account 의 파생 속성입니다. 어느 시점 t 의 balance 는 t 까지 그 Account 에 속한 Entry 금액의 합이에요. 저장된 사실이 아니라 Entry 에서 계산되는 값이라, 빨리 답하려고 계산해 둘 수는 있지만 계산해 둔 값이 Entry 합과 다르면 틀린 쪽은 계산해 둔 값입니다.
+  - **balance**(잔액) — Account 의 파생 속성입니다. 어느 시점 t 의 balance 는 거래일이 t 이하인, 그 Account 에 속한 Entry 금액의 합이에요. 저장된 사실이 아니라 Entry 에서 계산되는 값이라, 빨리 답하려고 계산해 둘 수는 있지만 계산해 둔 값이 Entry 합과 다르면 틀린 쪽은 계산해 둔 값입니다.
   - 협력: Entry 가 Account 에 속합니다(Account 1 — Entry 여럿). Fowler 는 이 패턴의 의도를 관련된 회계 Entry 를 모으고 요약 동작을 제공하는 것으로 적었어요([eaaDev Account](https://martinfowler.com/eaaDev/Account.html)).
 - **Entry**(항목) — 계정 하나에 금액 하나가 오간 사실 한 건입니다.
   - 책임: 어느 Account 에 얼마(Money)가 기록됐는지 담습니다. 확정된 뒤에는 바뀌지 않는다는 규칙은 Fowler 가 흔한 규칙으로 적은 것이고([eaaDev Accounting Entry](https://martinfowler.com/eaaDev/AccountingEntry.html)), 이 글은 그 규칙을 따라요 — 최소 조건에서는 선택으로 둡니다.
@@ -185,7 +185,7 @@ After — 잔액은 Entry 를 더해서 얻는 값
 
 아래 조건은 클래스 모양이 아니라 개념이 맡는 책임과 모델이 늘 지키는 불변식으로 판정해요. Entry 를 누가 소유하든 같은 기준으로 판정할 수 있어야 하기 때문입니다. 조건마다 근거가 원서 그림인지, Fowler 의 후속 초안(eaaDev)인지, 이 가이드의 정책인지를 괄호로 밝혔어요. `[필수]` 에는 원전이 Account 의 성립 요건으로 적은 것만 올렸고, 원전이 흔한 규칙으로 적은 것과 이 가이드의 정책은 번호 순서와 무관하게 `[선택]` 입니다.
 
-1. [필수] 잔액은 Entry 의 합으로 정의됩니다 — 어느 시점의 잔액이든 그 시점까지 확정된 Entry 가운데 그 Account 에 속한 것의 금액 합과 같아요. 잔액을 계산해 둔 값이 있어도 기준은 이 합이고, 계산해 둔 값은 반영한 위치까지의 합과 같아야 합니다. 오래된 Entry 를 합이 같은 한 건으로 정리했다면 정리한 구간 안쪽 시점만 예외예요. (근거: 원서 그림 6.1 의 `balance = sum(entries.amount)`, 정리는 eaaDev Account)
+1. [필수] 잔액은 Entry 의 합으로 정의됩니다 — 어느 시점의 잔액이든 그 시점까지의(거래일 기준) 확정된 Entry 가운데 그 Account 에 속한 것의 금액 합과 같아요. 언제 전기됐는지가 아니라 거래일로 가릅니다 — 4/5 거래를 4/7 에 전기해도 그 Entry 는 4/5 잔액에 들어가요. 오래된 Entry 를 합이 같은 한 건으로 정리했다면 정리한 구간 안쪽 시점만 예외예요. (근거: 원서 그림 6.1 의 `balance = sum(entries.amount)`, 정리는 eaaDev Account) 잔액을 계산해 둔 값이 있어도 기준은 이 합이고, 계산해 둔 값은 반영한 위치까지의 합과 같아야 합니다(이 반영 위치 규칙은 이 가이드가 조건 8 의 캐시를 운영하는 방식입니다).
    빠지면: 개요의 Before 처럼 잔액 숫자를 고쳐 쓰는 필드가 됩니다. 4/5 마감 때 현금이 얼마였는지, +5,000 이 무엇이었는지 답할 재료가 없어요. Fowler 도 현재 값만 필요하면 필드로 충분하다고 했는데, 그건 Account 패턴이 아니라 속성 하나입니다.
 2. [필수] Account 는 Entry 를 모으는 기준을 책임집니다 — 모든 Entry 는 정확히 한 Account 에 속하고, 한 Account 의 잔액은 그 Account 에 속한 Entry 만 더해요. 속한다는 말은 Account 가 Entry 목록을 들고 있다는 뜻이 아니라 Entry 마다 속한 Account 가 하나로 정해진다는 뜻이고, 목록에 담든 식별자로 가리키든 같습니다. (근거: 원서 그림 6.1 의 Account 1 — Entry 여럿)
    빠지면: Entry 에 `"현금"` 같은 분류 문자열만 붙은 기록 목록이 됩니다. `"현금"` 과 `"현금 "` 이 서로 다른 묶음으로 더해지고, 통화나 열림/닫힘처럼 묶음 전체에 걸리는 사실을 둘 곳이 없어요. Fowler 가 Account 없이 Entry 만 쓰는 선택지로 따로 적은 모양입니다([eaaDev Accounting Entry](https://martinfowler.com/eaaDev/AccountingEntry.html)).
@@ -319,7 +319,7 @@ GeneralLedger           저장소와 전기 서비스를 메모리로 흉내 낸
 | 항목 | 이 가이드의 설정 |
 | --- | --- |
 | bounded context | 총계정원장 전기 컨텍스트 — 다른 컨텍스트의 업무 사건을 균형 잡힌 거래로 전기하고 계정별 잔액을 파생 |
-| 불변식의 위치 | ① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → `Transaction` root 의 Factory `Transaction.create`, 동기 ② 전기된 Transaction 과 그 Entry 는 수정·삭제하지 않음 — 각 Entry 의 값뿐 아니라 그 거래에 어떤 Entry 가 속하는지(거래 구성)도 전기 뒤에 바뀌지 않음 → `Transaction` root, 생성 뒤 상태를 바꾸는 메서드가 없어 Entry 를 더하거나 뺄 수 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 `Account` root 의 `checkPostable` 을 호출, 동기 (계정 닫기와 같은 순간에 일어난 전기의 경합은 허용, 통화가 다른 금액의 덧셈은 `Money` 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 `AccountBalance` 읽기 모델이 `TransactionPosted` 이벤트로 반영 위치(`lastAppliedSeq`)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제) |
+| 불변식의 위치 | ① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → `Transaction` root 의 Factory `Transaction.create`, 동기 ② 전기된 Transaction 과 그 Entry 는 수정·삭제하지 않음 — 각 Entry 의 값뿐 아니라 그 거래에 어떤 Entry 가 속하는지(거래 구성)도 전기 뒤에 바뀌지 않음 → `Transaction` root, 생성 뒤 상태를 바꾸는 메서드가 없어 Entry 를 더하거나 뺄 수 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 검사 시점 기준으로 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 `Account` root 의 `checkPostable` 을 호출, 동기 (검사와 저장 사이에 계정이 닫히는 경합은 허용, 통화가 다른 금액의 덧셈은 `Money` 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 `AccountBalance` 읽기 모델이 `TransactionPosted` 이벤트로 반영 위치(`lastAppliedSeq`)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제) |
 | root·entity·VO 배정 | `Account` = aggregate root (식별자·이름·계정 종류 id·통화·열림/닫힘만, Entry 목록과 잔액 필드 없음) · `Transaction` = 별도 aggregate root · `Entry` = `Transaction` 안의 불변 child entity (식별자 = 거래 id + 순번 `seq`, 같은 거래 안에서는 `seq` 로 비교) · `Money` · `AccountAmount` = VO · `AccountBalance` = 읽기 모델 (aggregate 아님) · `TransactionPosted` = 값만 담는 도메인 이벤트 |
 | 타 aggregate 참조 방식 | id 참조 — `Entry` → `Account` 는 `AccountId`, 역분개 `Transaction` → 원 `Transaction` 은 `TransactionId`, `AccountBalance` → `Account` 는 `AccountId`, `Account` → 지식 층위의 계정 종류는 `AccountTypeId`. 어느 aggregate 도 다른 aggregate 의 객체를 필드나 메서드 시그니처에 두지 않음 |
 
@@ -365,7 +365,7 @@ Entry 가 AccountId 를 들 때
 | `Account.accountTypeId: AccountTypeId` (Account → 계정 종류) | Account 가 계정 종류 객체를 듦 | 참조 칸, 배정 칸(계정 종류는 지식 층위라 계정과 따로 바뀜) | 계정을 닫는 저장이 들고 있던 옛 계정 종류 정의까지 함께 써서, 같은 시각 종류 이름을 고친 요청의 결과를 덮음 |
 | `AccountBalance.accountId: AccountId` (읽기 모델 → Account) | 읽기 모델이 `Account` 객체를 듦 | 불변식 ④(잔액은 aggregate 경계 밖 읽기 모델), 참조 칸 | 읽기 모델 갱신 코드가 `close()` 같은 변경 메서드에 닿아, 결과를 보여 주는 곳이 규칙을 바꾸는 곳이 됨. 붙든 Account 사본이 오래되면 닫힌 계정이 열린 것으로 보이고, 그 사본을 저장하면 닫힘이 되돌려짐 |
 
-네 행의 모양은 같아요. 객체 참조가 곧 규칙 위반은 아니지만, 참조를 따라가면 다른 aggregate 를 읽은 순간의 사본으로 고치거나 함께 저장하는 경로가 열립니다. id 로만 가리키면 다른 aggregate 가 필요할 때마다 저장소에서 지금 값을 새로 읽어야 해서 그 경로가 코드에 남지 않아요([Vernon Part II](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf)의 id 참조 규칙).
+네 행의 모양은 같아요. 객체 참조가 곧 규칙 위반은 아니지만, 참조를 따라가면 다른 aggregate 를 읽은 순간의 사본으로 고치거나 함께 저장하는 경로가 열립니다. id 로만 가리키면 다른 aggregate 가 필요할 때 저장소를 거쳐 다시 읽는 코드가 되고, 읽은 사본을 함께 저장하는 경로가 기본으로 생기지 않아요([Vernon Part II](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf)의 id 참조 규칙). 다시 읽은 값이 최신인지까지 id 참조가 보장하지는 않습니다 — 저장소가 캐시나 오래된 사본을 돌려줄 수 있고, 그 몫은 저장·동시성 정책이 집니다.
 
 뒤의 세 언어 구현은 이 설정을 그대로 옮긴 것이고, 실행하면 셋이 아래 10줄을 글자까지 같게 냅니다(Java 21 · TypeScript 를 tsc 로 변환한 뒤 Node · Rust 2021 에서 실행해 확인). 가이드 폴더의 `code/expected-output.txt` 와 같은 내용이고, 이 글의 모든 실행 수치가 여기서 옵니다. 무엇이 나오는지 먼저 보아 두면 뒤의 코드와 해설을 따라가기 쉬워요.
 
