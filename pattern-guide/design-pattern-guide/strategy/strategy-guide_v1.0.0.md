@@ -52,7 +52,7 @@ After : 배송비 계산을 객체로 떼어 내고, 어느 객체를 쓸지는 
 
 ![Strategy 구조 — Context 는 연산 모양만 알고 방법은 밖에 산다](diagrams/strategy-structure.png)
 
-그림에서 Context 의 화살표가 Strategy 로만 향하고 ConcreteStrategy 를 직접 가리키지 않는다는 점을 봐 두세요. ConcreteStrategy 를 아는 쪽은 그것을 만드는 Client 뿐입니다. 뒤에 나오는 최소 조건 2·3번이 바로 이 두 화살표를 코드에서 확인하는 조건이에요.
+그림에서 Context 의 화살표가 Strategy 로만 향하고 ConcreteStrategy 를 직접 가리키지 않는다는 점을 봐 두세요. ConcreteStrategy 를 아는 쪽은 그것을 만드는 Client 뿐입니다. Context 쪽 화살표는 뒤에 나오는 최소 조건 2·3번이, ConcreteStrategy 를 만드는 쪽 화살표는 4번이 코드에서 확인합니다.
 
 > 무엇을 계산할지는 Context 가, 어떻게 계산할지는 ConcreteStrategy 가, 어느 것을 쓸지는 Client 가 정한다.
 
@@ -174,7 +174,7 @@ Strategy 로 옮긴 코드
 | `MemberFree` | `memberGrade` |
 | `CouponRate` | `subtotal` · `couponCode` |
 
-배송 방법마다 필요한 값이 달라 연산이 다섯 매개변수로 넓어졌다고 해 봐요. 여섯 구현이 받는 값은 모두 6 × 5 = 30 개인데 계산에 쓰는 것은 0 + 1 + 1 + 1 + 1 + 2 = 6 개뿐이고, 매개변수를 하나 더 넓힐 때마다 여섯 구현의 시그니처를 모두 함께 고쳐야 합니다(구현 해설에서 실제로 컴파일해 봅니다). 코드에서는 이렇게 구현마다 쓰는 매개변수를 세어 대부분의 구현이 대부분을 버리는지 확인해요. 그렇다면 4-b·4-c 처럼 전략이 Context 에 필요한 값만 묻게 해 연산 모양을 좁히거나(대신 결합이 커짐), 이 계산들을 공통 연산 하나로 묶는 것 자체를 다시 검토합니다.
+배송 방법마다 필요한 값이 달라 연산이 다섯 매개변수로 넓어졌다고 해 봐요. 여섯 구현이 받는 값은 모두 6 × 5 = 30 개인데 계산에 쓰는 것은 0 + 1 + 1 + 1 + 1 + 2 = 6 개뿐이고, 매개변수를 하나 더 넓히면 여섯 구현의 시그니처를 함께 맞춰야 하는데 그 강제는 언어마다 달라요. Java 와 Rust 는 구현을 고치기 전까지 컴파일러가 막고, TypeScript 는 공통 연산만 넓히고 구현을 그대로 둬도 strict 모드에서 통과하니 1번을 지키려면 직접 맞춰야 합니다(구현 해설에서 세 언어를 실제로 컴파일해 봅니다). 코드에서는 이렇게 구현마다 쓰는 매개변수를 세어 대부분의 구현이 대부분을 버리는지 확인해요. 그렇다면 4-b·4-c 처럼 전략이 Context 에 필요한 값만 묻게 해 연산 모양을 좁히거나(대신 결합이 커짐), 이 계산들을 공통 연산 하나로 묶는 것 자체를 다시 검토합니다.
 
 ## 패턴의 경계
 
@@ -187,10 +187,11 @@ Strategy 로 옮긴 코드
    - 또 하나는 공통 인터페이스는 있지만 구현이 `AnyPlan(String plan)` 하나뿐이고, 그 `fee` 안에서 `switch (plan)` 으로 정액과 무게별을 고르는 코드입니다. 분기가 Context 에서 전략 클래스 안으로 옮겨 갔을 뿐이라 방법을 더하려면 `AnyPlan` 의 `switch` 를 고쳐야 해요.
 2. [필수] Context 는 전략을 그 연산 모양으로만 보유하고 호출합니다 — Context 의 필드·생성자 인자·메서드 인자·타입 매개변수에 적힌 전략 타입이 1번의 공통 타입이거나 그 연산을 요구하는 타입 매개변수이고, 요청을 처리하는 메서드는 그 연산을 호출해 계산을 넘기며, 구체 전략 타입에 따라 갈라지는 코드(타입 검사나 다운캐스트, 곧 상위 타입으로 받은 값을 하위 타입으로 바꾸는 변환)가 Context 에 없습니다 (근거: GoF 원서 Strategy 참여자 — Context 는 Strategy 객체 참조를 유지하고 Strategy 인터페이스로 ConcreteStrategy 가 정의한 알고리즘을 호출한다 · 협력 — Context 는 자기 클라이언트의 요청을 자기 전략으로 전달한다).
    - 이 조건이 빠지면 둘 중 하나가 됩니다. 필드가 `ByWeight policy` 처럼 구체 타입이면 다른 계산을 넣을 수 없어서 도우미 클래스 하나에 일을 넘기는 단순 위임에 그쳐요. `if (policy instanceof ByWeight)` 처럼 종류를 확인하면 1번에서 없앤 분기가 Context 로 돌아옵니다.
-3. [필수] 어떤 전략을 쓸지는 Context 밖에서 정해집니다 — ConcreteStrategy 를 고르고 만드는 코드(생성자 호출·함수 값 작성·타입 인자 지정)가 Client·설정·조립 코드처럼 Context 밖에 있고, Context 는 만들어진 전략을 받는 경로를 가지며, 여러 전략 중 하나를 고르는 분기가 Context 안에 없습니다 (근거: GoF 원서 Strategy 협력 — Client 가 ConcreteStrategy 객체를 만들어 Context 에 넘기고 그 뒤로는 Context 하고만 상호작용한다 · 결과 — 전략을 고르던 조건문이 Context 에서 사라진다). 인자를 생략했을 때 쓸 기본 전략 하나를 Context 가 정해 두는 것은 고르는 분기가 아니므로 이 조건을 어기지 않습니다.
+3. [필수] 여러 전략 중 하나를 고르는 분기가 Context 안에 없고, Context 는 전략을 받는 경로를 가집니다 — 요금제 값이나 설정을 보고 어느 계산을 쓸지 가르는 분기가 Context 의 코드에 없고, 쓸 전략이 밖에서 정해져 들어오는 경로(생성자 인자·설치 연산·요청 메서드의 인자·타입 인자)가 있습니다 (근거: GoF 원서 Strategy 결과 — 전략을 고르던 조건문이 Context 에서 사라진다 · 의도 — 알고리즘이 그것을 쓰는 클라이언트와 독립적으로 바뀐다). 인자를 생략했을 때 쓸 기본 전략 하나를 Context 가 정해 두는 것은 고르는 분기가 아니므로 이 조건을 어기지 않습니다.
    - 이 조건이 빠지는 모양은 Context 생성자가 요금제 문자열을 받아 `switch` 로 `new FlatRate(3_000)` 과 `new ByWeight(1_500)` 중 하나를 직접 고르는 코드입니다. 필드 타입은 공통 타입이어도 방법을 하나 더할 때마다 Context 의 그 `switch` 를 고쳐야 해요. 원서가 이 패턴으로 없애려던 조건문이 자리만 옮겨 Context 안에 남은 모양입니다.
-4. [선택] Context 에 전략을 다시 설치하는 연산이 있습니다 — setter 같은 연산으로 실행 중에 설치된 전략을 다른 전략으로 바꿀 수 있습니다. 이 연산이 없어도 1~3번을 만족하면 Strategy 입니다.
-5. [선택] 여러 Context 가 공유하는 전략 객체는 호출 사이에 값을 남기지 않습니다 — 정적 필드나 싱글턴(인스턴스를 하나만 두고 함께 쓰는 방식)으로 한 ConcreteStrategy 인스턴스를 여러 Context 가 함께 참조한다면, 그 전략의 연산이 자기 필드나 필드가 가리키는 가변 객체에 값을 쓰지 않습니다. 생성할 때 정한 뒤 바뀌지 않는 필드(`FlatRate` 의 `amount` 처럼 원서 Flyweight 의 내재 상태에 해당하는 값)는 두어도 됩니다. 원서가 공유 전략에 붙인 조건이에요.
+4. [선택] ConcreteStrategy 를 만드는 코드가 Context 밖에 있습니다 — 전략 객체를 만드는 자리(생성자 호출·함수 값 작성·타입 인자 지정)가 Client·설정·조립 코드에 있고 Context 는 만들어진 것을 받기만 합니다 (근거: GoF 원서 Strategy 협력 — Client 가 **보통** ConcreteStrategy 객체를 만들어 Context 에 넘기고 그 뒤로는 Context 하고만 상호작용한다). 원서가 "보통"으로 적은 자리라 필수로 올리지 않았어요. Context 가 기본 전략 객체를 스스로 만들더라도 고르는 분기가 없으면 3번은 그대로 만족합니다.
+5. [선택] Context 에 전략을 다시 설치하는 연산이 있습니다 — setter 같은 연산으로 실행 중에 설치된 전략을 다른 전략으로 바꿀 수 있습니다. 이 연산이 없어도 1~3번을 만족하면 Strategy 입니다.
+6. [선택] 여러 Context 가 공유하는 전략 객체는 호출 사이에 값을 남기지 않습니다 — 정적 필드나 싱글턴(인스턴스를 하나만 두고 함께 쓰는 방식)으로 한 ConcreteStrategy 인스턴스를 여러 Context 가 함께 참조한다면, 그 전략의 연산이 자기 필드나 필드가 가리키는 가변 객체에 값을 쓰지 않습니다. 생성할 때 정한 뒤 바뀌지 않는 필드(`FlatRate` 의 `amount` 처럼 원서 Flyweight 의 내재 상태에 해당하는 값)는 두어도 됩니다. 원서가 공유 전략에 붙인 조건이에요.
    - 예를 들어 공유된 `ByWeight` 가 직전 호출의 kg 값을 필드에 남겨 다음 계산에 쓰면, 한 결제 객체의 결과가 다른 결제 객체가 방금 계산한 주문에 따라 달라집니다.
 
 1번이 맨 앞인 데는 이유가 있습니다. 1번만 빠지고 2·3번은 만족하는 코드가 실제로 있어서, 1번을 보지 않으면 그런 코드가 Strategy 로 통과해요. 1번의 두 번째 반례인 `AnyPlan` 을 코드로 봅시다.
@@ -216,7 +217,7 @@ final class AnyPlan implements ShippingPolicy {
 // Checkout 은 구현 절과 같다: 필드는 ShippingPolicy, Client 가 new AnyPlan("weight") 를 만들어 넘긴다
 ```
 
-`Checkout` 은 `ShippingPolicy` 타입으로 들고 타입 검사 없이 `fee` 를 부르니 2번을 만족하고, `new AnyPlan("weight")` 를 밖에서 만들어 넘기니 3번도 만족합니다. 32,000원·2,300g 주문을 넣으면 `"weight"` 로 36,500원, `"flat"` 으로 35,000원이 나오는데, 상황 설정에 실은 실행 출력의 주문 A 값과 같습니다(`Checkout` 을 붙여 직접 실행해 확인). 그런데 5kg 초과 요금 같은 방법을 더하려면 `AnyPlan.fee` 의 `switch` 에 `case` 를 더해야 하니, 원서가 이 패턴의 결과로 든 조건문 제거가 일어나지 않고 조건문이 자리만 옮긴 셈입니다.
+`Checkout` 은 `ShippingPolicy` 타입으로 들고 타입 검사 없이 `fee` 를 부르니 2번을 만족하고, `Checkout` 안에 계산 방법을 고르는 분기가 없고 전략을 받는 경로가 있으니 3번도 만족합니다. 32,000원·2,300g 주문을 넣으면 `"weight"` 로 36,500원, `"flat"` 으로 35,000원이 나오는데, 상황 설정에 실은 실행 출력의 주문 A 값과 같습니다(`Checkout` 을 붙여 직접 실행해 확인). 그런데 5kg 초과 요금 같은 방법을 더하려면 `AnyPlan.fee` 의 `switch` 에 `case` 를 더해야 하니, 원서가 이 패턴의 결과로 든 조건문 제거가 일어나지 않고 조건문이 자리만 옮긴 셈입니다.
 
 | 코드 | 1번 | 2번 | 3번 | 판정 |
 | --- | --- | --- | --- | --- |
@@ -225,14 +226,14 @@ final class AnyPlan implements ShippingPolicy {
 | `FlatRate(3_000)`·`FlatRate(5_000)` 두 객체와 `Checkout` | 만족 (필드 값만 다르고 계산 코드는 같음) | 만족 | 만족 | Strategy (한 방법을 매개변수로 나눔) |
 | 필드가 `ByWeight` 인 `Checkout` | 전략 쪽만 보면 만족할 수 있음 | 빠짐 (구체 타입) | 만족할 수 있음 | Strategy 아님 |
 
-`[필수]` 는 하나만 빠져도 판정이 끝나므로 1번부터 차례로 봅니다. 1번은 전략 쪽 코드만, 2번은 Context 의 선언과 호출만, 3번은 전략을 고르고 만드는 코드의 위치만 보면 되어서 앞 조건에서 멈추면 뒤는 읽지 않아도 돼요.
+`[필수]` 는 하나만 빠져도 판정이 끝나므로 1번부터 차례로 봅니다. 1번은 전략 쪽 코드만, 2번은 Context 의 선언과 호출만, 3번은 Context 안에 고르는 분기가 있는지만 보면 되어서 앞 조건에서 멈추면 뒤는 읽지 않아도 돼요. 다만 필수 셋을 다 갖췄다고 판정이 끝나는 것은 아니에요. 구현 객체들이 같은 계산의 대안이 아니라 도메인의 상태를 나타낸다면 비교 절의 기준으로 State 쪽인지 함께 봅니다.
 
-여기서 헷갈리기 쉬운 포인트는 4번 실행 중 교체가 필수처럼 보인다는 점입니다. refactoring.guru 의 Java 예제 페이지도 실제 일을 안쪽 객체에 맡기는 메서드와 그 객체를 바꾸는 setter 를 이 패턴을 알아보는 단서로 들어요([refactoring.guru — Strategy in Java](https://refactoring.guru/design-patterns/strategy/java/example)). 하지만 원서의 구현 쟁점 2는 컴파일할 때 전략을 고르고 실행 중에는 바꾸지 않는 C++ 템플릿 매개변수 방식도 Strategy 로 다룹니다. 그래서 이 가이드는 전략이 정해지는 때가 아니라 전략을 정하는 곳을 필수로 둡니다. 아래 세 설치 방식은 모두 1~3번을 만족해요.
+여기서 헷갈리기 쉬운 포인트는 5번 실행 중 교체가 필수처럼 보인다는 점입니다. refactoring.guru 의 Java 예제 페이지도 실제 일을 안쪽 객체에 맡기는 메서드와 그 객체를 바꾸는 setter 를 이 패턴을 알아보는 단서로 들어요([refactoring.guru — Strategy in Java](https://refactoring.guru/design-patterns/strategy/java/example)). 하지만 원서의 구현 쟁점 2는 컴파일할 때 전략을 고르고 실행 중에는 바꾸지 않는 C++ 템플릿 매개변수 방식도 Strategy 로 다룹니다. 그래서 이 가이드는 전략이 정해지는 때를 필수로 두지 않고, 고르는 분기가 Context 안에 남아 있는지를 필수로 봅니다. 아래 세 설치 방식은 모두 1~3번을 만족해요.
 
 | 설치 방식 | 전략이 정해지는 때 | 설치 뒤 다른 전략으로 교체 | 예 |
 | --- | --- | --- | --- |
 | 생성자 인자로 한 번 | 객체를 만들 때 | 불가 | Java `TreeMap(Comparator)` |
-| setter 로 다시 설치 | 실행 중 아무 때 | 가능 (4번 충족) | 구현 절의 `changePolicy` |
+| setter 로 다시 설치 | 실행 중 아무 때 | 가능 (5번 충족) | 구현 절의 `changePolicy` |
 | 타입 매개변수 | 컴파일할 때 | 다른 타입의 전략은 불가 | Rust `HashMap<K, V, S>` 의 `S` |
 
 > 바깥에서 고르는 것은 필수, 실행 중에 바꾸는 것은 선택.
@@ -244,7 +245,7 @@ Strategy 와 구조가 닮았거나 같은 단서에서 떠오르는 대상 넷�
 | 비교 대상 | 구분 기준 | Strategy 를 고르면 얻는 것 | 포기하는 것 |
 | --- | --- | --- | --- |
 | State | 구현 객체가 같은 계산의 대안인가, 객체가 오가는 상태인가. 코드에서는 요청을 처리한 결과로 다음 구현 객체가 정해지는 코드가 있는지부터 봄 | 요청 처리 흐름에 전이 코드가 없어, 전략을 더하거나 지울 때 보통 다른 전략 코드를 볼 일이 없음 | Strategy 자체는 상태 전이 모델을 주지 않음. 전이가 필요하면 Context 나 별도 상태 모델에 따로 둬야 함 |
-| Template Method | 바뀌는 계산이 하위 클래스의 재정의로 들어오는가, 받은 객체의 연산 호출로 들어오는가 | 계산 조합마다 하위 클래스를 만들지 않음. 설치 연산을 두면 실행 중 교체도 가능(최소 조건 4번) | 하위 클래스 하나가 골격 안의 여러 단계를 함께 재정의하며 상위 클래스의 필드와 protected 연산을 바로 쓰던 방식 |
+| Template Method | 바뀌는 계산이 하위 클래스의 재정의로 들어오는가, 받은 객체의 연산 호출로 들어오는가 | 계산 조합마다 하위 클래스를 만들지 않음. 설치 연산을 두면 실행 중 교체도 가능(최소 조건 5번) | 하위 클래스가 상위 클래스의 필드와 protected 연산을 바로 쓰던 내부 접근. 전략은 Context 가 넘긴 값이나 공개한 조회 연산으로만 데이터를 얻음 |
 | Command | 구현 객체가 Context 의 요청 처리 중 한 단계를 같은 목적의 다른 방법으로 맡는가, 수행할 요청 하나를 객체로 담고 있는가 | Context 가 요청 처리 흐름과 넘길 데이터를 정하고 전략의 결과나 동작을 그 자리에서 이어받음 | 둘은 함께 쓸 수 있어 맡는 범위의 차이에 가까움. 요청을 객체로 만들어 큐·이력에 두는 일은 Strategy 가 해 주지 않으니 필요하면 Command 를 따로 둠 |
 | 분기를 메서드로 뽑은 코드 (Strategy 로 오해받는 코드) | 새 계산 방법을 더할 때 Context 의 계산 코드에 새 방법의 이름(`case` 값·메서드 이름)을 더해야 하는가 | 새 방법이 새 클래스로 들어오고 방법마다 따로 테스트 | 한 곳에서 보이던 흐름이 여러 타입으로 나뉘고, 고르는 분기는 Client 쪽에 남음 |
 
@@ -275,7 +276,7 @@ final class Order {
 
 `Order.pay()` 는 요청을 처리하면서 `state` 필드에 새 객체를 넣습니다. `AwaitingPayment` 와 `Paid` 는 같은 계산을 다르게 하는 대안이 아니라, 결제 요청이 다시 왔을 때 반응이 달라야 하는 주문의 상태예요. 구현 절의 `Checkout.total()` 은 `policy` 를 읽기만 하고, `policy` 에 값을 넣는 코드는 Client 가 부르는 생성자와 `changePolicy` 뿐입니다.
 
-여기서 헷갈리기 쉬운 포인트는 다음 객체를 누가 정하는지만 보고 가르려는 것입니다. 위 코드에서 상태 객체가 다음 상태를 돌려주지 않게 바꾸고 `Order.pay()` 안에서 `state = new Paid()` 로 전이를 정해도 원서는 여전히 State 로 봐요. 원서의 State 협력 설명이 다음 상태를 정하는 쪽으로 Context 와 상태 객체를 모두 허용하기 때문입니다(GoF, 5장 State). 전이를 누가 정하든 State 예요. 반대로 요청 결과에 따라 Context 가 다음 알고리즘을 고르기만 하고 그 구현들이 상태를 나타내지 않는다면 State 는 아닙니다. 원서는 이런 적응형 선택을 따로 다루지 않고, 이 가이드는 선택을 Context 밖에 두라는 3번에 따라 이 코드를 Strategy 로도 판정하지 않아요.
+여기서 헷갈리기 쉬운 포인트는 다음 객체를 누가 정하는지만 보고 가르려는 것입니다. 위 코드에서 상태 객체가 다음 상태를 돌려주지 않게 바꾸고 `Order.pay()` 안에서 `state = new Paid()` 로 전이를 정해도 원서는 여전히 State 로 봐요. 원서의 State 협력 설명이 다음 상태를 정하는 쪽으로 Context 와 상태 객체를 모두 허용하기 때문입니다(GoF, 5장 State). 전이를 누가 정하든 State 예요. 반대로 요청 결과에 따라 Context 가 다음 알고리즘을 고르기만 하고 그 구현들이 상태를 나타내지 않는다면 State 는 아닙니다. 원서는 이런 적응형 선택을 따로 다루지 않고, 이 가이드는 고르는 분기를 Context 에 두지 말라는 3번에 따라 이 코드를 Strategy 로도 판정하지 않아요.
 
 ```text
                        Strategy (Checkout)          State (Order)
@@ -306,7 +307,7 @@ final class WeightShippingCheckout extends Checkout {
 }
 ```
 
-이 코드에서 무게별 배송비로 결제하는 객체는 만들어지는 순간 `WeightShippingCheckout` 으로 정해지고, 그 객체를 정액 배송비로 바꿀 방법이 없습니다. 클래스가 곧 계산 방법이니까요. Strategy 를 고르면 사용 목적의 단서 2에서 센 것처럼 계산 조합마다 하위 클래스를 만들지 않고, setter 같은 설치 연산을 두면(최소 조건 4번) 실행 중에 바꿀 수도 있어요. 계산 순서는 두 쪽 다 고정돼요. Template Method 는 상위 클래스의 `final` 메서드가, Strategy 는 구현 절의 `Checkout.total()` 처럼 Context 메서드가 순서를 정합니다. 달라지는 것은 끼우는 단위예요. 하위 클래스 하나가 골격 안의 여러 단계를 함께 재정의하면서 상위 클래스의 필드와 protected 연산(하위 클래스에서만 부를 수 있게 열어 둔 메서드)을 바로 쓰던 방식이 사라지고, 전략은 Context 가 부르는 연산 하나 단위로 끼워져 Context 가 넘긴 값이나 공개한 조회 연산으로만 데이터를 얻습니다. 동작 절차 4단계의 통신 부담을 떠안게 되는 거죠.
+이 코드에서 무게별 배송비로 결제하는 객체는 만들어지는 순간 `WeightShippingCheckout` 으로 정해지고, 그 객체를 정액 배송비로 바꿀 방법이 없습니다. 클래스가 곧 계산 방법이니까요. Strategy 를 고르면 사용 목적의 단서 2에서 센 것처럼 계산 조합마다 하위 클래스를 만들지 않고, setter 같은 설치 연산을 두면(최소 조건 5번) 실행 중에 바꿀 수도 있어요. 계산 순서는 두 쪽 다 고정돼요. Template Method 는 상위 클래스의 `final` 메서드가, Strategy 는 구현 절의 `Checkout.total()` 처럼 Context 메서드가 순서를 정합니다. 달라지는 것은 끼우는 단위예요. 하위 클래스가 상위 클래스의 필드와 protected 연산(하위 클래스에서만 부를 수 있게 열어 둔 메서드)을 바로 쓰던 내부 접근이 사라지고, 전략은 Context 가 부르는 연산 단위로 끼워져(연산이 하나일 수도 있고, 뒤에 나오는 `ResourceLoader` 처럼 몇 개일 수도 있어요) Context 가 넘긴 값이나 공개한 조회 연산으로만 데이터를 얻습니다. 동작 절차 4단계의 통신 부담을 떠안게 되는 거죠.
 
 **Command 와의 차이.** 구분 기준은 구현 객체가 Context 의 요청 처리 중 한 단계를 같은 목적의 다른 방법으로 맡는지, 수행할 요청 하나를 객체로 담고 있는지입니다. 반환값은 기준이 아니에요. 앞쪽이면 구현 객체는 그 요청 처리 흐름 안에서 불리고, 돌려주는 값이 없어도 Strategy 입니다. 뒤쪽이면 요청 객체가 요청 하나를 대표하고, 호출하는 쪽(원서의 Invoker)은 그 일이 무엇인지 모른 채 실행 연산만 부릅니다. 원서의 대표 구현은 요청 객체가 받을 객체(Receiver)와 동작을 묶지만 받는 객체 없이 스스로 일을 다 하는 명령도 허용하므로, 필드 모양은 기준으로 쓰지 않아요(GoF, 5장 Command). refactoring.guru 도 두 패턴이 객체를 어떤 동작으로 매개변수화한다는 점은 같고 목적이 다르다고 봅니다. Command 는 연산 자체를 객체로 바꿔(연산의 매개변수가 객체의 필드가 됨) 실행 지연·큐잉·이력·원격 실행을 가능하게 하고, Strategy 는 같은 일을 하는 다른 방법을 바꿔 끼웁니다([refactoring.guru — Strategy](https://refactoring.guru/design-patterns/strategy)).
 
@@ -727,7 +728,7 @@ fn main() {
 | `checkout.changePolicy(choosePolicy("free-over"))` 호출 | 참조 하나를 새 객체로 바꿔 넣음 | 그대로 |
 | After | `FreeOverThreshold { threshold: 50000, amount: 3000 }` | 그대로이고 다음 호출부터 새 전략을 씀 |
 
-`changePolicy` 가 바꾸는 것은 `policy` 참조 하나뿐입니다. 이 연산은 최소 조건 4번에 해당하는 선택 구조라서, `changePolicy` 를 지우고 정책마다 `Checkout` 을 새로 만들어도 1~3번은 그대로 만족해요. 반대로 `choosePolicy` 의 `switch` 를 `Checkout` 생성자 안으로 옮기면 3번이 빠집니다.
+`changePolicy` 가 바꾸는 것은 `policy` 참조 하나뿐입니다. 이 연산은 최소 조건 5번에 해당하는 선택 구조라서, `changePolicy` 를 지우고 정책마다 `Checkout` 을 새로 만들어도 1~3번은 그대로 만족해요. 반대로 `choosePolicy` 의 `switch` 를 `Checkout` 생성자 안으로 옮기면 3번이 빠집니다.
 
 원서가 말한 통신 부담도 코드에 드러나 있어요. `FlatRate.fee` 는 받은 상품 금액과 무게를 둘 다 쓰지 않습니다. Rust 판의 매개변수 이름이 `_subtotal`·`_weight_grams` 인 이유가 그것이고, 밑줄을 떼고 컴파일하면 rustc(Rust 컴파일러) 1.95.0 이 쓰이지 않는 변수라는 경고를 냅니다(직접 컴파일해 확인).
 
@@ -753,7 +754,7 @@ fn main() {
 
 `Comparator` 행은 refactoring.guru 가 `Collections#sort()` 에서 호출되는 `Comparator#compare()` 를 Java 핵심 라이브러리의 Strategy 사례로 드는 곳이에요([refactoring.guru Strategy in Java 예제](https://refactoring.guru/design-patterns/strategy/java/example)). `ResourceLoader` 행은 Javadoc(Java 소스 주석에서 만들어 내는 라이브러리 설명 문서) 첫 문장이 스스로를 리소스를 읽어 오는 Strategy 인터페이스라고 소개하고, `ResourceEditor` Javadoc 도 실제 일을 `ResourceLoader` 에 위임하며 기본값으로 `DefaultResourceLoader` 를 쓴다고 적습니다.
 
-표를 최소 조건과 맞춰 보면 짚을 곳이 셋 있습니다. `TreeMap` 은 생성자로만 비교기를 받고 바꾸는 연산이 없어서 4번이 없는 Strategy 이고, `ThreadPoolExecutor` 는 `setRejectedExecutionHandler` 로 4번까지 갖췄어요. 거절 핸들러를 받지 않는 `ThreadPoolExecutor` 생성자와 `ResourceLoader` 를 받지 않는 `ResourceEditor` 생성자가 기본 전략 하나(`AbortPolicy`·`DefaultResourceLoader`)를 쓰는 모양은 3번이 허용하는 기본값입니다. 또 `rejectedExecution` 은 값을 돌려주지 않고 예외를 던지거나 그 자리에서 실행하거나 버리는 동작을 하지만, 작업 거절을 처리한다는 한 단계를 같은 목적의 다른 방법으로 맡으니 비교 절의 기준으로도 Command 가 아니라 Strategy 쪽이에요.
+표를 최소 조건과 맞춰 보면 짚을 곳이 셋 있습니다. `TreeMap` 은 생성자로만 비교기를 받고 바꾸는 연산이 없어서 5번이 없는 Strategy 이고, `ThreadPoolExecutor` 는 `setRejectedExecutionHandler` 로 5번까지 갖췄어요. 거절 핸들러를 받지 않는 `ThreadPoolExecutor` 생성자와 `ResourceLoader` 를 받지 않는 `ResourceEditor` 생성자가 기본 전략 하나(`AbortPolicy`·`DefaultResourceLoader`)를 쓰는 모양은 3번이 허용하는 기본값입니다. 또 `rejectedExecution` 은 값을 돌려주지 않고 예외를 던지거나 그 자리에서 실행하거나 버리는 동작을 하지만, 작업 거절을 처리한다는 한 단계를 같은 목적의 다른 방법으로 맡으니 비교 절의 기준으로도 Command 가 아니라 Strategy 쪽이에요.
 
 ```text
 [1, 30, 4, 21, 100000].sort()                  → [1, 100000, 21, 30, 4]
@@ -762,7 +763,7 @@ fn main() {
 
 `Array.prototype.sort` 는 비교 함수를 생략하면 원소를 문자열로 바꿔 UTF-16(유니코드 문자를 16비트 단위로 적는 인코딩) 코드 단위 순서로 비교합니다([MDN(MDN Web Docs, 모질라가 운영하는 웹 기술 문서) Array.prototype.sort()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)). 위 첫 줄이 숫자 크기 순서가 아닌 이유가 이것이고, 전략이 없으면 기본 행위를 하는 원서 구현 쟁점 3과 같은 모양이에요. 두 줄은 Node.js 22.22.3 에서 실행해 결과를 확인했습니다.
 
-`HashMap<K, V, S>` 는 문서가 해시 알고리즘을 맵마다 바꿀 수 있다고 적지만, 어떤 `S` 를 쓸지는 맵 타입의 일부라서 컴파일할 때 정해집니다. 원서 구현 쟁점 2의 템플릿 매개변수 전략과 같은 선택이고, 최소 조건 절의 설치 방식 표에서 세 번째 방식의 예로 든 것이 이 구조예요.
+`HashMap<K, V, S>` 는 문서가 해시 알고리즘을 맵마다 바꿀 수 있다고 적지만, 어떤 `S` 를 쓸지는 맵 타입의 일부라서 컴파일할 때 정해집니다. `S` 자리의 `BuildHasher` 는 해시를 직접 계산하지 않고 `build_hasher()` 로 `Hasher` 를 만들어 주며, 실제 해시 계산은 그 `Hasher` 가 합니다. 원서 구현 쟁점 2의 템플릿 매개변수 전략과 같은 선택이고, 최소 조건 절의 설치 방식 표에서 세 번째 방식의 예로 든 것이 이 구조예요.
 
 ## 스스로 점검하기
 
