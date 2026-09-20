@@ -435,6 +435,32 @@ def check_headings(md: Md, spec: dict) -> list[str]:
             continue
         if c["required"] and c["id"] not in matched:
             errors.append(f"필수 절 누락: '{c['heading']}'")
+    errors += check_dangling_sections(md, comp, matched)
+    return errors
+
+
+def check_dangling_sections(md: Md, comp: list[dict], matched: dict[str, int]) -> list[str]:
+    """본문이 가리키는데 헤딩이 없는 절을 잡는다.
+
+    조건부 절은 조건에 해당하지 않으면 헤딩째 빠져도 된다(PG23). 그래서 헤딩 검사만으로는
+    편집 사고로 절이 통째로 사라진 것과 정당한 생략이 구분되지 않는다 — 실제로 Quantity 에서
+    `### 상황이 달라지면` 이 편집 중 사라졌는데 `--all` 이 통과시켰고, 그 절을 가리키는 참조
+    넷만 본문에 남았다. 본문이 이름으로 가리키면 그 절은 있어야 한다.
+    """
+    errors: list[str] = []
+    for c in comp:
+        if c["level"] == 1 or c["id"] in matched or c["pattern"]:
+            continue
+        title = c["text"]
+        if not title:
+            continue
+        rx = re.compile(r"[「『\"']" + re.escape(title) + r"[」』\"']|" + re.escape(title) + r"\s*(?:표|절)")
+        for i, line in enumerate(md.lines):
+            if md.masked[i] or HEADING.match(line):
+                continue
+            if rx.search(line):
+                errors.append(f"L{i + 1} 본문이 '{c['heading']}' 을 가리키는데 그 절이 없습니다")
+                break
     return errors
 
 
@@ -1272,6 +1298,11 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
         ("all", "good-analysis 통과", ["--all", *ana_spec, str(fx / "good-analysis.md")], 0, None),
         ("all", "bad-analysis 실패(상황 설정 표 라벨)", ["--all", *ana_spec, str(fx / "bad-analysis.md")], 1,
          need({"context-table"}, "all")),
+        ("all", "dangling-section 실패(본문이 가리키는 조건부 절이 없음)",
+         ["--all", *ana_spec, str(fx / "dangling-section-analysis.md")], 1,
+         lambda d, o: (lambda a, b: (a[0] and b[0], a[1] + " · " + b[1]))(
+             need({"heading"}, "all")(d, o),
+             contains("all", "가리키는데 그 절이 없습니다")(d, o))),
         ("all", "spec 없음은 명확한 오류", ["--all", "--project", str(fx), "--spec", "no-such-spec",
                                      str(fx / "good-gof.md")], 1,
          lambda d, o: ("spec `no-such-spec` 이 없습니다" in o, "오류 문구 없음")),

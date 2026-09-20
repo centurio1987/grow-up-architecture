@@ -276,7 +276,7 @@ final class Order {
 
 `Order.pay()` 는 요청을 처리하면서 `state` 필드에 새 객체를 넣습니다. `AwaitingPayment` 와 `Paid` 는 같은 계산을 다르게 하는 대안이 아니라, 결제 요청이 다시 왔을 때 반응이 달라야 하는 주문의 상태예요. 구현 절의 `Checkout.total()` 은 `policy` 를 읽기만 하고, `policy` 에 값을 넣는 코드는 Client 가 부르는 생성자와 `changePolicy` 뿐입니다.
 
-여기서 헷갈리기 쉬운 포인트는 다음 객체를 누가 정하는지만 보고 가르려는 것입니다. 위 코드에서 상태 객체가 다음 상태를 돌려주지 않게 바꾸고 `Order.pay()` 안에서 `state = new Paid()` 로 전이를 정해도 원서는 여전히 State 로 봐요. 원서의 State 협력 설명이 다음 상태를 정하는 쪽으로 Context 와 상태 객체를 모두 허용하기 때문입니다(GoF, 5장 State). 전이를 누가 정하든 State 예요. 반대로 요청 결과에 따라 Context 가 다음 알고리즘을 고르기만 하고 그 구현들이 상태를 나타내지 않는다면 State 는 아닙니다. 원서는 이런 적응형 선택을 따로 다루지 않고, 이 가이드는 고르는 분기를 Context 에 두지 말라는 3번에 따라 이 코드를 Strategy 로도 판정하지 않아요.
+여기서 헷갈리기 쉬운 포인트는 다음 객체를 누가 정하는지만 보고 가르려는 것입니다. 위 코드에서 상태 객체가 다음 상태를 돌려주지 않게 바꾸고 `Order.pay()` 안에서 `state = new Paid()` 로 전이를 정해도 원서는 여전히 State 로 봐요. 원서의 State 협력 설명이 다음 상태를 정하는 쪽으로 Context 와 상태 객체를 모두 허용하기 때문입니다(GoF, 5장 State). 전이를 누가 정하든 State 예요. 반대로 요청 결과에 따라 Context 가 다음 알고리즘을 고르기만 하고 그 구현들이 상태를 나타내지 않는다면 State 는 아닙니다. 원서 Strategy 절에는 이런 적응형 선택을 다루는 서술이 없고, 이 가이드는 고르는 분기를 Context 에 두지 말라는 3번에 따라 이 코드를 Strategy 로도 판정하지 않아요.
 
 ```text
                        Strategy (Checkout)          State (Order)
