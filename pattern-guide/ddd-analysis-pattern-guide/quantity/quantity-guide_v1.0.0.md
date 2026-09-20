@@ -2,7 +2,7 @@
 pattern: Quantity
 slug: quantity
 spec: analysis-guide
-spec_version: 1.1.0
+spec_version: 1.2.0
 version: 1.0.0
 status: draft
 date: 2026-09-20
@@ -58,7 +58,7 @@ ConversionRatio   from kg ──▶ to g,  number = 1000
 
 ![Quantity 모델 — 수치와 단위가 한 값이고 환산 근거는 모델 안에 있다](diagrams/quantity-model.png)
 
-그림에는 개념과 연관·다중도만 있습니다. CompoundUnit 이 어떤 단위를 몇 제곱으로 묶는지(원서 Figure 3.4 의 지수를 가진 단위 참조)는 Quantity 중심으로 줄이느라 뺐어요. 이 개념들을 코드에서 어느 묶음에 넣을지는 뒤의 구현 예시가 상황 설정 표로 정합니다.
+그림에는 개념과 연관·다중도만 있습니다. CompoundUnit 이 어떤 단위를 몇 제곱으로 묶는지(원서 Figure 3.4 의 지수를 가진 단위 참조)는 Quantity 중심으로 줄이느라 뺐어요. 그림의 ConversionRatio 가 가진 `number` 는 원서 Figure 3.3 의 필드 이름을 그대로 옮긴 것이고, 뒤의 구현 예시는 같은 값을 `factor` 로 부릅니다. TypeScript 에서 `number` 가 수 타입 이름이라 필드 이름으로 두면 읽기 헷갈려서, 세 언어에 같은 이름을 쓰려고 바꾼 자리예요. 이 개념들을 코드에서 어느 묶음에 넣을지는 뒤의 구현 예시가 상황 설정 표로 정합니다.
 
 ### 동작 절차
 
@@ -141,16 +141,17 @@ record Post(PostId id, long viewCount) {
 
 아래 조건은 클래스 모양이 아니라 **개념이 무엇을 책임지는가**로 판정합니다. `record` 든 `struct` 든, 필드가 하나든 둘이든 판정에는 상관없어요.
 
-1. [필수] **Quantity 가 나타내는 양은 단위와 함께 다닌다** — 도메인 연산이 양을 주고받을 때 수치만 넘기지 않습니다. 수치만 꺼내 쓰는 일(화면 표시, 저장)은 단위를 아는 쪽이 합니다.
+1. [필수] **Quantity 가 나타내는 양은 단위와 함께 다닌다** — 도메인 연산이 양을 주고받을 때 수치만 넘기지 않습니다. 수치만 꺼내 쓰는 일(화면 표시, 저장)은 단위를 아는 쪽이 합니다. (근거: Fowler *Analysis Patterns* 3장 — 그림 3.1 에서 Person 의 `height`·`weight` 가 `Number` 라 단위가 모델에 없던 것을, 그림 3.2 가 `amount: Number` 와 `units: Unit` 을 가진 Quantity 로 바꿉니다)
    - 빠지면 단위가 필드 이름에만 남은 `onHandKg: number` 가 됩니다. 레시피의 100 g 이 숫자 100 으로 들어가 0.3 에서 100 을 빼는 개요의 계산이 그대로 통과해요.
-2. [필수] **양끼리 만나는 연산과 크기 비교가 단위를 확인한다** — Quantity 가 제공하는 더하기·빼기와 크기 비교(같은 양인가, 어느 쪽이 큰가)는 같은 단위면 계산하고, 다르면 환산 근거로 맞추고, 근거가 없으면 거부합니다. 곱하기·나누기를 제공한다면 결과 단위를 정합니다. 보통의 수를 곱하면 단위를 유지하고, 양끼리 곱하거나 나누면 새 단위가 나옵니다. 조건 3 의 값 같음은 크기 비교와 다른 판정이라 이 규칙을 따르지 않아요.
-   - 빠지면 단위를 들고만 있는 래퍼가 됩니다. `plus` 가 수치만 더해서 0.3 kg 과 100 g 의 합이 100.3 kg 으로 나와요(비교 절의 `Weight` 코드). 단위가 다를 때 거부만 하고 환산은 못 하는 래퍼라면 이 조건은 갖춘 것이고, 환산은 [선택] 4 의 몫입니다.
-3. [필수] **값으로 다룬다** — 수치와 단위가 둘 다 같은 두 Quantity 를 같은 값으로 판정하는 수단(메서드든 비교 함수든)이 있습니다. 표현이 같은지를 보는 판정이라 2.5 kg 과 2500 g 은 같은 양이어도 같은 값은 아니에요. 그리고 한 곳의 계산이 같은 값을 쓰던 다른 곳을 바꾸지 않습니다. 원서 그림이 Quantity 연산에 `=` 를 두고(Figure 3.2), Fowler 가 값 객체에는 aliasing 을 막을 장치가 필요하다고 적은 것을 근거로 이 가이드가 필수로 올린 조건입니다. Fowler 는 그 장치로 불변을 먼저 권하고, 대입할 때마다 복사하는 방법도 가능하다고 적습니다([Value Object](https://martinfowler.com/bliki/ValueObject.html)).
+2. [필수] **양끼리 만나는 연산과 크기 비교가 단위를 확인한다** — Quantity 가 제공하는 더하기·빼기와 크기 비교(같은 양인가, 어느 쪽이 큰가)는 같은 단위면 계산하고, 다르면 환산 근거로 맞추고, 근거가 없으면 거부합니다. (근거: Fowler *Analysis Patterns* 3장 — 그림 3.2 가 `+ - * / = > <` 를 Quantity 자신의 연산으로 적어 산술을 값의 책임으로 두고, 그림 3.3 이 두 Unit 을 잇는 Conversion Ratio 를 모델에 둬 단위가 다른 양을 다룰 근거를 만듭니다) 단위가 다를 때 거부할지 환산할지까지는 원서가 못 박지 않아서, 둘 중 무엇을 골라도 이 조건은 갖춘 것으로 봅니다. 곱하기·나누기를 제공한다면 결과 단위를 정합니다. 보통의 수를 곱하면 단위를 유지하고, 양끼리 곱하거나 나누면 새 단위가 나옵니다. 조건 3 의 값 같음은 크기 비교와 다른 판정이라 이 규칙을 따르지 않아요.
+   - 빠지면 단위를 들고만 있는 래퍼가 됩니다. `plus` 가 수치만 더해서 0.3 kg 과 100 g 의 합이 100.3 kg 으로 나와요(비교 절의 `Weight` 코드). 단위가 다를 때 거부만 하고 환산은 못 하는 래퍼라면 이 조건은 갖춘 것이고, 환산은 [선택] 5 의 몫입니다.
+3. [필수] **값으로 비교하고 값으로 주고받는다** — 두 Quantity 가 같은 값인지 객체 참조가 아니라 값으로 판정하는 수단(메서드든 비교 함수든)이 있고, 한 곳의 계산이 같은 값을 쓰던 다른 곳을 바꾸지 않습니다. (근거: Fowler *Analysis Patterns* 3장 그림 3.2 가 Quantity 의 연산 목록에 `=` 를 둔 자리와, Fowler 가 martinfowler.com 의 Value Object 글에서 값 객체에는 aliasing 을 막을 장치가 필요하다고 적은 자리) Fowler 는 그 장치로 불변을 먼저 권하고, 대입할 때마다 복사하는 방법도 가능하다고 적습니다([Value Object](https://martinfowler.com/bliki/ValueObject.html)). 무엇을 같은 값으로 볼지 — 표현이 같아야 하는지, 환산해서 크기가 같으면 되는지 — 까지는 원서가 정하지 않습니다. 원서 그림은 연산 목록에 `=` 를 둘 뿐이에요. 그 선택은 [선택] 4 에 있습니다.
    - 빠지면 둘 중 하나가 생깁니다. `add` 가 자기 수치를 바꾸는데 복사도 하지 않으면, 레시피 1회분 100 g 객체를 두 재고가 함께 쓰는 순간 한쪽 계산이 레시피 값까지 바꿉니다. Fowler 가 aliasing bug 라고 부르는 문제예요. 같음을 객체 참조로 판정하면 똑같이 2.5 kg 인 두 객체가 다르다고 나옵니다.
-4. [선택] **환산 규칙을 모델에 둔다** — 단위를 바꾸는 계산이 모델이 가진 근거를 거쳐서 일어납니다. 원서는 그 근거를 방향이 있는 비율(Conversion Ratio)로 두고, Fowler 튜토리얼 슬라이드의 `as(Unit)` 연산이 그 비율로 단위를 바꿉니다. 이 조건이 없으면 단위가 다른 양을 만났을 때 조건 2 에 따라 거부할 수밖에 없어요.
-5. [선택] **자릿수와 반올림 규칙을 값이 안다** — 수치가 가질 수 있는 소수 자리와 그 자리를 넘을 때의 처리(거부 또는 반올림)가 Quantity 쪽에 있습니다. Money 에서는 통화의 최소 단위가 이 규칙입니다.
-6. [선택] **CompoundUnit 으로 단위를 합성한다** — 양끼리 곱하거나 나눈 결과를 m/s² 같은 단위로 표현합니다.
-7. [선택] **문자열로 읽고 쓴다** — Fowler 튜토리얼 슬라이드의 `valueOf(String)` 과 `toString()` 처럼 `0.3 kg` 같은 표기와 값을 오갈 수 있습니다.
+4. [선택] **표현이 같아야 같은 값으로 본다** — 같은 값 판정이 환산을 거치지 않아서, 2.5 kg 과 2500 g 은 크기가 같아도 다른 값입니다. 대신 2.50 kg 과 2.5 kg 처럼 표기만 다른 것은 하나로 맞춰 둡니다. (근거: 이 가이드의 정책 — 장부와 실사 기록을 대조할 때 단위까지 같은지 보려는 예제 요구이고, 상황 설정의 전제로 적었습니다) 환산해서 크기로 같음을 보는 쪽을 골라도 조건 3 은 그대로 충족합니다. 그때는 크기 비교와 값 같음이 한 판정으로 합쳐지고, 단위가 다른 두 기록이 같은 값으로 지나갑니다.
+5. [선택] **환산 규칙을 모델에 둔다** — 단위를 바꾸는 계산이 모델이 가진 근거를 거쳐서 일어납니다. 원서는 그 근거를 방향이 있는 비율(Conversion Ratio)로 두고, Fowler 튜토리얼 슬라이드의 `as(Unit)` 연산이 그 비율로 단위를 바꿉니다. 이 조건이 없으면 단위가 다른 양을 만났을 때 조건 2 에 따라 거부할 수밖에 없어요.
+6. [선택] **자릿수와 반올림 규칙을 값이 안다** — 수치가 가질 수 있는 소수 자리와 그 자리를 넘을 때의 처리(거부 또는 반올림)가 Quantity 쪽에 있습니다. Money 에서는 통화의 최소 단위가 이 규칙입니다.
+7. [선택] **CompoundUnit 으로 단위를 합성한다** — 양끼리 곱하거나 나눈 결과를 m/s² 같은 단위로 표현합니다.
+8. [선택] **문자열로 읽고 쓴다** — Fowler 튜토리얼 슬라이드의 `valueOf(String)` 과 `toString()` 처럼 `0.3 kg` 같은 표기와 값을 오갈 수 있습니다.
 
 ### 비슷한 패턴·안티패턴과의 차이
 
@@ -190,7 +191,7 @@ record Weight(double value, String unit) {
 // new Weight(0.3, "kg").plus(new Weight(100, "g"))  →  Weight[value=100.3, unit=kg]
 ```
 
-0.3 kg 과 100 g 을 더했는데 100.3 kg 이 나옵니다(Java 21 로 실행해 확인). 조건 1 은 갖췄지만 조건 2 가 빠져 Quantity 가 아니에요. 같은 래퍼라도 `plus` 가 `other.unit` 을 비교해 다르면 거부한다면 조건 2 를 갖춘 것이고, 그때 남는 차이는 환산([선택] 4)을 하느냐입니다. Quantity 를 고르면 단위가 맞지 않는 계산을 값이 거부하게 되고, 대신 연산마다 단위 확인이 들어갑니다.
+0.3 kg 과 100 g 을 더했는데 100.3 kg 이 나옵니다(Java 21 로 실행해 확인). 조건 1 은 갖췄지만 조건 2 가 빠져 Quantity 가 아니에요. 같은 래퍼라도 `plus` 가 `other.unit` 을 비교해 다르면 거부한다면 조건 2 를 갖춘 것이고, 그때 남는 차이는 환산([선택] 5)을 하느냐입니다. Quantity 를 고르면 단위가 맞지 않는 계산을 값이 거부하게 되고, 대신 연산마다 단위 확인이 들어갑니다.
 
 **Measurement 와의 차이.** 구분 기준은 대상과 측정 항목을 가진 기록 계층이 필요한가입니다. Measurement(원서 §3.4)는 Quantity 의 대안이 아니라 Quantity 를 품는 기록이에요. 원서 그림에서 Measurement 는 사람(Person) 하나와 측정 항목(Phenomenon Type) 하나에 연결되고, 잰 값을 `quantity: Quantity` 속성으로 가집니다(Figure 3.6). 같은 120 mmHg 를 두 층으로 나누면 이렇게 보여요.
 
@@ -212,7 +213,7 @@ Measurement    환자 A · 수축기 혈압 · 120 mmHg
 
 빵집 한 곳의 재료 재고 프로그램을 예제로 씁니다. 재료 하나마다 재고 기록이 하나 있고, 입고와 사용이 보유량을 바꿉니다. 요청마다 달라지는 것은 수치의 단위예요. 납품서는 kg, 레시피는 g 로 적고, 레시피 1회분을 여러 번 쓰면 사용량은 1회분에 횟수를 곱해 만듭니다. 가끔은 L 로 적힌 액체 재료가 잘못 들어옵니다.
 
-고정인 것도 정해 둡니다. 단위는 g · kg · L 셋이고 환산 비율은 kg → g 1000 하나이며, 새 단위는 코드를 고쳐 배포할 때만 늘어요. 수치는 소수점 아래 세 자리까지 기록하고(kg 로 적으면 1 g 까지), 이 자리를 넘는 환산은 반올림하지 않고 거부합니다. 보유량은 음수가 될 수 없지만, Quantity 자체는 음수를 담을 수 있어야 해요. 사용 뒤 보유량이 음수인지 판정하려면 뺄셈 결과가 음수로 나와야 하기 때문이고, 입고·사용량이 양수라는 규칙은 재고라는 문맥의 규칙이라 root 가 지킵니다. 보유량을 kg 와 g 중 어느 단위로 적어 두는지는 요구 전제가 아니라서, 크기만 맞으면 됩니다. 예제 코드의 타입은 앞 절의 개념과 이렇게 짝지어집니다.
+고정인 것도 정해 둡니다. 단위는 g · kg · L 셋이고 환산 비율은 kg → g 1000 하나이며, 새 단위는 코드를 고쳐 배포할 때만 늘어요. 수치는 소수점 아래 세 자리까지 기록하고(kg 로 적으면 1 g 까지), 이 자리를 넘는 환산은 반올림하지 않고 거부합니다. 보유량은 음수가 될 수 없지만, Quantity 자체는 음수를 담을 수 있어야 해요. 사용 뒤 보유량이 음수인지 판정하려면 뺄셈 결과가 음수로 나와야 하기 때문이고, 입고·사용량이 양수라는 규칙은 재고라는 문맥의 규칙이라 root 가 지킵니다. 보유량을 kg 와 g 중 어느 단위로 적어 두는지는 요구 전제가 아니라서, 크기만 맞으면 됩니다. 같은 값인지 따지는 기준도 여기서 정합니다. 이 예제는 환산하지 않고 표현이 같은지로 봐서 2.5 kg 과 2500 g 은 크기가 같아도 다른 값이고, 2.50 kg 과 2.5 kg 은 같은 값이에요. 장부와 실사 기록을 대조할 때 단위까지 같은지 보려는 요구라서 고른 정책이고, 최소 조건에서는 [필수] 3 이 아니라 [선택] 4 에 있습니다. 크기가 같으면 같은 값으로 보는 쪽을 골라도 [필수] 3 은 그대로 충족해요. 예제 코드의 타입은 앞 절의 개념과 이렇게 짝지어집니다.
 
 | 예제 타입 | 대응하는 개념 |
 | --- | --- |
@@ -224,7 +225,7 @@ Measurement    환자 A · 수축기 혈압 · 120 mmHg
 | 항목 | 이 가이드의 설정 |
 | --- | --- |
 | bounded context | 빵집 재료 재고 — 입고와 사용으로 재료별 보유량을 기록한다 |
-| 불변식의 위치 | 최소 조건 1~3(양과 단위가 함께 다님, 연산의 단위 확인, 값으로 다룸)과 소수점 아래 세 자리 규칙(역방향 환산의 자릿수 초과 거부 포함)은 root 가 아니라 Quantity 가 생성과 연산에서 지킨다. 보유량이 음수가 되지 않고 입고·사용량이 0보다 크다는 규칙은 IngredientStock root 의 `receive`·`consume` 이 지킨다 |
+| 불변식의 위치 | 최소 조건 1~3(양과 단위가 함께 다님, 연산의 단위 확인, 값으로 비교·전달)과 이 예제가 고른 표현 동등성([선택] 4), 소수점 아래 세 자리 규칙(역방향 환산의 자릿수 초과 거부 포함)은 root 가 아니라 Quantity 가 생성과 연산에서 지킨다. 보유량이 음수가 되지 않고 입고·사용량이 0보다 크다는 규칙은 IngredientStock root 의 `receive`·`consume` 이 지킨다 |
 | root·entity·VO 배정 | IngredientStock aggregate 하나. IngredientStock 은 root(entity, `StockId` 로 식별)이고, 보유량 Quantity 와 그 안의 Unit 은 VO. ConversionRatio 는 어느 aggregate 에도 속하지 않는 불변 VO 로, 코드 상수 표 `ConversionRatio.ALL` 하나를 모든 Quantity 의 연산이 함께 조회한다. `StockId`·`IngredientId` 는 id VO |
 | 타 aggregate 참조 방식 | IngredientStock 이 재료 카탈로그 aggregate(이 예제 밖)의 재료를 `IngredientId` 로 가리킨다. Quantity 는 id 없이 불변 값으로 주고받으므로, 같은 인스턴스를 함께 써도 복사한 것과 결과가 같다 |
 
@@ -236,6 +237,22 @@ Measurement    환자 A · 수축기 혈압 · 120 mmHg
 - **Entity** — 속성이 바뀌어도 식별자로 같은 것을 가리키는 객체입니다.
 - **Value Object(VO)** — 식별자 없이 속성 값만으로 같음을 판단하고, 불변으로 다루는 객체입니다.
 - **id 참조** — 다른 aggregate 를 객체로 들지 않고 식별자 값으로만 가리키는 방식이에요. Vernon 의 규칙 "Reference Other Aggregates By Identity" 입니다([Effective Aggregate Design Part II](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf)).
+
+뒤의 세 언어 구현은 이 설정을 그대로 옮긴 것이고, 실행하면 셋이 아래 열한 줄을 글자까지 같게 냅니다(Java 21 · TypeScript 를 tsc 로 변환한 뒤 Node · Rust 2021 에서 실행해 확인). 가이드 폴더의 `code/expected-output.txt` 와 같은 내용이고, 이 글의 실행 수치는 전부 여기서 옵니다. 무엇이 나오는지 먼저 보아 두면 뒤의 코드와 해설을 따라가기 쉬워요.
+
+```text
+재고 stock-1 · 재료 yeast
+입고 0.3 kg → 보유 0.3 kg
+사용 50 g × 2 → 보유 200 g
+보유량을 kg 로 → 0.2 kg
+사용 0.2 kg → 보유 0 g
+거부 — 재고가 모자랍니다: 보유 0 g, 요청 1 g
+거부 — 환산 비율이 없습니다: g ↔ L
+거부 — kg 로 옮기면 소수점 아래 세 자리를 넘습니다: 0.5 g
+같은 값인가 2.50 kg / 2.5 kg: true
+같은 값인가 2.5 kg / 2500 g: false
+같은 양인가 2.5 kg / 2500 g: true
+```
 
 ### 구현
 
@@ -440,6 +457,9 @@ class ConversionRatio {
     return ConversionRatio.ALL.find((r) => (r.from === a && r.to === b) || (r.from === b && r.to === a));
   }
 }
+
+// 배열을 얼리면 원소 교체만 막힌다. 클래스까지 얼려야 ConversionRatio.ALL = [] 같은 정적 필드 재대입이 막힌다.
+Object.freeze(ConversionRatio);
 
 const ONE = 1000n; // 소수점 아래 세 자리
 
@@ -802,21 +822,21 @@ fn main() -> Result<(), String> {
 }
 ```
 
-세 코드는 같은 시나리오를 돌려 같은 열한 줄을 출력합니다. Java 21 · TypeScript · Rust 2021 로 각각 실행해 확인한 출력이에요.
+세 코드는 같은 시나리오를 돌려 같은 열한 줄을 출력합니다. 그 열한 줄은 「상황 설정」 끝에 실어 두었고, 행마다 어느 갈래를 지나는지는 이렇습니다.
 
-| 행 | 출력 |
+| 행 | 무엇을 보여 주는가 |
 | --- | --- |
-| 1 | `재고 stock-1 · 재료 yeast` |
-| 2 | `입고 0.3 kg → 보유 0.3 kg` |
-| 3 | `사용 50 g × 2 → 보유 200 g` |
-| 4 | `보유량을 kg 로 → 0.2 kg` |
-| 5 | `사용 0.2 kg → 보유 0 g` |
-| 6 | `거부 — 재고가 모자랍니다: 보유 0 g, 요청 1 g` |
-| 7 | `거부 — 환산 비율이 없습니다: g ↔ L` |
-| 8 | `거부 — kg 로 옮기면 소수점 아래 세 자리를 넘습니다: 0.5 g` |
-| 9 | `같은 값인가 2.50 kg / 2.5 kg: true` |
-| 10 | `같은 값인가 2.5 kg / 2500 g: false` |
-| 11 | `같은 양인가 2.5 kg / 2500 g: true` |
+| 1 | 재고 root 의 식별자 `StockId` 와, 재료 카탈로그를 가리키는 `IngredientId` |
+| 2 | 절차 3-a — 단위가 같아 환산 없이 더한다 |
+| 3 | 절차 3-b·4-a — 공통 단위 g 로 곱해 맞춘 뒤 뺀다. 0.3 kg 이 300 g 이 되고 100 g 을 뺀다 |
+| 4 | 절차 4-b — 역방향이라 나눈다. 200 ÷ 1000 = 0.2 kg |
+| 5 | 결과가 0 이어도 단위는 공통 단위 g 로 남는다 |
+| 6 | root 의 음수 검사가 보유량 교체보다 먼저다 — 거부 뒤에도 보유량이 0 g 이다 |
+| 7 | 절차 3-c — 비율이 없는 g ↔ L 은 계산을 거부한다 |
+| 8 | 역방향 환산이 자릿수 규칙을 넘어 거부된다(0.5 g → 0.0005 kg) |
+| 9 | 생성 때 표현을 하나로 맞춰서 2.50 kg 과 2.5 kg 이 같은 값이다 |
+| 10 | 표현 동등성 정책([선택] 4) — 크기가 같아도 단위가 다르면 다른 값이다 |
+| 11 | 최소 조건 2 의 크기 비교 — 환산하면 같은 양이다 |
 
 상황 설정 표의 네 칸은 코드에서 아래 자리에 나타납니다. root 몫의 핵심은 음수 검사가 보유량 교체보다 먼저 온다는 점이에요. 6행에서 1 g 사용이 거부된 뒤에도 보유량이 0 g 으로 남는 것이 그 순서 덕분입니다.
 
@@ -834,7 +854,7 @@ fn main() -> Result<(), String> {
 | 수치와 단위가 한 값이다 | root 가 `onHandAmount`·`onHandUnit` 두 필드로 따로 든다 | 실사 화면이 g 로 센 300 을 보정 메서드에 넘기면 수치 필드만 300 으로 바뀌고 단위 필드는 kg 로 남아, 보유량이 300 kg 이 됩니다. 한 값이면 수치만 바꾸는 길이 없어요 |
 | 연산이 단위를 확인한다 | root 의 `receive`·`consume` 만 단위를 확인하고 `Quantity.plus` 는 수치만 더한다 | 레시피 배치 작업이 1회분 합계를 내려고 `plus` 를 직접 부르면 0.3 kg + 100 g 이 100.3 kg 이 됩니다. root 를 거치지 않는 계산은 확인을 받지 못해요 |
 | 비율이 없으면 거부한다 | 비율이 없을 때 Quantity 는 왼쪽 단위로 간주하고, 거부는 호출자가 미리 확인한다 | 납품 화면이 확인을 빠뜨리고 우유 1 L 를 이스트 재고에 입고하면 0 g + 1 이 1 g 으로 더해집니다. 장부에는 들어오지 않은 이스트 1 g 이 생깁니다 |
-| 수치와 단위가 둘 다 같아야 같은 값이다 | 실사 화면이 `amount` 수치만 꺼내 장부와 비교한다 | 장부 200 g 과 단위를 kg 로 잘못 적은 실사 기록 200 kg 이 같은 값으로 판정돼, 199.8 kg 차이가 조정 없이 넘어갑니다. 반대로 Java 에서 `stripTrailingZeros` 를 빼면 실사 2.50 kg 과 장부 2.5 kg 이 다르다고 나와 없는 차이를 조정합니다 |
+| 수치와 단위가 둘 다 같아야 같은 값이다([선택] 4 의 예제 정책) | 실사 화면이 `amount` 수치만 꺼내 장부와 비교한다 | 장부 200 g 과 단위를 kg 로 잘못 적은 실사 기록 200 kg 이 같은 값으로 판정돼, 199.8 kg 차이가 조정 없이 넘어갑니다. 반대로 Java 에서 `stripTrailingZeros` 를 빼면 실사 2.50 kg 과 장부 2.5 kg 이 다르다고 나와 없는 차이를 조정합니다 |
 | 한 곳의 계산이 다른 곳을 바꾸지 않는다 | 보유량을 제자리에서 바뀌는 객체로 두고, 본점과 분점의 이스트 재고가 초기값으로 같은 객체를 참조한다 | 본점 `consume` 이 공유 객체의 수치를 줄이면 분점 보유량도 함께 줄어듭니다. 분점 root 의 `consume` 은 불리지 않았으니 분점 쪽 검사는 한 번도 돌지 않고, 분점 장부가 자기 입출고 기록과 어긋나요 |
 | 수치는 소수점 아래 세 자리까지다 | `Quantity.of` 는 확인하지 않고 납품 화면만 자릿수를 자른다 | 레시피 배치 작업 경로로 0.0005 kg 이 들어오면, 정수 표현을 쓰는 TypeScript·Rust 구현에서 소수 부분 `0005` 가 정수 5 로 읽혀 0.005 kg(5 g)이 됩니다(확인을 빼고 실행해 봄). 0.5 g 이 5 g 으로 열 배가 돼요 |
 | 역방향 환산이 자릿수를 넘으면 거부한다 | `convertTo` 가 거부하지 않고 셋째 자리로 반올림하며, 쓸지 말지는 호출자가 판단한다 | 월말 보고서가 보유량 0.5 g 을 kg 로 옮기면 0.0005 가 0.001 kg 으로 반올림되고, 다음 달 이 값을 다시 g 재고로 들여오면 1 g 이 됩니다. 옮겼다 되돌리기만 했는데 0.5 g 이 늘어요 |
@@ -867,9 +887,9 @@ fn main() -> Result<(), String> {
 | TypeScript | `private readonly scaled: bigint` · 수치 × 1000 이라 자릿수 규칙이 표현 자체에 담김 |
 | Rust | `scaled: i64` · 수치 × 1000, 계산은 `checked_add`·`checked_sub`·`checked_mul` |
 
-Java `BigDecimal` 은 10진 수를 그대로 담지만 `equals` 가 값뿐 아니라 scale 까지 같아야 참이라서, 2.0 과 2.00 이 다르다고 나옵니다. 크기만 보는 `compareTo` 는 둘을 같게 봐요([BigDecimal](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html)). record 의 `equals` 는 컴포넌트의 `equals` 를 그대로 쓰므로([JEP(JDK Enhancement Proposal) 395](https://openjdk.org/jeps/395)), 생성자에서 `stripTrailingZeros()` 로 표현을 하나로 맞춰야 9행이 `true` 가 됩니다. 같은 생성자가 `Objects.requireNonNull` 로 단위 없는 Quantity 를 막아요. TypeScript 는 10진 타입이 없어서 수치 × 1000 을 `bigint` 정수로 듭니다. `number` 가 정수를 안전하게 표현하는 범위는 −(2⁵³−1)~2⁵³−1 이고 `bigint` 에는 그 한계가 없어요. 대신 JSON(JavaScript Object Notation)으로 바꾸는 `JSON.stringify` 에 그대로 넘기면 `TypeError` 가 나므로 저장할 때는 `toString()` 결과를 씁니다([MDN BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)). `readonly` 는 컴파일 시점에만 막아서([Object Types](https://www.typescriptlang.org/docs/handbook/2/objects.html)) 생성자에서 `Object.freeze(this)` 를 함께 부릅니다. freeze 는 얕게 얼리지만([MDN Object.freeze](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)) 필드가 `bigint` 와 문자열뿐이라 여기서는 충분하고, 식별자 `StockId`·`IngredientId` 도 같은 이유로 얼린 클래스로 만들었습니다. 평범한 객체 리터럴이면 생성자에 넘긴 뒤 호출자가 `value` 를 바꿔 재고의 식별자까지 바뀌거든요. 두 클래스의 `private` 표식 필드는 모양이 같은 두 id 타입이 서로 대입되지 않게 합니다([Type Compatibility](https://www.typescriptlang.org/docs/handbook/type-compatibility.html)). TypeScript 의 `===` 는 객체를 참조로 비교하므로 VO 로 배정한 `StockId`·`IngredientId`·`ConversionRatio` 에도 값으로 비교하는 `equals` 를 두었고, 공유 상수 표 `ConversionRatio.ALL` 은 배열째 얼려 실행 중에 비우거나 바꿀 수 없게 했어요.
+Java `BigDecimal` 은 10진 수를 그대로 담지만 `equals` 가 값뿐 아니라 scale 까지 같아야 참이라서, 2.0 과 2.00 이 다르다고 나옵니다. 크기만 보는 `compareTo` 는 둘을 같게 봐요([BigDecimal](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html)). record 의 `equals` 는 컴포넌트의 `equals` 를 그대로 쓰므로([JEP(JDK Enhancement Proposal) 395](https://openjdk.org/jeps/395)), 생성자에서 `stripTrailingZeros()` 로 표현을 하나로 맞춰야 9행이 `true` 가 됩니다. 같은 생성자가 `Objects.requireNonNull` 로 단위 없는 Quantity 를 막아요. 역방향 환산이 부르는 `amount.divide(factor)` 에는 한계가 하나 있습니다. 반올림 방식을 주지 않은 호출이라 몫이 유한 소수로 끝나지 않으면 자릿수 검사에 닿기도 전에 `ArithmeticException` 이 납니다. 이 예제의 비율은 1000 = 2³ × 5³ 하나뿐이라 늘 나눠떨어지지만, 1 yard = 3 ft 같은 비율을 표에 더하는 순간 1 ft 를 yard 로 옮기는 자리에서 예외가 나요(Java 21 에서 `new BigDecimal("1").divide(BigDecimal.valueOf(3))` 를 실행하면 "Non-terminating decimal expansion" 입니다). 그때는 `divide(factor, MAX_SCALE, RoundingMode.HALF_UP)` 처럼 반올림 방식을 정하거나, TypeScript·Rust 구현처럼 나눠떨어지는지를 먼저 확인해 도메인 오류로 돌려줘야 합니다. TypeScript 는 10진 타입이 없어서 수치 × 1000 을 `bigint` 정수로 듭니다. `number` 가 정수를 안전하게 표현하는 범위는 −(2⁵³−1)~2⁵³−1 이고 `bigint` 에는 그 한계가 없어요. 대신 JSON(JavaScript Object Notation)으로 바꾸는 `JSON.stringify` 에 그대로 넘기면 `TypeError` 가 나므로 저장할 때는 `toString()` 결과를 씁니다([MDN BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)). `readonly` 는 컴파일 시점에만 막아서([Object Types](https://www.typescriptlang.org/docs/handbook/2/objects.html)) 생성자에서 `Object.freeze(this)` 를 함께 부릅니다. freeze 는 얕게 얼리지만([MDN Object.freeze](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)) 필드가 `bigint` 와 문자열뿐이라 여기서는 충분하고, 식별자 `StockId`·`IngredientId` 도 같은 이유로 얼린 클래스로 만들었습니다. 평범한 객체 리터럴이면 생성자에 넘긴 뒤 호출자가 `value` 를 바꿔 재고의 식별자까지 바뀌거든요. 두 클래스의 `private` 표식 필드는 모양이 같은 두 id 타입이 서로 대입되지 않게 합니다([Type Compatibility](https://www.typescriptlang.org/docs/handbook/type-compatibility.html)). TypeScript 의 `===` 는 객체를 참조로 비교하므로 VO 로 배정한 `StockId`·`IngredientId`·`ConversionRatio` 에도 값으로 비교하는 `equals` 를 두었고, 공유 상수 표 `ConversionRatio.ALL` 은 막는 층이 셋입니다. `readonly` 가 컴파일 시점의 대입을 막고, `Object.freeze` 로 얼린 배열이 실행 중 원소 교체를 막고, 클래스를 얼리는 `Object.freeze(ConversionRatio)` 가 `ConversionRatio.ALL = []` 같은 정적 필드 재대입을 막아요. 마지막 한 줄이 없으면 앞의 둘을 다 갖추고도 표를 통째로 다른 배열로 바꿀 수 있습니다(node 로 실행해 확인). Java 의 `static final` 과 Rust 의 `const` 에는 이 구멍이 없어서, 같은 보장을 맞추느라 TypeScript 에만 줄이 하나 더 붙었어요.
 
-Rust 의 `f64` 는 NaN(Not a Number) 때문에 `Eq` 를 구현하지 않습니다([std::cmp::Eq](https://doc.rust-lang.org/std/cmp/trait.Eq.html)). 부동소수 필드로는 `Eq`·`Hash` 를 파생할 수 없으니 `i64` 정수로 들어요. 정수 연산자는 debug 빌드에서 오버플로 때 panic 하므로([Operator expressions](https://doc.rust-lang.org/reference/expressions/operator-expr.html)), `checked_*` 가 돌려주는 `Option` 을 도메인 오류로 바꿉니다([i64](https://doc.rust-lang.org/std/primitive.i64.html)). 여기서 자릿수를 지키는 것과 표현 범위를 지키는 것은 별개예요. `i64` 의 최댓값은 9,223,372,036,854,775,807 이라, 10¹³ kg 은 수치 × 1000 = 10¹⁶ 으로 들어가지만 g 로 옮기면 10¹⁹ 이 되어 `checked_mul` 이 오류를 냅니다(실행해 확인). Java `BigDecimal` 과 TypeScript `bigint` 는 이 한계가 없어요. 9행~11행은 최소 조건 2 의 크기 비교와 조건 3 의 값 같음을 구분해 보여 줍니다. `equals`(Rust 는 `==`)는 수치와 단위가 둘 다 같아야 참이고, `compareTo`(Rust 는 `compare_to`)는 공통 단위로 옮긴 뒤 크기만 비교해 BigDecimal 의 `equals` 와 `compareTo` 가 갈리는 방식과 같은 모양입니다. 끝으로 문자열 입력 문법은 시나리오가 쓰는 부호 없는 10진 표기(`0.3`, `2.50`)에서만 세 언어가 같습니다. Java 의 `new BigDecimal` 은 `1e3` 같은 지수 표기와 `+5` 를 받고, Rust 의 정수 파싱도 `+5` 를 받지만, TypeScript 의 정규식은 둘 다 거부해요(세 언어에서 실행해 확인).
+Rust 의 `f64` 는 NaN(Not a Number) 때문에 `Eq` 를 구현하지 않습니다([std::cmp::Eq](https://doc.rust-lang.org/std/cmp/trait.Eq.html)). 부동소수 필드로는 `Eq`·`Hash` 를 파생할 수 없으니 `i64` 정수로 들어요. 정수 연산자는 debug 빌드에서 오버플로 때 panic 하므로([Operator expressions](https://doc.rust-lang.org/reference/expressions/operator-expr.html)), `checked_*` 가 돌려주는 `Option` 을 도메인 오류로 바꿉니다([i64](https://doc.rust-lang.org/std/primitive.i64.html)). 여기서 자릿수를 지키는 것과 표현 범위를 지키는 것은 별개예요. `i64` 의 최댓값은 9,223,372,036,854,775,807 이라, 10¹³ kg 은 수치 × 1000 = 10¹⁶ 으로 들어가지만 g 로 옮기면 10¹⁹ 이 되어 `checked_mul` 이 오류를 냅니다(실행해 확인). Java `BigDecimal` 과 TypeScript `bigint` 는 이 한계가 없어요. 9행~11행은 최소 조건 2 의 크기 비교와 조건 3 의 값 같음을 구분해 보여 줍니다. `equals`(Rust 는 `==`)는 수치와 단위가 둘 다 같아야 참이라 10행이 `false` 인데, 이 표현 동등성은 조건 3 이 요구하는 것이 아니라 이 예제가 고른 [선택] 4 예요. `compareTo`(Rust 는 `compare_to`)는 공통 단위로 옮긴 뒤 크기만 비교해서 11행이 `true` 가 되고, BigDecimal 의 `equals` 와 `compareTo` 가 갈리는 방식과 같은 모양입니다. 끝으로 문자열 입력 문법은 시나리오가 쓰는 부호 없는 10진 표기(`0.3`, `2.50`)에서만 세 언어가 같습니다. Java 의 `new BigDecimal` 은 `1e3` 같은 지수 표기와 `+5` 를 받고, Rust 의 정수 파싱도 `+5` 를 받지만, TypeScript 의 정규식은 둘 다 거부해요(세 언어에서 실행해 확인).
 
 ### 상황이 달라지면
 
@@ -919,7 +939,7 @@ class Amount {
 }
 ```
 
-> 풀이 — 조건 1 은 충족합니다. 수치와 단위가 한 값으로 다녀요. 조건 2 도 충족합니다. 단위가 다르면 거부하는데, 최소 조건은 환산 근거가 없을 때 거부하는 것을 허용합니다. 환산을 못 하는 것은 `[선택]` 4 가 빠진 것이지 필수 위반이 아니에요. 조건 3 에서 판정이 갈립니다. `plus` 는 자기 값을 바꾸지 않고 새 값을 돌려주니 한 곳의 계산이 다른 곳을 바꾸지는 않지만, 수치와 단위로 같음을 판정하는 수단이 메서드로도 비교 함수로도 없습니다. `new Amount(5n, "g") === new Amount(5n, "g")` 는 참조 비교라 `false` 예요(node 로 실행해 확인). 그래서 이 가이드의 `[필수]` 3 을 채우지 못해 판정은 아직 Quantity 가 아닙니다. 구조는 거의 다 갖췄으니 값 비교 수단 하나만 더하면 조건 셋을 갖춥니다. 다만 `[a].includes(b)` 같은 표준 라이브러리 검색은 그 뒤에도 참조로 비교해서 `false` 이니, 본문 Quantity 처럼 목록에서 찾을 때는 `equals` 를 직접 불러야 합니다. 런타임에서 `readonly` 를 우회하는 대입까지 막으려면 본문처럼 `Object.freeze` 를 더합니다.
+> 풀이 — 조건 1 은 충족합니다. 수치와 단위가 한 값으로 다녀요. 조건 2 도 충족합니다. 단위가 다르면 거부하는데, 최소 조건은 환산 근거가 없을 때 거부하는 것을 허용합니다. 환산을 못 하는 것은 `[선택]` 5 가 빠진 것이지 필수 위반이 아니에요. 조건 3 에서 판정이 갈립니다. `plus` 는 자기 값을 바꾸지 않고 새 값을 돌려주니 한 곳의 계산이 다른 곳을 바꾸지는 않지만, 두 `Amount` 가 같은 값인지 값으로 판정하는 수단이 메서드로도 비교 함수로도 없습니다. `new Amount(5n, "g") === new Amount(5n, "g")` 는 참조 비교라 `false` 예요(node 로 실행해 확인). 그래서 `[필수]` 3 을 채우지 못해 판정은 아직 Quantity 가 아닙니다. 구조는 거의 다 갖췄으니 값 비교 수단 하나만 더하면 조건 셋을 갖춰요. 그 수단이 표현이 같은지를 볼지(본문 예제의 `[선택]` 4) 환산해서 크기로 볼지는 그다음 선택이고, 조건 3 의 판정에는 어느 쪽이든 상관없습니다. 다만 `[a].includes(b)` 같은 표준 라이브러리 검색은 그 뒤에도 참조로 비교해서 `false` 이니, 본문 Quantity 처럼 목록에서 찾을 때는 `equals` 를 직접 불러야 합니다. 런타임에서 `readonly` 를 우회하는 대입까지 막으려면 본문처럼 `Object.freeze` 를 더합니다.
 
 **문제 2.** 병원 시스템이 `{ patientId: "p-7", item: "체온", takenAt: "2026-09-17T09:00", value: 36.5, unit: "°C" }` 를 JSON 으로 저장합니다. 이 기록 전체와 그 안의 `value`·`unit` 부분은 각각 무엇을 나타낼까요? 비교 절의 구분 기준과 최소 조건으로 답해 보세요.
 

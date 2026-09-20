@@ -54,7 +54,7 @@
 
 ### 구현
 
-<!-- @write: example.impl — 아래 세 펜스를 이 순서 그대로 채운다: java, typescript, rust. 세 펜스 사이에 산문·헤딩을 끼우지 않는다(HTML 파생본에서 탭 하나로 묶인다). 펜스마다 단독 파일로 컴파일돼야 한다(Java 21 · TypeScript strict · Rust 2021 edition). 표준 라이브러리만, 생략 표기 없음, 빈 펜스 금지. 세 펜스 모두 상황 설정의 같은 시나리오를 같은 역할·타입 이름으로 구현하고 그 시나리오를 호출하는 진입점(Java main · TypeScript 최상위 호출 · Rust fn main)을 갖는다. 펜스마다 250줄 이하. 코드의 정본은 가이드 폴더의 code/ 실행 파일이고 본문 펜스는 거기서 가져오며, 실행 출력은 code/expected-output.txt 와 같은 펜스로 싣는다(PG16·PG17·PG18·PG19·PG28·PG29). -->
+<!-- @write: example.impl — 아래 세 펜스를 이 순서 그대로 채운다: java, typescript, rust. 세 펜스 사이에 산문·헤딩을 끼우지 않는다(HTML 파생본에서 탭 하나로 묶인다). 펜스마다 단독 파일로 컴파일돼야 한다(Java 21 · TypeScript strict · Rust 2021 edition). 표준 라이브러리만, 생략 표기 없음, 빈 펜스 금지. 세 펜스 모두 상황 설정의 같은 시나리오를 같은 역할·타입 이름으로 구현하고 그 시나리오를 호출하는 진입점(Java main · TypeScript 최상위 호출 · Rust fn main)을 갖는다. 펜스마다 250줄 이하. 코드의 정본은 가이드 폴더의 code/ 실행 파일이고 본문 펜스는 거기서 가져오며, 실행 출력은 code/expected-output.txt 와 같은 펜스로 싣되 그 펜스는 구현 절 밖(상황 설정 또는 해설)에 둔다(PG16·PG17·PG18·PG19·PG28·PG29). -->
 
 ```java
 ```

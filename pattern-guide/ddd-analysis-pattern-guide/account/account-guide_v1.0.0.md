@@ -2,7 +2,7 @@
 pattern: Account
 slug: account
 spec: analysis-guide
-spec_version: 1.1.0
+spec_version: 1.2.0
 version: 1.0.0
 status: draft
 date: 2026-09-20
@@ -29,7 +29,7 @@ Before — 잔액을 숫자 하나로 고쳐 쓰는 모델
 
 마감 보고서를 다시 뽑거나 감사에서 5,000원의 출처를 물으면 숫자 하나로는 답할 수 없어요. 75,000 이 맞는 값인지 확인할 기준조차 없습니다.
 
-Account 패턴은 잔액을 저장해 두는 값으로 보지 않아요. 돈이 오갈 때마다 **Entry**(계정 하나에 금액 하나가 오간 기록) 한 건을 남기고, 잔액은 그 시점까지 이 계정에 기록된 Entry 금액의 합으로 정의합니다. 확정된 기록은 고치지 않고, 바로잡을 때도 Entry 를 새로 더합니다. 이 글의 예에서는 부호가 반대인 Entry 로 효과를 지운 뒤 올바른 Entry 를 남기는 방식(역분개)을 씁니다.
+Account 패턴은 잔액을 저장해 두는 값으로 보지 않아요. 돈이 오갈 때마다 **Entry**(계정 하나에 금액 하나가 오간 기록) 한 건을 남기고, 잔액은 그 시점까지 이 계정에 기록된 Entry 금액의 합으로 정의합니다. 이 글에서는 확정된 기록을 고치지 않고, 바로잡을 때도 Entry 를 새로 더해요 — 부호가 반대인 Entry 로 효과를 지운 뒤 올바른 Entry 를 남기는 방식(역분개)입니다.
 
 ```text
 After — 잔액은 Entry 를 더해서 얻는 값
@@ -62,7 +62,7 @@ After — 잔액은 Entry 를 더해서 얻는 값
   - **balance**(잔액) — Account 의 파생 속성입니다. 어느 시점 t 의 balance 는 t 까지 그 Account 에 속한 Entry 금액의 합이에요. 저장된 사실이 아니라 Entry 에서 계산되는 값이라, 빨리 답하려고 계산해 둘 수는 있지만 계산해 둔 값이 Entry 합과 다르면 틀린 쪽은 계산해 둔 값입니다.
   - 협력: Entry 가 Account 에 속합니다(Account 1 — Entry 여럿). Fowler 는 이 패턴의 의도를 관련된 회계 Entry 를 모으고 요약 동작을 제공하는 것으로 적었어요([eaaDev Account](https://martinfowler.com/eaaDev/Account.html)).
 - **Entry**(항목) — 계정 하나에 금액 하나가 오간 사실 한 건입니다.
-  - 책임: 어느 Account 에 얼마(Money)가 기록됐는지 담고, 기록이 확정된 뒤에는 바뀌지 않습니다.
+  - 책임: 어느 Account 에 얼마(Money)가 기록됐는지 담습니다. 확정된 뒤에는 바뀌지 않는다는 규칙은 Fowler 가 흔한 규칙으로 적은 것이고([eaaDev Accounting Entry](https://martinfowler.com/eaaDev/AccountingEntry.html)), 이 글은 그 규칙을 따라요 — 최소 조건에서는 선택으로 둡니다.
   - 협력: 정확히 한 Account 에 속하고, balance 계산의 재료가 됩니다. 복식부기에서는 한 Transaction 에도 묶여요.
   - 금액·계정·날짜가 모두 같은 Entry 둘도 서로 다른 사실이에요. 같은 날 같은 금액을 두 번 입금하면 기록도 두 건입니다.
   - 원서 그림 6.1 의 Entry 는 금액과 함께 시각 둘(`whenCharged`, `whenBooked`)을 가집니다. 이 글의 예제는 거래 날짜 하나로 줄였어요.
@@ -183,14 +183,14 @@ After — 잔액은 Entry 를 더해서 얻는 값
 
 ### 디자인 패턴을 충족하는 최소 조건
 
-아래 조건은 클래스 모양이 아니라 개념이 맡는 책임과 모델이 늘 지키는 불변식으로 판정해요. Entry 를 누가 소유하든 같은 기준으로 판정할 수 있어야 하기 때문입니다. 조건마다 근거가 원서 그림인지, Fowler 의 후속 초안(eaaDev)인지, 이 가이드의 정책인지를 괄호로 밝혔어요.
+아래 조건은 클래스 모양이 아니라 개념이 맡는 책임과 모델이 늘 지키는 불변식으로 판정해요. Entry 를 누가 소유하든 같은 기준으로 판정할 수 있어야 하기 때문입니다. 조건마다 근거가 원서 그림인지, Fowler 의 후속 초안(eaaDev)인지, 이 가이드의 정책인지를 괄호로 밝혔어요. `[필수]` 에는 원전이 Account 의 성립 요건으로 적은 것만 올렸고, 원전이 흔한 규칙으로 적은 것과 이 가이드의 정책은 번호 순서와 무관하게 `[선택]` 입니다.
 
 1. [필수] 잔액은 Entry 의 합으로 정의됩니다 — 어느 시점의 잔액이든 그 시점까지 확정된 Entry 가운데 그 Account 에 속한 것의 금액 합과 같아요. 잔액을 계산해 둔 값이 있어도 기준은 이 합이고, 계산해 둔 값은 반영한 위치까지의 합과 같아야 합니다. 오래된 Entry 를 합이 같은 한 건으로 정리했다면 정리한 구간 안쪽 시점만 예외예요. (근거: 원서 그림 6.1 의 `balance = sum(entries.amount)`, 정리는 eaaDev Account)
    빠지면: 개요의 Before 처럼 잔액 숫자를 고쳐 쓰는 필드가 됩니다. 4/5 마감 때 현금이 얼마였는지, +5,000 이 무엇이었는지 답할 재료가 없어요. Fowler 도 현재 값만 필요하면 필드로 충분하다고 했는데, 그건 Account 패턴이 아니라 속성 하나입니다.
 2. [필수] Account 는 Entry 를 모으는 기준을 책임집니다 — 모든 Entry 는 정확히 한 Account 에 속하고, 한 Account 의 잔액은 그 Account 에 속한 Entry 만 더해요. 속한다는 말은 Account 가 Entry 목록을 들고 있다는 뜻이 아니라 Entry 마다 속한 Account 가 하나로 정해진다는 뜻이고, 목록에 담든 식별자로 가리키든 같습니다. (근거: 원서 그림 6.1 의 Account 1 — Entry 여럿)
    빠지면: Entry 에 `"현금"` 같은 분류 문자열만 붙은 기록 목록이 됩니다. `"현금"` 과 `"현금 "` 이 서로 다른 묶음으로 더해지고, 통화나 열림/닫힘처럼 묶음 전체에 걸리는 사실을 둘 곳이 없어요. Fowler 가 Account 없이 Entry 만 쓰는 선택지로 따로 적은 모양입니다([eaaDev Accounting Entry](https://martinfowler.com/eaaDev/AccountingEntry.html)).
-3. [필수] 확정된 Entry 를 고치거나 지워서 정정하지 않습니다 — 값의 변화와 정정은 Entry 를 새로 더해서 기록해요. (근거: eaaDev Account 가 이 패턴을 현재 값·과거 값·변경 이력이 모두 필요할 때 쓴다고 적은 것, eaaDev Accounting Entry 의 확정 뒤 변경 금지 규칙. 정정 방식을 역분개로 정한 것은 이 가이드의 정책)
-   빠지면: T2 #2 의 −30,000 을 −25,000 으로 고치는 모델이 됩니다. 4/5 현금 잔액이 70,000 에서 75,000 으로 바뀌어 4/5 에 낸 보고서와 어긋나고, 수정 전 값이 남지 않으니 어느 쪽이 맞는지도 보일 수 없어요. 이력이 사라진 거죠. 변경 이력이 없으니 Temporal Property 나 필드와 다를 것이 없습니다. Fowler 는 확정(booked) 전 변경을 허용하는 규칙도 흔하다고 적었고 오래된 Entry 정리도 적었으므로, 이 조건이 막는 것은 확정된 Entry 를 정정하려고 고치거나 지우는 일뿐입니다.
+3. [선택] 확정된 Entry 를 고치거나 지워서 정정하지 않습니다 — 값의 변화와 정정은 Entry 를 새로 더해서 기록해요. (근거: Fowler 가 흔한 규칙으로 적은 것 — eaaDev Accounting Entry 는 확정 뒤 변경 금지와 함께 확정 전 변경을 허용하는 규칙도 흔하다고 적었고, 원전이 Account 의 성립 요건으로 든 것은 Entry 를 모으는 것과 그 합으로 요약을 주는 것 둘입니다. 감사와 과거 시점 보고가 요구로 들어오면 이 조건이 필요하고, 이 가이드는 역분개로 따릅니다)
+   빠지면 잃는 것: 과거 시점 잔액의 재현, 수정 전 값. T2 #2 의 −30,000 을 −25,000 으로 고치면 4/5 현금 잔액이 70,000 에서 75,000 으로 바뀌어 4/5 에 낸 보고서와 어긋나고, 수정 전 값이 남지 않으니 어느 쪽이 맞는지도 보일 수 없어요. 조건 1 은 그대로 지켜집니다 — 잔액은 여전히 Entry 합이고, 합의 재료였던 Entry 가 바뀌었을 뿐이에요. 그래서 이 조건이 빠져도 Account 패턴이 아니게 되지는 않고, 과거를 묻는 질문에만 답하지 못합니다. Fowler 는 오래된 Entry 정리도 적었으므로, 이 조건이 막는 것은 확정된 Entry 를 정정하려고 고치거나 지우는 일뿐입니다.
 4. [필수] 금액은 단위를 가진 값이고, 한 잔액으로 더하는 금액은 단위가 같습니다 — 돈이면 통화를 가진 Money 이고, 통화가 다른 금액은 한 잔액에 더하지 않아요. 단위가 하나로 고정된 모델이면 그것으로 충족하고, 여러 통화를 받는 계정이면 통화별로 따로 더합니다(eaaDev 가 말하는 Money Bag, 통화별 금액 묶음). (근거: 원서 그림 6.1 에서 amount 와 balance 가 Quantity, eaaDev Account 의 계정 통화)
    빠지면: 현금(KRW) 잔액 70,000 에 USD 100 이 숫자 100 으로 더해져 70,100 이 됩니다. 합은 나오지만 어느 통화의 금액도 아니에요.
 5. [선택] 계정 열림/닫힘 — 닫힌 Account 는 새 Entry 를 받지 않고, 이미 확정된 Entry 와 잔액은 그대로 둡니다. (근거: 이 가이드의 정책, [회계 배경 확정안](../../research/accounting-context.md) I5 의 계정 유효)
@@ -363,6 +363,21 @@ Entry 가 AccountId 를 들 때
 | `AccountBalance.accountId: AccountId` (읽기 모델 → Account) | 읽기 모델이 `Account` 객체를 듦 | 불변식 ④(잔액은 aggregate 경계 밖 읽기 모델), 참조 칸 | 읽기 모델 갱신 코드가 `close()` 같은 변경 메서드에 닿아, 결과를 보여 주는 곳이 규칙을 바꾸는 곳이 됨. 붙든 Account 사본이 오래되면 닫힌 계정이 열린 것으로 보이고, 그 사본을 저장하면 닫힘이 되돌려짐 |
 
 네 행의 모양은 같아요. 객체 참조가 곧 규칙 위반은 아니지만, 참조를 따라가면 다른 aggregate 를 읽은 순간의 사본으로 고치거나 함께 저장하는 경로가 열립니다. id 로만 가리키면 다른 aggregate 가 필요할 때마다 저장소에서 지금 값을 새로 읽어야 해서 그 경로가 코드에 남지 않아요([Vernon Part II](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf)의 id 참조 규칙).
+
+뒤의 세 언어 구현은 이 설정을 그대로 옮긴 것이고, 실행하면 셋이 아래 10줄을 글자까지 같게 냅니다(Java 21 · TypeScript 를 tsc 로 변환한 뒤 Node · Rust 2021 에서 실행해 확인). 가이드 폴더의 `code/expected-output.txt` 와 같은 내용이고, 이 글의 모든 실행 수치가 여기서 옵니다. 무엇이 나오는지 먼저 보아 두면 뒤의 코드와 해설을 따라가기 쉬워요.
+
+```text
+T1 전기 직후 현금: 읽기 모델 0 KRW / Entry 합 100000 KRW
+이벤트 전달 후 현금: 읽기 모델 100000 KRW
+T3 이 되돌리는 거래: T2
+현금 4/5 기준 Entry 합: 70000 KRW
+현금 4/6 기준 Entry 합: 75000 KRW
+현금 읽기 모델: 75000 KRW (Entry 합과 같음: true)
+매출(수익) 읽기 모델: -100000 KRW
+거절(불균형): KRW 합이 0 이 아닙니다: 10000
+거절(닫힌 계정): 가수금 계정은 닫혀 있습니다
+현금 읽기 모델을 이벤트로 다시 만든 값: 75000 KRW
+```
 
 ### 구현
 
@@ -1043,7 +1058,7 @@ fn main() -> Result<(), String> {
 }
 ```
 
-세 언어 모두 같은 시나리오를 돌리고, 실행하면 아래 10줄을 똑같이 출력합니다(Java 21 · TypeScript 를 tsc 로 변환한 뒤 Node · Rust 2021 에서 실행해 확인).
+세 언어 모두 같은 시나리오를 돌립니다. 「상황 설정」 끝에 실어 둔 10줄이 그 실행 출력이고, 줄마다 무엇을 보이는지는 이렇습니다.
 
 | 출력 | 무엇을 보이는가 |
 | --- | --- |
@@ -1069,7 +1084,7 @@ fn main() -> Result<(), String> {
 이 표가 상황 설정의 배정 칸이 코드에 드러나는 자리이고, Account 개념의 요약 책임(잔액에 답하기)은 `balanceAsOf`(Rust `balance_as_of`)와 `AccountBalance` 가 대신 수행합니다. 나머지 핵심 줄은 다섯 곳이에요.
 
 - **합 0 검사** — Java `sums.merge(...)` 와 `if (sum != 0)`, TypeScript `sums.set(currency, (...).plus(line.amount))` 와 `if (sum.minor !== 0)`, Rust `*sum = sum.checked_add(...)` 와 `if *sum != 0`. `create` 와 `reverse` 가 함께 쓰는 `build` 안에 있어서, 불균형 거래 객체는 아예 만들어지지 않습니다. 이 줄이 없으면 T5 가 만들어지고, 그대로 전기하면 현금에는 +100,000, 매출에는 −90,000 만 기록돼 합이 +10,000 인 거래가 원장에 남아요.
-- **저장 전 계정 확인** — `GeneralLedger.post` 의 `checkPostable` 반복문(Rust `self.account(line.account_id)?.check_postable(line.amount)?`). 이 줄을 저장 뒤로 옮기면 거절 메시지는 똑같이 나오지만 T6 이 이미 저장된 뒤라 닫힌 가수금 계정의 Entry 합이 −50,000 이 됩니다. T6 을 역분개하려 해도 그 거래가 같은 닫힌 계정을 가리키니 올바른 순서의 확인에서 거절돼요(두 경우 모두 코드를 바꿔 실행해 확인). 계정은 저장소의 `closeAccount`(Rust `close_account`)가 root 의 `close()` 를 부르는 길로만 닫히고, 저장된 Account 를 통째로 바꿔 끼우는 길은 열어 두지 않았어요.
+- **저장 전 계정 확인** — `GeneralLedger.post` 의 `checkPostable` 반복문(Rust `self.account(line.account_id)?.check_postable(line.amount)?`). 이 줄을 저장 뒤로 옮기면 거절 메시지는 똑같이 나오지만 T6 이 이미 저장된 뒤라 닫힌 가수금 계정의 Entry 합이 −50,000 이 됩니다. T6 을 역분개하려 해도 그 거래가 같은 닫힌 계정을 가리키니 올바른 순서의 확인에서 거절돼요(두 경우 모두 코드를 바꿔 실행해 확인). 계정을 닫는 일은 세 언어 모두 root 의 `close()` 를 거치고, 저장된 Account 를 통째로 바꿔 끼우는 길은 두지 않았습니다. 다만 그 `close()` 에 닿는 경로는 언어마다 달라요. Rust 의 `account` 는 `&Account` 를 돌려주어 `close(&mut self)` 를 부를 수 없으니 저장소의 `close_account` 하나뿐이지만(넣어 보면 `E0596 cannot borrow data in a & reference as mutable`), Java·TypeScript 의 `account(id)` 는 저장된 Account 를 그대로 돌려주므로 `ledger.account(id).close()` 로도 닫힙니다(세 경우 모두 코드에 넣어 컴파일해 확인). 조회가 읽기 전용을 돌려주는지는 언어의 가변성 표현이 정하는 것이고, 어느 경로든 계정의 상태가 바뀌는 자리는 root 의 `close()` 하나예요.
 - **이미 반영한 이벤트 건너뛰기** — `AccountBalance.apply` 의 첫 줄, Java `if (event.position() <= lastAppliedSeq) return;` · TypeScript `if (event.position <= this.lastAppliedSeq) return;` · Rust `if event.position <= self.last_applied_seq`. 예시의 배달자는 전달 위치를 기억하지 않아 이미 보낸 이벤트도 다시 보내는데, 이 줄 덕분에 같은 이벤트가 한 번만 더해집니다. 같은 메서드는 합을 `next` 에 먼저 모은 뒤 잔액과 반영 위치를 함께 바꿔서, 도중에 덧셈이 실패해도 절반만 반영된 채 위치가 남지 않아요. 배달자는 이벤트 하나를 계정마다 한 번만 전하므로, 한 거래에 같은 계정의 Entry 가 둘이어도 이 줄에 기대지 않습니다. 이 건너뛰기는 이벤트가 전기 순서대로 온다는 전제에서만 안전해요. T1·T2 만 전기하고 거꾸로 전달하도록 바꿔 실행하면 T2(2번)가 먼저 반영돼 T1(1번)이 건너뛰어지고, 현금 읽기 모델은 −30,000, Entry 합은 70,000 이 됩니다.
 - **Entry 를 밖으로 내보내지 않기** — `Transaction.lines()` 는 Entry 객체가 아니라 `AccountAmount` 값만 돌려줍니다(Java `toList()` 의 수정 불가 목록, TypeScript 는 얼린 값의 읽기 전용 배열이고 `Transaction` 자체도 `Object.freeze`, Rust 는 값 사본 `Vec<AccountAmount>`). `TransactionPosted` 도 이 값만 담고, 받은 목록을 복사하거나(Java compact 생성자의 `List.copyOf`) 얼려서(TypeScript `Object.freeze`) 보관하므로 root 바깥에서 child entity 를 붙잡는 곳이 없습니다. `AccountAmount` 는 VO 라 값으로 비교해요 — Java `record` 의 `equals`, TypeScript `equals` 메서드, Rust `#[derive(PartialEq, Eq)]`. 이 예제의 이벤트는 읽기 모델이 쓰는 전기 순번과 값만 담았고, 거래를 되짚는 소비자가 생기면 `TransactionId` 도 담아야 합니다.
 - **읽기 모델 다시 만들기** — `rebuildBalance`(Rust `rebuild_balance`)는 읽기 모델을 버리고 이벤트를 처음부터 다시 전달합니다. 마지막 출력의 75,000 이 그 결과이고, 원천이 Transaction 과 이벤트 쪽에 있기 때문에 가능한 작업이에요.
@@ -1146,7 +1161,7 @@ After — ④-a (Account 가 요약 VO 를 가진다)
 
 ## 스스로 점검하기
 
-**1. 경계 판정.** 아래 포인트 지갑 모델이 Account 패턴인지 최소 조건 1~4 로 판정해 보세요.
+**1. 경계 판정.** 아래 포인트 지갑 모델이 Account 패턴인지 필수 조건 1 · 2 · 4 로 판정해 보세요.
 
 ```java
 class PointWallet {
@@ -1166,7 +1181,7 @@ class PointWallet {
 }
 ```
 
-> 풀이 — 조건 2 는 지갑 하나가 내역을 모으는 기준이라 충족하고, 조건 4 는 포인트라는 단위 하나만 쓰니 충족합니다. 조건 1 도 지금 시점만 보면 지켜져요. `earn` 과 `cancelEarn` 이 필드와 내역 합을 함께 움직이니까요. 갈리는 곳은 조건 3 입니다. `cancelEarn` 이 내역을 지워서 정정하므로, 취소 전 날짜의 포인트를 다시 계산하면 그때 보여 준 값과 달라져요. 그래서 이 가이드의 최소 조건으로는 Account 패턴이 아닙니다. 취소를 부호가 반대인 내역 추가로 바꾸면 조건 3 을 충족합니다.
+> 풀이 — 조건 2 는 지갑 하나가 내역을 모으는 기준이라 충족하고, 조건 4 는 포인트라는 단위 하나만 쓰니 충족합니다. 갈리는 곳은 조건 1 이에요. 이 모델의 잔액은 `points` 필드이고 `history` 는 그 옆에 쌓이는 기록일 뿐입니다 — 잔액을 `history` 의 합으로 정의한 곳도, 둘이 어긋나면 `history` 로 `points` 를 다시 계산한다는 규칙도 없어요. 「비슷한 패턴·안티패턴과의 차이」 첫 행의 필드가 원천인 잔액 모델입니다. `cancelEarn` 이 그것을 드러내요. 내역을 지우고 필드를 빼므로 취소 전 날짜의 포인트를 `history` 로 되짚을 수 없고, 필드와 내역이 어긋났을 때 어느 쪽이 맞는지 정한 규칙도 없습니다. 그래서 조건 1 에서 이미 Account 패턴이 아니에요. 잔액을 `history` 의 합으로 정의하면 조건 1 을 충족하고, 취소까지 부호가 반대인 내역 추가로 바꾸면 선택 조건 3 도 함께 충족합니다.
 
 **2. 비교 판별.** 요구가 두 가지 있습니다. 어느 쪽이 Account 이고 어느 쪽이 Temporal Property 인지, 구분 기준을 근거로 골라 보세요.
 

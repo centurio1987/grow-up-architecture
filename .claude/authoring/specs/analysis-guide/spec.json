@@ -3,7 +3,7 @@
   "schema_version": 1,
   "id": "analysis-guide",
   "label": "가이드 — 분석 패턴",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "source": {
     "origin": "extracted",
     "refs": [
@@ -340,7 +340,7 @@
       "code": "PG29",
       "level": "MUST",
       "axis": "evidence",
-      "text": "코드 정본 — 예시 코드는 가이드 폴더의 `code/` 에 실행 파일로 있고(공개 클래스 이름의 .java · main.ts · main.rs · expected-output.txt), 본문 펜스가 그 파일과 글자 단위로 같으며, 본문이 싣는 실행 출력이 expected-output.txt 와 같다. 세 언어가 같은 출력을 내지 않거나 본문 수치가 실행에서 오지 않으면 미흡"
+      "text": "코드 정본 — 예시 코드는 가이드 폴더의 `code/` 에 실행 파일로 있고(공개 클래스 이름의 .java · main.ts · main.rs · expected-output.txt), 본문 펜스가 그 파일과 글자 단위로 같으며, 본문이 싣는 실행 출력이 expected-output.txt 와 같다(그 펜스는 `### 구현` 밖에 둔다 — 그 절은 언어 펜스 셋뿐이다). 세 언어가 같은 출력을 내지 않거나 본문 수치가 실행에서 오지 않으면 미흡"
     },
     {
       "code": "AG1",

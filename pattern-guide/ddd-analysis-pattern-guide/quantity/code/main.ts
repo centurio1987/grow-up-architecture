@@ -22,6 +22,9 @@ class ConversionRatio {
   }
 }
 
+// 배열을 얼리면 원소 교체만 막힌다. 클래스까지 얼려야 ConversionRatio.ALL = [] 같은 정적 필드 재대입이 막힌다.
+Object.freeze(ConversionRatio);
+
 const ONE = 1000n; // 소수점 아래 세 자리
 
 class Quantity {
