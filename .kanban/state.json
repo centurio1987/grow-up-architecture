@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 22,
+  "next_seq": 24,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -64,12 +64,12 @@
       ]
     },
     "KAN-001.2-4NWK0T": {
-      "col": "review",
+      "col": "doing",
       "title": "authoring-kit 정착",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-17",
+      "갱신": "2026-09-20",
       "title_hash": "fce3906c934dd6927c14181fcd7e86550926b8b7",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "authoring-kit 정착",
@@ -90,12 +90,12 @@
       ]
     },
     "KAN-001.3-Q6FYKP": {
-      "col": "review",
+      "col": "doing",
       "title": "파일럿 3편과 회고",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-17",
+      "갱신": "2026-09-20",
       "title_hash": "d0c1d7cc85456412364438d6bc7e735d5b0c0729",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "파일럿 3편과 회고",
@@ -222,11 +222,31 @@
     "KAN-001.5-6HF35H",
     "KAN-001.6-HB5NH9",
     "KAN-001-YXTC2C",
-    "KAN-001.2-4NWK0T",
     "KAN-001.1-P5N9NF",
+    "KAN-001.2-4NWK0T",
     "KAN-001.3-Q6FYKP"
   ],
   "recent": [
+    {
+      "seq": 23,
+      "t": "2026-09-20T17:12",
+      "a": "ai",
+      "id": "KAN-001.3-Q6FYKP",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "review",
+      "to": "doing"
+    },
+    {
+      "seq": 22,
+      "t": "2026-09-20T17:12",
+      "a": "ai",
+      "id": "KAN-001.2-4NWK0T",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "review",
+      "to": "doing"
+    },
     {
       "seq": 21,
       "t": "2026-09-17T17:02",
