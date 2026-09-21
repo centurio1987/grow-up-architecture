@@ -11,14 +11,14 @@
   - 목적: 나머지 GoF 22편을 gof-guide spec으로 다시 쓴다
   - 이유: 요청서의 재집필 본체이고 analyzer가 읽는 최소 조건이 여기서 갱신된다
   - 목표: 22편 게이트 PASS, 헤딩·placeholder·mermaid·컴파일 검사 0 오류, analyzer 스팟체크 통과
-  - 실행 문서: KANBAN/cards/KAN-001.4-BJT8JD.md (0/22 · 최근 09-20)
+  - 실행 문서: KANBAN/cards/KAN-001.4-BJT8JD.md (0/22 · 최근 09-21)
 - `KAN-001.5-6HF35H` 분석 패턴 8편 재집필 — 생성:ai · 최종:ai · 갱신:2026-09-17
   - 상위: `KAN-001-YXTC2C` (진행 중)
   - 짧은 제목: 분석 패턴 8편 재집필
   - 목적: 나머지 8편을 analysis-guide spec으로 다시 쓰고 consideration 2편과 정합시킨다
   - 이유: 회계 3부작이 aggregate 경계 정의 없이 쓰여 독자를 오도한다
   - 목표: 8편 PASS, 회계 3부작 동일 배경 인용, consideration 교차 참조·모순 0
-  - 실행 문서: KANBAN/cards/KAN-001.5-6HF35H.md (0/9 · 최근 09-20)
+  - 실행 문서: KANBAN/cards/KAN-001.5-6HF35H.md (0/9 · 최근 09-21)
 - `KAN-001.6-HB5NH9` 인덱스·stale 정리·최종 검증 — 생성:ai · 최종:ai · 갱신:2026-09-17
   - 상위: `KAN-001-YXTC2C` (진행 중)
   - 짧은 제목: 인덱스·stale 정리·최종 검증
@@ -66,7 +66,7 @@
   - 목적: Strategy·Account·Quantity 1편씩(GoF / 회계 aggregate / 값 객체 계열) 전체 파이프라인을 통과시키고 spec·게이트·배치 크기를 개정한다
   - 이유: 명세는 산출물로 검증되기 전엔 추정이고, 30편을 틀린 명세로 쓰면 되돌리는 비용이 크다
   - 목표: 3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar spec마다 1건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성
-  - 실행 문서: KANBAN/cards/KAN-001.3-Q6FYKP.md (11/12 · 최근 09-21)
-  - 검토 문서: KANBAN/reviews/KAN-001.3-Q6FYKP.review.md (승인 7/15 · 반려 6 · 철회 4 · 추가 의견 총 28 · 검토 대기)
+  - 실행 문서: KANBAN/cards/KAN-001.3-Q6FYKP.md (12/12 · 최근 09-21)
+  - 검토 문서: KANBAN/reviews/KAN-001.3-Q6FYKP.review.md (승인 7/15 · 추가 의견 2 · 반려 6 · 철회 4 · 추가 의견 총 30 · 검토 대기)
 
 ## 완료
