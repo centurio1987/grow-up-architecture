@@ -14,16 +14,19 @@
  *   3  playwright 미설치
  *   5  페인트/폰트 가드 실패 — 무채색이거나 IBM Plex가 아닌 폰트가 섞였다
  *   6  잘림 가드 실패 — 도식 내용이 캡처 상자 밖으로 나가 PNG 에서 잘린다
+ *   7  기하/겹침 가드 실패 — 마커가 방향을 잃었거나 엣지가 남의 상자 밑을 지난다
  */
 
 import { mkdir, writeFile } from 'node:fs/promises';
 import { basename, dirname, join, relative, resolve } from 'node:path';
 import {
   assertEdgeMarkersOriented,
+  assertNoEdgeOverlaps,
   assertNoFontPollution,
   bundleToIife,
   EXIT_PAINT,
   inspectEdgeGeometry,
+  inspectEdgeOverlaps,
   inspectPage,
   REPO_ROOT,
   withRenderedPage,
@@ -138,6 +141,7 @@ await withRenderedPage(
     // 캡처 **전에** 죽인다. 틀린 PNG가 산출물에 남으면 다음 공정이 그걸 정본으로 삼는다.
     const defects = await inspectEdgeGeometry(page);
     assertEdgeMarkersOriented(defects, relative(REPO_ROOT, modulePath));
+    assertNoEdgeOverlaps(await inspectEdgeOverlaps(page), relative(REPO_ROOT, modulePath));
 
     // 잘림 가드 — 캡처 상자 밖으로 나간 도형·글자는 PNG 에서 소리 없이 잘린다. 참고 문서 4편 중 3편이
     // 오른쪽·아래쪽이 뜯긴 채 lint 를 통과했다(2026-09-21 실측). SVG 자식의 화면 좌표 합집합이 캡처 상자를

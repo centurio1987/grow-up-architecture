@@ -246,6 +246,92 @@ export async function inspectEdgeGeometry(page: any): Promise<EdgeDefect[]> {
   });
 }
 
+export interface EdgeOverlap {
+  id: string;
+  /** 엣지가 밑을 지나는 상자의 글자(앞부분). */
+  box: string;
+  /** 겹친 구간이 전체 길이에서 차지하는 비율(0~1). */
+  ratio: number;
+  d: string;
+}
+
+/**
+ * 겹침 가드 — **엣지가 자기 양끝이 아닌 상자 밑을 지나는 것**을 잡는다.
+ *
+ * 왜 있나: Strategy 구조 도식에서 `Client ⇢ ConcreteStrategy` 의존 엣지가 Strategy 상자의 왼쪽 변으로
+ * 들어가 상자에 가려졌다가 아래 변에서 화살촉을 달고 나왔다. 독자 눈에는 `Client ⇢ Strategy` 와
+ * `Strategy ⇢ ConcreteStrategy` 두 엣지로 읽혀, 본문이 "ConcreteStrategy 를 아는 쪽은 Client 뿐" 이라고
+ * 가리킨 것의 정반대가 됐다(2026-09-21 채점이 눈으로 잡음). `lint-diagrams` 는 스스로 "레이아웃 겹침은
+ * 검사하지 않는다" 고 적고 있어 기계가 비운 자리였다.
+ *
+ * 판정: 엣지 경로를 길이로 표본해 화면 좌표로 옮기고, **양끝에 닿은 상자를 뺀** 상자의 사각형 안에
+ * 표본이 들어가면 결함이다. 상자 테두리를 스치는 것은 여백(2px)으로 눈감고, 표본 하나만 걸리는 것도
+ * 세지 않는다(모서리 접점) — 연속 구간이 전체의 2% 를 넘을 때만 잡는다.
+ */
+export async function inspectEdgeOverlaps(page: any): Promise<EdgeOverlap[]> {
+  return page.evaluate(() => {
+    const PAD = 2;          // 테두리를 스치는 것은 겹침이 아니다
+    const MIN_RATIO = 0.02; // 모서리 접점 한두 표본은 세지 않는다
+    // 같은 상자가 겹쳐 선언된 경우(바깥 테두리 + 안쪽 판)가 있어 사각형이 거의 같으면 하나로 본다.
+    const boxes: { r: DOMRect; text: string }[] = [];
+    for (const b of document.querySelectorAll('[data-bbangto-viz-class-box]')) {
+      const r = b.getBoundingClientRect();
+      if (r.width < 4 || r.height < 4) continue;
+      const text = (b.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 24);
+      const dup = boxes.find((x) => Math.abs(x.r.left - r.left) < 3 && Math.abs(x.r.top - r.top) < 3 &&
+                                    Math.abs(x.r.width - r.width) < 3 && Math.abs(x.r.height - r.height) < 3);
+      if (dup) { if (!dup.text && text) dup.text = text; continue; }
+      boxes.push({ r, text });
+    }
+    const out: { id: string; box: string; ratio: number; d: string }[] = [];
+    const edges = [...document.querySelectorAll('path[data-bbangto-viz-edge]')] as SVGPathElement[];
+    edges.forEach((el, i) => {
+      const len = el.getTotalLength();
+      if (!len) return;
+      const ctm = el.getScreenCTM();
+      if (!ctm) return;
+      const N = Math.max(40, Math.min(400, Math.round(len)));
+      const pts: { x: number; y: number }[] = [];
+      for (let k = 0; k <= N; k++) {
+        const p = el.getPointAtLength((len * k) / N);
+        pts.push({ x: p.x * ctm.a + p.y * ctm.c + ctm.e, y: p.x * ctm.b + p.y * ctm.d + ctm.f });
+      }
+      const inside = (b: { r: DOMRect }, p: { x: number; y: number }) =>
+        p.x > b.r.left + PAD && p.x < b.r.right - PAD && p.y > b.r.top + PAD && p.y < b.r.bottom - PAD;
+      // 양끝이 닿은 상자는 자기 것이다 — 시작·끝 표본을 담는 상자를 뺀다.
+      const own = new Set(boxes.filter((b) =>
+        [pts[0], pts[pts.length - 1]].some((p) =>
+          p.x > b.r.left - 6 && p.x < b.r.right + 6 && p.y > b.r.top - 6 && p.y < b.r.bottom + 6)));
+      const id = el.getAttribute('data-bbangto-viz-edge-id') || `#${i}`;
+      // 엣지 하나당 한 줄만 낸다 — 그림자·테두리가 상자마다 두 겹이라 그대로 내면 같은 결함이 두 번 찍힌다.
+      let worst: { box: string; ratio: number } | null = null;
+      for (const b of boxes) {
+        if (own.has(b)) continue;
+        const ratio = pts.filter((p) => inside(b, p)).length / (N + 1);
+        if (ratio <= MIN_RATIO) continue;
+        if (!worst || ratio > worst.ratio || (ratio === worst.ratio && !worst.box && b.text)) {
+          worst = { box: b.text, ratio };
+        }
+      }
+      if (worst) out.push({ id, box: worst.box, ratio: worst.ratio, d: el.getAttribute('d') || '' });
+    });
+    return out;
+  });
+}
+
+/** 남의 상자 밑을 지나는 엣지가 있으면 EXIT_GEOMETRY로 죽는다. */
+export function assertNoEdgeOverlaps(overlaps: EdgeOverlap[], label = ''): void {
+  if (!overlaps.length) return;
+  console.error(
+    `[겹침] 엣지가 자기 양끝이 아닌 상자 밑을 지난다 ${overlaps.length}건${label ? ` (${label})` : ''}.\n` +
+      `       가려진 엣지는 독자에게 다른 관계로 읽힌다 — 경유점(waypoints)으로 상자를 우회시키거나 배치를 바꿔라.`,
+  );
+  for (const o of overlaps) {
+    console.error(`  ${o.id} 가 "${o.box}" 밑을 지남 (경로의 ${(o.ratio * 100).toFixed(0)}%)\n    d="${o.d}"`);
+  }
+  process.exit(EXIT_GEOMETRY);
+}
+
 /** 마커가 방향을 잃은 엣지가 있으면 EXIT_GEOMETRY로 죽는다. */
 export function assertEdgeMarkersOriented(defects: EdgeDefect[], label = ''): void {
   if (!defects.length) return;
