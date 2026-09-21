@@ -13,6 +13,7 @@
  *   1  인자·모듈 오류
  *   3  playwright 미설치
  *   5  페인트/폰트 가드 실패 — 무채색이거나 IBM Plex가 아닌 폰트가 섞였다
+ *   6  잘림 가드 실패 — 도식 내용이 캡처 상자 밖으로 나가 PNG 에서 잘린다
  */
 
 import { mkdir, writeFile } from 'node:fs/promises';
@@ -37,6 +38,7 @@ function arg(name: string, fallback?: string): string {
   process.exit(1);
 }
 const flag = (name: string) => process.argv.includes(`--${name}`);
+const EXIT_CLIP = 6;
 
 const modulePath = resolve(arg('module'));
 const exportName = arg('name', 'default');
@@ -91,6 +93,23 @@ await withRenderedPage(
           [data-rz-capture] svg{display:block;width:100%;height:auto}`,
   },
   async (page) => {
+    // 폭 자동 맞춤 — 컴포넌트가 선언한 캔버스 폭(viewBox 또는 width)이 캡처 폭보다 크면 캡처 폭을 그만큼 넓힌다.
+    // `--width` 를 사람이 기억해야 하는 구조는 네 편 중 세 편에서 오른쪽이 잘린 채 통과했다(2026-09-21). 기본값은 하한일 뿐이다.
+    const intrinsic = await page.evaluate(() => {
+      const svg = document.querySelector('[data-rz-capture] svg') as SVGSVGElement | null;
+      if (!svg) return 0;
+      const vb = svg.viewBox?.baseVal;
+      return vb && vb.width > 0 ? vb.width : svg.width?.baseVal?.value || 0;
+    });
+    const contentWidth = await page.evaluate(() => (document.querySelector('[data-rz-capture]') as HTMLElement).clientWidth - 32);
+    if (intrinsic > contentWidth + 0.5) {
+      const w = Math.ceil(intrinsic) + (width - contentWidth); // 패딩·박스 모델 차이를 실측값으로 보정
+      await page.setViewportSize({ width: w + 64, height: 900 });
+      await page.addStyleTag({ content: `[data-rz-capture]{width:${w}px}` });
+      await page.waitForTimeout(50);
+      console.log(`      캔버스 폭 ${intrinsic}px > 캡처 내용 폭 ${contentWidth}px — 캡처 폭을 ${w}px 로 넓힘(자동)`);
+    }
+
     const info = await inspectPage(page, '[data-rz-capture]');
     assertNoFontPollution(info);
 
@@ -119,6 +138,53 @@ await withRenderedPage(
     // 캡처 **전에** 죽인다. 틀린 PNG가 산출물에 남으면 다음 공정이 그걸 정본으로 삼는다.
     const defects = await inspectEdgeGeometry(page);
     assertEdgeMarkersOriented(defects, relative(REPO_ROOT, modulePath));
+
+    // 잘림 가드 — 캡처 상자 밖으로 나간 도형·글자는 PNG 에서 소리 없이 잘린다. 참고 문서 4편 중 3편이
+    // 오른쪽·아래쪽이 뜯긴 채 lint 를 통과했다(2026-09-21 실측). SVG 자식의 화면 좌표 합집합이 캡처 상자를
+    // 넘으면 캡처 **전에** 죽인다 — 캔버스 폭을 줄이거나 `--width` 를 주거나 높이를 다시 재라는 뜻이다.
+    const overflow = await page.evaluate(() => {
+      const cap = document.querySelector('[data-rz-capture]') as HTMLElement;
+      const box = cap.getBoundingClientRect();
+      // 그려지지 않는 것은 뺀다 — defs·clipPath·mask·marker·symbol 안, display:none·visibility:hidden·opacity 0.
+      const skipAncestor = 'defs, clipPath, mask, marker, symbol, pattern, title, desc';
+      const parts = [...cap.querySelectorAll('svg *')].filter((n) => {
+        if (n.closest(skipAncestor)) return false;
+        if (n instanceof SVGSVGElement) return false;
+        const cs = getComputedStyle(n);
+        if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') return false;
+        return true;
+      });
+      let l = Infinity, t = Infinity, r = -Infinity, b = -Infinity;
+      const eps = 0.5;
+      const offenders: string[] = [];
+      for (const p of parts) {
+        const rc = (p as Element).getBoundingClientRect();
+        if (rc.width === 0 && rc.height === 0) continue;
+        l = Math.min(l, rc.left); t = Math.min(t, rc.top); r = Math.max(r, rc.right); b = Math.max(b, rc.bottom);
+        if (rc.left < box.left - eps || rc.top < box.top - eps || rc.right > box.right + eps || rc.bottom > box.bottom + eps) {
+          const e = p as Element;
+          const txt = (e.textContent || '').trim().slice(0, 30);
+          offenders.push(`<${e.tagName}${e.id ? '#' + e.id : ''}${e.getAttribute('data-viz-part') ? ' part=' + e.getAttribute('data-viz-part') : ''}> ` +
+            `${Math.round(rc.left)}..${Math.round(rc.right)}×${Math.round(rc.top)}..${Math.round(rc.bottom)}${txt ? ' "' + txt + '"' : ''}`);
+        }
+      }
+      return {
+        box: { left: box.left, top: box.top, right: box.right, bottom: box.bottom },
+        content: { left: l, top: t, right: r, bottom: b },
+        clipped: l < box.left - eps || t < box.top - eps || r > box.right + eps || b > box.bottom + eps,
+        offenders: offenders.slice(0, 6),
+      };
+    });
+    if (overflow.clipped) {
+      const f = (n: number) => Math.round(n);
+      console.error(
+        `[잘림] 도식 내용이 캡처 상자를 벗어난다 — 내용 ${f(overflow.content.left)}..${f(overflow.content.right)} × ` +
+          `${f(overflow.content.top)}..${f(overflow.content.bottom)} / 상자 ${f(overflow.box.left)}..${f(overflow.box.right)} × ` +
+          `${f(overflow.box.top)}..${f(overflow.box.bottom)} (CSS px). 캔버스 폭·높이를 내용에 맞추거나 --width 를 키운다.\n` +
+          overflow.offenders.map((o) => `        넘친 요소: ${o}`).join('\n'),
+      );
+      process.exit(EXIT_CLIP);
+    }
 
     console.log(`      도형 ${paint.shapeCount}개 · 채움 ${paint.fills.length}종 · 폰트 ${info.fonts.length}종`);
 

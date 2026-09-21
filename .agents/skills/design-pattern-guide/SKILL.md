@@ -120,7 +120,9 @@ Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide>
 ### 4. 발행 — 3단계를 전부 통과한 뒤에만
 
 1. **도식** — 바뀐 도식이 있으면 `bun run scripts/render-viz.ts --module <diagrams/X.tsx> --out <diagrams/x.png>` 로 다시 굽고
-   `bun run scripts/lint-diagrams.ts` 를 돌린다.
+   `bun run scripts/lint-diagrams.ts` 를 돌린다. 렌더러는 SVG 고유 폭에 캡처 폭을 자동으로 맞추고, 내용이 캡처 상자를 벗어나면
+   **종료 코드 6 `[잘림]`** 으로 멈추며 넘친 요소를 찍는다 — 잘림은 캔버스 높이·배치를 고쳐서 푼다(2026-09-21: 참고 문서 3편과
+   Strategy 구조 도식이 잘린 채 lint 를 통과했던 것을 이 가드로 막았다). 렌더한 PNG 는 그래도 열어 본다 — 가드는 잘림만 본다.
 2. **HTML** — `commands.render` → `commands.derived`(낡은 HTML 이 없어야 한다). 출력은 md 와 같은 폴더다.
    이 편이 링크한 **참고 문서**도 같은 명령으로 렌더 상태를 확인한다 — 가이드는 fresh 인데 참고 문서 HTML 이 낡아 있으면 독자가 두 판본을 본다.
 3. **인덱스 등록** — `paths.json` 의 `dirs.index`(`PATTERNS.md`)에 이 편을 **손으로 끼워 넣는다.** 분류·비교 페어 구조가 뜻을 담고 있으므로
