@@ -116,6 +116,19 @@ def guide_versions(folder: Path) -> list[Path]:
     got = [f for f in folder.glob("*_v*.md") if GUIDE_RE.match(f.name)]
     return sorted(got, key=lambda f: semver(GUIDE_RE.match(f.name)["ver"]))
 
+
+def latest_published(folder: Path) -> Path | None:
+    """포인터가 가리켜야 할 판 — **발행본(status: published) 중 최신**.
+
+    명세: `status` 는 draft(집필·게이트 중) · published(게이트 통과) · legacy 이고, 인덱스·기준 예시·상호 링크는
+    "**새 버전을 발행하면** 그 자리들을 같이 고친다". 파일 이름의 semver 만 보면 게이트를 통과하지도 않은 초안이
+    최신이 되어, 초안을 쓰는 순간 인덱스·기준 예시·상호 링크가 전부 낡은 것으로 잡힌다(실측: 초안 한 편에 8건).
+    발행본이 하나도 없으면(첫 집필) 초안을 최신으로 본다 — 그때는 가리킬 발행본 자체가 없다.
+    """
+    vs = guide_versions(folder)
+    pub = [f for f in vs if parse_front(f.read_text(encoding="utf-8")).get("status") == "published"]
+    return pub[-1] if pub else (vs[-1] if vs else None)
+
 MIN_COND_HEADING = "디자인 패턴을 충족하는 최소 조건"
 IMPL_HEADING = "구현"
 CONTEXT_HEADING = "상황 설정"
@@ -1315,12 +1328,12 @@ def mode_pointers(ctx: Ctx, rep: Report) -> None:
             continue
         for folder in sorted(p for p in base.iterdir() if p.is_dir()):
             vs = guide_versions(folder)
-            if not vs:
+            latest = latest_published(folder)
+            if not vs or latest is None:
                 continue
-            latest = vs[-1]
-            olds = [f.name for f in vs[:-1] if f.name in text]
+            olds = [f.name for f in vs if f != latest and f.name in text]
             if olds:
-                rep.add(M, "index", False, f"인덱스가 낡은 판을 가리킵니다: {olds} (최신 {latest.name})", ctx.rel(idx))
+                rep.add(M, "index", False, f"인덱스가 발행본이 아닌 판을 가리킵니다: {olds} (최신 발행본 {latest.name})", ctx.rel(idx))
             elif latest.name in text:
                 listed += 1
     rep.info(M, "index_latest", listed)
@@ -1333,9 +1346,9 @@ def mode_pointers(ctx: Ctx, rep: Report) -> None:
         if not p.exists():
             rep.add(M, "exemplar", False, f"{sid} 기준 예시가 없습니다: {rel}")
             continue
-        vs = guide_versions(p.parent)
-        if vs and vs[-1] != p:
-            rep.add(M, "exemplar", False, f"{sid} 기준 예시가 낡았습니다: {rel} (최신 {vs[-1].name})")
+        lp = latest_published(p.parent)
+        if lp is not None and lp != p:
+            rep.add(M, "exemplar", False, f"{sid} 기준 예시가 낡았습니다: {rel} (최신 발행본 {lp.name})")
         else:
             rep.add(M, "exemplar", True, f"{sid} → {rel}")
     if not ex:
@@ -1349,13 +1362,13 @@ def mode_pointers(ctx: Ctx, rep: Report) -> None:
             tp = doc.parent / rel
             if not rel or not GUIDE_RE.match(tp.name) or not ctx.in_layout(tp):
                 continue
-            vs = guide_versions(tp.parent)
-            if not vs:
+            lp = latest_published(tp.parent)
+            if lp is None:
                 continue              # 대상 폴더가 비어 있으면 --links 가 잡는다
             checked += 1
-            if vs[-1].name != tp.name:
+            if lp.name != tp.name:
                 rep.add(M, "link-latest", False,
-                        f"L{i + 1} 링크가 낡은 판을 가리킵니다: ({target}) — 최신은 {vs[-1].name}", ctx.rel(doc))
+                        f"L{i + 1} 링크가 발행본이 아닌 판을 가리킵니다: ({target}) — 최신 발행본은 {lp.name}", ctx.rel(doc))
     rep.info(M, "doc_links", checked)
 
 
@@ -1394,7 +1407,11 @@ def mode_gates(ctx: Ctx, rep: Report) -> None:
         problems = []
         if rec["verdict"] != "PASS":
             problems.append(f"verdict={rec['verdict']!r} (PASS 여야 함)")
-        tsid = ctx.track_spec(ctx.project / f)
+        fp = ctx.project / f
+        if fp.exists() and parse_front(fp.read_text(encoding="utf-8")).get("status") == "legacy":
+            rep.add(M, "record", True, f"L{n} 건너뜀 — 구본(legacy)", f)
+            continue
+        tsid = ctx.track_spec(fp)
         if tsid and str(rec["spec"]) != tsid:
             problems.append(f"기록 spec {rec['spec']!r} ≠ 파일 트랙의 명세 {tsid!r}")
         ok, cur = ctx.resolve_hash(str(rec["spec"]))
@@ -1406,8 +1423,19 @@ def mode_gates(ctx: Ctx, rep: Report) -> None:
             rep.add(M, "record", False, f"L{n} " + " · ".join(problems), f)
         else:
             rep.add(M, "record", True, f"L{n} PASS · {rec['date']}", f)
-    # 대상 대조 — 트랙(가이드·참고 문서)의 최신·비구본 문서마다 기록이 있어야 한다. 기록을 빠뜨리면 여기서 잡힌다.
-    docs = [(sid, p) for sid, p in ctx.latest_docs() if spec_filter is None or sid == spec_filter]
+    # 대상 대조 — **발행본**(status: published)마다 기록이 있어야 한다. 기록을 빠뜨리면 여기서 잡힌다.
+    # 초안(draft)은 집필·게이트 중이라 아직 기록이 없는 것이 정상이고, 발행하는 순간 기록과 status 가 함께 선다.
+    docs: list[tuple[str, Path]] = []
+    for sid, track in ctx.tracks.items():
+        if spec_filter is not None and sid != spec_filter:
+            continue
+        base = ctx.project / ctx.dirs["content"] / track
+        if not base.is_dir():
+            continue
+        for folder in sorted(q for q in base.iterdir() if q.is_dir()):
+            lp = latest_published(folder)
+            if lp is not None and parse_front(lp.read_text(encoding="utf-8")).get("status") == "published":
+                docs.append((sid, lp))
     rep.info(M, "targets", len(docs))
     for sid, p in docs:
         if ctx.rel(p) not in last:
@@ -1617,20 +1645,24 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
                 base.update(kw)
                 return json.dumps(base, ensure_ascii=False)
 
-            def gates_project(name: str, guides: tuple[str, ...] = (), refs: tuple[str, ...] = ()) -> str:
+            def gates_project(name: str, guides: tuple[str, ...] = (), refs: tuple[str, ...] = (),
+                              drafts: tuple[str, ...] = ()) -> str:
                 # 기록 대조(coverage)는 배치 안 최신 문서를 세므로 실제 프로젝트가 아니라 임시 배치에서 돈다.
                 # spec·lock 은 실제 것을 그대로 써야 resolve 해시가 나오니 .claude 만 링크로 건다.
                 root = tmp_root / name
                 root.mkdir()
                 (root / ".claude").symlink_to(DEFAULT_PROJECT / ".claude")
+                def doc(d: Path, name: str, status: str) -> None:
+                    d.mkdir(parents=True, exist_ok=True)
+                    (d / name).write_text(f"---\nstatus: {status}\n---\n\n# {name} — 임시\n", encoding="utf-8")
+
                 for slug in guides:
                     d = root / "pattern-guide/design-pattern-guide" / slug
-                    d.mkdir(parents=True)
-                    (d / f"{slug}-guide_v1.0.0.md").write_text(f"# {slug} — 임시\n", encoding="utf-8")
+                    doc(d, f"{slug}-guide_v1.0.0.md", "published")
+                    if slug in drafts:            # 발행본 위에 초안이 얹힌 상태
+                        doc(d, f"{slug}-guide_v1.1.0.md", "draft")
                 for slug in refs:
-                    d = root / "pattern-guide/reference" / slug
-                    d.mkdir(parents=True)
-                    (d / f"{slug}-ref_v1.0.0.md").write_text(f"# {slug} — 임시\n", encoding="utf-8")
+                    doc(root / "pattern-guide/reference" / slug, f"{slug}-ref_v1.0.0.md", "published")
                 return str(root)
 
             empty = ["--project", gates_project("gates-empty")]
@@ -1667,6 +1699,10 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
                  both(need({"coverage"}, "gates"), contains("gates", "게이트 기록이 없습니다(reference-note)"))),
                 ("gates", "기록 spec 이 파일 트랙의 명세와 다르면 실패", ["--gates", *cov, "--gate-file", str(mism)], 1,
                  contains("gates", "파일 트랙의 명세")),
+                # 발행본 위에 초안이 얹혀도 기록을 요구하는 대상은 발행본이다 — 초안은 집필·게이트 중이라 기록이 없다.
+                ("gates", "발행본 위의 초안은 coverage 대상이 아니다",
+                 ["--gates", "--project", gates_project("gates-draft", guides=("alpha",), drafts=("alpha",)),
+                  "--gate-file", str(covfile)], 0, None),
             ]
             if gof_hash:
                 cases.append(("gates", "--spec 필터 안의 대상이 전부 기록되면 통과",
@@ -1713,7 +1749,7 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
         ]
 
         # pointers: 본문 링크가 참고 문서의 최신 semver 를 가리키는가
-        def pointers_project(name: str, link: str) -> str:
+        def pointers_project(name: str, link: str, statuses: dict[str, str] | None = None) -> str:
             root = tmp_root / name
             (root / ".claude/authoring").mkdir(parents=True)
             (root / ".claude/authoring/paths.json").write_text(json.dumps({
@@ -1728,8 +1764,12 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
             r = root / "pattern-guide/reference/beta"
             r.mkdir(parents=True)
             for v in ("1.0.0", "1.1.0"):
-                (r / f"beta-ref_v{v}.md").write_text("# beta — 임시\n", encoding="utf-8")
-            (root / "PATTERNS.md").write_text("alpha-guide_v1.0.0.md · beta-ref_v1.1.0.md\n", encoding="utf-8")
+                st = (statuses or {}).get(v)
+                front = f"---\nstatus: {st}\n---\n\n" if st else ""
+                (r / f"beta-ref_v{v}.md").write_text(f"{front}# beta — 임시\n", encoding="utf-8")
+            newest = max((statuses or {"1.1.0": "published"}).items(),
+                         key=lambda kv: (kv[1] == "published", semver(kv[0])))[0] if statuses else "1.1.0"
+            (root / "PATTERNS.md").write_text(f"alpha-guide_v1.0.0.md · beta-ref_v{newest}.md\n", encoding="utf-8")
             return str(root)
         cases += [
             ("pointers", "본문 링크가 참고 문서 최신을 가리키면 통과",
@@ -1737,6 +1777,17 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
             ("pointers", "본문 링크가 낡은 참고 문서를 가리키면 실패",
              ["--pointers", "--project", pointers_project("ptr-old", "../../reference/beta/beta-ref_v1.0.0.md")], 1,
              need({"link-latest"}, "pointers")),
+            # 초안이 더 높은 버전으로 있어도 포인터의 기준은 **발행본**이다 — 초안을 쓰는 동안 포인터가 전부
+            # 낡은 것으로 잡히면(실측 8건) 집필 중에는 이 검사를 못 쓴다.
+            ("pointers", "더 높은 초안이 있어도 발행본 링크는 통과",
+             ["--pointers", "--project", pointers_project(
+                 "ptr-draft-ok", "../../reference/beta/beta-ref_v1.0.0.md",
+                 {"1.0.0": "published", "1.1.0": "draft"})], 0, None),
+            ("pointers", "발행되지 않은 초안을 가리키면 실패",
+             ["--pointers", "--project", pointers_project(
+                 "ptr-draft-bad", "../../reference/beta/beta-ref_v1.1.0.md",
+                 {"1.0.0": "published", "1.1.0": "draft"})], 1,
+             both(need({"link-latest"}, "pointers"), contains("pointers", "발행본이 아닌 판"))),
         ]
 
         # 참고 문서 배치 — 파일명 종류(-ref_v) · serves 의 가이드 폴더 존재는 배치 안에서만 본다
