@@ -3,9 +3,11 @@
   "_note": "경로·명령 바인딩. spec 은 논리(항목·작성법·원칙·퍼소나)만 담고, 물리적 위치와 실행 명령은 전부 여기 모은다. 같은 spec 을 다른 프로젝트에서 쓰려면 이 파일만 갈아 끼우면 된다.",
   "dirs": {
     "content": "pattern-guide",
+    "reference": "pattern-guide/reference",
     "tracks": {
       "gof-guide": "design-pattern-guide",
-      "analysis-guide": "ddd-analysis-pattern-guide"
+      "analysis-guide": "ddd-analysis-pattern-guide",
+      "reference-note": "reference"
     },
     "research": "pattern-guide/research",
     "gate_results": "pattern-guide/gate-results.jsonl",
@@ -16,7 +18,8 @@
   },
   "templates": {
     "gof-guide-canvas": ".claude/skills/design-pattern-guide/gof-guide-canvas.md",
-    "analysis-guide-canvas": ".claude/skills/design-pattern-guide/analysis-guide-canvas.md"
+    "analysis-guide-canvas": ".claude/skills/design-pattern-guide/analysis-guide-canvas.md",
+    "reference-note-canvas": ".claude/skills/design-pattern-guide/reference-note-canvas.md"
   },
   "commands": {
     "check": "python3 scripts/check-guides.py --all {file}",
@@ -31,5 +34,5 @@
     "analysis-guide": "pattern-guide/ddd-analysis-pattern-guide/account/account-guide_v1.0.0.md",
     "gof-guide": "pattern-guide/design-pattern-guide/strategy/strategy-guide_v1.0.0.md"
   },
-  "_layout": "가이드 한 편이 폴더 하나다 — dirs.content/<tracks[spec]>/<slug>/<slug>-guide_v<semver>.md. HTML·코드·도식은 같은 폴더에 둔다. 이전 버전 파일은 지우지 않고 남기며, 최신은 semver 가 가장 높은 것이다. 인덱스·기준 예시·분석 스킬은 모두 최신을 가리킨다."
+  "_layout": "가이드 한 편이 폴더 하나다 — dirs.content/<tracks[spec]>/<slug>/<slug>-guide_v<semver>.md. HTML·코드·도식은 같은 폴더에 둔다. 이전 버전 파일은 지우지 않고 남기며, 최신은 semver 가 가장 높은 것이다. 인덱스·기준 예시·분석 스킬은 모두 최신을 가리킨다. 참고 문서(reference-note)도 같은 규약이다 — dirs.reference/<slug>/<slug>-ref_v<semver>.md, 머리말 serves 에 이 문서를 링크하는 가이드 슬러그를 둔다. 가이드가 참고 문서를 링크할 때도 최신 파일명을 쓴다."
 }

@@ -3,20 +3,24 @@
 
 사람이나 외부 모델에게 다시 시킬 필요가 없는 판정을 전부 여기서 한다. 표준 라이브러리만 쓴다.
 
-대상 가이드
-    pattern-guide/design-pattern-guide/*-pattern.md       → spec `gof-guide`
-    pattern-guide/ddd-analysis-pattern-guide/*-pattern.md → spec `analysis-guide`
-    (배치는 .claude/authoring/paths.json 의 dirs.content · dirs.tracks 를 읽는다 — 가이드 한 편 = 폴더 하나, 파일명에 semver)
+대상 문서 (한 편 = 폴더 하나, 파일명에 semver · 배치는 .claude/authoring/paths.json 의 dirs.content · dirs.tracks · dirs.reference)
+    pattern-guide/design-pattern-guide/<slug>/<slug>-guide_v<semver>.md       → spec `gof-guide`
+    pattern-guide/ddd-analysis-pattern-guide/<slug>/<slug>-guide_v<semver>.md → spec `analysis-guide`
+    pattern-guide/reference/<slug>/<slug>-ref_v<semver>.md                    → spec `reference-note`
+        (참고 문서 — 가이드가 링크로 잇는 개념 설명. 머리말 serves 에 이 문서를 링크하는 가이드 slug 를 적는다)
 
 모드 (여러 개 동시 지정 가능 · 실패가 하나라도 있으면 종료코드 1 · --json 이면 기계 판독 출력)
-    --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · 펜스·도식 · 상대 링크 ·
-                             최소 조건 [필수]/[선택] · (analysis) 상황 설정 표
-    --compile [files]        `### 구현` 절 펜스 3개(java → typescript → rust) 컴파일. 도구가 없으면 실패
+    --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · 펜스·도식 · 상대 링크 · 자립성(PG30·PG31) ·
+                             (spec 에 그 절이 있을 때) 최소 조건 [필수]/[선택] · 시나리오 구성(PG32) · 조건·비교의 시나리오 참조(PG33) ·
+                             (analysis) 상황 설정 표 · (참고 문서) serves
+    --compile [files]        `### 구현` 절 펜스 3개(java → typescript → rust) 컴파일. 도구가 없으면 실패.
+                             구현 절이 없는 문서(참고 문서)는 건너뜀
     --links [files]          상대 링크 해소
     --spec-shared            두 spec.md 의 shared:pattern-guide-common 블록 1쌍씩 · 바이트 동일
     --resolve-hash <spec>    authoring.py resolve(worker) stdout sha256 앞 16자
-    --gates [--spec] [--expect N]   gate-results.jsonl 파일별 마지막 기록: PASS · 해시 최신
-    --pointers                      인덱스·기준 예시가 폴더의 최신본을 가리키는가(버저닝 규약)
+    --gates [--spec] [--expect N]   gate-results.jsonl 파일별 마지막 기록: PASS · 해시 최신 · 기록 spec = 트랙 명세 ·
+                                    트랙(가이드·참고 문서)의 최신본마다 기록 존재
+    --pointers                      인덱스·기준 예시·본문 링크가 폴더의 최신본(가이드·참고 문서)을 가리키는가(버저닝 규약)
     --derived [--require-html]      가이드 md ↔ HTML 지문(render-guides.py 의 fingerprint) 대조
     --self-test              scripts/fixtures/check/ 로 각 모드가 통과할 것은 통과, 실패할 것은 실패하는지
 
@@ -53,13 +57,18 @@ VOICE = "ppangtolab-teacher"
 
 DEFAULT_DIRS = {
     "content": "pattern-guide",
+    "reference": "pattern-guide/reference",
     "gate_results": "pattern-guide/gate-results.jsonl",
     "index": "PATTERNS.md",
 }
-DEFAULT_TRACKS = {"gof-guide": "design-pattern-guide", "analysis-guide": "ddd-analysis-pattern-guide"}
+REFERENCE_SPEC = "reference-note"      # 참고 문서 spec id — 파일은 <slug>-ref_v<semver>.md
+DEFAULT_TRACKS = {"gof-guide": "design-pattern-guide", "analysis-guide": "ddd-analysis-pattern-guide",
+                  REFERENCE_SPEC: "reference"}
 SPEC_OF_DIRKEY = {"gof": "gof-guide", "analysis": "analysis-guide"}   # 구 배치(평면) 호환
-GUIDE_RE = re.compile(r"^(?P<slug>[a-z0-9-]+)-guide_v(?P<ver>\d+\.\d+\.\d+)\.md$")
-FRONT_KEYS = ("pattern", "slug", "spec", "version", "status")
+# kind: guide(가이드) · ref(참고 문서). 트랙의 spec 이 정하는 kind 와 파일명의 kind 가 같아야 한다.
+GUIDE_RE = re.compile(r"^(?P<slug>[a-z0-9-]+)-(?P<kind>guide|ref)_v(?P<ver>\d+\.\d+\.\d+)\.md$")
+FRONT_KEYS = ("pattern", "slug", "spec", "version", "status")          # 가이드
+FRONT_KEYS_REF = ("title", "slug", "spec", "version", "status")        # 참고 문서 — serves 는 check_serves 가 본다
 
 
 def parse_front(text: str) -> dict:
@@ -69,12 +78,30 @@ def parse_front(text: str) -> dict:
     end = text.find("\n---", 4)
     if end < 0:
         return {}
-    meta = {}
+    meta: dict = {}
+    last = None
     for line in text[4:end].split("\n"):
-        if ":" in line:
+        item = re.match(r"^\s*-\s+(.*)$", line)
+        if item and last is not None and (meta[last] == "" or isinstance(meta[last], list)):
+            # YAML 블록 목록(serves 등) — 값이 비어 있는 키 아래의 `- 항목` 줄
+            meta[last] = (meta[last] or []) + [item.group(1).strip()]
+            continue
+        if ":" in line and not line.startswith((" ", "\t")):
             k, v = line.split(":", 1)
-            meta[k.strip()] = v.strip()
+            last = k.strip()
+            meta[last] = v.strip()
     return meta
+
+
+def front_list(meta: dict, key: str) -> list[str]:
+    """머리말의 목록 값 — `[a, b]` · `a, b` · YAML 블록 목록 어느 쪽이든 항목 목록으로."""
+    v = meta.get(key, "")
+    if isinstance(v, str):
+        v = v.strip()
+        if v.startswith("[") and v.endswith("]"):
+            v = v[1:-1]
+        v = v.split(",")
+    return [s.strip().strip("'\"") for s in v if s.strip().strip("'\"")]
 
 
 def semver(v: str) -> tuple:
@@ -85,13 +112,34 @@ def semver(v: str) -> tuple:
 
 
 def guide_versions(folder: Path) -> list[Path]:
-    """폴더 안의 가이드 파일을 버전 오름차순으로."""
-    got = [f for f in folder.glob("*-guide_v*.md") if GUIDE_RE.match(f.name)]
+    """폴더 안의 문서 파일(가이드 `-guide_v` · 참고 문서 `-ref_v`)을 버전 오름차순으로."""
+    got = [f for f in folder.glob("*_v*.md") if GUIDE_RE.match(f.name)]
     return sorted(got, key=lambda f: semver(GUIDE_RE.match(f.name)["ver"]))
 
 MIN_COND_HEADING = "디자인 패턴을 충족하는 최소 조건"
 IMPL_HEADING = "구현"
 CONTEXT_HEADING = "상황 설정"
+COMPARE_HEADING = "비슷한 패턴·안티패턴과의 차이"
+REFS_HEADING = "참고 자료"
+# PG30 — 원서를 읽었다는 전제로 자리를 가리키는 표현. (근거: …) 괄호와 `## 참고 자료` 절 밖에서는 오류다.
+BASIS_PAREN = re.compile(r"\(근거:(?:[^()]|\([^()]*\))*\)")     # 한 단계 중첩 허용
+LINK_DEST = re.compile(r"\]\([^)]*\)")                          # 마크다운 링크 대상 `](…)`
+LOCATORS = [re.compile(p) for p in (
+    r"그림\s*\d+(?:\.\d+)?",
+    r"Figure\s*\d+(?:\.\d+)?",
+    r"§\s*\d+(?:\.\d+)*",
+    r"구현 쟁점\s*\d",
+    r"\d+\s*장\s*[「『\"]",
+    r"원서의\s+\S+\s+(?:설명|절|목록|예|협력|참여자)",
+    r"(?:원서|원전|원저)\S{0,3}\s[^.。]{0,25}(?:Participants|Collaborations|Implementation|Consequences|Applicability|Structure)",
+)]
+# PG31 — 권위 인용 문장. 실패가 아니라 개수만 낸다(각 문장의 이유가 따로 있는지는 채점이 본다).
+AUTHORITY = re.compile(r"(?:원서|원전|Fowler|GoF|Evans|Vernon)\s*(?:가|는|도|은|이)?\s[^.。]{0,60}"
+                       r"(?:적었|적습니다|적어요|꼽|들었|듭니다|들어요|권하|권합니다|말했|말합니다|부릅니다|불러요)")
+# PG32 · PG33 — 시나리오 구성과 참조.
+SCENARIO_NUM = re.compile(r"시나리오\s*(\d+)")
+SCENARIO_MENTION = re.compile(r"시나리오\s*\d")
+STEP_ITEM = re.compile(r"^\d+\.\s")                             # 들여쓰기 없는 번호 목록 항목
 SHARED_OPEN = b"<!-- shared:pattern-guide-common -->"
 SHARED_CLOSE = b"<!-- /shared -->"
 LANGS = [("java", {"java"}), ("typescript", {"typescript", "ts"}), ("rust", {"rust"})]
@@ -191,6 +239,12 @@ class Ctx:
                     self.tracks = {k: v for k, v in _d["tracks"].items() if isinstance(v, str)}
             except (OSError, json.JSONDecodeError) as e:
                 raise Fatal(f"paths.json 을 읽을 수 없습니다: {pj} — {e}")
+        if REFERENCE_SPEC not in self.tracks:
+            # paths.json 의 tracks 에 참고 문서가 아직 없으면 dirs.reference 에서 트랙 이름을 만든다.
+            content = self.dirs["content"].rstrip("/") + "/"
+            ref = str(self.dirs.get("reference", ""))
+            if ref.startswith(content) and ref[len(content):].strip("/"):
+                self.tracks[REFERENCE_SPEC] = ref[len(content):].strip("/")
         self.spec_overrides: dict[str, dict] = {}
         for sf in args.spec_file or []:
             p = Path(sf)
@@ -213,8 +267,12 @@ class Ctx:
     def targets(self, files: list[str] | None) -> list[Path]:
         if files:
             return [Path(f) if Path(f).is_absolute() else Path.cwd() / f for f in files]
-        out: list[Path] = []
-        for track in self.tracks.values():
+        return [p for _, p in self.latest_docs()]
+
+    def latest_docs(self) -> list[tuple[str, Path]]:
+        """트랙(가이드·참고 문서)마다 폴더별 최신 한 편 — (spec id, 경로). 구본(status: legacy)은 재집필 대상이라 뺀다."""
+        out: list[tuple[str, Path]] = []
+        for sid, track in self.tracks.items():
             base = self.project / self.dirs["content"] / track
             if not base.is_dir():
                 continue
@@ -223,11 +281,20 @@ class Ctx:
                 if not vs:
                     continue
                 latest = vs[-1]
-                # 구본(status: legacy)은 재집필 대상이라 명세 검사에서 뺀다.
                 if parse_front(latest.read_text(encoding="utf-8")).get("status") == "legacy":
                     continue
-                out.append(latest)
+                out.append((sid, latest))
         return out
+
+    @staticmethod
+    def kind_of(sid: str) -> str:
+        """spec 이 정하는 파일 종류 — 참고 문서는 `ref`, 나머지는 `guide`."""
+        return "ref" if sid == REFERENCE_SPEC else "guide"
+
+    def slug_exists(self, slug: str) -> bool:
+        """어느 가이드 트랙에든 <slug>/ 폴더가 있는가(참고 문서 serves 검사용)."""
+        return any((self.project / self.dirs["content"] / track / slug).is_dir()
+                   for sid, track in self.tracks.items() if sid != REFERENCE_SPEC)
 
     def in_layout(self, path: Path) -> bool:
         """<content>/<track>/<slug>/ 아래의 가이드인가."""
@@ -238,11 +305,9 @@ class Ctx:
                 return True
         return False
 
-    def spec_id_for(self, path: Path) -> str | None:
-        if self.args.spec:
-            return self.args.spec
+    def track_spec(self, path: Path) -> str | None:
+        """배치만으로 정해지는 spec — <content>/<track>/<slug>/ 아래면 그 트랙의 spec. --spec 은 보지 않는다."""
         rp = path.resolve()
-        # 새 배치: <content>/<track>/<slug>/<slug>-guide_vX.Y.Z.md
         for sid, track in self.tracks.items():
             base = (self.project / self.dirs["content"] / track).resolve()
             if base in rp.parents:
@@ -252,6 +317,14 @@ class Ctx:
                 d = (self.project / self.dirs[key]).resolve()
                 if rp.parent == d:
                     return sid
+        return None
+
+    def spec_id_for(self, path: Path) -> str | None:
+        if self.args.spec:
+            return self.args.spec
+        sid = self.track_spec(path)
+        if sid:
+            return sid
         if len(self.spec_overrides) == 1:
             return next(iter(self.spec_overrides))
         return None
@@ -528,8 +601,8 @@ def check_images(md: Md, path: Path) -> list[str]:
     return errors
 
 
-def check_links(md: Md, path: Path) -> tuple[int, list[str]]:
-    errors, n = [], 0
+def iter_rel_links(md: Md):
+    """본문의 상대 링크 — (줄 번호, 원문 대상, 조각·질의를 뗀 경로). 외부·앵커·스킴 링크는 뺀다."""
     for i, line in enumerate(md.lines):
         if md.masked[i]:
             continue
@@ -538,19 +611,20 @@ def check_links(md: Md, path: Path) -> tuple[int, list[str]]:
             low = target.lower()
             if low.startswith(("http://", "https://", "#", "mailto:")) or re.match(r"^[a-z][a-z0-9+.-]*:", low):
                 continue
-            n += 1
-            rel = urllib.parse.unquote(target.split("#", 1)[0].split("?", 1)[0])
-            if not rel:
-                continue
-            if not (path.parent / rel).exists():
-                errors.append(f"L{i + 1} 상대 링크가 해소되지 않습니다: ({target})")
+            yield i, target, urllib.parse.unquote(target.split("#", 1)[0].split("?", 1)[0])
+
+
+def check_links(md: Md, path: Path) -> tuple[int, list[str]]:
+    errors, n = [], 0
+    for i, target, rel in iter_rel_links(md):
+        n += 1
+        if rel and not (path.parent / rel).exists():
+            errors.append(f"L{i + 1} 상대 링크가 해소되지 않습니다: ({target})")
     return n, errors
 
 
-def check_min_conditions(md: Md) -> tuple[bool, list[str], int]:
-    rng = md.section(3, MIN_COND_HEADING)
-    if rng is None:
-        return False, [], 0
+def _min_items(md: Md, rng: tuple[int, int]) -> tuple[list[tuple[int, int, str]], int, list[int]]:
+    """최소 조건 절의 목록 항목 (줄, 들여쓰기, 본문) · 최상위 들여쓰기 · 최상위 항목의 줄 번호."""
     items = []
     for i in range(*rng):
         if md.masked[i]:
@@ -559,9 +633,18 @@ def check_min_conditions(md: Md) -> tuple[bool, list[str], int]:
         if m:
             items.append((i, len(m.group(1).expandtabs(4)), m.group(3)))
     if not items:
-        return True, [f"'### {MIN_COND_HEADING}' 절에 목록 항목이 없습니다"], 0
+        return [], 0, []
     top = min(ind for _, ind, _ in items)
-    tops = [i for i, ind, _ in items if ind == top]
+    return items, top, [i for i, ind, _ in items if ind == top]
+
+
+def check_min_conditions(md: Md) -> tuple[bool, list[str], int]:
+    rng = md.section(3, MIN_COND_HEADING)
+    if rng is None:
+        return False, [], 0
+    items, top, tops = _min_items(md, rng)
+    if not items:
+        return True, [f"'### {MIN_COND_HEADING}' 절에 목록 항목이 없습니다"], 0
     errors = []
     count = 0
     for i, ind, body in items:
@@ -605,6 +688,95 @@ def check_min_conditions(md: Md) -> tuple[bool, list[str], int]:
             errors.append(
                 f"L{i + 1} [필수] 조건의 근거가 원전을 가리키지 않습니다(PG27) — 허용: {', '.join(BASIS_SOURCES)}: '{text[:50]}'")
     return True, errors, count
+
+
+def check_self_contained(md: Md) -> tuple[list[str], int]:
+    """PG30 — 본문이 원서의 자리(그림·절·구현 쟁점 번호·원서의 ~ 설명)를 가리키면 오류.
+
+    (근거: …) 괄호와 마크다운 링크 대상은 지우고 본다. `## 참고 자료` 절은 제외. 함께 PG31 권위 인용 문장 수를 센다.
+    """
+    refs = md.section(2, REFS_HEADING)
+    errors: list[str] = []
+    cites = 0
+    for i, line in enumerate(md.lines):
+        if md.masked[i] or (refs and refs[0] <= i < refs[1]):
+            continue
+        text = LINK_DEST.sub("]", BASIS_PAREN.sub("", line))
+        for rx in LOCATORS:
+            m = rx.search(text)
+            if m:
+                snip = text[max(0, m.start() - 40):m.end() + 40].strip()
+                errors.append(f"L{i + 1} 본문이 원서의 자리를 가리킵니다(PG30) — 근거 괄호·참고 자료 밖에서는 "
+                              f"내용을 풀거나 참고 문서로 잇습니다: '{snip}'")
+                break
+        if AUTHORITY.search(text):
+            cites += 1
+    return errors, cites
+
+
+def _spec_heading(spec: dict, sid: str):
+    for s in spec.get("sections", []):
+        if s.get("id") == sid and s.get("heading"):
+            return _compile_heading(s["heading"])
+    return None
+
+
+def check_scenarios(md: Md, spec: dict) -> tuple[list[str], int]:
+    """PG32 — `## 패턴 자세히 들여다보기` 아래 시나리오 절이 2개 이상, 번호가 1부터 연속, 절마다 최상위 번호 목록 3단계 이상."""
+    det, sc = _spec_heading(spec, "detail"), _spec_heading(spec, "detail.scenario")
+    if det is None or sc is None:
+        return [], 0
+    rng = md.section(det[0], det[1])
+    if rng is None:
+        return [], 0                                  # 절 자체가 없는 것은 헤딩 검사가 잡는다
+    heads = [(ln, tx) for ln, lv, tx in md.headings if lv == sc[0] and rng[0] <= ln < rng[1] and sc[2].match(tx)]
+    errors: list[str] = []
+    if len(heads) < 2:
+        errors.append(f"'{det[1]}' 아래 시나리오 절이 {len(heads)}개입니다 — "
+                      f"'{sc[1]}' 헤딩을 2개 이상 둡니다(PG32)")
+    nums = [(int(m.group(1)) if (m := SCENARIO_NUM.search(tx)) else None) for _, tx in heads]
+    if heads and nums != list(range(1, len(heads) + 1)):
+        errors.append(f"시나리오 번호가 1부터 연속이 아닙니다: {nums}(PG32)")
+    for ln, tx in heads:
+        end = next((ln2 for ln2, lv2, _ in md.headings if ln2 > ln and lv2 <= sc[0]), len(md.lines))
+        steps = sum(1 for k in range(ln + 1, end) if not md.masked[k] and STEP_ITEM.match(md.lines[k]))
+        if steps < 3:
+            errors.append(f"L{ln + 1} '{tx}' 의 단계가 {steps}개입니다 — 들여쓰기 없는 번호 목록 3단계 이상으로 적습니다(PG32)")
+    return errors, len(heads)
+
+
+def check_scenario_refs(md: Md) -> list[str]:
+    """PG33 — 최소 조건 항목마다 어느 시나리오의 단계인지 적고, 비교 절은 시나리오를 2회 이상 끌어다 쓴다."""
+    errors: list[str] = []
+    rng = md.section(3, MIN_COND_HEADING)
+    if rng is not None:
+        _, _, tops = _min_items(md, rng)
+        for k, i in enumerate(tops, 1):
+            nxt = next((j for j in tops if j > i), rng[1])      # 항목 줄 + 들여쓴 이어지는 줄(check_min_conditions 와 같은 범위)
+            span = "\n".join(md.lines[j] for j in range(i, nxt) if not md.masked[j])
+            if not SCENARIO_MENTION.search(span):
+                errors.append(f"L{i + 1} 조건 {k} 이 어느 시나리오의 단계를 보여 주는지 적지 않았습니다(PG33)")
+    rng = md.section(3, COMPARE_HEADING)
+    if rng is not None:
+        n = sum(len(SCENARIO_MENTION.findall(md.lines[j])) for j in range(*rng) if not md.masked[j])
+        if n < 2:
+            errors.append(f"'### {COMPARE_HEADING}' 절이 시나리오를 {n}회 언급합니다 — "
+                          f"차이는 시나리오의 단계로 2회 이상 보여 줍니다(PG33)")
+    return errors
+
+
+def check_serves(ctx: "Ctx", meta: dict, in_layout: bool) -> list[str]:
+    """참고 문서 머리말 serves — 이 문서를 링크하는 가이드 slug 목록. 비면 오류, 배치 안이면 폴더가 있어야 한다."""
+    if not meta:
+        return [f"머리말(frontmatter)이 없습니다 — 참고 문서는 {', '.join(FRONT_KEYS_REF)}, serves 를 답니다"]
+    serves = front_list(meta, "serves")
+    if not serves:
+        return ["머리말 serves 가 비어 있습니다 — 이 문서를 링크하는 가이드 slug 를 하나 이상 적습니다"]
+    if not in_layout:
+        return []
+    tracks = [t for sid, t in ctx.tracks.items() if sid != REFERENCE_SPEC]
+    return [f"serves 의 '{s}' 에 해당하는 가이드 폴더가 없습니다 — {ctx.dirs['content']}/{{{'|'.join(tracks)}}}/{s}/"
+            for s in serves if not ctx.slug_exists(s)]
 
 
 def _cells(row: str) -> list[str]:
@@ -657,15 +829,23 @@ def check_context_table(md: Md) -> list[str]:
 
 
 def check_version(ctx: "Ctx", path: Path, sid: str, text: str) -> list[str]:
-    """버저닝 규약 — 파일명 semver · 머리말 · spec 판본 · 폴더 안 최신 유일."""
+    """버저닝 규약 — 파일명 semver·종류(guide/ref) · 머리말 · spec 판본 · 폴더 안 최신 유일."""
     errs = []
     m = GUIDE_RE.match(path.name)
     if not m:
-        return [f"파일명이 <slug>-guide_v<semver>.md 가 아닙니다: {path.name}"]
+        return [f"파일명이 <slug>-guide_v<semver>.md(가이드) 또는 <slug>-ref_v<semver>.md(참고 문서)가 아닙니다: {path.name}"]
+    kind = ctx.kind_of(sid)
+    if m["kind"] != kind:
+        if kind == "ref":
+            errs.append(f"참고 문서 트랙({ctx.dirs.get('reference', ctx.tracks.get(REFERENCE_SPEC))})에는 "
+                        f"<slug>-ref_v<semver>.md 만 둡니다: {path.name}")
+        else:
+            errs.append(f"참고 문서(-ref_v)는 {ctx.dirs.get('reference', 'reference')} 아래에 둡니다 — 가이드 트랙({sid})에 있습니다: {path.name}")
+    keys = FRONT_KEYS_REF if kind == "ref" else FRONT_KEYS
     meta = parse_front(text)
     if not meta:
-        return [f"머리말(frontmatter)이 없습니다 — {', '.join(FRONT_KEYS)} 를 답니다"]
-    for k in FRONT_KEYS:
+        return errs + [f"머리말(frontmatter)이 없습니다 — {', '.join(keys)} 를 답니다"]
+    for k in keys:
         if not meta.get(k):
             errs.append(f"머리말에 {k} 가 없습니다")
     if meta.get("version") and meta["version"] != m["ver"]:
@@ -704,12 +884,20 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
             rep.add(M, "file", False, "파일이 없습니다", f)
             continue
         raw = p.read_text(encoding="utf-8")
-        if ctx.in_layout(p):          # 버저닝 규약은 가이드 배치 안의 파일에만 건다(픽스처·임시 파일 제외)
+        in_layout = ctx.in_layout(p)
+        if in_layout:                 # 버저닝 규약은 배치 안의 파일에만 건다(픽스처·임시 파일 제외)
             verrs = check_version(ctx, p, sid, raw)
             for e in verrs:
                 rep.add(M, "version", False, e, f)
             if not verrs:
                 rep.add(M, "version", True, f"v{GUIDE_RE.match(p.name)['ver']} · spec {sid}", f)
+        if ctx.kind_of(sid) == "ref":  # 참고 문서는 배치 밖(픽스처)에서도 serves 를 본다 — 폴더 존재는 배치 안에서만
+            meta = parse_front(raw)
+            errs = check_serves(ctx, meta, in_layout)
+            for e in errs:
+                rep.add(M, "serves", False, e, f)
+            if not errs:
+                rep.add(M, "serves", True, "serves " + ", ".join(front_list(meta, "serves")), f)
         md = Md(raw)
         errs = check_headings(md, spec)
         for e in errs:
@@ -735,17 +923,35 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
             rep.add(M, "links", False, e, f)
         if not errs:
             rep.add(M, "links", True, f"상대 링크 {n}개", f)
-        present, errs, count = check_min_conditions(md)
-        for e in errs:
-            rep.add(M, "min-conditions", False, e, f)
-        if present and not errs:
-            rep.add(M, "min-conditions", True, f"조건 {count}개", f)
-        if sid == "analysis-guide":
+        # 절별 검사는 spec 에 그 절이 있을 때만 돈다 — 참고 문서 spec 에는 최소 조건·상황 설정·시나리오가 없다.
+        ids = {s.get("id") for s in spec.get("sections", [])}
+        if "boundary.minimum" in ids:
+            present, errs, count = check_min_conditions(md)
+            for e in errs:
+                rep.add(M, "min-conditions", False, e, f)
+            if present and not errs:
+                rep.add(M, "min-conditions", True, f"조건 {count}개", f)
+        if sid == "analysis-guide" and "example.context" in ids:
             errs = check_context_table(md)
             for e in errs:
                 rep.add(M, "context-table", False, e, f)
             if not errs:
                 rep.add(M, "context-table", True, "", f)
+        errs, cites = check_self_contained(md)
+        for e in errs:
+            rep.add(M, "self-contained", False, e, f)
+        rep.add(M, "self-contained", True, f"권위 인용 문장 {cites}개 — 각 문장의 이유가 본문에 따로 있는지 채점이 본다(PG31)", f)
+        if "detail.scenario" in ids:
+            errs, n_sc = check_scenarios(md, spec)
+            for e in errs:
+                rep.add(M, "scenarios", False, e, f)
+            if not errs:
+                rep.add(M, "scenarios", True, f"시나리오 {n_sc}개", f)
+            errs = check_scenario_refs(md)
+            for e in errs:
+                rep.add(M, "scenario-ref", False, e, f)
+            if not errs:
+                rep.add(M, "scenario-ref", True, "", f)
 
 
 def mode_links(ctx: Ctx, rep: Report, files: list[Path]) -> None:
@@ -937,6 +1143,11 @@ def mode_run(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         return
     for p in files:
         f = ctx.rel(p)
+        md = Md(p.read_text(encoding="utf-8"))
+        rng = md.section(3, IMPL_HEADING)
+        if rng is None:               # 참고 문서에는 구현 절이 없다. 가이드에서 빠진 것은 --all 의 헤딩 검사가 잡는다.
+            rep.add(M, "code-dir", True, "건너뜀(구현 절 없음)", f)
+            continue
         code = p.parent / "code"
         if not code.is_dir():
             rep.add(M, "code-dir", False, f"예시 코드 폴더가 없습니다: {ctx.rel(code)}", f)
@@ -957,9 +1168,7 @@ def mode_run(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         expected = exp_path.read_text(encoding="utf-8")
         rep.add(M, "code-dir", True, f"{javas[0].name} · main.ts · main.rs · expected-output.txt", f)
         # 본문 펜스 = 코드 파일
-        md = Md(p.read_text(encoding="utf-8"))
-        rng = md.section(3, IMPL_HEADING)
-        blocks = [b for b in md.fences_in(rng) if "no-compile" not in b["info"]] if rng else []
+        blocks = [b for b in md.fences_in(rng) if "no-compile" not in b["info"]]
         if len(blocks) != 3:
             rep.add(M, "fence-sync", False, f"'### {IMPL_HEADING}' 의 펜스가 3개가 아닙니다 — {len(blocks)}개", f)
         else:
@@ -1012,8 +1221,8 @@ def mode_compile(ctx: Ctx, rep: Report, files: list[Path]) -> None:
             continue
         md = Md(p.read_text(encoding="utf-8"))
         rng = md.section(3, IMPL_HEADING)
-        if rng is None:
-            rep.add(M, "structure", False, f"'### {IMPL_HEADING}' 절이 없습니다", f)
+        if rng is None:               # 참고 문서에는 구현 절이 없다. 가이드에서 빠진 것은 --all 의 헤딩 검사가 잡는다.
+            rep.add(M, "structure", True, "건너뜀(구현 절 없음)", f)
             continue
         blocks = [b for b in md.fences_in(rng) if "no-compile" not in b["info"]]
         langs = [b["lang"] or "(정보 문자열 없음)" for b in blocks]
@@ -1131,6 +1340,23 @@ def mode_pointers(ctx: Ctx, rep: Report) -> None:
             rep.add(M, "exemplar", True, f"{sid} → {rel}")
     if not ex:
         rep.add(M, "exemplar", False, "paths.json 의 exemplars 가 비어 있습니다 — spec 마다 최신 통과본을 등록합니다")
+    # 본문 링크 — 최신 문서가 버전 붙은 다른 문서(참고 문서·가이드)를 가리키면 그 폴더의 최신이어야 한다.
+    # 가이드 → 참고 문서 링크가 주 대상이고, 가이드 → 가이드 · 참고 문서 → 가이드도 같은 규칙이다.
+    checked = 0
+    for _, doc in ctx.latest_docs():
+        md = Md(doc.read_text(encoding="utf-8"))
+        for i, target, rel in iter_rel_links(md):
+            tp = doc.parent / rel
+            if not rel or not GUIDE_RE.match(tp.name) or not ctx.in_layout(tp):
+                continue
+            vs = guide_versions(tp.parent)
+            if not vs:
+                continue              # 대상 폴더가 비어 있으면 --links 가 잡는다
+            checked += 1
+            if vs[-1].name != tp.name:
+                rep.add(M, "link-latest", False,
+                        f"L{i + 1} 링크가 낡은 판을 가리킵니다: ({target}) — 최신은 {vs[-1].name}", ctx.rel(doc))
+    rep.info(M, "doc_links", checked)
 
 
 def mode_gates(ctx: Ctx, rep: Report) -> None:
@@ -1168,6 +1394,9 @@ def mode_gates(ctx: Ctx, rep: Report) -> None:
         problems = []
         if rec["verdict"] != "PASS":
             problems.append(f"verdict={rec['verdict']!r} (PASS 여야 함)")
+        tsid = ctx.track_spec(ctx.project / f)
+        if tsid and str(rec["spec"]) != tsid:
+            problems.append(f"기록 spec {rec['spec']!r} ≠ 파일 트랙의 명세 {tsid!r}")
         ok, cur = ctx.resolve_hash(str(rec["spec"]))
         if not ok:
             problems.append(f"현재 resolve 해시를 구할 수 없습니다 — {cur}")
@@ -1177,6 +1406,12 @@ def mode_gates(ctx: Ctx, rep: Report) -> None:
             rep.add(M, "record", False, f"L{n} " + " · ".join(problems), f)
         else:
             rep.add(M, "record", True, f"L{n} PASS · {rec['date']}", f)
+    # 대상 대조 — 트랙(가이드·참고 문서)의 최신·비구본 문서마다 기록이 있어야 한다. 기록을 빠뜨리면 여기서 잡힌다.
+    docs = [(sid, p) for sid, p in ctx.latest_docs() if spec_filter is None or sid == spec_filter]
+    rep.info(M, "targets", len(docs))
+    for sid, p in docs:
+        if ctx.rel(p) not in last:
+            rep.add(M, "coverage", False, f"게이트 기록이 없습니다({sid}) — 최신본마다 PASS 기록 한 줄이 있어야 합니다", ctx.rel(p))
     if ctx.args.expect is not None:
         ok = len(selected) == ctx.args.expect
         what = f"spec {spec_filter}" if spec_filter else "전체"
@@ -1271,8 +1506,15 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
             return not miss, f"실패 메시지에 없음: {miss}"
         return pred
 
+    def both(*preds):
+        def pred(data, out):
+            rs = [p(data, out) for p in preds]
+            return all(r[0] for r in rs), " · ".join(r[1] for r in rs)
+        return pred
+
     gof_spec = ["--spec-file", str(fx / "spec-gof.json")]
     ana_spec = ["--spec-file", str(fx / "spec-analysis.json")]
+    ref_spec = ["--spec-file", str(fx / "spec-reference.json")]
     cases += [
         ("all", "good-gof 통과", ["--all", *gof_spec, str(fx / "good-gof.md")], 0, None),
         ("all", "bad-gof 실패(헤딩·최소 조건·링크·mermaid)", ["--all", *gof_spec, str(fx / "bad-gof.md")], 1,
@@ -1316,6 +1558,22 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
          need({"compile:java", "compile:typescript", "compile:rust"}, "compile")),
         ("links", "good-gof 링크 통과", ["--links", str(fx / "good-gof.md")], 0, None),
         ("links", "bad-gof 링크 실패", ["--links", str(fx / "bad-gof.md")], 1, need({"links"}, "links")),
+        # 1.4.0 — 자립성(PG30) · 시나리오 구성(PG32) · 시나리오 참조(PG33) · 참고 문서
+        ("all", "locator 실패(근거 괄호 밖의 원서 위치 지시자)", ["--all", *gof_spec, str(fx / "locator-gof.md")], 1,
+         both(need({"self-contained"}, "all"), contains("all", "PG30", "그림 3.2", "구현 쟁점 1"))),
+        ("all", "scenario-short 실패(시나리오 1개 · 단계 2개)", ["--all", *gof_spec, str(fx / "scenario-short-gof.md")], 1,
+         both(need({"scenarios"}, "all"), contains("all", "2개 이상", "단계가 2개"))),
+        ("all", "scenario-ref-missing 실패(조건에 시나리오 언급 없음 · 비교 절 1회)",
+         ["--all", *gof_spec, str(fx / "scenario-ref-missing-gof.md")], 1,
+         both(need({"scenario-ref"}, "all"), contains("all", "조건 1 이", "1회 언급"))),
+        ("all", "good-ref 통과(참고 문서)", ["--all", *ref_spec, str(fx / "good-ref.md")], 0, None),
+        ("all", "ref-locator 실패(참고 문서의 원서 지시자)", ["--all", *ref_spec, str(fx / "ref-locator.md")], 1,
+         need({"self-contained"}, "all")),
+        ("all", "ref-serves-missing 실패(serves 비어 있음)", ["--all", *ref_spec, str(fx / "ref-serves-missing.md")], 1,
+         both(need({"serves"}, "all"), contains("all", "serves 가 비어"))),
+        ("compile", "good-ref 는 구현 절 없음으로 건너뜀", ["--compile", str(fx / "good-ref.md")], 0,
+         lambda d, o: (bool(d) and any(it["message"] == "건너뜀(구현 절 없음)" for it in d["modes"]["compile"]["items"]),
+                       "건너뜀 정보 없음")),
     ]
 
     tmp_root = Path(tempfile.mkdtemp(prefix="check-guides-selftest-"))
@@ -1358,6 +1616,24 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
                         "rounds": 1, "external": "ok", "verdict": "PASS", "date": "2026-09-17"}
                 base.update(kw)
                 return json.dumps(base, ensure_ascii=False)
+
+            def gates_project(name: str, guides: tuple[str, ...] = (), refs: tuple[str, ...] = ()) -> str:
+                # 기록 대조(coverage)는 배치 안 최신 문서를 세므로 실제 프로젝트가 아니라 임시 배치에서 돈다.
+                # spec·lock 은 실제 것을 그대로 써야 resolve 해시가 나오니 .claude 만 링크로 건다.
+                root = tmp_root / name
+                root.mkdir()
+                (root / ".claude").symlink_to(DEFAULT_PROJECT / ".claude")
+                for slug in guides:
+                    d = root / "pattern-guide/design-pattern-guide" / slug
+                    d.mkdir(parents=True)
+                    (d / f"{slug}-guide_v1.0.0.md").write_text(f"# {slug} — 임시\n", encoding="utf-8")
+                for slug in refs:
+                    d = root / "pattern-guide/reference" / slug
+                    d.mkdir(parents=True)
+                    (d / f"{slug}-ref_v1.0.0.md").write_text(f"# {slug} — 임시\n", encoding="utf-8")
+                return str(root)
+
+            empty = ["--project", gates_project("gates-empty")]
             good = tmp_root / "gates-good.jsonl"
             good.write_text("\n".join([rec("a.md", verdict="FAIL"), rec("a.md"), rec("b.md")]) + "\n",
                             encoding="utf-8")
@@ -1365,14 +1641,36 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
             bad.write_text("\n".join([rec("a.md"), rec("b.md", resolve_hash="0" * 16),
                                       rec("d.md", verdict="FAIL")]) + "\n", encoding="utf-8")
             cases += [
-                ("gates", "마지막 기록 기준 통과 + expect 2", ["--gates", "--gate-file", str(good), "--expect", "2"], 0, None),
-                ("gates", "expect 불일치", ["--gates", "--gate-file", str(good), "--expect", "3"], 1,
+                ("gates", "마지막 기록 기준 통과 + expect 2", ["--gates", *empty, "--gate-file", str(good), "--expect", "2"], 0, None),
+                ("gates", "expect 불일치", ["--gates", *empty, "--gate-file", str(good), "--expect", "3"], 1,
                  need({"expect"}, "gates")),
-                ("gates", "낡은 PASS · verdict 실패", ["--gates", "--gate-file", str(bad)], 1,
+                ("gates", "낡은 PASS · verdict 실패", ["--gates", *empty, "--gate-file", str(bad)], 1,
                  contains("gates", "낡은 PASS", "verdict='FAIL'")),
-                ("gates", "기록 파일 없음", ["--gates", "--gate-file", str(tmp_root / "none.jsonl")], 1,
+                ("gates", "기록 파일 없음", ["--gates", *empty, "--gate-file", str(tmp_root / "none.jsonl")], 1,
                  need({"gate-file"}, "gates")),
             ]
+            # 대상 대조 — 가이드 alpha 와 참고 문서 beta 가 배치에 있는데 기록은 alpha 뿐
+            r = subprocess.run([sys.executable, str(SCRIPT_PATH), "--resolve-hash", "gof-guide", "--json"],
+                               capture_output=True, text=True)
+            try:
+                gof_hash = json.loads(r.stdout)["modes"]["resolve-hash"]["info"]["hash"]
+            except (json.JSONDecodeError, KeyError):
+                gof_hash = None
+            cov = ["--project", gates_project("gates-cov", guides=("alpha",), refs=("beta",))]
+            alpha = "pattern-guide/design-pattern-guide/alpha/alpha-guide_v1.0.0.md"
+            covfile = tmp_root / "gates-cov.jsonl"
+            covfile.write_text(rec(alpha, spec="gof-guide", resolve_hash=gof_hash or ok_hash) + "\n", encoding="utf-8")
+            mism = tmp_root / "gates-mismatch.jsonl"
+            mism.write_text(rec(alpha) + "\n", encoding="utf-8")            # spec 이 kanban-report — 트랙(gof-guide)과 다르다
+            cases += [
+                ("gates", "기록 없는 참고 문서는 coverage 실패", ["--gates", *cov, "--gate-file", str(covfile)], 1,
+                 both(need({"coverage"}, "gates"), contains("gates", "게이트 기록이 없습니다(reference-note)"))),
+                ("gates", "기록 spec 이 파일 트랙의 명세와 다르면 실패", ["--gates", *cov, "--gate-file", str(mism)], 1,
+                 contains("gates", "파일 트랙의 명세")),
+            ]
+            if gof_hash:
+                cases.append(("gates", "--spec 필터 안의 대상이 전부 기록되면 통과",
+                              ["--gates", *cov, "--gate-file", str(covfile), "--spec", "gof-guide", "--expect", "1"], 0, None))
 
         # derived: 가짜 렌더러를 둔 임시 프로젝트(새 배치 — 가이드 한 편이 폴더 하나, HTML 은 같은 폴더)
         dp = tmp_root / "derived"
@@ -1390,18 +1688,79 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
             md = d / f"{name}-guide_v1.0.0.md"
             md.write_text(f"# {name}\n", encoding="utf-8")
             mds[name] = md
-        fp = hashlib.sha256(b"# fresh\n").hexdigest()[:16]
-        mds["fresh"].with_suffix(".html").write_text(f"<!doctype html><!-- guide-fp:{fp} -->\n", encoding="utf-8")
+        rdir = dp / "pattern-guide/reference/note"          # 참고 문서도 같은 규칙 — md 옆에 html
+        rdir.mkdir(parents=True)
+        mds["note"] = rdir / "note-ref_v1.0.0.md"
+        mds["note"].write_text("# note\n", encoding="utf-8")
+        for name in ("fresh", "note"):
+            fp = hashlib.sha256(mds[name].read_bytes()).hexdigest()[:16]
+            mds[name].with_suffix(".html").write_text(f"<!doctype html><!-- guide-fp:{fp} -->\n", encoding="utf-8")
         mds["stale"].with_suffix(".html").write_text("<!doctype html><!-- guide-fp:0000000000000000 -->\n", encoding="utf-8")
         fresh_md = str(mds["fresh"])
         nohtml_md = str(mds["nohtml"])
+        note_md = str(mds["note"])
         cases += [
-            ("derived", "stale 은 실패", ["--derived", "--project", str(dp)], 1, need({"stale"}, "derived")),
-            ("derived", "fresh + missing 은 통과", ["--derived", "--project", str(dp), fresh_md, nohtml_md], 0, None),
+            ("derived", "stale 은 실패(참고 문서는 fresh 로 집계)", ["--derived", "--project", str(dp)], 1,
+             both(need({"stale"}, "derived"),
+                  lambda d, o: (bool(d) and d["modes"]["derived"]["info"].get("counts", {}).get("fresh") == 2,
+                                "fresh 가 2(가이드 1 + 참고 문서 1)가 아님"))),
+            ("derived", "fresh + 참고 문서 + missing 은 통과",
+             ["--derived", "--project", str(dp), fresh_md, note_md, nohtml_md], 0, None),
             ("derived", "--require-html 이면 missing 실패",
              ["--derived", "--require-html", "--project", str(dp), fresh_md, nohtml_md], 1, need({"missing"}, "derived")),
             ("derived", "렌더러 없음은 오류", ["--derived", "--project", str(tmp_root / "shared-ok")], 1,
              need({"renderer"}, "derived")),
+        ]
+
+        # pointers: 본문 링크가 참고 문서의 최신 semver 를 가리키는가
+        def pointers_project(name: str, link: str) -> str:
+            root = tmp_root / name
+            (root / ".claude/authoring").mkdir(parents=True)
+            (root / ".claude/authoring/paths.json").write_text(json.dumps({
+                "dirs": {"content": "pattern-guide", "reference": "pattern-guide/reference", "index": "PATTERNS.md",
+                         "tracks": {"gof-guide": "design-pattern-guide", "analysis-guide": "ddd-analysis-pattern-guide",
+                                    REFERENCE_SPEC: "reference"}},
+                "exemplars": {"gof-guide": "pattern-guide/design-pattern-guide/alpha/alpha-guide_v1.0.0.md"}}),
+                encoding="utf-8")
+            g = root / "pattern-guide/design-pattern-guide/alpha"
+            g.mkdir(parents=True)
+            (g / "alpha-guide_v1.0.0.md").write_text(f"# alpha — 임시\n\n[beta 참고 문서]({link})\n", encoding="utf-8")
+            r = root / "pattern-guide/reference/beta"
+            r.mkdir(parents=True)
+            for v in ("1.0.0", "1.1.0"):
+                (r / f"beta-ref_v{v}.md").write_text("# beta — 임시\n", encoding="utf-8")
+            (root / "PATTERNS.md").write_text("alpha-guide_v1.0.0.md · beta-ref_v1.1.0.md\n", encoding="utf-8")
+            return str(root)
+        cases += [
+            ("pointers", "본문 링크가 참고 문서 최신을 가리키면 통과",
+             ["--pointers", "--project", pointers_project("ptr-ok", "../../reference/beta/beta-ref_v1.1.0.md")], 0, None),
+            ("pointers", "본문 링크가 낡은 참고 문서를 가리키면 실패",
+             ["--pointers", "--project", pointers_project("ptr-old", "../../reference/beta/beta-ref_v1.0.0.md")], 1,
+             need({"link-latest"}, "pointers")),
+        ]
+
+        # 참고 문서 배치 — 파일명 종류(-ref_v) · serves 의 가이드 폴더 존재는 배치 안에서만 본다
+        def ref_project(name: str, guides: tuple[str, ...], filename: str) -> tuple[str, str]:
+            root = tmp_root / name
+            for slug in guides:
+                (root / "pattern-guide/ddd-analysis-pattern-guide" / slug).mkdir(parents=True)
+            acc = root / "pattern-guide/ddd-analysis-pattern-guide/account/account-guide_v1.0.0.md"
+            acc.parent.mkdir(parents=True, exist_ok=True)
+            acc.write_text("# Account — 임시\n", encoding="utf-8")
+            d = root / "pattern-guide/reference/bounded-context"
+            d.mkdir(parents=True)
+            text = (fx / "good-ref.md").read_text(encoding="utf-8").replace(
+                "(good-analysis.md)", "(../../ddd-analysis-pattern-guide/account/account-guide_v1.0.0.md)")
+            (d / filename).write_text(text, encoding="utf-8")
+            return str(root), str(d / filename)
+        root_ok, f_ok = ref_project("ref-ok", ("account", "quantity"), "bounded-context-ref_v1.0.0.md")
+        root_bad, f_bad = ref_project("ref-bad", ("account",), "bounded-context-guide_v1.0.0.md")
+        cases += [
+            ("all", "참고 문서 배치 통과(-ref_v 이름 · serves 폴더 존재)",
+             ["--all", *ref_spec, "--project", root_ok, f_ok], 0, None),
+            ("all", "참고 문서 배치 실패(-guide_v 이름 · serves 폴더 없음)",
+             ["--all", *ref_spec, "--project", root_bad, f_bad], 1,
+             both(need({"version", "serves"}, "all"), contains("all", "-ref_v<semver>.md 만", "가이드 폴더가 없습니다"))),
         ]
 
         results = []

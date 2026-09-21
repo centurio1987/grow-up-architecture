@@ -3,7 +3,7 @@
   "schema_version": 1,
   "id": "analysis-guide",
   "label": "가이드 — 분석 패턴",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "source": {
     "origin": "extracted",
     "refs": [
@@ -14,9 +14,10 @@
       "~/code_test/.claude/authoring/specs/ds-guide — 계승 원형(when.clue → purpose, 조건부 절 규칙, 원칙 코드·축 배정 방식)",
       "KANBAN/cards/KAN-001-YXTC2C.md 「전략」 — 결정 11건 · 새 골격 · analysis-guide 차이 · 코드 검사 계약 · HTML 버전(정본)",
       "KANBAN/cards/KAN-001.2-4NWK0T.md 「전략」 — spec 2종 · 공유 블록 · analyzer 계약",
-      "KANBAN/requests/doing/KAN-001-YXTC2C.request.md — 유저 요청서(가이드 구성 4요소, 분석 패턴 DDD 준수·배경 전제)"
+      "KANBAN/requests/doing/KAN-001-YXTC2C.request.md — 유저 요청서(가이드 구성 4요소, 분석 패턴 DDD 준수·배경 전제)",
+      "KANBAN/reviews/KAN-001.3-Q6FYKP — 파일럿 검토 항목 18·19(2026-09-21 유저 지적: 원서는 링크로만 존재한다 · 가이드의 주요 컨텐츠는 시나리오를 따라가는 개념 설명)"
     ],
-    "note": "gof-guide 와 골격을 공유하는 분석 패턴 트랙 명세다. 차이(분석 층위 개념 · 개념적 판정 기준 · 상황 설정 MUST 표 · 표와 1:1 구현 · 상황이 달라지면 · 실제 사례)는 루트 카드 「analysis-guide 차이」와 유저 요청서에서 왔다. 공통 작성법 블록은 gof-guide spec.md 에서 바이트 단위로 복사했다. 잠정 둘: AG4(DDD 전술 용어 한 줄 정의 — 기준선 문서 신설 시 링크로 대체), 값 객체 계열의 AG3 표(파일럿 Quantity 실측 후 1.1 에서 처분). PG 코드는 두 트랙 공통, AG 코드는 분석 전용."
+    "note": "gof-guide 와 골격을 공유하는 분석 패턴 트랙 명세다. 차이(분석 층위 개념 · 개념적 판정 기준 · 상황 설정 MUST 표 · 표와 1:1 구현 · 상황이 달라지면 · 실제 사례)는 루트 카드 「analysis-guide 차이」와 유저 요청서에서 왔다. 공통 작성법 블록은 gof-guide spec.md 에서 바이트 단위로 복사했다. 잠정 둘: AG4(DDD 전술 용어 한 줄 정의 — 기준선 문서 신설 시 링크로 대체), 값 객체 계열의 AG3 표(파일럿 Quantity 실측 후 1.1 에서 처분). PG 코드는 두 트랙 공통, AG 코드는 분석 전용. 1.4.0 은 파일럿 검토(유저 지적 두 건)로 골격의 중심을 시나리오로 옮기고(PG32~PG35) 본문의 원서 자립성을 못 박았다(PG30·PG31). 주제 밖 사전 지식은 reference-note 로 뺀다."
   },
   "voice": {
     "default": "ppangtolab-teacher",
@@ -51,20 +52,22 @@
       "container": true
     },
     {
-      "id": "detail.terms",
-      "label": "등장하는 개념과 정의",
+      "id": "detail.scenario",
+      "label": "시나리오",
       "required": true,
       "order": 21,
-      "heading": "### 등장하는 개념과 정의",
-      "heading_fixed": true,
-      "parent": "detail"
+      "heading": "### 시나리오 {n} — {제목}",
+      "heading_fixed": false,
+      "parent": "detail",
+      "repeat": true,
+      "_note": "2개 이상, 번호 1부터 연속. 종류 ① 기본 흐름(필수) ② 변화가 들어올 때 ③ 경계를 넘을 때 — ②·③ 중 하나 이상(PG32)"
     },
     {
-      "id": "detail.procedure",
-      "label": "동작 절차",
+      "id": "detail.terms",
+      "label": "개념 정리",
       "required": true,
-      "order": 22,
-      "heading": "### 동작 절차",
+      "order": 25,
+      "heading": "### 개념 정리",
       "heading_fixed": true,
       "parent": "detail"
     },
@@ -184,19 +187,19 @@
       "code": "PG3",
       "level": "MUST",
       "axis": "structure",
-      "text": "개념 전수 정의 — 본문(개요·절차·경계·구현)에 나오는 역할·개념 이름이 전부 `detail.terms` 에 정의돼 있다. 이름만 나열했거나, 뒤 절에서 정의 없는 이름이 처음 등장하면 미흡"
+      "text": "개념 전수 정의 — 본문(개요·시나리오·경계·구현)에 나오는 역할·개념 이름이 전부 `detail.terms`(`### 개념 정리`)에 정의돼 있다. 시나리오가 처음 쓰는 이름은 그 자리에서 한 구절로 소개돼 있어야 하고, 정식 정의가 `detail.terms` 에 없거나 이름만 나열했으면 미흡"
     },
     {
       "code": "PG4",
       "level": "MUST",
       "axis": "structure",
-      "text": "정의 직후 클래스 다이어그램 — `detail.terms` 의 정의 목록 바로 뒤에 클래스 구조 도식 이미지가 1개 있고(`diagrams/` 컴포넌트 렌더 산출물), 그 클래스 이름과 정의 목록의 이름이 1:1로 대응한다"
+      "text": "정의 직후 클래스 다이어그램 — `detail.terms`(`### 개념 정리`)의 정의 목록 바로 뒤에 클래스 구조 도식 이미지가 1개 있고(`diagrams/` 컴포넌트 렌더 산출물), 그 클래스 이름과 정의 목록의 이름이 1:1로 대응한다"
     },
     {
       "code": "PG5",
       "level": "MUST",
       "axis": "structure",
-      "text": "절차 전수와 이유 — `detail.procedure` 가 협력을 번호 단계로 빠짐없이 적고, 단계마다 '왜 그 역할이 그 일을 맡는가' 또는 '순서를 바꾸면 무엇이 깨지는가'를 붙인다. 이유 없는 단계가 하나라도 있으면 미흡"
+      "text": "단계마다 이유 — `detail.scenario` 의 모든 단계에 '왜 그 역할이 그 일을 맡는가' 또는 '순서를 바꾸면 무엇이 깨지는가'가 붙어 있다. 절차가 갈라지면 갈래마다 단계가 따로 있다. 이유 없는 단계가 하나라도 있으면 미흡"
     },
     {
       "code": "PG6",
@@ -256,7 +259,7 @@
       "code": "PG15",
       "level": "MUST",
       "axis": "structure",
-      "text": "상황 설정 선행 — `example.context` 가 구현 펜스보다 앞에서 도메인과 요구 전제(무엇이 변하고 무엇이 고정인가)를 적고, 예시의 타입 이름이 `detail.terms` 의 어느 역할·개념에 대응하는지 매핑한다(매핑이 `example.impl` 해설에 있어도 충족)"
+      "text": "상황 설정 선행 — `example.context` 가 구현 펜스보다 앞에서 도메인과 요구 전제(무엇이 변하고 무엇이 고정인가)를 적고, 예시의 타입 이름이 `detail.terms` 의 어느 역할·개념에 대응하는지 매핑한다(매핑이 `example.impl` 해설에 있어도 충족). 그 도메인은 `detail.scenario` 가 이미 쓴 것이다(PG35)"
     },
     {
       "code": "PG16",
@@ -322,7 +325,7 @@
       "code": "PG26",
       "level": "SHOULD",
       "axis": "scope-principle",
-      "text": "경계 판정 문제 — `selfcheck` 에 `boundary.minimum` 의 조건을 적용해 주어진 코드나 모델이 이 패턴인지 판정하게 하는 문제가 1개 이상 있다"
+      "text": "경계 판정 문제 — `selfcheck` 에 `boundary.minimum` 의 조건을 적용해 주어진 코드나 모델이 이 패턴인지 판정하게 하는 문제가 1개 이상 있고, 시나리오의 두 단계를 바꾸거나 책임을 옮기면 무엇이 깨지는지 추적하는 문제가 섞여 있다"
     },
     {
       "code": "PG27",
@@ -343,10 +346,46 @@
       "text": "코드 정본 — 예시 코드는 가이드 폴더의 `code/` 에 실행 파일로 있고(공개 클래스 이름의 .java · main.ts · main.rs · expected-output.txt), 본문 펜스가 그 파일과 글자 단위로 같으며, 본문이 싣는 실행 출력이 expected-output.txt 와 같다(그 펜스는 `### 구현` 밖에 둔다 — 그 절은 언어 펜스 셋뿐이다). 세 언어가 같은 출력을 내지 않거나 본문 수치가 실행에서 오지 않으면 미흡"
     },
     {
+      "code": "PG30",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "자립성 — 본문은 원서 없이 읽힌다. 원서 위치 지시자(`그림 n.n` · `Figure n` · `§n.n` · `n장 「…」` · `구현 쟁점 n` · \"원서의 X 절/설명/목록/협력/참여자\")는 `(근거: …)` 괄호와 `## 참고 자료` 안에서만 쓴다. 본문이 원서의 개념·논의에 기대야 하면 이 가이드의 주제 안이면 그 자리에서 풀고, 주제 밖 사전 지식이면 참고 문서(`reference-note`, `dirs.reference`)를 쓰고 내부 링크로 잇는다. 검사기(`self-contained`)가 본문의 위치 지시자를 막는다. (2026-09-21 유저 지적: \"원서는 외부 레퍼런스이고 링크로만 존재한다. 가이드의 컨텐츠가 아니다.\")"
+    },
+    {
+      "code": "PG31",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "권위 인용은 설명이 아니다 — \"원서/Fowler/GoF 가 … 적었다/꼽았다/든다\"는 근거 표시일 뿐이다. 그 주장이 왜 그런지의 설명(반례·수치·절차)이 본문에 따로 있어야 하고, 권위 인용만으로 끝난 주장이 있으면 미흡. 채점이 본다(검사기는 그런 문장 수를 정보로 낸다)"
+    },
+    {
+      "code": "PG32",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "시나리오가 골격의 중심 — `### 시나리오 n — 제목` 이 2개 이상이고 번호가 1부터 연속이다. 종류는 ① 기본 흐름(요청·업무 사건 하나가 끝까지 처리되는 길, 필수) ② 변화가 들어올 때(새 요구·새 종류가 더해질 때 무엇이 바뀌고 무엇은 안 바뀌는가) ③ 경계를 넘을 때(패턴의 규칙을 어기면 어느 단계에서 무엇이 깨지는가)이고 ②·③ 중 하나 이상이 있다. 각 시나리오는 상황 한 문단(구체 값) → 번호 단계 3개 이상(누가 무엇을 하는가 + 왜) → \"이 시나리오가 보여 준 것\" 한 문단으로 구성되고, 처음 쓰는 이름은 그 자리에서 한 구절로 소개한다. 개수·번호·단계 수는 검사기가, 종류 충족과 \"왜\"의 질은 채점이 본다. (2026-09-21 유저 지적: \"정적인 설명만 가득하다. 시나리오에 따른 절차와 절차별 설명이 없다. 스펙 보다는, 이해를 위한 개념적 레벨에서의 설명이 가이드의 주요 컨텐츠다.\")"
+    },
+    {
+      "code": "PG33",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "조건과 비교는 시나리오를 가리킨다 — `boundary.minimum` 의 조건 항목마다 본체 줄이나 `빠지면:` 줄에 \"시나리오 n 의 k단계\" 처럼 어느 시나리오의 어느 단계가 그 조건을 보여 주는지 적혀 있고, `boundary.compare` 에 `시나리오 n` 언급이 2회 이상 있어 대상마다 차이가 드러나는 시나리오를 가리킨다. 검사기가 센다"
+    },
+    {
+      "code": "PG34",
+      "level": "SHOULD",
+      "axis": "structure",
+      "text": "구현 해설은 줄 포인팅 — `example.impl` 의 해설이 시나리오 단계 ↔ 코드 줄 대응(\"시나리오 1 의 3단계는 Java n행 · TypeScript n행 · Rust n행\")으로 쓰여 있고, 언어 차이 해설은 그 뒤에 짧게 붙는다. 구현 쟁점 열거나 언어 기능 강의로 채우면 미흡"
+    },
+    {
+      "code": "PG35",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "한 도메인 — `detail.scenario` 가 고른 도메인·등장 요소·값을 `example.context` 와 `example.impl` 이 그대로 이어받는다. 시나리오와 구현 예시의 도메인이 다르거나 등장 요소가 끊기면 미흡"
+    },
+    {
       "code": "AG1",
       "level": "MUST",
       "axis": "structure",
-      "text": "분석 층위 정의 — `detail.terms` 가 패턴이 모델링하는 도메인 개념과 그 관계만 정의하고 Entity·Value Object·Aggregate 같은 DDD 전술 분류를 매기지 않는다(분류는 `example.context` 표의 몫). 정의 직후 classDiagram 에도 전술 분류 스테레오타입이 없다"
+      "text": "분석 층위 정의 — `detail.terms`(`### 개념 정리`)가 패턴이 모델링하는 도메인 개념과 그 관계만 정의하고 Entity·Value Object·Aggregate 같은 DDD 전술 분류를 매기지 않는다(분류는 `example.context` 표의 몫). 정의 직후 클래스 구조 도식에도 전술 분류 스테레오타입이 없다"
     },
     {
       "code": "AG2",
@@ -364,7 +403,7 @@
       "code": "AG4",
       "level": "MUST",
       "axis": "structure",
-      "text": "DDD 전술 용어 한 줄 정의(잠정 규칙) — 상황 설정 표에서 처음 쓰는 DDD 전술 용어(Bounded Context·Aggregate·Aggregate Root·Entity·Value Object 등)가 표 셀 안 괄호나 표 바로 아래 목록에서 한 줄로 정의돼 있다. 유저가 DDD 전술 용어 기준선 문서 신설을 결정하면 그 문서 링크로 대체한다"
+      "text": "DDD 전술 용어는 참고 문서로 — 상황 설정 표에서 쓰는 DDD 전술 용어(Bounded Context·Aggregate·Aggregate Root·Entity·Value Object·id 참조·불변식)는 표 앞이나 뒤에서 참고 문서 `ddd-tactical-terms`(`dirs.reference`)를 한 번 링크하고 표 안에서 다시 정의하지 않는다. 링크가 없거나 표 안에 한 줄 정의를 되풀이하면 미흡(1.3.0 까지의 잠정 규칙은 폐지)"
     },
     {
       "code": "AG5",

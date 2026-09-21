@@ -1,0 +1,62 @@
+{
+  "$schema": "authoring-kit/spec@1",
+  "schema_version": 1,
+  "id": "reference-note",
+  "label": "참고 문서(검사기 픽스처)",
+  "version": "0.0.0-fixture",
+  "_note": "check-guides.py --self-test 전용 사본. 참고 문서 골격 — 가이드가 링크로 잇는 개념 설명 한 편. 최소 조건·상황 설정·구현·시나리오 절이 없으므로 그 검사들은 돌지 않는다. 파일은 pattern-guide/reference/<slug>/<slug>-ref_v<semver>.md, 머리말은 title·slug·spec·spec_version·version·status·date·serves(이 문서를 링크하는 가이드 slug 목록). 정본 spec 은 .claude/authoring/specs/<id>/spec.json 이며, 이 파일은 정본이 바뀌어도 자동으로 따라가지 않는다.",
+  "sections": [
+    {
+      "id": "title",
+      "heading": "# {제목} — {한 줄 답}",
+      "heading_fixed": false,
+      "required": true,
+      "order": 5
+    },
+    {
+      "id": "answers",
+      "heading": "## 이 문서가 답하는 것",
+      "heading_fixed": true,
+      "required": true,
+      "order": 10
+    },
+    {
+      "id": "concepts",
+      "heading": "## 개념",
+      "heading_fixed": true,
+      "required": true,
+      "order": 20,
+      "container": true
+    },
+    {
+      "id": "concepts.item",
+      "heading": "### {개념}",
+      "heading_fixed": false,
+      "required": true,
+      "repeat": true,
+      "order": 21,
+      "parent": "concepts"
+    },
+    {
+      "id": "relations",
+      "heading": "## 개념 사이의 관계",
+      "heading_fixed": true,
+      "required": true,
+      "order": 30
+    },
+    {
+      "id": "back",
+      "heading": "## 가이드로 돌아가기",
+      "heading_fixed": true,
+      "required": true,
+      "order": 40
+    },
+    {
+      "id": "refs",
+      "heading": "## 참고 자료",
+      "heading_fixed": true,
+      "required": true,
+      "order": 50
+    }
+  ]
+}

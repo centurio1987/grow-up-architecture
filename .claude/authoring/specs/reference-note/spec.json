@@ -1,0 +1,155 @@
+{
+  "$schema": "authoring-kit/spec@1",
+  "schema_version": 1,
+  "id": "reference-note",
+  "label": "참고 문서 — 가이드의 사전 지식",
+  "version": "1.0.0",
+  "source": {
+    "origin": "extracted",
+    "refs": [
+      "KANBAN/reviews/KAN-001.3-Q6FYKP — 파일럿 검토 항목 18(2026-09-21 유저 지적: 원서는 링크로만 존재한다 · 사전 이해가 필요하면 별도 참고 문서를 써 내부 참조)",
+      ".claude/authoring/specs/gof-guide/spec.md 「원서를 다루는 법」(PG30·PG31) — 이 종류가 받아 주는 자리",
+      ".claude/authoring/specs/analysis-guide/spec.md AG4 — DDD 전술 용어 링크 대상",
+      "pattern-guide/research/*.md — 개념의 원전 위치와 주장 출처"
+    ],
+    "note": "가이드 두 트랙(gof-guide·analysis-guide)이 기대는 주제 밖 사전 지식을 원서 없이 읽히게 푸는 짧은 문서의 명세다. 유저 지적(2026-09-21)에서 왔다: \"가이드에서 해당 내용을 참조하는 것이 주제를 벗어나지만, 사전 이해가 필요하다면, 별도의 가이드나 참고 문서를 작성해서 내부 참조를 하도록 만들어라.\" 패턴 판정·비교·구현은 싣지 않는다. 산출 위치는 paths.json 의 dirs.reference, 버저닝은 가이드와 같은 규약. 도식 규약은 가이드의 공유 블록과 같지만 공유 마커는 쓰지 않는다 — 공유 블록은 두 가이드 트랙만의 것이다."
+  },
+  "voice": {
+    "default": "ppangtolab-teacher",
+    "allowed": [
+      "ppangtolab-teacher"
+    ]
+  },
+  "sections": [
+    {
+      "id": "title",
+      "label": "제목 + 한 줄 답",
+      "required": true,
+      "order": 5,
+      "heading": "# {제목} — {한 줄 답}",
+      "heading_fixed": false
+    },
+    {
+      "id": "answers",
+      "label": "이 문서가 답하는 것",
+      "required": true,
+      "order": 10,
+      "heading": "## 이 문서가 답하는 것",
+      "heading_fixed": true
+    },
+    {
+      "id": "concepts",
+      "label": "개념",
+      "required": true,
+      "order": 20,
+      "heading": "## 개념",
+      "heading_fixed": true,
+      "container": true
+    },
+    {
+      "id": "concepts.item",
+      "label": "개념 하나",
+      "required": true,
+      "order": 21,
+      "heading": "### {개념}",
+      "heading_fixed": false,
+      "parent": "concepts",
+      "repeat": true,
+      "_note": "2개 이상. 정의 + 예 1개, 흔한 오해는 선택(RN2)"
+    },
+    {
+      "id": "relations",
+      "label": "개념 사이의 관계",
+      "required": true,
+      "order": 30,
+      "heading": "## 개념 사이의 관계",
+      "heading_fixed": true
+    },
+    {
+      "id": "back",
+      "label": "가이드로 돌아가기",
+      "required": true,
+      "order": 40,
+      "heading": "## 가이드로 돌아가기",
+      "heading_fixed": true
+    },
+    {
+      "id": "refs",
+      "label": "참고 자료",
+      "required": true,
+      "order": 50,
+      "heading": "## 참고 자료",
+      "heading_fixed": true
+    }
+  ],
+  "principles": [
+    {
+      "code": "RN1",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "자립성 — 본문은 원서 없이 읽힌다. 원서 위치 지시자(`그림 n.n` · `Figure n` · `§n.n` · `n장 「…」` · \"원서의 X 절/설명\")는 `(근거: …)` 괄호와 `## 참고 자료` 안에서만 쓴다. 가이드의 PG30 과 같은 규칙이고 검사기(`self-contained`)가 막는다"
+    },
+    {
+      "code": "RN2",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "개념마다 정의와 예 — `### {개념}` 이 2개 이상이고, 개념마다 정의 한 문단과 구체 예(값·상황) 1개가 있다. 정의만 있거나 예가 추상 서술이면 미흡. 흔한 오해는 선택"
+    },
+    {
+      "code": "RN3",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "관계 도식 — `## 개념 사이의 관계` 에 도식 1개(`diagrams/` viz 이미지 또는 text 도식)가 있고, 도식의 이름이 `### {개념}` 헤딩과 1:1 이며 설명이 붙어 있다"
+    },
+    {
+      "code": "RN4",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "가이드 링크 유효 — `## 가이드로 돌아가기` 의 링크가 실제 가이드 파일(최신 버전 파일명)을 가리키고 상대 링크가 해소된다. 머리말 `serves` 의 슬러그와 링크 대상이 맞는다"
+    },
+    {
+      "code": "RN5",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "분량 — 본문이 300줄 이하다. 넘으면 문서를 나눈다 — 참고 문서는 가이드에서 잠깐 다녀오는 자리다"
+    },
+    {
+      "code": "RN6",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "출처 — 본문의 주장마다 출처 링크가 그 자리에 있고 `## 참고 자료` 에 전부 모여 있으며, 원전이 맨 앞에 장·절까지 적혀 있다. 본문이 쓰지 않은 출처는 올리지 않는다(가이드의 PG24·PG25 계승)"
+    },
+    {
+      "code": "RN7",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "주제 밖 금지 — 패턴의 판정(최소 조건)·비교·구현 코드를 싣지 않는다. 그건 가이드의 몫이고, 여기 실리면 가이드와 갈라진다. `## 이 문서가 답하는 것` 이 다루지 않는 것을 한 문장으로 못 박는다"
+    }
+  ],
+  "conditional_rule": "조건부 절은 없다. 일곱 절이 모두 필수다.",
+  "template": {
+    "kind": "md",
+    "template_ref": "reference-note-canvas",
+    "slot_style": "std-v1",
+    "slots_map": "template.slots.json",
+    "outputs": [
+      {
+        "format": "md",
+        "dir": "reference"
+      }
+    ]
+  },
+  "placeholders": {
+    "profile": "std-v1",
+    "legacy_accept": [],
+    "_note": "캔버스는 std-v1 표기만 쓴다."
+  },
+  "gate": {
+    "rubric": "default",
+    "max_rounds": 3,
+    "external_review": {
+      "enabled": false,
+      "_note": "외부 모델 비평은 이 파이프라인에서 쓰지 않는다(2026-09-20 유저 결정). 사실 주장 검증은 품질 게이트 채점이 원문 대조로 진다."
+    }
+  }
+}

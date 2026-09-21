@@ -1,13 +1,13 @@
 ---
 name: design-pattern-guide
-description: 디자인 패턴 가이드 1편을 authoring-kit 명세(gof-guide · analysis-guide)로 집필·재집필하는 진입 스킬. 사전 확인 → 리서치 노트 → authoring-write 위임 → 기계 검사·품질 게이트 → 발행·게이트 기록까지 끌고 간다. 트리거 — "디자인 패턴 가이드", "Singleton/Strategy/Observer/... 패턴 가이드 작성/재집필", "분석 패턴 가이드", "Account/Quantity/Transaction 패턴 가이드", "design pattern guide", "패턴 가이드 문서". 여러 패턴을 요청하면 패턴마다 1편씩 따로 돈다. 이미 있는 코드가 패턴에 맞는지 판정하는 일은 design-pattern-analyzer 가 맡는다.
+description: 디자인 패턴 가이드 1편을 authoring-kit 명세(gof-guide · analysis-guide)로 집필·재집필하는 진입 스킬. 사전 확인 → 리서치 노트·사전 지식 점검(참고 문서 reference-note) → authoring-write 위임 → 기계 검사·품질 게이트 → 발행·게이트 기록까지 끌고 간다. 트리거 — "디자인 패턴 가이드", "Singleton/Strategy/Observer/... 패턴 가이드 작성/재집필", "분석 패턴 가이드", "Account/Quantity/Transaction 패턴 가이드", "design pattern guide", "패턴 가이드 문서". 여러 패턴을 요청하면 패턴마다 1편씩 따로 돈다. 이미 있는 코드가 패턴에 맞는지 판정하는 일은 design-pattern-analyzer 가 맡는다.
 argument-hint: <pattern-kebab-name>
 ---
 
 # design-pattern-guide 스킬 (패턴 가이드 집필 진입점)
 
-`$ARGUMENTS` 패턴의 가이드 1편을 `<대상 트리>/$ARGUMENTS-pattern.md` 에 쓴다.
-재집필이면 **같은 경로에 덮어쓴다** — 파일명이 analyzer 와 인덱스의 키다.
+`$ARGUMENTS` 패턴의 가이드 1편을 `<대상 트리>/$ARGUMENTS/$ARGUMENTS-guide_v<semver>.md` 에 쓴다(가이드 한 편 = 폴더 하나).
+재집필이면 **새 버전 파일**을 같은 폴더에 만들고 이전 판본은 남긴다 — 인덱스·기준 예시·분석 스킬은 최신 파일명을 가리킨다.
 
 > **집필 규칙은 이 파일에 없다.** 골격·작성법·최소 조건의 판정 원칙은 명세(spec)
 > `gof-guide` · `analysis-guide` 에, 문체는 퍼소나(voice) `ppangtolab-teacher` 에 산다.
@@ -20,8 +20,9 @@ argument-hint: <pattern-kebab-name>
 | --- | --- | --- |
 | `pattern-guide/design-pattern-guide/<패턴>/` (`dirs.content` · `dirs.tracks`) | `gof-guide` | `gof-guide-canvas` |
 | `pattern-guide/ddd-analysis-pattern-guide/<패턴>/` (`dirs.content` · `dirs.tracks`) | `analysis-guide` | `analysis-guide-canvas` |
+| `pattern-guide/reference/<슬러그>/` (`dirs.reference`) — 가이드가 기대는 주제 밖 사전 지식 | `reference-note` | `reference-note-canvas` |
 
-voice 는 둘 다 `ppangtolab-teacher` 다.
+voice 는 셋 다 `ppangtolab-teacher` 다. 참고 문서는 패턴이 아니라 **개념군** 단위이고, 가이드 집필 도중 사전 지식 점검(1단계)이 없다고 판정할 때 먼저 쓴다.
 
 대상 트리는 `$ARGUMENTS-pattern.md` 가 이미 있는 쪽이다. 두 트리 어디에도 없는 새 패턴이면
 `dirs.research` 의 `candidates.md` 「결정」 절에 기록된 spec 을 따른다. 거기에도 없으면 멈추고
@@ -74,6 +75,10 @@ python3 "$PLUGIN/scripts/authoring.py" resolve --voice ppangtolab-teacher --spec
 - **재사용 자산 확인** — 같은 주제의 기존 가이드 폴더(`diagrams/` 의 도식 컴포넌트, `code/` 의 예시)에 쓸 것이 있으면 가져다 쓴다. 새로 만들지 않는다.
   가져온 것도 검사 면제가 아니다 — 도식 검사와 실행 대조를 그대로 지난다.
 - **본문에 실을 수치는 실행에서 확정한다** — `code/` 의 세 언어를 돌려 나온 출력이 정본이고, 손으로 적은 값은 쓰지 않는다.
+- **사전 지식 점검** — 본문이 기대게 될 원서 개념을 목록으로 뽑는다(원서의 그림·절·구현 쟁점, 다른 패턴의 개념, DDD 전술 용어, 회계 기초 등).
+  항목마다 둘 중 하나로 표시한다: **주제 안**이면 본문에서 풀 것으로(원서 위치 지시자 없이 설명한다), **주제 밖**이면 `dirs.reference` 에 참고 문서가 있는지 확인하고
+  링크할 파일명(최신 판본)을 적는다. **없으면 `reference-note` 로 먼저 집필한다** — 가이드가 없는 문서를 링크하면 검사가 막힌다.
+  원서는 링크로만 존재하는 외부 레퍼런스라 본문이 원서를 펴야 읽히면 미흡이다(PG30·PG31).
 - 본문에 실을 사실·수치·출처와, 조건부 절을 쓸지(출처가 확인된 사용처가 있는지 등)를 여기서 확정한다.
 
 ### 2. 집필 — `authoring-write` 에 위임
@@ -91,6 +96,9 @@ Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide>
 - **이 스킬이 본문을 직접 쓰지 않는다.**
 - 산출물은 본문 하나가 아니다 — 가이드 폴더에 `code/`(공개 클래스 이름의 `.java` · `main.ts` · `main.rs` · `expected-output.txt`)와
   `diagrams/`(도식 컴포넌트 `.tsx` 와 렌더한 이미지)가 함께 선다. 본문 펜스는 `code/` 에서 가져오고, 도식은 이미지로 싣는다.
+- **골격의 중심은 시나리오다**(명세 1.4.0, PG32~PG35). `## 패턴 자세히 들여다보기` 아래에 `### 시나리오 n — 제목` 이 2개 이상(기본 흐름 필수, 변화가 들어올 때·경계를 넘을 때 중 하나 이상),
+  그 뒤 `### 개념 정리`. 최소 조건·비교는 "시나리오 n 의 k단계" 로 시나리오를 가리키고, 구현 해설은 시나리오 단계 ↔ 코드 줄 대응이며, 시나리오와 구현은 한 도메인이다.
+  워커에게 1단계의 사전 지식 목록(주제 안/밖 판정과 링크할 참고 문서 파일명)을 함께 넘긴다 — 본문에 원서 위치 지시자를 두지 않는다(PG30).
 - `authoring-write` 의 품질 게이트 단계는 아래 3단계 순서로 돈다. 기계 검사가 그 앞에 온다. 플러그인이 외부 검토를 부르면 건너뛴다 — 이 프로젝트는 쓰지 않는다.
 
 ### 3. 게이트 — 순서 고정
@@ -114,10 +122,12 @@ Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide>
 1. **도식** — 바뀐 도식이 있으면 `bun run scripts/render-viz.ts --module <diagrams/X.tsx> --out <diagrams/x.png>` 로 다시 굽고
    `bun run scripts/lint-diagrams.ts` 를 돌린다.
 2. **HTML** — `commands.render` → `commands.derived`(낡은 HTML 이 없어야 한다). 출력은 md 와 같은 폴더다.
+   이 편이 링크한 **참고 문서**도 같은 명령으로 렌더 상태를 확인한다 — 가이드는 fresh 인데 참고 문서 HTML 이 낡아 있으면 독자가 두 판본을 본다.
 3. **인덱스 등록** — `paths.json` 의 `dirs.index`(`PATTERNS.md`)에 이 편을 **손으로 끼워 넣는다.** 분류·비교 페어 구조가 뜻을 담고 있으므로
    **인덱스 전체를 알파벳순으로 다시 만드는 것은 금지**다. 새 버전을 냈으면 인덱스가 가리키는 파일명도 그 자리에서 고친다.
    분석 패턴은 `pattern-guide/ddd-analysis-pattern-guide/README.md` 가 인덱스다.
-4. **포인터 점검** — `commands.pointers`. 인덱스·기준 예시가 최신본을 가리키는지 본다.
+4. **포인터 점검** — `commands.pointers`. 인덱스·기준 예시·**참고 문서 링크**가 최신본을 가리키는지 본다.
+   새로 발행한 가이드가 참고 문서를 링크했으면 그 참고 문서의 `## 가이드로 돌아가기` 와 머리말 `serves` 에 이 편을 더한다(patch 판본).
 5. **게이트 기록** — `paths.json` `dirs.gate_results`(jsonl) 에 work 하나당 한 줄을 덧붙인다.
 
 ```bash
@@ -150,8 +160,8 @@ PY
 
 ## 참조 파일
 
-- `gof-guide-canvas.md` · `analysis-guide-canvas.md` (이 폴더) — 캔버스. `paths.json` `templates` 가 가리킨다. 헤딩 문구·순서를 바꾸지 않는다
-- `../../authoring/specs/{gof-guide,analysis-guide}/` — 항목 구성 · 항목별 작성법 · 판정 원칙
+- `gof-guide-canvas.md` · `analysis-guide-canvas.md` · `reference-note-canvas.md` (이 폴더) — 캔버스. `paths.json` `templates` 가 가리킨다. 헤딩 문구·순서를 바꾸지 않는다
+- `../../authoring/specs/{gof-guide,analysis-guide,reference-note}/` — 항목 구성 · 항목별 작성법 · 판정 원칙
 - `~/.claude/authoring/voices/ppangtolab-teacher/` — voice (전역, 여러 프로젝트가 함께 쓴다)
 - `../../authoring/paths.json` — 경로(`dirs`) · 캔버스(`templates`) · 명령(`commands`)
 - `../../authoring.lock.json` — 이 프로젝트가 서 있는 규칙 조합
@@ -166,5 +176,7 @@ PY
 - 조건부 절은 해당 없으면 **절 자체를 지우고**, 생략 사유는 **게이트 보고에만** 남긴다.
   독자용 문서에 "해당 없음" 을 남기지 않는다.
 - 본문에 싣는 수치·경로·실행 결과는 **실제로 확인한 것만** 쓴다.
+- **원서는 링크로만 존재한다.** 본문에 `그림 n.n` · `§n.n` · `구현 쟁점 n` 같은 위치 지시자를 두지 않는다(근거 괄호·참고 자료만 예외).
+  주제 밖 사전 지식은 참고 문서(`reference-note`)를 링크하고, 없으면 먼저 쓴다.
 - **자동 통과 금지** — 품질 게이트 3라운드 소진과 기계 검사 비-0 은 "완성"이 아니다.
 - 재집필 지시가 없는 구 가이드는 건드리지 않는다. 구 골격이 남아 있는 것 자체는 위반이 아니다.

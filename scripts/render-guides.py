@@ -8,6 +8,7 @@
 
 - 출력 경로는 pattern-guide/ 아래 하위 디렉토리를 미러링한다:
   pattern-guide/<track>/<slug>/<slug>-guide_v1.0.0.md → 같은 폴더의 <slug>-guide_v1.0.0.html
+  참고 문서 pattern-guide/reference/<slug>/<slug>-ref_v1.0.0.md 도 같은 규칙(같은 폴더에 .html)
   (--out-dir 를 주면 그 아래에 계열·패턴 폴더를 미러링한다)
 - `### 구현` 절에서 연속한 java · typescript(ts) · rust 펜스(`no-compile` 없음)를 탭 위젯 하나로 묶는다.
 - 도식은 viz 컴포넌트를 렌더한 이미지를 본문이 가리키고, 렌더러가 그것을 data URI 로 박는다.
@@ -44,9 +45,10 @@ SCRIPTS_DIR = Path(os.path.abspath(__file__)).parent
 ROOT = SCRIPTS_DIR.parent
 GUIDE_ROOT = ROOT / "pattern-guide"
 DEFAULT_OUT_DIR = GUIDE_ROOT / "html"
-TARGET_DIRS = ("design-pattern-guide", "ddd-analysis-pattern-guide")
+TARGET_DIRS = ("design-pattern-guide", "ddd-analysis-pattern-guide", "reference")
 TARGET_SUFFIX = ".md"
-GUIDE_RE = re.compile(r"^[a-z0-9-]+-guide_v\d+\.\d+\.\d+\.md$")   # 가이드 한 편 = 폴더 하나, 파일명에 semver
+# 한 편 = 폴더 하나, 파일명에 semver. 가이드는 -guide_v, 참고 문서(reference/)는 -ref_v.
+GUIDE_RE = re.compile(r"^[a-z0-9-]+-(?:guide|ref)_v\d+\.\d+\.\d+\.md$")
 
 RENDERER = Path(os.path.abspath(__file__))
 ASSET_CSS = SCRIPTS_DIR / "assets" / "guide.css"
@@ -131,7 +133,7 @@ def _real(p) -> Path:
 
 
 def is_render_target(md_path) -> bool:
-    """pattern-guide/<track>/<slug>/<slug>-guide_v<semver>.md 인가(존재 여부 무관)."""
+    """pattern-guide/<track>/<slug>/<slug>-guide_v<semver>.md 또는 reference/<slug>/<slug>-ref_v<semver>.md 인가(존재 여부 무관)."""
     p = _real(md_path)
     return (
         bool(GUIDE_RE.match(p.name))
@@ -141,7 +143,7 @@ def is_render_target(md_path) -> bool:
 
 
 def _versions(folder: Path) -> list[Path]:
-    return sorted((f for f in folder.glob("*-guide_v*.md") if GUIDE_RE.match(f.name)),
+    return sorted((f for f in folder.glob("*_v*.md") if GUIDE_RE.match(f.name)),
                   key=lambda f: tuple(int(x) for x in f.stem.split("_v")[-1].split(".")))
 
 
@@ -1061,7 +1063,8 @@ def main(argv: list[str] | None = None) -> int:
         description="패턴 가이드 md → 자립형 HTML(세 언어 탭 · 도식 data URI · 지문)",
     )
     parser.add_argument("files", nargs="*", help="렌더할 가이드 md")
-    parser.add_argument("--all", action="store_true", help="pattern-guide/{design-pattern-guide,ddd-analysis-pattern-guide}/*-pattern.md 전부")
+    parser.add_argument("--all", action="store_true",
+                        help="pattern-guide/{design-pattern-guide,ddd-analysis-pattern-guide,reference}/<slug>/ 의 최신본 전부")
     parser.add_argument("--out-dir", default=None, help="출력 루트(기본: md 와 같은 폴더)")
     parser.add_argument("--check", action="store_true", help="쓰지 않고 fresh/stale/missing 만 보고")
     parser.add_argument("--force", action="store_true", help="지문이 같아도 다시 쓴다")

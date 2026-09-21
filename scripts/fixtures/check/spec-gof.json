@@ -4,7 +4,7 @@
   "id": "gof-guide",
   "label": "GoF 디자인 패턴 가이드(검사기 픽스처)",
   "version": "0.0.0-fixture",
-  "_note": "check-guides.py --self-test 전용 사본. 결정 문서(KANBAN/cards/KAN-001-YXTC2C.md 「새 골격」)의 골격을 옮겼다. 정본 spec 은 .claude/authoring/specs/<id>/spec.json 이며, 이 파일은 정본이 바뀌어도 자동으로 따라가지 않는다.",
+  "_note": "check-guides.py --self-test 전용 사본. 명세 1.4.0 골격(시나리오 중심 — `### 시나리오 {n} — {제목}` 반복 + `### 개념 정리`)을 옮겼다. 정본 spec 은 .claude/authoring/specs/<id>/spec.json 이며, 이 파일은 정본이 바뀌어도 자동으로 따라가지 않는다.",
   "sections": [
     {
       "id": "title",
@@ -29,19 +29,20 @@
       "container": true
     },
     {
-      "id": "detail.terms",
-      "heading": "### 등장하는 개념과 정의",
-      "heading_fixed": true,
+      "id": "detail.scenario",
+      "heading": "### 시나리오 {n} — {제목}",
+      "heading_fixed": false,
       "required": true,
+      "repeat": true,
       "order": 21,
       "parent": "detail"
     },
     {
-      "id": "detail.procedure",
-      "heading": "### 동작 절차",
+      "id": "detail.terms",
+      "heading": "### 개념 정리",
       "heading_fixed": true,
       "required": true,
-      "order": 22,
+      "order": 25,
       "parent": "detail"
     },
     {

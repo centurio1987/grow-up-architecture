@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "template": ".claude/skills/design-pattern-guide/reference-note-canvas.md",
+  "format": "md",
+  "slot_style": "std-v1",
+  "slots": [
+    {
+      "id": "answers.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "back.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "concepts.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "refs.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "relations.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "title.answer",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "title.name",
+      "kind": "fill",
+      "value": null
+    }
+  ],
+  "legacy_detected": {},
+  "_note": "value 가 null 이면 미해결이다. 템플릿 파일은 프로젝트에 그대로 두고 paths.json 이 경로만 참조한다."
+}
