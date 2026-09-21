@@ -4,7 +4,7 @@ slug: strategy
 spec: gof-guide
 spec_version: 1.4.0
 version: 1.1.0
-status: draft
+status: published
 date: 2026-09-21
 ---
 
@@ -37,7 +37,7 @@ After : 배송비 계산을 객체로 떼어 내고, 어느 객체를 쓸지는 
                                                   └─ 새 방법 = 새 클래스 (Checkout 은 그대로)
 ```
 
-이 패턴의 이름은 GoF(Gang of Four, 1994년에 나온 *Design Patterns* 의 저자 네 명을 함께 부르는 이름) 가 붙인 것이고 다른 이름은 Policy 예요(근거: GoF Strategy 절 Also Known As). 분류는 행위 패턴이고, 함께 쓰는 패턴은 Flyweight 입니다. 배송비 객체가 생성할 때 정한 금액만 필드에 두고 호출 사이에 새 값을 남기지 않으면 결제 객체 여럿이 하나를 같이 써도 되는데, 그 조건을 이르는 말이 [참고 문서 「GoF 공통 어휘」의 내재 상태와 외재 상태](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.0.md)예요. 이 글은 시나리오 셋을 따라갑니다. 주문 하나가 총액이 되는 길, 요금제가 더해질 때 무엇이 안 바뀌는가, 규칙을 어기면 어느 단계에서 깨지는가. 끝까지 읽으면 어떤 코드를 Strategy 라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, 구조가 닮은 State·Template Method 코드와도 구분할 수 있게 됩니다.
+이 패턴의 이름은 GoF(Gang of Four, 1994년에 나온 *Design Patterns* 의 저자 네 명을 함께 부르는 이름) 가 붙인 것이고 다른 이름은 Policy 예요(근거: GoF Strategy 절 Also Known As). 분류는 행위 패턴이고, 함께 쓰는 패턴은 Flyweight 입니다. 배송비 객체가 생성할 때 정한 금액만 필드에 두고 호출 사이에 새 값을 남기지 않으면 결제 객체 여럿이 하나를 같이 써도 되는데, 그 조건을 이르는 말이 [참고 문서 「GoF 공통 어휘」의 내재 상태와 외재 상태](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md)예요. 이 글은 시나리오 셋을 따라갑니다. 주문 하나가 총액이 되는 길, 요금제가 더해질 때 무엇이 안 바뀌는가, 규칙을 어기면 어느 단계에서 깨지는가. 끝까지 읽으면 어떤 코드를 Strategy 라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, 구조가 닮은 State·Template Method 코드와도 구분할 수 있게 됩니다.
 
 ## 패턴 자세히 들여다보기
 
@@ -56,7 +56,7 @@ After : 배송비 계산을 객체로 떼어 내고, 어느 객체를 쓸지는 
    - 갈래 4-a. 값을 인자로 넘깁니다. `fee(subtotal, weightGrams)` 처럼 `Checkout` 이 값을 꺼내 넘기면 전략이 `Checkout` 을 몰라도 되니 둘 사이의 결합이 가장 느슨해요. 대신 어떤 전략은 받은 값을 쓰지 않게 됩니다.
    - 갈래 4-b. `Checkout` 자신을 넘깁니다. `fee(checkout)` 처럼 넘기고 전략이 필요한 값을 `Checkout` 에 물으면 전략마다 필요한 값만 가져갈 수 있어요. 대신 `Checkout` 이 전략용 조회 연산을 공개해야 하므로 둘이 더 단단히 묶입니다.
    - 갈래 4-c. 전략이 `Checkout` 참조를 미리 들고 있습니다. 전략을 만들거나 설치할 때 `Checkout` 을 넘겨 두면 호출할 때는 아무것도 넘기지 않아요. 4-b 와 같은 결합이 생기고, 전략 객체가 참조한 `Checkout` 하나에 묶입니다.
-5. `FlatRate` 가 3,000 을 돌려줍니다. 받은 상품 금액과 무게는 둘 다 쓰지 않았어요. 모든 전략이 같은 연산 모양을 공유하니 단순한 전략은 받은 값을 버리게 되고, 이것이 이 패턴이 치르는 통신 부담입니다(근거: GoF Strategy 절 Consequences).
+5. `FlatRate` 가 3,000 을 돌려줍니다. 받은 상품 금액과 무게는 둘 다 쓰지 않았고, 어디에도 적어 두지 않았어요. 받은 값을 필드에 남기지 않기 때문에 이 객체를 결제 객체 여럿이 같이 써도 앞 호출이 뒤 호출의 답을 바꾸지 못합니다. 모든 전략이 같은 연산 모양을 공유하니 단순한 전략은 받은 값을 버리게 되고, 이것이 이 패턴이 치르는 통신 부담입니다(근거: GoF Strategy 절 Consequences).
 6. `Checkout` 이 32,000 + 3,000 = 35,000 을 Client 에 돌려줍니다. 더하는 일을 전략으로 옮기지 않는 이유는 그 규칙이 요금제와 무관하게 늘 같아서예요. 전략마다 덧셈을 갖게 하면 같은 덧셈이 전략 수만큼 복제됩니다.
 
 ```text
@@ -90,7 +90,7 @@ After : 배송비 계산을 객체로 떼어 내고, 어느 객체를 쓸지는 
 2. Client 의 조립 코드(구현 절의 `choosePolicy`)에 `"free-over"` 를 `FreeOverThreshold(50,000, 3,000)` 으로 잇는 한 줄을 더합니다. 이 줄이 Client 쪽에 있는 이유는 시나리오 1 의 1단계와 같아요. 요금제 이름과 계산의 대응을 아는 쪽은 요구를 아는 쪽입니다.
 3. `Checkout` 은 한 줄도 바뀌지 않습니다. `Checkout` 에 적힌 배송비 관련 이름은 `ShippingPolicy` 와 `fee` 뿐이라 새 클래스 이름이 들어갈 자리가 없어서예요. 이것이 조건문을 없앤다는 이 패턴의 결과이고, 없어진 것이 아니라 Client 의 조립 코드 한 곳으로 모인 것입니다(근거: GoF Strategy 절 Consequences).
 4. Client 가 같은 `Checkout` 객체에 두 요금제를 차례로 설치하며 주문 B 를 넣어 봅니다. 정액을 설치하고 총액을 물으면 61,000, `changePolicy` 로 새 전략을 갈아 끼우고 다시 물으면 58,000 이에요. 갈아 끼우는 연산이 있어서 `Checkout` 을 새로 만들지 않아도 되지만, 이 연산이 없어도 요금제마다 `Checkout` 을 새로 만들면 같은 결과가 납니다. 그래서 실행 중 교체는 패턴의 필수가 아니라 선택이에요.
-5. 무게별 요금제가 들어오면 1~3단계를 그대로 되풀이합니다. `ByWeight` 클래스 하나와 조립 코드 한 줄이 늘고 `Checkout` 은 그대로예요. 이번 전략은 무게만 쓰고 상품 금액은 버립니다. 주문 A 는 2,300g 을 올림해 3kg 이니 32,000 + 4,500 = 36,500, 주문 B 는 5,100g 이 6kg 이니 58,000 + 9,000 = 67,000 입니다.
+5. 무게별 요금제가 들어오면 `ByWeight` 클래스 하나와 조립 코드 한 줄이 늘고 `Checkout` 은 그대로입니다. 두 번째 요금제 때와 드는 품이 같은 이유는 `Checkout` 이 배송비 계산을 이름으로 부르지 않고 연산 모양으로만 부르기 때문이에요. 이름을 불렀다면 요금제가 늘 때마다 그 이름을 아는 자리도 함께 늘었을 겁니다. 이번 전략은 무게만 쓰고 상품 금액은 버립니다. 주문 A 는 2,300g 을 올림해 3kg 이니 32,000 + 4,500 = 36,500, 주문 B 는 5,100g 이 6kg 이니 58,000 + 9,000 = 67,000 입니다.
 
 ```text
 변화                    바뀐 곳                                        안 바뀐 곳
@@ -101,7 +101,7 @@ weight 추가             ByWeight 클래스 (새로 씀)                       
                         choosePolicy 의 "weight" 한 줄                  ShippingPolicy · FlatRate · FreeOverThreshold
 ```
 
-이 두 변화를 진입점에서 차례로 돌린 것이 구현 절의 실행 출력이에요. 1번 줄이 정액, 2번 줄이 free-over, 3번 줄이 weight 이고 주문 A·B 의 총액이 한 줄에 같이 찍힙니다.
+이 두 변화를 진입점에서 차례로 돌린 것이 구현 예시의 실행 출력이에요. 1번 줄이 정액, 2번 줄이 free-over, 3번 줄이 weight 이고 주문 A·B 의 총액이 한 줄에 같이 찍힙니다.
 
 | 요금제 | 주문 A (32,000원 · 2,300g) | 주문 B (58,000원 · 5,100g) |
 | --- | --- | --- |
@@ -109,7 +109,7 @@ weight 추가             ByWeight 클래스 (새로 씀)                       
 | free-over | 32,000 < 50,000 이라 32,000 + 3,000 = 35,000 | 58,000 ≥ 50,000 이라 58,000 + 0 = 58,000 |
 | weight | 올림 3kg × 1,500 = 4,500 → 36,500 | 올림 6kg × 1,500 = 9,000 → 67,000 |
 
-여기서 헷갈리기 쉬운 포인트는 전략이 정해지는 때가 실행 중이어야 한다고 믿는 것입니다. 4단계의 `changePolicy` 는 편의일 뿐이고, 생성자로 한 번만 받는 `Checkout` 도 이 시나리오의 1~3단계를 똑같이 지나요. 한 걸음 더 가면 전략을 타입 매개변수로 받아 컴파일할 때 고정하는 변형도 있습니다(근거: GoF Strategy 절 Implementation 2). 그때는 같은 `Checkout` 객체가 다른 전략으로 바뀌지는 못하지만, 새 전략을 더할 때 `Checkout` 이 안 바뀐다는 3단계는 그대로예요. 두 변형이 갈리는 지점이 결합 시점(컴파일 시점 결합과 실행 시점 결합)인데, 그 용어는 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.0.md)의 「컴파일 시점 결합과 실행 시점 결합」이 정의합니다.
+여기서 헷갈리기 쉬운 포인트는 전략이 정해지는 때가 실행 중이어야 한다고 믿는 것입니다. 4단계의 `changePolicy` 는 편의일 뿐이고, 생성자로 한 번만 받는 `Checkout` 도 이 시나리오의 1~3단계를 똑같이 지나요. 한 걸음 더 가면 전략을 타입 매개변수로 받아 컴파일할 때 고정하는 변형도 있습니다(근거: GoF Strategy 절 Implementation 2). 그때는 같은 `Checkout` 객체가 다른 전략으로 바뀌지는 못하지만, 새 전략을 더할 때 `Checkout` 이 안 바뀐다는 3단계는 그대로예요. 두 변형이 갈리는 지점이 결합 시점(컴파일 시점 결합과 실행 시점 결합)인데, 그 용어는 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md)의 「컴파일 시점 결합과 실행 시점 결합」이 정의합니다.
 
 이 시나리오가 보여 준 것은 변화의 범위입니다. 새 종류가 들어올 때 바뀌는 곳은 새 ConcreteStrategy 하나와 Client 의 조립 코드 한 줄이고, Context 와 기존 전략은 그대로예요(1~3단계). 전략끼리 서로를 모르기 때문에 하나를 더하거나 지울 때 다른 전략 코드를 볼 일이 없고, 새 전략마다 받은 값 중 다른 것을 버리는 통신 부담이 한 줄씩 늘어납니다(5단계). 실행 중 교체(4단계)는 뼈대가 아니라 선택지예요.
 
@@ -147,12 +147,12 @@ Before (시나리오 3)                             After (시나리오 1·2 의
 
 - **Strategy** — 같은 목적의 알고리즘들이 모두 따르는 연산을 선언합니다. Context 는 이 선언만 보고 호출하고(시나리오 1 의 4단계), ConcreteStrategy 는 이 선언을 구현해요. 배송비 예에서는 상품 금액과 무게를 받아 배송비를 돌려주는 연산 `fee` 하나를 선언한 `ShippingPolicy` 가 Strategy 입니다.
 - **ConcreteStrategy** — Strategy 가 선언한 연산을 실제 알고리즘으로 구현합니다. 같은 Strategy 를 따르는 ConcreteStrategy 들이 알고리즘 군(family)을 이루고, 서로를 몰라도 각자 동작해요(시나리오 2 의 1단계). Client 가 만들고 Context 가 호출합니다. 배송비 예에서는 `FlatRate`·`FreeOverThreshold`·`ByWeight` 가 각각 ConcreteStrategy 예요.
-- **Context** — Client 의 요청을 받는 객체입니다. ConcreteStrategy 하나를 Strategy 타입 참조로 받아 두고, 요청을 처리하다 바뀌는 계산이 나오면 그 참조에 넘겨요(시나리오 1 의 2·4단계). 이렇게 일을 넘기는 것이 위임이고 Strategy 타입으로만 드는 것이 인터페이스에 프로그래밍한다는 원칙인데, 두 말의 정의는 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.0.md)에 있습니다. 전략을 받아 두는 일을 이 글에서는 설치라고 불러요. 배송비 예에서는 `Checkout` 이 Context 입니다.
+- **Context** — Client 의 요청을 받는 객체입니다. ConcreteStrategy 하나를 Strategy 타입 참조로 받아 두고, 요청을 처리하다 바뀌는 계산이 나오면 그 참조에 넘겨요(시나리오 1 의 2·4단계). 이렇게 일을 넘기는 것이 위임이고 Strategy 타입으로만 드는 것이 인터페이스에 프로그래밍한다는 원칙인데, 두 말의 정의는 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md)에 있습니다. 전략을 받아 두는 일을 이 글에서는 설치라고 불러요. 배송비 예에서는 `Checkout` 이 Context 입니다.
 - **Client** — ConcreteStrategy 군에서 하나를 골라 만들고(시나리오 1 의 1단계), Context 에 설치한 뒤에는 Context 에게만 요청합니다(3단계). 배송비 예에서는 요금제 설정을 읽어 어떤 배송비 객체를 넣을지 정하는 조립 코드 `choosePolicy` 와 진입점이 Client 예요.
 
 ![Strategy 구조 — Context 는 연산 모양만 알고 방법은 밖에 산다](diagrams/strategy-structure.png)
 
-그림에서 Context 의 화살표가 Strategy 로만 향하고 ConcreteStrategy 를 직접 가리키지 않는다는 점을 봐 두세요. ConcreteStrategy 를 아는 쪽은 그것을 만드는 Client 뿐입니다. Context 쪽 화살표는 최소 조건 2·3번이, ConcreteStrategy 를 만드는 쪽 화살표는 4번이 코드에서 확인해요.
+그림에서 Context 의 화살표가 Strategy 로만 향하고 ConcreteStrategy 를 직접 가리키지 않는다는 점을 봐 두세요. ConcreteStrategy 로 들어가는 화살표는 Client 에서 내려온 것 하나뿐입니다 — 그것을 만드는 쪽이 Client 이기 때문이에요. Context 쪽 화살표는 최소 조건 2·3번이, ConcreteStrategy 를 만드는 쪽 화살표는 4번이 코드에서 확인해요.
 
 > 무엇을 계산할지는 Context 가, 어떻게 계산할지는 ConcreteStrategy 가, 어느 것을 쓸지는 Client 가 정한다.
 
@@ -249,7 +249,7 @@ Strategy 로 옮긴 코드
    - 빠지면: 시나리오 3 의 1~3단계가 이 자리입니다. Context 생성자가 요금제 문자열을 받아 `switch` 로 전략을 직접 고르면 필드 타입이 공통 타입이어도 방법을 하나 더할 때마다 그 `switch` 를 고쳐야 하고, 새 클래스만 더한 채 `new Checkout("free-over")` 를 부르면 `unknown plan: free-over` 예외가 납니다(직접 실행해 확인).
 4. [선택] ConcreteStrategy 를 만드는 코드가 Context 밖에 있습니다 — 전략 객체를 만드는 자리(생성자 호출·함수 값 작성·타입 인자 지정)가 Client·설정·조립 코드에 있고 Context 는 만들어진 것을 받기만 합니다. 시나리오 1 의 1단계가 이 모양이에요 (근거: GoF Strategy 절 Collaborations — Client 가 보통 ConcreteStrategy 객체를 만들어 Context 에 넘긴다고 적혀 있어, "보통" 인 자리라 필수로 올리지 않았다). Context 가 기본 전략 객체를 스스로 만들더라도 고르는 분기가 없으면 3번은 그대로 만족합니다.
 5. [선택] Context 에 전략을 다시 설치하는 연산이 있습니다 — setter(필드 값을 바꾸는 메서드) 같은 연산으로 실행 중에 설치된 전략을 다른 전략으로 바꿀 수 있습니다. 시나리오 2 의 4단계가 이 연산을 쓰지만 없어도 같은 결과가 났던 자리예요 (근거: 이 가이드의 정책 — 컴파일할 때 전략을 고정하는 타입 매개변수 변형도 Strategy 로 보므로, GoF Strategy 절 Implementation 2). 이 연산이 없어도 1~3번을 만족하면 Strategy 입니다.
-6. [선택] 여러 Context 가 공유하는 전략 객체는 호출 사이에 값을 남기지 않습니다 — 정적 필드나 싱글턴(인스턴스를 하나만 두고 함께 쓰는 방식)으로 한 ConcreteStrategy 인스턴스를 여러 Context 가 함께 참조한다면, 그 전략의 연산이 자기 필드나 필드가 가리키는 가변 객체에 값을 쓰지 않습니다. 시나리오 1 의 5단계에서 `FlatRate` 가 받은 값을 필드에 남기지 않고 돌려준 것이 이 모양이에요 (근거: GoF Strategy 절 Consequences — 공유되는 전략은 호출 사이에 상태를 유지하면 안 된다). 생성할 때 정한 뒤 바뀌지 않는 필드(`FlatRate` 의 `amount`)는 두어도 되는데, 두어도 되는 값과 안 되는 값을 가르는 어휘가 [참고 문서 「GoF 공통 어휘」의 내재 상태와 외재 상태](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.0.md)입니다.
+6. [선택] 여러 Context 가 공유하는 전략 객체는 호출 사이에 값을 남기지 않습니다 — 정적 필드나 싱글턴(인스턴스를 하나만 두고 함께 쓰는 방식)으로 한 ConcreteStrategy 인스턴스를 여러 Context 가 함께 참조한다면, 그 전략의 연산이 자기 필드나 필드가 가리키는 가변 객체에 값을 쓰지 않습니다. 시나리오 1 의 5단계에서 `FlatRate` 가 받은 값을 필드에 남기지 않고 돌려준 것이 이 모양이에요 (근거: GoF Strategy 절 Consequences — 공유되는 전략은 호출 사이에 상태를 유지하면 안 된다). 생성할 때 정한 뒤 바뀌지 않는 필드(`FlatRate` 의 `amount`)는 두어도 되는데, 두어도 되는 값과 안 되는 값을 가르는 어휘가 [참고 문서 「GoF 공통 어휘」의 내재 상태와 외재 상태](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md)입니다.
    - 예를 들어 공유된 무게별 전략이 처음 계산한 kg 값을 필드에 남겨 두고 다음 호출에서 그 값을 다시 쓰면, 결제 객체 둘이 그 전략을 같이 쓸 때 주문 A(2,300g)를 먼저 계산한 뒤 주문 B(5,100g)의 총액이 67,000 이 아니라 3kg 요금을 더한 62,500 으로 나옵니다(직접 실행해 확인).
 
 1번이 맨 앞인 데는 이유가 있습니다. 1번만 빠지고 2·3번은 만족하는 코드가 실제로 있어서, 1번을 보지 않으면 그런 코드가 Strategy 로 통과해요. 1번의 두 번째 반례인 `AnyPlan` 을 코드로 봅시다.
@@ -346,7 +346,7 @@ final class Order {
 
 > 전략은 서로 모르는 대안이고, 상태는 요청에 따라 옮겨 가는 자리다.
 
-**Template Method 와의 차이.** 구분 기준은 바뀌는 계산이 하위 클래스의 재정의로 들어오는지, 필드나 인자로 받은 객체의 연산 호출로 들어오는지입니다. 앞은 상속으로 알고리즘의 일부를 바꾸고 뒤는 위임으로 알고리즘 전체를 바꿔요(근거: GoF Template Method 절 Related Patterns). 상속으로 맺는 관계와 객체로 맺는 관계가 어떻게 다른지는 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.0.md)의 「위임」 항목, 그리고 「클래스 패턴과 객체 패턴」 항목에 있습니다.
+**Template Method 와의 차이.** 구분 기준은 바뀌는 계산이 하위 클래스의 재정의로 들어오는지, 필드나 인자로 받은 객체의 연산 호출로 들어오는지입니다. 앞은 상속으로 알고리즘의 일부를 바꾸고 뒤는 위임으로 알고리즘 전체를 바꿔요(근거: GoF Template Method 절 Related Patterns). 상속으로 맺는 관계와 객체로 맺는 관계가 어떻게 다른지는 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md)의 「위임」 항목, 그리고 「클래스 패턴과 객체 패턴」 항목에 있습니다.
 
 ```java no-compile
 abstract class Checkout {
@@ -366,7 +366,7 @@ final class WeightShippingCheckout extends Checkout {
 
 이 코드에서 무게별 배송비로 결제하는 객체는 만들어지는 순간 `WeightShippingCheckout` 으로 정해지고, 그 객체를 정액 배송비로 바꿀 방법이 없습니다. 클래스가 곧 계산 방법이니까요. 시나리오 2 의 1~3단계를 이 코드에 넣으면 새 요금제는 새 하위 클래스가 되고, 사용 목적의 단서 2 에서 센 대로 할인까지 나뉘면 조합마다 클래스가 생겨요. 계산 순서는 두 쪽 다 고정돼요. Template Method 는 상위 클래스의 `final` 메서드가, Strategy 는 구현 절의 `Checkout.total()` 처럼 Context 메서드가 순서를 정합니다. 달라지는 것은 끼우는 단위예요. 하위 클래스가 상위 클래스의 필드와 protected 연산(하위 클래스에서만 부를 수 있게 열어 둔 메서드)을 바로 쓰던 내부 접근이 사라지고, 전략은 Context 가 넘긴 값이나 공개한 조회 연산으로만 데이터를 얻습니다. 시나리오 1 의 4단계에서 본 통신 부담을 떠안게 되는 거죠.
 
-**Command 와의 차이.** 구분 기준은 구현 객체가 Context 의 요청 처리 중 한 단계를 같은 목적의 다른 방법으로 맡는지, 수행할 요청 하나를 객체로 담고 있는지입니다. 반환값은 기준이 아니에요. 앞쪽이면 구현 객체는 그 요청 처리 흐름 안에서 불리고, 돌려주는 값이 없어도 Strategy 입니다. 뒤쪽이면 요청 객체가 요청 하나를 대표하고, 호출하는 쪽은 그 일이 무엇인지 모른 채 실행 연산만 부릅니다. Command 의 세 역할(Invoker · Receiver · Command 객체)과 Receiver 없이 명령이 스스로 일을 다 하는 모양도 허용된다는 점은 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.0.md)의 「Invoker · Receiver · Command 객체」에 있고, 그래서 필드 모양은 기준으로 쓰지 않아요. refactoring.guru 도 두 패턴이 객체를 어떤 동작으로 매개변수화한다는 점은 같고 목적이 다르다고 봅니다. Command 는 연산 자체를 객체로 바꿔(연산의 매개변수가 객체의 필드가 됨) 실행 지연·큐잉·이력·원격 실행을 가능하게 하고, Strategy 는 같은 일을 하는 다른 방법을 바꿔 끼웁니다([refactoring.guru — Strategy](https://refactoring.guru/design-patterns/strategy)).
+**Command 와의 차이.** 구분 기준은 구현 객체가 Context 의 요청 처리 중 한 단계를 같은 목적의 다른 방법으로 맡는지, 수행할 요청 하나를 객체로 담고 있는지입니다. 반환값은 기준이 아니에요. 앞쪽이면 구현 객체는 그 요청 처리 흐름 안에서 불리고, 돌려주는 값이 없어도 Strategy 입니다. 뒤쪽이면 요청 객체가 요청 하나를 대표하고, 호출하는 쪽은 그 일이 무엇인지 모른 채 실행 연산만 부릅니다. Command 의 세 역할(Invoker · Receiver · Command 객체)과 Receiver 없이 명령이 스스로 일을 다 하는 모양도 허용된다는 점은 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md)의 「Invoker · Receiver · Command 객체」에 있고, 그래서 필드 모양은 기준으로 쓰지 않아요. refactoring.guru 도 두 패턴이 객체를 어떤 동작으로 매개변수화한다는 점은 같고 목적이 다르다고 봅니다. Command 는 연산 자체를 객체로 바꿔(연산의 매개변수가 객체의 필드가 됨) 실행 지연·큐잉·이력·원격 실행을 가능하게 하고, Strategy 는 같은 일을 하는 다른 방법을 바꿔 끼웁니다([refactoring.guru — Strategy](https://refactoring.guru/design-patterns/strategy)).
 
 ```text
 Strategy : Context 의 요청 처리 중 한 단계를 같은 목적의 다른 방법으로 맡음 (시나리오 1 의 4·5단계)
@@ -773,15 +773,15 @@ fn main() {
 | TypeScript 27행의 `ByWeight.fee` 만 `fee(weightGrams: number)` 로 (첫 인자만 받게) | 컴파일 통과. 출력 3줄이 `weight: A=80000 B=145000`. 첫 인자인 상품 금액 32,000 이 무게 자리로 들어가 32kg × 1,500 = 48,000 이 배송비가 됨 | 매개변수가 적은 메서드도 호환으로 통과하지만 뜻이 어긋나 1번이 빠짐. 같은 연산 모양이려면 매개변수의 개수와 순서마다의 뜻까지 같아야 함 |
 | Java 69~76행의 `switch` 를 55~57행의 생성자 안으로 옮기고 `Checkout(String plan)` 으로 | 시나리오 3 의 2단계 그대로 `unknown plan: free-over` | 3번이 빠짐 |
 
-TypeScript 줄이 조용히 통과하는 이유는 매개변수 이름을 보지 않고 매개변수가 적은 함수도 많은 쪽 자리에 넣을 수 있게 하는 타입 호환 규칙 때문입니다([TypeScript Handbook: Type Compatibility](https://www.typescriptlang.org/docs/handbook/type-compatibility.html)). Java 와 Rust 는 공통 선언과 어긋난 구현을 컴파일러가 막고요. 언어마다 전략을 표현하는 관용도 달라서, 아래 세 모양은 정본 코드의 해당 줄만 바꿔도 같은 출력이 납니다(Java·TypeScript 줄은 직접 바꿔 실행해 확인).
+TypeScript 줄이 조용히 통과하는 이유는 매개변수 이름을 보지 않고 매개변수가 적은 함수도 많은 쪽 자리에 넣을 수 있게 하는 타입 호환 규칙 때문입니다([TypeScript Handbook: Type Compatibility](https://www.typescriptlang.org/docs/handbook/type-compatibility.html)). Java 와 Rust 는 공통 선언과 어긋난 구현을 컴파일러가 막고요. 언어마다 전략을 표현하는 관용도 달라서, 아래 세 모양은 모두 정본과 같은 세 줄을 출력합니다(셋 다 직접 바꿔 컴파일·실행해 확인). 앞의 둘은 줄 하나만 갈아 끼우면 되는데 Rust 제네릭 판은 그렇지 않아요.
 
 | 언어 | 전략을 표현하는 관용 | 바꿔 써 본 줄 |
 | --- | --- | --- |
 | Java | 추상 메서드가 하나인 인터페이스라 람다(이름 없는 함수 식)가 ConcreteStrategy 가 될 수 있음 | 71행을 `case "flat" -> (subtotal, weightGrams) -> 3_000;` 으로 |
-| TypeScript | `implements` 없이도 `fee` 의 모양만 맞는 객체 리터럴이 들어감 | 76행을 `checkout.changePolicy({ fee: (subtotal, weightGrams) => 3_000 });` 으로 |
-| Rust | trait 객체는 실행 중 교체 가능, 제네릭은 전략 타입이 컴파일할 때 고정 | 47행 `Box<dyn ShippingPolicy>` 대신 `struct Checkout<P: ShippingPolicy>` |
+| TypeScript | `implements` 없이도 `fee` 의 모양만 맞는 객체 리터럴이 들어감 | 73행을 `const checkout = new Checkout({ fee: (subtotal, weightGrams) => 3_000 });` 으로 |
+| Rust | trait 객체는 실행 중 교체 가능, 제네릭은 전략 타입이 컴파일할 때 고정 | 46·47행을 `struct Checkout<P: ShippingPolicy> { policy: P, }` 로, 50행을 `impl<P: ShippingPolicy> Checkout<P>` 로, 51·55행 인자의 `Box<dyn ShippingPolicy>` 를 `P` 로, 64~74행의 `choose_policy` 를 지우고 76행을 `fn print_totals<P: ShippingPolicy>(plan: &str, checkout: &Checkout<P>, orders: &[Order])` 로, 진입점(84~98행)은 요금제마다 `Checkout` 을 따로 만들게 |
 
-세 모양 모두 최소 조건 1번의 같은 연산 모양을 만족하므로 판정은 같아요. Java 컴파일러는 추상 메서드가 정확히 하나인 인터페이스를 `@FunctionalInterface` 표시가 없어도 함수형 인터페이스로 다룹니다([Java SE(Standard Edition) 21 FunctionalInterface 문서](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/FunctionalInterface.html)). Rust 의 trait 객체와 제네릭이 갈리는 지점은 결합 시점이고, 그 둘(동적 디스패치와 정적 디스패치)의 정의와 `Vec` 에 섞어 넣을 때 무엇이 달라지는지는 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.0.md)의 「컴파일 시점 결합과 실행 시점 결합」에 있습니다. 제네릭 판은 시나리오 2 의 끝에서 말한 컴파일 시점 고정 변형이에요.
+Rust 판만 손댈 곳이 많은 데는 이유가 있습니다. 타입 매개변수 `P` 는 한 번에 한 구체 타입만 대신하므로, 요금제에 따라 다른 타입을 돌려주던 `choose_policy` 가 성립하지 않고 같은 `Checkout` 객체를 다른 요금제로 갈아 끼우는 `change_policy` 호출도 쓸 수 없어요. 그래서 진입점이 요금제마다 `Checkout` 을 새로 만들게 됩니다. 필드 선언 줄만 `policy: P` 로 바꾸면 `error[E0425]: cannot find type P in this scope` 로 멈추고요(직접 컴파일해 확인). 시나리오 2 의 4단계에서 실행 중 교체가 필수가 아니라고 한 것이 코드에서는 이렇게 보입니다. 세 모양 모두 최소 조건 1번의 같은 연산 모양을 만족하므로 판정은 같아요. Java 컴파일러는 추상 메서드가 정확히 하나인 인터페이스를 `@FunctionalInterface` 표시가 없어도 함수형 인터페이스로 다룹니다([Java SE(Standard Edition) 21 FunctionalInterface 문서](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/FunctionalInterface.html)). Rust 의 trait 객체와 제네릭이 갈리는 지점은 결합 시점이고, 그 둘(동적 디스패치와 정적 디스패치)의 정의와 `Vec` 에 섞어 넣을 때 무엇이 달라지는지는 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md)의 「컴파일 시점 결합과 실행 시점 결합」에 있습니다. 제네릭 판은 시나리오 2 의 끝에서 말한 컴파일 시점 고정 변형이에요.
 
 ### 실제 라이브러리에서
 
@@ -890,7 +890,7 @@ TypeScript 줄이 조용히 통과하는 이유는 매개변수 이름을 보지
   - 5장 Behavioral Patterns, Strategy(315쪽부터) — 의도·다른 이름(Policy)·적용 대상(Applicability)·참여자(Participants)·협력(Collaborations)·결과(Consequences: 조건문 제거, Client 가 전략 차이를 알아야 함, 통신 부담, 공유 전략)·구현 쟁점 1~3(데이터 전달 세 방식 · 템플릿 매개변수 전략 · 선택적 전략). 개요·시나리오 1~3·개념 정리·사용 목적·최소 조건의 근거
   - 5장 Behavioral Patterns, State(305쪽부터) — 다음 상태를 Context 와 상태 객체 중 어느 쪽이 정해도 된다는 협력(Collaborations) 설명. State 비교의 근거
   - 5장 Behavioral Patterns, Template Method(325쪽부터) — 상속으로 알고리즘 일부를, 위임으로 전체를 바꾼다는 관련 패턴(Related Patterns) 설명. Template Method 비교의 근거
-- [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.0.md) — 개요와 최소 조건 6번의 내재 상태·외재 상태, 개념 정리의 위임과 인터페이스에 프로그래밍한다는 원칙, 시나리오 2·최소 조건 설치 방식 표·구현 해설의 컴파일 시점 결합과 실행 시점 결합(정적·동적 디스패치), Template Method 비교의 클래스 패턴과 객체 패턴, Command 비교의 Invoker · Receiver · Command 객체
+- [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md) — 개요와 최소 조건 6번의 내재 상태·외재 상태, 개념 정리의 위임과 인터페이스에 프로그래밍한다는 원칙, 시나리오 2·최소 조건 설치 방식 표·구현 해설의 컴파일 시점 결합과 실행 시점 결합(정적·동적 디스패치), Template Method 비교의 클래스 패턴과 객체 패턴, Command 비교의 Invoker · Receiver · Command 객체
 - [refactoring.guru — Strategy](https://refactoring.guru/design-patterns/strategy) — 새 클래스와 인터페이스로 프로그램이 과하게 복잡해질 수 있다는 단점, Command 와의 구분(Command 는 연산의 매개변수가 객체의 필드가 됨)
 - [refactoring.guru — State](https://refactoring.guru/design-patterns/state) — 상태 객체는 서로를 알고 전략 객체는 서로를 거의 모른다는 구분
 - [refactoring.guru — Strategy in Java](https://refactoring.guru/design-patterns/strategy/java/example) — `Collections#sort()` 가 부르는 `Comparator#compare()` 사례, setter 를 식별 단서로 드는 설명

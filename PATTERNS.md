@@ -1,6 +1,6 @@
 # 디자인 패턴 가이드 인덱스
 
-GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문서는 `.claude/skills/design-pattern-guide/template.md` 표준 양식을 따른다.
+GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문서는 authoring-kit 명세 `gof-guide`(분석 패턴은 `analysis-guide`)가 정한 골격을 따른다.
 
 > 가이드 작성 자동화: `.claude/skills/design-pattern-guide`
 > 코드 부합도 분석: `.claude/skills/design-pattern-analyzer`
@@ -45,7 +45,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | Memento (메멘토) | 캡슐화를 깨지 않고 객체 상태를 보존·복원 | [memento-guide_v0.1.0.md](pattern-guide/design-pattern-guide/memento/memento-guide_v0.1.0.md) |
 | Observer (옵저버) | 1:N 의존성 관계에서 상태 변화 자동 통보 | [observer-guide_v0.1.0.md](pattern-guide/design-pattern-guide/observer/observer-guide_v0.1.0.md) |
 | State (상태) | 내부 상태에 따라 객체 행동을 바꿈 | [state-guide_v0.1.0.md](pattern-guide/design-pattern-guide/state/state-guide_v0.1.0.md) |
-| Strategy (전략) | 알고리즘군을 캡슐화하고 런타임 교체 | [strategy-guide_v1.0.0.md](pattern-guide/design-pattern-guide/strategy/strategy-guide_v1.0.0.md) |
+| Strategy (전략) | 알고리즘군을 캡슐화하고 런타임 교체 | [strategy-guide_v1.1.0.md](pattern-guide/design-pattern-guide/strategy/strategy-guide_v1.1.0.md) |
 | Template Method (템플릿 메서드) | 알고리즘 골격을 상위 클래스에, 단계는 하위 클래스에 | [template-method-guide_v0.1.0.md](pattern-guide/design-pattern-guide/template-method/template-method-guide_v0.1.0.md) |
 | Visitor (방문자) | 데이터 구조와 연산을 분리, double dispatch | [visitor-guide_v0.1.0.md](pattern-guide/design-pattern-guide/visitor/visitor-guide_v0.1.0.md) |
 
@@ -58,6 +58,18 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 - Adapter ↔ Decorator ↔ Proxy: 인터페이스 변환 vs 행위 추가 vs 접근 제어
 - Builder ↔ Abstract Factory: 단계적 조립 vs 제품군 일관성
 - Mediator ↔ Facade: 동료 간 중재 vs 서브시스템 단순 진입점
+
+## 참고 문서
+
+가이드가 기대는 **주제 밖 사전 지식**을 원서 없이 읽히게 푼 문서다. 패턴의 판정·비교·구현은 싣지 않는다 — 그건 가이드의 몫이다.
+가이드 본문이 필요한 자리에서 이 문서들을 내부 링크로 가리킨다.
+
+| 문서 | 답하는 것 |
+| --- | --- |
+| [GoF 공통 어휘](pattern-guide/reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md) | 인터페이스에 프로그래밍 · 위임 · 클래스/객체 패턴 · 결합 시점과 디스패치 · 내재/외재 상태 · Invoker·Receiver·Command |
+| [DDD 전술 용어](pattern-guide/reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.0.md) | Bounded Context · Aggregate · Root · Entity · Value Object · id 참조 · 불변식 · Repository |
+| [복식부기와 회계 모델](pattern-guide/reference/accounting-model/accounting-model-ref_v1.0.0.md) | 부호 규약 · 원장과 전기 · 역분개 · Account · Entry · Transaction · AccountType · 지식/운영 층위 · Posting Rule · Money |
+| [수량·측정·관측 모델](pattern-guide/reference/observation-model/observation-model-ref_v1.0.0.md) | Quantity · Unit · Conversion Ratio · Compound Unit · Money · Measurement · Observation · Range · Rejected Observation |
 
 ## 코드 부합도 분석
 

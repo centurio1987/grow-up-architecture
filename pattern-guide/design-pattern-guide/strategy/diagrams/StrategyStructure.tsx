@@ -20,7 +20,10 @@ const SPEC: DomainModelSpec = {
   ],
   relations: [
     { from: 'client', to: 'context', kind: 'dependency' },
-    { from: 'client', to: 'concrete', kind: 'dependency' },
+    // `above` 는 배치 힌트다(관계 종류는 그대로 의존). 안 주면 ConcreteStrategy 가 Strategy 밑으로만
+    // 배치돼 이 엣지가 Strategy 칸 밑을 지나고(경로의 21% — render-viz 겹침 가드가 잡는다),
+    // `Client ⇢ Strategy` + `Strategy ⇢ ConcreteStrategy` 두 선으로 읽혀 본문 주장의 정반대가 된다.
+    { from: 'client', to: 'concrete', kind: 'dependency', above: 'from' },
     { from: 'context', to: 'strategy', kind: 'aggregation', toCard: '1' },
     { from: 'concrete', to: 'strategy', kind: 'realization' },
   ],
@@ -28,7 +31,7 @@ const SPEC: DomainModelSpec = {
 
 export default function StrategyStructure() {
   return (
-    <Canvas width={W} height={560}>
+    <Canvas width={W} height={400}>
       <DiagramHeader eyebrow="Strategy structure" title="Context 는 연산 모양만 알고 방법은 밖에 산다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>
