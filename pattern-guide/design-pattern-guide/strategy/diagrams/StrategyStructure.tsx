@@ -28,7 +28,7 @@ const SPEC: DomainModelSpec = {
 
 export default function StrategyStructure() {
   return (
-    <Canvas width={W} height={430}>
+    <Canvas width={W} height={560}>
       <DiagramHeader eyebrow="Strategy structure" title="Context 는 연산 모양만 알고 방법은 밖에 산다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>

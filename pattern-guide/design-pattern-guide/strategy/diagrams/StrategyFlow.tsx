@@ -26,7 +26,7 @@ const STEPS = [
   { from: 'client', to: 'context', y: 330, text: '3. 요청한다' },
   { from: 'context', to: 'strategy', y: 375, text: '4. 연산 모양으로 호출한다' },
   { from: 'strategy', to: 'context', y: 415, text: '5. 결과를 돌려준다', dashed: true },
-  { from: 'context', to: 'client', y: 455, text: '결과로 마무리한 응답', dashed: true },
+  { from: 'context', to: 'client', y: 455, text: '6. 결과로 마무리해 응답한다', dashed: true },
 ];
 
 export default function StrategyFlow() {
