@@ -42,3 +42,7 @@ java/bin/
 # viz 도구(도식 렌더) — 설치물과 작업 디렉터리
 node_modules/
 .work/
+
+# 파이썬 바이트코드 — 스크립트를 import 할 때마다 바뀐다(검사기가 렌더러를 불러 쓴다)
+__pycache__/
+*.py[cod]

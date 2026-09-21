@@ -67,9 +67,9 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | 문서 | 답하는 것 |
 | --- | --- |
 | [GoF 공통 어휘](pattern-guide/reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md) | 인터페이스에 프로그래밍 · 위임 · 클래스/객체 패턴 · 결합 시점과 디스패치 · 내재/외재 상태 · Invoker·Receiver·Command |
-| [DDD 전술 용어](pattern-guide/reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.0.md) | Bounded Context · Aggregate · Root · Entity · Value Object · id 참조 · 불변식 · Repository |
-| [복식부기와 회계 모델](pattern-guide/reference/accounting-model/accounting-model-ref_v1.0.0.md) | 부호 규약 · 원장과 전기 · 역분개 · Account · Entry · Transaction · AccountType · 지식/운영 층위 · Posting Rule · Money |
-| [수량·측정·관측 모델](pattern-guide/reference/observation-model/observation-model-ref_v1.0.0.md) | Quantity · Unit · Conversion Ratio · Compound Unit · Money · Measurement · Observation · Range · Rejected Observation |
+| [DDD 전술 용어](pattern-guide/reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.1.md) | Bounded Context · Aggregate · Root · Entity · Value Object · id 참조 · 불변식 · Repository |
+| [복식부기와 회계 모델](pattern-guide/reference/accounting-model/accounting-model-ref_v1.0.1.md) | 부호 규약 · 원장과 전기 · 역분개 · Account · Entry · Transaction · AccountType · 지식/운영 층위 · Posting Rule · Money |
+| [수량·측정·관측 모델](pattern-guide/reference/observation-model/observation-model-ref_v1.0.1.md) | Quantity · Unit · Conversion Ratio · Compound Unit · Money · Measurement · Observation · Range · Rejected Observation |
 
 ## 코드 부합도 분석
 
