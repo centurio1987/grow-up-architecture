@@ -1,0 +1,8 @@
+[head-office] E1 monthly 3200000 -> gross 3200000 tax 288000 net 2912000
+[head-office] E2 monthly 2750000 -> gross 2750000 tax 247500 net 2502500
+[head-office] net total 5414500
+[fulfillment] E3 hourly 12000x160 -> gross 1920000 tax 86400 net 1833600
+[fulfillment] E4 hourly 11450x93 -> gross 1064850 tax 47918 net 1016932
+[fulfillment] net total 2850532
+[studio] E5 project 450000x3 -> gross 1350000 tax 74250 net 1275750
+[studio] net total 1275750

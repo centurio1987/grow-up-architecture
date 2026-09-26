@@ -102,8 +102,8 @@
 - [IntoIterator (Rust std)](https://doc.rust-lang.org/std/iter/trait.IntoIterator.html) — "Conversion into an Iterator" · 조회 2026-09-17
 
 ### 미해결 질문
-- refactoring.guru의 Java 사용 예(`Calendar#getInstance()`, `NumberFormat#getInstance()`, `EnumSet#of()` 등)는 정적 메서드라 GoF 정의(서브클래스가 결정)와 맞지 않는다. 가이드가 이 예를 쓸지, "흔한 오인"으로 쓸지 정해야 한다.
-- 기본 구현만 있고 오버라이드하는 서브클래스가 아직 없는 구체 Creator(GoF 변형 2)를 분석기가 Factory Method로 판정할지 정하지 않았다. 원문은 이를 "유연성을 위한" 정상 변형으로 본다.
+- ~~refactoring.guru의 Java 사용 예(`Calendar#getInstance()`, `NumberFormat#getInstance()`, `EnumSet#of()` 등)는 정적 메서드라 GoF 정의(서브클래스가 결정)와 맞지 않는다. 가이드가 이 예를 쓸지, "흔한 오인"으로 쓸지 정해야 한다.~~ → **닫힘(가이드 v1.0.0, 2026-09-27)**: 「실제 사용처」가 아니라 **오인 사례**로 썼다. 최소 조건 절의 "이름으로 판정하려는 것" 자리와 Simple Factory 비교에 둔다. 판정 근거는 `static` 이라 최소 조건 2번(재정의로 결정)에서 빠진다는 것이고, 채점이 `javap` 로 두 메서드가 실제 `static` 임을 확인했다.
+- ~~기본 구현만 있고 오버라이드하는 서브클래스가 아직 없는 구체 Creator(GoF 변형 2)를 분석기가 Factory Method로 판정할지 정하지 않았다. 원문은 이를 "유연성을 위한" 정상 변형으로 본다.~~ → **닫힘(가이드 v1.0.0, 2026-09-27)**: 최소 조건 4번이 정했다 — "ConcreteCreator 가 하나 이상 있거나, **아직 없더라도 재정의가 막혀 있지 않아 그렇게 할 수 있습니다**". 즉 열려 있으면 Factory Method 로 판정한다. `final` 로 재정의가 막힌 생성 메서드만 빠진다.
 - Effective Java 3판 Item 1의 "static factory method는 GoF Factory Method와 다르다" 취지 문장은 원문을 확인하지 않았다(기존 가이드 참고 자료에만 있음).
 - 기존 가이드 참고 자료의 PoEAA(Fowler) 항목이 Factory Method의 어느 절과 연결되는지 확인하지 않았다.
 
@@ -196,7 +196,7 @@
 - [Rust Reference — Traits (Dyn compatibility)](https://doc.rust-lang.org/reference/items/traits.html) — dyn 호환 조건 · 조회 2026-09-17
 
 ### 미해결 질문
-- GoF Discussion of Creational Patterns는 "각 팩토리가 제품 하나만 만드는" GraphicsFactory 계층도 Abstract Factory 적용으로 부르고, refactoring.guru의 JDK 사례(`DocumentBuilderFactory`는 주로 `DocumentBuilder` 1종)도 같은 모양이다. "제품 종류 2개 이상"을 [필수]로 둘지, 의도(intent)의 "families"를 근거로 [필수]를 유지하되 이 사례를 경계 사례로 설명할지 정해야 한다. 기존 가이드는 전자(1종이면 FM)였다.
+- ~~GoF Discussion of Creational Patterns는 "각 팩토리가 제품 하나만 만드는" GraphicsFactory 계층도 Abstract Factory 적용으로 부르고, refactoring.guru의 JDK 사례(`DocumentBuilderFactory`는 주로 `DocumentBuilder` 1종)도 같은 모양이다. "제품 종류 2개 이상"을 [필수]로 둘지, 의도(intent)의 "families"를 근거로 [필수]를 유지하되 이 사례를 경계 사례로 설명할지 정해야 한다. 기존 가이드는 전자(1종이면 FM)였다.~~ → **닫힘(가이드 v1.0.0, 2026-09-27)**: 「제품 종류 둘 이상」을 **`[필수]` 로 유지**한다. 근거는 Intent 의 families 다(PG27 통과). 다만 원전 토론 절의 1종짜리 사례가 반대 방향이라, 가이드는 최소 조건 2번 경계 문단에서 **이 선이 원전이 그어 준 것이 아니라 의도의 「군」을 기준으로 이 가이드가 고른 것**임을 밝히고 `IconSet`(생성 연산 1개) 반례로 경계를 보인다.
 - JDK 내장 `Document`·`TransformerFactory` 구현 클래스명(ConcreteFactory)은 확인하지 않았다.
 - 기존 가이드 참고 자료의 "Chapter 3" 표기: CD판 목차에서 Creational Patterns가 Introduction·Case Study 다음 장인 것은 확인했으나 판면의 장 번호는 확인하지 않았다.
 

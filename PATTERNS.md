@@ -12,8 +12,8 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
 | Singleton (싱글톤) | 클래스가 단 하나의 인스턴스만 가지도록 보장하고 전역 접근점을 제공 | [singleton-guide_v0.1.0.md](pattern-guide/design-pattern-guide/singleton/singleton-guide_v0.1.0.md) |
-| Factory Method (팩토리 메서드) | 객체 생성의 책임을 서브클래스로 위임 | [factory-method-guide_v0.1.0.md](pattern-guide/design-pattern-guide/factory-method/factory-method-guide_v0.1.0.md) |
-| Abstract Factory (추상 팩토리) | 관련된 제품군(family)을 일관되게 생성하는 인터페이스 제공 | [abstract-factory-guide_v0.1.0.md](pattern-guide/design-pattern-guide/abstract-factory/abstract-factory-guide_v0.1.0.md) |
+| Factory Method (팩토리 메서드) | 객체 생성의 책임을 서브클래스로 위임 | [factory-method-guide_v1.0.0.md](pattern-guide/design-pattern-guide/factory-method/factory-method-guide_v1.0.0.md) |
+| Abstract Factory (추상 팩토리) | 관련된 제품군(family)을 일관되게 생성하는 인터페이스 제공 | [abstract-factory-guide_v1.0.0.md](pattern-guide/design-pattern-guide/abstract-factory/abstract-factory-guide_v1.0.0.md) |
 | Builder (빌더) | 복잡한 객체의 생성 과정을 단계적으로 분리 | [builder-guide_v0.1.0.md](pattern-guide/design-pattern-guide/builder/builder-guide_v0.1.0.md) |
 | Prototype (프로토타입) | 기존 객체를 복제해 새 객체 생성 | [prototype-guide_v0.1.0.md](pattern-guide/design-pattern-guide/prototype/prototype-guide_v0.1.0.md) |
 
