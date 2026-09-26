@@ -55,7 +55,7 @@
   - 목적: 나머지 GoF 22편을 gof-guide spec으로 다시 쓴다
   - 이유: 요청서의 재집필 본체이고 analyzer가 읽는 최소 조건이 여기서 갱신된다
   - 목표: 22편 게이트 PASS, 헤딩·placeholder·mermaid·컴파일 검사 0 오류, analyzer 스팟체크 통과
-  - 실행 문서: KANBAN/cards/KAN-001.4-BJT8JD.md (2/22 · 최근 09-27)
+  - 실행 문서: KANBAN/cards/KAN-001.4-BJT8JD.md (4/22 · 최근 09-27)
 
 ## 검토
 

@@ -260,6 +260,7 @@
   - 소유권 쟁점: **비소비형(non-consuming) 빌더가 권장**된다 — 종결 메서드(`Command::spawn`)가 설정 데이터의 소유권이 필요 없어 `&self`를 받으므로 설정 메서드는 `&mut self`를 받고 돌려주며, 한 줄 체이닝과 복잡한 단계적 구성 모두에 쓸 수 있다. 종결 시 소유권을 넘겨야 하면(예: `io::Write` 소유권을 태스크에 넘김) **소비형**이다. 이때 설정 메서드가 가변 빌림이면 한 줄 체이닝이 불가능하고, 소유 `self`를 주고받으면 복잡한 구성이 불편해지는 절충이 있어, C-BUILDER는 소비형 빌더의 모든 메서드가 소유 `self`를 받고 돌려주도록 권한다.
   - std 시그니처 실례: `OpenOptions::open(&self, path)`와 `Command::spawn(&mut self)`는 빌더를 남기고(비소비형), `thread::Builder::spawn(self, f)`는 빌더를 소비한다(소비형). 가이드 예제에서 두 형태를 대비할 수 있다.
   - 참고(보조 출처): rust-unofficial Patterns 책의 Builder 항목.
+- **실측 보탬(Builder v1.0.0 집필 중, rustc 1.95.0, 2026-09-27)** — Rust std 종결 연산의 수신자 3종을 직접 재현 확인했다. `Command::spawn` 은 `&mut self` 라 비-mut 바인딩에서 부르면 `error[E0596]: cannot borrow as mutable`. `OpenOptions::open` 은 `&self` 라 비-mut 바인딩으로 두 번 불러도 통과. `thread::Builder::spawn` 은 소유 `self` 라 두 번째 호출에서 `error[E0382]: use of moved value` 가 나고 rustc 가 "`Builder::spawn` takes ownership of the receiver `self`" 라고 직접 찍는다. 노트의 기존 서술(조회 2026-09-17)과 일치한다.
 
 ### 실제 사용처
 - `java.net.http.HttpRequest.Builder` — `Builder` = HttpRequest.Builder(인터페이스), `ConcreteBuilder` = JDK 내부 구현(클래스명 확인 안 함), `Product` = `HttpRequest`, 종결 = `build()`, Director 없음. Javadoc: "A builder of HTTP requests", Since 11. — [HttpRequest.Builder (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.net.http/java/net/http/HttpRequest.Builder.html) · Java 11+
@@ -297,8 +298,8 @@
 - [rust-unofficial Patterns — Builder](https://rust-unofficial.github.io/patterns/patterns/creational/builder.html) — 보조 출처(존재 확인만) · 조회 2026-09-17
 
 ### 미해결 질문
-- 기존 가이드는 "`build()` 시점 검증"을 필수 조건으로 두었지만 GoF 원문에는 그런 조건이 없다. 분석기 기준으로 [필수]로 올릴지 [선택]으로 둘지 정해야 한다.
-- GoF형(Director + 여러 표현)과 옵션형(Effective Java·C-BUILDER, Director 없음)을 한 가이드에서 "같은 패턴의 두 변형"으로 다룰지, 옵션형을 별도 관용구로 분리할지 정해야 한다. 표준 라이브러리 실례는 거의 모두 옵션형이고, Director가 있는 표준 라이브러리 실례는 찾지 못했다.
+- ~~기존 가이드는 "`build()` 시점 검증"을 필수 조건으로 두었지만 GoF 원문에는 그런 조건이 없다. 분석기 기준으로 [필수]로 올릴지 [선택]으로 둘지 정해야 한다.~~ → **닫힘(Builder v1.0.0, 2026-09-27)**: `[선택]` 으로 결정. 원전 Consequences·Implementation 어디에도 종결 시점 검증 요구가 없어 `[필수]` 로 올리면 코드 분석 스킬이 원전 기준으로는 Builder 인 코드를 "패턴 아님" 으로 오판한다(GG3). 최소 조건 6번에 `[선택]` 으로 두고 근거는 `HttpRequest.Builder` 가 URI 미설정 시 `build()` 에서 `IllegalStateException` 을 던진다고 Javadoc 에 계약을 밝힌 것으로 달았다(2026-09-27 원문 대조 확인). 구 가이드가 필수로 두었던 것은 승계하지 않는다.
+- ~~GoF형(Director + 여러 표현)과 옵션형(Effective Java·C-BUILDER, Director 없음)을 한 가이드에서 "같은 패턴의 두 변형"으로 다룰지, 옵션형을 별도 관용구로 분리할지 정해야 한다.~~ → **닫힘(Builder v1.0.0, 2026-09-27)**: 한 패턴의 두 모양으로 함께 다룬다. 가르는 것이 Director 의 존재 하나뿐이라 최소 조건 5번만 `[선택]` 으로 두고, 1~4번(별개 빌더 타입 · 종결 연산 · 절차가 추상 타입만 참조 · 조립은 빌더 안에서)은 두 모양 모두에 걸리게 썼다. 3번을 「절차가 별도 Director 객체에 사느냐」가 아니라 「절차가 어떤 타입을 통해 부르느냐」로 적은 것이 이 결정을 떠받친다. 표준 라이브러리 실례 다섯이 전부 Director 없는 옵션형이고 1~4번을 만족한다. 아래 원문 서술은 그 결정의 근거로 남긴다 — 표준 라이브러리 실례는 거의 모두 옵션형이고, Director가 있는 표준 라이브러리 실례는 찾지 못했다.
 - refactoring.guru Java 예의 `StringBuilder#append`·`ByteBuffer#put`·`Appendable`을 Builder 사례로 볼지 — 종결 연산(`toString`)은 있으나 "구성과 표현의 분리" 기준에서 논쟁 여지가 있다.
 - Effective Java 3판 Item 2 원문과 OkHttp `Request.Builder` 소스는 확인하지 않았다(기존 참고 자료 승계).
 
@@ -504,9 +505,9 @@
 - [stdout (Rust std)](https://doc.rust-lang.org/std/io/fn.stdout.html) — 공유 전역 버퍼 · 조회 2026-09-17
 
 ### 미해결 질문
-- GoF 원문 생성자는 서브클래싱을 위해 `protected`인데 기존 가이드는 `private`를 필수로 두었다. 서브클래싱 가능한 싱글톤(원문 Implementation 2)을 가이드에서 허용할지 정해야 한다.
-- "동시성에서의 유일성"은 GoF 원문 조건이 아니라 후대 출처(refactoring.guru, Wikipedia) 기준이다. [필수]로 두되 출처를 그렇게 표기할지 확인이 필요하다.
-- Rust `std::io::stdout()`을 싱글톤 사례로 쓸지(핸들은 여러 개) — 변형 사례로만 쓸지 정해야 한다.
+- ~~GoF 원문 생성자는 서브클래싱을 위해 `protected`인데 기존 가이드는 `private`를 필수로 두었다. 서브클래싱 가능한 싱글톤(원문 Implementation 2)을 가이드에서 허용할지 정해야 한다.~~ → **닫힘(Singleton v1.0.0, 2026-09-27)**: 허용한다. 최소 조건 1번을 「생성자가 private」 이라는 **문법**이 아니라 「바깥에서 새 인스턴스를 얻을 경로가 없다」는 **결과**로 쓰고, 비공개 생성자·하위 타입 전용 생성자·비공개 필드 구조체·모듈 밖으로 안 내보낸 생성 함수·열거 상수·생성 호출 가로채기(파이썬 `__new__`)를 모두 충족으로 본다. 근거는 GoF 「구현」 절의 protected 생성자와 예제 코드이고(명세 PG27 의 원전 열거에 「구현」·「예제 코드」가 들어 있다), 서브클래싱·등록부는 최소 조건 6번 `[선택]` 으로 뺐다.
+- ~~"동시성에서의 유일성"은 GoF 원문 조건이 아니라 후대 출처(refactoring.guru, Wikipedia) 기준이다. [필수]로 두되 출처를 그렇게 표기할지 확인이 필요하다.~~ → **닫힘(Singleton v1.0.0, 2026-09-27)**: `[선택]` 으로 내린다. PG27 의 원전 화이트리스트에 refactoring.guru·Wikipedia 가 없어 `[필수]` 근거로 쓸 수 없고, `[필수]` 로 올리면 스레드 없는 실행 환경의 정상 싱글톤이 "패턴 아님" 으로 떨어진다(GG3). 근거 괄호는 `(근거: 이 가이드의 정책 — …)` 로 달았다. 경합 자체는 가이드가 실측으로 보인다 — `synchronized` 를 뺀 판에서 동시 진입 3회 재현, `next()` 10만 회 호출에 서로 다른 번호 99,994~99,998.
+- ~~Rust `std::io::stdout()`을 싱글톤 사례로 쓸지(핸들은 여러 개) — 변형 사례로만 쓸지 정해야 한다.~~ → **닫힘(Singleton v1.0.0, 2026-09-27)**: **쓰지 않는다.** 핸들이 여러 개라 최소 조건 3번의 「같은 객체」를 코드로 보일 수 없다. 「실제 라이브러리에서」에는 `java.lang.Runtime`(`javap -p` 로 비공개 생성자 실측)과 Node.js CommonJS 모듈 캐시(실행으로 `same-object=true` 확인) 둘만 실었다.
 - Effective Java Item 3과 Bill Pugh의 원문 글은 확인하지 않았다(Wikipedia holder 문서가 Pugh 페이지 `cs.umd.edu/~pugh/java/memoryModel/`를 외부 링크로 거는 것만 확인).
 - refactoring.guru가 드는 `java.awt.Desktop#getDesktop()`, `System#getSecurityManager()`는 Javadoc을 확인하지 않았다(`SecurityManager`는 최근 JDK에서 폐기 경로에 있어 사례 부적합 가능성, 확인 안 함).
 
