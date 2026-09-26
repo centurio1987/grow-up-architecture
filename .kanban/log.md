@@ -1,6 +1,7 @@
 # KANBAN 변경 이력
 > 최근 50건. 이보다 오래된 이력은 archive.jsonl 로 압축 보관한다.
 
+- #31 2026-09-27 04:01 · ai · KAN-001.4-BJT8JD 이동 백로그 → 진행 중
 - #30 2026-09-27 02:46 · ai · KAN-001.7-4MRJ1B 수정 메모
 - #29 2026-09-27 02:45 · ai · KAN-001.7-4MRJ1B 생성 "추가 패턴 4편 집필 — Dependency Injection · Temporal Property · Null Object · Specification" → 백로그 (상위 KAN-001-YXTC2C)
 - #28 2026-09-27 02:09 · ai · KAN-001.3-Q6FYKP 이동 검토 → 완료
