@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 26,
+  "next_seq": 29,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -40,12 +40,12 @@
       ]
     },
     "KAN-001.1-P5N9NF": {
-      "col": "review",
+      "col": "done",
       "title": "리서치와 후보 조사",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-17",
+      "갱신": "2026-09-27",
       "title_hash": "34adde9dbff19b7056e1c2eb78d9621b3e8136b4",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "리서치와 후보 조사",
@@ -64,12 +64,12 @@
       ]
     },
     "KAN-001.2-4NWK0T": {
-      "col": "review",
+      "col": "done",
       "title": "authoring-kit 정착",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-20",
+      "갱신": "2026-09-27",
       "title_hash": "fce3906c934dd6927c14181fcd7e86550926b8b7",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "authoring-kit 정착",
@@ -95,12 +95,12 @@
       ]
     },
     "KAN-001.3-Q6FYKP": {
-      "col": "review",
+      "col": "done",
       "title": "파일럿 3편과 회고",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-20",
+      "갱신": "2026-09-27",
       "title_hash": "d0c1d7cc85456412364438d6bc7e735d5b0c0729",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "파일럿 3편과 회고",
@@ -229,6 +229,36 @@
     "KAN-001.3-Q6FYKP"
   ],
   "recent": [
+    {
+      "seq": 28,
+      "t": "2026-09-27T02:09",
+      "a": "ai",
+      "id": "KAN-001.3-Q6FYKP",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "review",
+      "to": "done"
+    },
+    {
+      "seq": 27,
+      "t": "2026-09-27T02:09",
+      "a": "ai",
+      "id": "KAN-001.2-4NWK0T",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "review",
+      "to": "done"
+    },
+    {
+      "seq": 26,
+      "t": "2026-09-27T02:09",
+      "a": "ai",
+      "id": "KAN-001.1-P5N9NF",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "review",
+      "to": "done"
+    },
     {
       "seq": 25,
       "t": "2026-09-20T18:27",

@@ -115,9 +115,9 @@ request_fp: 30fa12f6cd2e0b6602ce471d169d312ddf274b64
 <!-- `S<n>`은 고정 id — 이름을 바꾸지 않는다. 체크 상태는 doc-step 이 갱신한다. -->
 루트 work 하나 = 하위 카드 하나. 완료 기준은 그 하위 카드가 `완료`로 이동한 것이다. 순서는 엄격 순차.
 
-- [ ] `S1` KAN-001.1-P5N9NF 리서치와 후보 조사 — 노트 4건 + 후보 보고서 + 회계 배경 확정안, 유저 결정 접수
-- [ ] `S2` KAN-001.2-4NWK0T authoring-kit 정착 — spec 2종·lock·게이트·검사기·렌더러·진입 스킬, `validate --all` 통과
-- [ ] `S3` KAN-001.3-Q6FYKP 파일럿 3편과 회고 — Strategy·Account·Quantity PASS, spec 1.1, `batch_size_works` 확정, .4·.5·.6 배치 생성
+- [x] `S1` KAN-001.1-P5N9NF 리서치와 후보 조사 — 노트 4건 + 후보 보고서 + 회계 배경 확정안, 유저 결정 접수
+- [x] `S2` KAN-001.2-4NWK0T authoring-kit 정착 — spec 2종·lock·게이트·검사기·렌더러·진입 스킬, `validate --all` 통과
+- [x] `S3` KAN-001.3-Q6FYKP 파일럿 3편과 회고 — Strategy·Account·Quantity PASS, spec 1.1, `batch_size_works` 확정, .4·.5·.6 배치 생성
 - [ ] `S4` KAN-001.4-BJT8JD GoF 22편 재집필 — 22편 PASS + 검사 0
 - [ ] `S5` KAN-001.5-6HF35H 분석 패턴 8편 재집필 — 8편 PASS + consideration 정합
 - [ ] `S6` KAN-001.6-HB5NH9 인덱스·stale 정리·최종 검증 — 링크 0·HTML 33편 fresh·검토서
@@ -167,3 +167,6 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <
 - 2026-09-20T17:17 · s:548f6b02 — `전략` 섹션 교체
 - 2026-09-20T17:17 · s:548f6b02 — `전략` 섹션 교체
 - 2026-09-20T18:43 · s:548f6b02 — `전략` 섹션 교체
+- 2026-09-27T02:09 · s:00758e49 · S1 done — KAN-001.1-P5N9NF 리서치와 후보 조사 — 완료로 이동. 검토서 10/10 승인(검토자가 §10 을 새로 세워 검증 절 「사람 판정」 문구 잔여를 잡았고 그것까지 닫음). 산출물: 리서치 노트 4건 + 후보 보고서 + 회계 배경 확정안, 유저 결정 8건은 검토 판단 항목으로 접수
+- 2026-09-27T02:09 · s:00758e49 · S2 done — KAN-001.2-4NWK0T authoring-kit 정착 — 완료로 이동. 검토서 승인 9 · 철회 1 로 수렴. 유저 반려 두 건(가이드 한 편 = 폴더 하나 · mermaid 대신 ~/resume viz)이 실물로 뒤집힌 것을 검토자가 독립 확인했고, PG27 우회 차단과 상황 표 값 칸 검사는 변형 12건을 새로 만들어 재현 검증했다
+- 2026-09-27T02:09 · s:00758e49 · S3 done — KAN-001.3-Q6FYKP 파일럿 3편과 회고 — 완료로 이동. 검토서 16/16 승인(철회 4 제외)으로 수렴. 명세 1.4.0 시나리오 골격으로 Strategy·Account·Quantity v1.1.0 과 참고 문서 4편 발행, 검사 8종 통과, 기준 예시 3건 등록. 유저 승인 게이트 3건(존댓말 문체 · 코드 탭 화면 · 값 객체 표 네 줄)을 유저가 실물 보고 직접 판정해 33편 전체 기준이 확정됐다. analyzer 스팟체크로 새 배치에서 기준 해소가 도는 것도 확인
