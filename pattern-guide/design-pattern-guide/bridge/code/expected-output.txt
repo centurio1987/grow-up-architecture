@@ -1,0 +1,36 @@
+1) thermal x Receipt
+         BBANGTO STORE
+--------------------------------
+Coffee Beans 200g         18,000
+Paper Filter x2            7,000
+--------------------------------
+TOTAL                     25,000
+no ORD-7781
+2) html x Receipt
+<h1>BBANGTO STORE</h1>
+<hr>
+<p>Coffee Beans 200g<b>18,000</b></p>
+<p>Paper Filter x2<b>7,000</b></p>
+<hr>
+<p>TOTAL<b>25,000</b></p>
+<p>no ORD-7781</p>
+3) thermal x GiftReceipt
+         BBANGTO STORE
+--------------------------------
+Coffee Beans 200g           GIFT
+Paper Filter x2             GIFT
+--------------------------------
+no ORD-7781
+4) label x Receipt
+<1>BBANGTO STORE
+<2>
+<3>Coffee Beans 200g;18,000
+<3>Paper Filter x2;7,000
+<2>
+<3>TOTAL;25,000
+<4>no ORD-7781
+5) html x GiftReceipt.renderCard
+<h1>gift card</h1>
+<hr>
+<p>Happy birthday, Jiwon!</p>
+6) combined 2 x 3 = 6 classes, separated 2 + 3 = 5 classes

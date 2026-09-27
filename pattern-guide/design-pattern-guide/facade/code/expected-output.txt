@@ -1,0 +1,6 @@
+1) alice: confirmed R2 14-15 projector 1
+2) bob: confirmed R3 14-15 projector 1
+3) carol: rejected projector short need 1 free 0
+4) dave: confirmed R4 16-18 projector 0
+5) admin direct hold R1 14-15, mail sent 3
+6) first mail: alice@corp.example | booking confirmed | R2 14-15

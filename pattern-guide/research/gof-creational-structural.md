@@ -667,6 +667,8 @@
   - 정적 브리지: `struct Window<I: WindowImp> { imp: I }` — 컴파일 시 결합되어 원문 결과 1의 "런타임 구성·전환"은 잃지만 동적 디스패치 비용이 없다(Rust Book 18.2 정적/동적 디스패치). std `HashMap<K, V, S>`가 해시 알고리즘(`S: BuildHasher`)을 맵마다 교체할 수 있게 한 것이 이 모양이다(해석).
   - 동적 브리지: `struct Window { imp: Box<dyn WindowImp> }` — 런타임 교체 가능.
   - RefinedAbstraction: 상속이 없으므로 Abstraction을 필드로 품은 구조체나, Abstraction 연산을 기본 구현으로 가진 트레이트로 표현한다(해석).
+- **실측 보탬(Bridge v1.0.0, tsc 5.9.3, 2026-09-27)** — TypeScript 는 구조적 타이핑인데도 **`private` 필드가 있으면 모양이 같아도 대입이 거절**된다(`Types have separate declarations of a private property 'buffer'`). 구현자 교체 가능성이 `private` 유무에 달린다는 뜻이라 관용구로 값이 있다.
+- **비교 보탬(Bridge v1.0.0, 2026-09-27)** — 「vs Strategy」의 가장 날카로운 기준: **Bridge 는 Abstraction 이 여러 구현자 중 하나를 고르는 분기를 허용하고(GoF Bridge 절 Implementation), Strategy 는 금지한다**(Strategy 가이드 최소 조건 3번). 그래서 **같은 코드가 Bridge 로는 성립하고 Strategy 로는 성립하지 않는 자리가 실재한다.** Strategy 편은 Bridge 를 0회 언급하므로 이 경계는 Bridge 편이 처음 그은 것이다. 두 채점자가 각각 검증했다.
 
 ### 실제 사용처
 - `java.util.logging.Handler` × `java.util.logging.Formatter` — `Abstraction` = Handler(직계 하위 `MemoryHandler`·`StreamHandler`), `Implementor` = Formatter(직계 하위 `SimpleFormatter`·`XMLFormatter`), 연결 = `Handler#setFormatter`. Javadoc: "Typically each logging Handler will have a Formatter associated with it." 출력 대상 축과 형식 축이 독립적으로 늘어난다(해석, 패턴명 없음). — [Handler (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.logging/java/util/logging/Handler.html) · [Formatter (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.logging/java/util/logging/Formatter.html) · Java SE 21
@@ -699,10 +701,10 @@
 - [BuildHasher (Rust std)](https://doc.rust-lang.org/std/hash/trait.BuildHasher.html) — Hasher 인스턴스 생성 트레이트 · 조회 2026-09-17
 
 ### 미해결 질문
-- 기존 가이드는 "두 개의 독립된 클래스 계층"을 필수로 두었지만 GoF 원문은 Implementor가 하나뿐인 퇴화 형태(추상 Implementor 없음)도 Bridge로 본다. 분석기 기준에서 퇴화 형태를 "Bridge(퇴화)"로 인정할지 정해야 한다.
-- 표준 라이브러리 실례 3건은 모두 문서가 패턴명을 쓰지 않는 해석 사례다. 공식 문서가 Bridge라고 명시하는 실례는 찾지 못했다.
+- ~~기존 가이드는 "두 개의 독립된 클래스 계층"을 필수로 두었지만 GoF 원문은 Implementor가 하나뿐인 퇴화 형태도 Bridge로 본다~~ → **닫힘(Bridge v1.0.0, 2026-09-27)**: **인정한다.** `[선택]` 5번에 두고 최소 조건 판정 표에 「Bridge (퇴화 형태)」 행을 넣었다. 근거는 GoF Bridge 절 Implementation 이고 analyzer 기준도 이를 따른다.
+- 표준 라이브러리 실례 3건은 모두 문서가 패턴명을 쓰지 않는 해석 사례다. 공식 문서가 Bridge라고 명시하는 실례는 찾지 못했다. **→ 사실 자체는 전부 실행 확인함(2026-09-27, Java 21.0.11 · rustc 1.95.0)**: `Handler`·`Formatter` 둘 다 abstract 이고 `Handler` 직계 하위가 `StreamHandler`·`MemoryHandler` 둘(채점자가 jimage 전수로 재확인) · `newSetFromMap` 이 `Collections$SetFromMap` 을 돌려주고 `TreeMap` 을 넘기면 정렬됨 · Rust `HashMap::with_hasher` 에 사용자 정의 `BuildHasher` 주입 동작. **문서가 패턴명을 쓰지 않는다는 점은 그대로**라 가이드가 본문에 그 사실을 밝혔다.
 - 기존 가이드 참고 자료의 JDBC를 Bridge 사례로 볼지 — Oracle JDBC Overview 페이지 내용은 확인하지 않았고, JDBC `DriverManager`/`Driver` 구조를 Bridge로 명시한 공식 출처도 찾지 못했다.
-- SLF4J(자칭 facade)를 Bridge 사례로 볼 여지가 있는지는 Facade 절 미해결 질문과 함께 정해야 한다.
+- ~~SLF4J(자칭 facade)를 Bridge 사례로 볼 여지가 있는지는 Facade 절 미해결 질문과 함께 정해야 한다.~~ → **닫힘(2026-09-27)**: Facade 절에서 **경계 사례**로 정리했다(배포 시점에 백엔드 하나를 고르므로 Facade 최소 조건 1번에 걸린다). Bridge 편도 이 사례를 쓰지 않았다.
 
 ## Composite (컴포지트)
 
@@ -972,10 +974,11 @@
 - [Rust Book 7.3 Paths](https://doc.rust-lang.org/book/ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html) — 항목·필드 기본 비공개 · 조회 2026-09-17
 
 ### 미해결 질문
-- SLF4J는 스스로 facade라고 부르지만 "여러 로깅 프레임워크 중 하나를 배포 시점에 끼우는 추상화"라 GoF Facade(한 서브시스템의 협력 단순화)보다 Bridge/Adapter 구조에 가깝다는 해석이 가능하다. 가이드에서 실제 사용처로 쓸지, "이름이 facade인 경계 사례"로 쓸지 정해야 한다.
-- 기존 가이드의 "서브시스템 직접 접근 허용"을 [필수]로 둘지 — 원문 결과 3은 "막지 않는다"지만 Implementation 2는 private 서브시스템 클래스도 유용하다고 해 [선택]이 원문에 더 가깝다.
+- ~~SLF4J는 스스로 facade라고 부르지만 … 실제 사용처로 쓸지, "이름이 facade인 경계 사례"로 쓸지 정해야 한다~~ → **닫힘(Facade v1.0.0, 2026-09-27)**: **경계 사례로 쓴다.** 배포 시점에 백엔드 **하나를 고르는** 추상화라 한 번에 상대하는 대상이 하나이고, 가이드 최소 조건 1번(서브시스템 타입 둘 이상)에 걸린다. 사용처 표에서 빼고 「헷갈리기 쉬운 포인트」로 다뤘다. 백엔드 선택 시점이 `deployment time` 이라는 문구가 SLF4J 매뉴얼에 그대로 있음을 확인했다(2026-09-27). **Bridge 절의 같은 질문도 이것으로 함께 닫힌다.**.
+- ~~기존 가이드의 "서브시스템 직접 접근 허용"을 [필수]로 둘지~~ → **닫힘(Facade v1.0.0, 2026-09-27)**: **`[선택]`**(최소 조건 5번). 원문 Consequences 3 은 「막지 않는다」이고 Implementation 2 는 「일부 서브시스템 클래스를 private 으로 두는 것도 유용」이라, 둘 중 어느 쪽을 `[필수]` 로 올려도 **원전이 인정하는 절반이 「패턴 아님」으로 판정된다**(GG3 의 analyzer 오판 위험). 가이드 222~230행에 「전부 공개 / 일부 공개 / 전부 비공개」 셋이 모두 1~4번을 만족한다는 표를 뒀다.
 - refactoring.guru·기존 가이드의 `FacesContext`·`ExternalContext` 사례는 Jakarta 사양 문서를 확인하지 않았다.
 - PoEAA의 퍼사드 논의(기존 참고 자료)는 확인하지 않았다(PoEAA의 Remote Facade와 GoF Facade 구분 필요 여부 포함).
+- **노트 정정 3건(Facade v1.0.0 집필 중 재조회, 2026-09-27 — 집필자와 채점자가 각각 확인)** — ① 「실제 사용처」 JdbcClient 항목에 **위임 대상**을 더할 수 있다: Javadoc 이 `Delegates to JdbcTemplate and NamedParameterJdbcTemplate` 를 명시하고 복잡한 조작은 하위 템플릿을 직접 쓰라고 안내한다(노트에 없던 사실). 문서 판 표기는 노트가 적은 7.0.9 그대로였다. ② 「실제 사용처」 `java.nio.file.Files` 항목의 **`(해석)` 표시를 걷어도 된다** — 클래스 설명이 `consists exclusively of static methods` 와 `delegate to the associated file system provider` 를 직접 적는다. ③ **「원전 대응」·「출처」의 Related Patterns 구성(Abstract Factory · Mediator · Singleton, Adapter 없음)이 정확하다** — 가이드가 1라운드에 이 줄을 어기고 Adapter 를 그 근거에 달았다가 채점에 잡혔다. **다음 편 워커가 이 줄을 먼저 보게 할 것.**
 
 ## Flyweight (플라이웨이트)
 
