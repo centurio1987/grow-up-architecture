@@ -1,0 +1,8 @@
+1) legacy BOOK-042: BOOK_042|ON_HAND=37|RESERVED=5 -> available 32
+2) order BOOK-042 x 30 -> accepted
+3) order BOOK-042 x 40 -> rejected (short by 8)
+4) legacy total [BOOK-042, PEN-007] = 32 + 8 = 40
+5) partner BOOK-042 -> available 12
+6) counting over legacy: available 32, total 40, calls 2
+7) unknown CHAIR-900 -> available 0
+8) adaptee read without adapter: 37 (RESERVED 5 not subtracted)

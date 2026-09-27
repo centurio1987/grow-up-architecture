@@ -15,7 +15,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | Factory Method (팩토리 메서드) | 객체 생성의 책임을 서브클래스로 위임 | [factory-method-guide_v1.0.0.md](pattern-guide/design-pattern-guide/factory-method/factory-method-guide_v1.0.0.md) |
 | Abstract Factory (추상 팩토리) | 관련된 제품군(family)을 일관되게 생성하는 인터페이스 제공 | [abstract-factory-guide_v1.0.0.md](pattern-guide/design-pattern-guide/abstract-factory/abstract-factory-guide_v1.0.0.md) |
 | Builder (빌더) | 복잡한 객체의 생성 과정을 단계적으로 분리 | [builder-guide_v1.0.0.md](pattern-guide/design-pattern-guide/builder/builder-guide_v1.0.0.md) |
-| Prototype (프로토타입) | 기존 객체를 복제해 새 객체 생성 | [prototype-guide_v0.1.0.md](pattern-guide/design-pattern-guide/prototype/prototype-guide_v0.1.0.md) |
+| Prototype (프로토타입) | 미리 만들어 둔 견본을 복제해 새 객체를 얻음 | [prototype-guide_v1.0.0.md](pattern-guide/design-pattern-guide/prototype/prototype-guide_v1.0.0.md) |
 
 ## Structural Patterns (구조 패턴)
 
@@ -23,7 +23,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Adapter (어댑터) | 호환되지 않는 인터페이스 사이를 변환 | [adapter-guide_v0.1.0.md](pattern-guide/design-pattern-guide/adapter/adapter-guide_v0.1.0.md) |
+| Adapter (어댑터) | 호환되지 않는 인터페이스 사이를 변환 | [adapter-guide_v1.0.0.md](pattern-guide/design-pattern-guide/adapter/adapter-guide_v1.0.0.md) |
 | Bridge (브릿지) | 추상(Abstraction)과 구현(Implementor)을 분리해 독립적으로 확장 | [bridge-guide_v0.1.0.md](pattern-guide/design-pattern-guide/bridge/bridge-guide_v0.1.0.md) |
 | Composite (컴포지트) | 부분-전체 계층을 같은 인터페이스로 다룸 | [composite-guide_v0.1.0.md](pattern-guide/design-pattern-guide/composite/composite-guide_v0.1.0.md) |
 | Decorator (데코레이터) | 객체에 동적으로 책임을 추가 | [decorator-guide_v0.1.0.md](pattern-guide/design-pattern-guide/decorator/decorator-guide_v0.1.0.md) |

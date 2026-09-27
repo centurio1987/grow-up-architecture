@@ -360,6 +360,7 @@
   - `Clone` 트레이트가 내장 Prototype 인터페이스 역할을 한다. `Clone`은 항상 명시적이며 비용이 클 수도 있고, 암묵적 비트 복사인 `Copy`와 다르다(std `Clone` 문서). `#[derive(Clone)]`의 복사 깊이는 필드 타입의 `Clone` 구현을 따른다.
   - 함정: `pub trait Clone: Sized`이고, `Sized`를 슈퍼트레이트로 가지는 트레이트는 dyn 호환이 아니다(Rust Reference) — `Box<dyn Clone>`은 불가능하다. 다형 복제가 필요하면 `trait Shape { fn clone_box(&self) -> Box<dyn Shape>; }` 같은 별도 메서드를 둔다(널리 쓰이는 관용 해법이지만 공식 문서 명시는 확인 안 함).
   - 함정: `Rc<T>`/`Arc<T>`에 `clone`을 호출하면 **같은 할당을 가리키는 새 포인터**가 생길 뿐 값은 복제되지 않는다(std `rc` 모듈 문서). 필드에 `Rc`가 있으면 `derive(Clone)`의 결과는 그 부분을 공유한다.
+- **실측 보탬(Prototype v1.0.0 집필 중, JDK 21.0.11 · Node v22.22.3 · rustc 1.95.0, 2026-09-27)** — `javap java.lang.Cloneable` 출력이 `public interface java.lang.Cloneable { }` 로 **본문이 비어 있다**(노트의 "clone 메서드가 없다"를 뒷받침). `Object.class.getDeclaredMethod("clone")` 선언은 `protected native java.lang.Object java.lang.Object.clone() throws java.lang.CloneNotSupportedException`. 기본 clone 이 얕다는 것도 실측 — 가변 `List` 필드를 가진 클래스를 `super.clone()` 으로 복제해 복제본 리스트에 원소를 더하면 원본도 `[1, 2, 3, 4]` 가 된다. `Cloneable` 미구현 클래스에서 `super.clone()` 은 `java.lang.CloneNotSupportedException`. JS 두 건(MDN 인용과 일치): 클래스 인스턴스에 `structuredClone` 을 쓰면 결과의 `constructor.name` 이 `Object` 가 되고 메서드가 `undefined` 다. 객체 스프레드 뒤 중첩 객체를 고치면 원본도 바뀐다.
 
 ### 실제 사용처
 - `java.lang.Object#clone()` + `java.lang.Cloneable` — `Prototype` 연산 = `clone()`, `ConcretePrototype` = `Cloneable`을 구현하고 `clone`을 공개 재정의한 클래스. 단 `Cloneable`에 메서드가 없어 인터페이스 대응은 부분적이다. refactoring.guru도 Java의 기본 사례로 든다. — [Object (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html) · [Cloneable (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Cloneable.html) · Java SE 21
@@ -397,8 +398,8 @@
 - [std::rc 모듈 (Rust std)](https://doc.rust-lang.org/std/rc/index.html) — Rc clone은 같은 할당의 새 포인터 · 조회 2026-09-17
 
 ### 미해결 질문
-- Rust `clone_box` 관용 해법의 공식 문서 근거를 찾지 못했다(커뮤니티 관용으로만 표기할지 정해야 함).
-- Wikipedia "Prototype pattern"과 Effective Java Item 13은 이번에 내용을 대조하지 않았다(기존 참고 자료 승계).
+- **부분 해소(Prototype v1.0.0, 2026-09-27)** — ~~Rust `clone_box` 관용 해법의 공식 문서 근거를 찾지 못했다~~ 제약 쪽은 공식 근거가 생겼다: rustc 1.95.0 이 `Box<dyn Clone>` 에 대해 ``error[E0038]: the trait `Clone` is not dyn compatible`` + ``= note: the trait is not dyn compatible because it requires `Self: Sized`` 를 내고 진단 자체가 Rust Reference 의 dyn-compatibility 절을 링크한다(직접 컴파일 확인). **관용 이름 쪽은 여전히 열려 있어**, 가이드는 `clone_box` 라는 이름을 쓰지 않고 트레이트에 복제 연산(`fn copy(&self) -> Box<dyn …>`)을 직접 선언하는 쪽을 택했다. 노트의 "dyn 호환이 아니다" 표현은 rustc 1.95.0 의 실제 문구 `is not dyn compatible` 과 일치하므로 그대로 둔다.
+- Wikipedia "Prototype pattern"과 Effective Java Item 13은 이번에 내용을 대조하지 않았다(기존 참고 자료 승계). **열린 채로 둔다 — 다만 Prototype v1.0.0(2026-09-27)은 둘 다 쓰지 않았다**(대조 안 한 자료를 근거로 싣지 않는다). 다음 편이 되풀이 조사하지 않도록 적어 둔다.
 
 ## Singleton (싱글톤)
 
@@ -568,6 +569,7 @@
   - 고아 규칙(orphan rule) 때문에 외부 크레이트의 트레이트를 외부 타입에 직접 구현할 수 없다. 한 필드짜리 튜플 구조체로 감싸는 newtype 패턴이 그 우회로이며, 이것이 Rust에서 가장 흔한 Adapter 형태다(Rust Book 20.2 "Implementing External Traits with the Newtype Pattern").
   - `Read::bytes()`처럼 한 트레이트(`Read`)를 다른 트레이트(`Iterator`)로 바꿔 주는 메서드가 표준 라이브러리의 Adapter다.
   - 명칭 함정: std `iter` 모듈 문서는 `map`·`take`·`filter` 같은 "iterator adapters"를 "a form of the 'adapter pattern'"이라고 부르지만, 이들은 **Iterator를 받아 Iterator를 돌려주므로** GoF 기준(인터페이스 불변 + 기능 추가)으로는 Decorator에 가깝다(미해결 질문 참고).
+- **실측 보탬(Adapter v1.0.0 집필 중, JDK 21 · tsc 5.9.3 · rustc 1.95.0, 2026-09-27)** — `Arrays.asList` 뷰 성질 3줄(노트에는 Javadoc 인용만 있었다): `view.set(0,"z")` → `arr[0] = z` · `arr[1]="y"` → `view.get(1) = y` · `view.add("c")` → `java.lang.UnsupportedOperationException`. Adaptee 를 Target 자리에 대입했을 때의 진단 원문 3종은 세 언어 어댑터 편이 공용으로 쓸 수 있다 — javac `error: incompatible types: … cannot be converted to …`, tsc `error TS2739: Type … is missing the following properties from type …`, rustc `error[E0277]: the trait bound …: … is not satisfied`. Rust 고아 규칙은 `error[E0117]: only traits defined in the current crate can be implemented for types defined outside of the crate` 이고 **마지막 note 가 newtype 을 직접 권한다**(노트는 Rust Book 인용만 있었다). TypeScript 구조적 타이핑 실측: `implements` 없이 모양만 맞는 클래스가 Target 타입 변수에 대입돼 strict 모드에서 종료 코드 0 — "인터페이스가 이미 맞으면 어댑터가 필요 없다"(최소 조건 1번)의 기계 근거다.
 
 ### 실제 사용처
 - `java.io.InputStreamReader` — `Target` = `Reader`, `Adaptee` = `InputStream`, `Adapter` = InputStreamReader(지정 charset으로 바이트를 문자로 디코딩). refactoring.guru도 Adapter 사례로 든다. — [InputStreamReader (Java SE 21)](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStreamReader.html) · Java SE 21
@@ -604,8 +606,8 @@
 - [std::iter 모듈 (Rust std)](https://doc.rust-lang.org/std/iter/index.html) — iterator adapters를 adapter pattern의 한 형태로 부름 · 조회 2026-09-17
 
 ### 미해결 질문
-- Rust std 문서는 iterator adapter를 "adapter pattern"의 한 형태라고 부르지만 GoF 기준으로는 인터페이스가 그대로라 Decorator에 가깝다. Rust 가이드 편에서 이 명칭 충돌을 어떻게 설명할지(“Rust 문서의 adapter ≠ GoF Adapter”로 명시할지) 정해야 한다.
-- `InputStreamReader`의 Javadoc 자기 명칭("bridge")과 GoF Bridge의 충돌도 같은 성격이다. 가이드에서 "흔한 오해" 소재로 쓸지 결정이 필요하다.
+- ~~Rust std 문서는 iterator adapter를 "adapter pattern"의 한 형태라고 부르지만 GoF 기준으로는 인터페이스가 그대로라 Decorator에 가깝다. Rust 가이드 편에서 이 명칭 충돌을 어떻게 설명할지 정해~~ → **닫힘(Adapter v1.0.0, 2026-09-27)**: 「갈림 1」(감싼 결과가 내미는 인터페이스가 대상의 것과 같은가)로 판정해 `Read::bytes()` 는 Adapter, `map`·`filter`·`take` 는 Decorator 쪽으로 명시하고 "std 가 쓰는 adapter 와 GoF Adapter 는 같은 말이 아니다"로 닫았다(가이드 973행). Decorator 편이 이 사례를 쓰면 같은 판정을 유지해야 한다. 원래 물음의 뒷부분은 여기서 잘려 있었다야 한다.
+- ~~`InputStreamReader`의 Javadoc 자기 명칭("bridge")과 GoF Bridge의 충돌도 같은 성격이다. 가이드에서 "흔한 오해" 소재로 쓸지 결정이 필요하다.~~ → **닫힘(Adapter v1.0.0, 2026-09-27)**: 「실제 라이브러리에서」에서 이름 오해로 다루고, Bridge 와 가르는 기준을 「두 인터페이스를 우리가 설계했는가」로 적었다(가이드 960행).
 - refactoring.guru가 드는 `javax.xml.bind.annotation.adapters.XmlAdapter`는 현행 JDK에 포함되는지 확인하지 않았다(JAXB가 JDK에서 분리된 이력이 있다고 알려져 있으나 확인 안 함).
 - Spring `HandlerAdapter`의 구체 구현 클래스명은 확인하지 않았다.
 - Evans DDD의 Anti-Corruption Layer와 Adapter 관계는 원문 확인 안 함(기존 참고 자료 승계).
@@ -883,6 +885,7 @@
 - [Rust Book 18.2 Trait Objects](https://doc.rust-lang.org/book/ch18-02-trait-objects.html) — 정적/동적 디스패치 · 조회 2026-09-17
 
 ### 미해결 질문
+- **제약 추가(Adapter v1.0.0, 2026-09-27) — Decorator 편이 자유롭게 정할 수 없는 자리가 됐다.** Adapter 편이 예시 `CountingStock` 을 「Adapter 아님 — Decorator」 로 판정해 최소 조건 판정표(231행)에 박았는데, 그 클래스는 `StockSource` 에 없는 공개 메서드 `calls()` 를 갖는다. **Decorator 편이 「추가 메서드 금지」로 결정하면 두 편이 어긋난다.** 결정할 때 Adapter 편의 그 판정을 함께 보고, 다르게 정할 것이면 Adapter 편 231행도 같이 고쳐야 한다.
 - ConcreteDecorator가 Component에 없는 **추가 공개 메서드**를 가져도 되는가 — GoF 관련 패턴 절은 "인터페이스를 바꾸지 않는다", refactoring.guru는 "the same or gets extended", 기존 가이드는 변경 금지다. GoF 구조 다이어그램(이미지)의 `AddedBehavior` 표기는 이미지라 이번에 확인하지 못했다. 분석기 기준을 "기존 인터페이스 보존은 필수, 추가 메서드는 허용"으로 둘지 정해야 한다.
 - `Collections.unmodifiableList`·`synchronizedList`를 Decorator(refactoring.guru)로 볼지 보호 프록시로 볼지 — GoF는 보호 프록시가 데코레이터와 똑같이 구현될 수 있다고만 한다. 가이드에서 경계 사례로 쓸지 정해야 한다.
 - "전달 흐름을 끊지 않는다" 조건은 refactoring.guru 근거뿐이다. GoF 원문은 전달 전후 추가 연산만 말한다.

@@ -326,6 +326,8 @@ Abstract Factory 를 고르면 여러 종류의 제품이 같은 계열로 묶�
   빠뜨린 연산은 컴파일이 막음          빠뜨린 견본은 그 종류를 요청할 때 드러남
 ```
 
+둘을 양자택일로 읽기 쉽지만, 이 두 패턴도 포개져요. `MarkdownKit`·`HtmlKit`·`TextKit` 세 클래스를 지우고 `PrototypeKit` 하나만 남긴 뒤, 그 인스턴스가 제목 견본 하나와 표 견본 하나를 들고 `createHeading`·`createTable` 에서 각각 복제본을 돌려주게 하는 구성이 그것입니다. 이 구성이 Abstract Factory 를 그만둔 것인지는 최소 조건으로 재 보면 답이 나와요. `ReportWriter` 는 여전히 `ReportKit` 타입으로 팩토리를 들고 제품을 요청하니 1번이 살아 있고, 생성 연산이 여전히 둘이면서 서로 다른 추상 제품을 돌려주니 2번과 3번도 그대로이며, 쓰는 쪽에 구체 이름이 없으니 5번도 지켜집니다. 읽는 법이 달라지는 것은 4번 하나예요. 계열을 가르는 것이 팩토리 **클래스**가 아니라 **인스턴스가 든 견본 집합**이 되니까요. 그래도 4번이 요구하는 두 가지는 남습니다. 마크다운 견본 둘을 든 인스턴스 안에는 형식을 가르는 분기가 없고, 그 인스턴스가 내는 제품은 전부 마크다운이에요. 시나리오 3 의 4단계에서 깨졌던 것이 여기서는 깨지지 않는 셈이죠. 그래서 이 구성은 최소 조건 `[선택]` 8번이 처음부터 허용해 둔 자리이고(근거: GoF Abstract Factory 절 Implementation — 제품군이 많으면 프로토타입을 들고 복제하는 구체 팩토리로 계열마다 서브클래스를 만들 필요를 없앤다), 견본을 들고 있는 그 팩토리는 [Prototype 가이드 「디자인 패턴을 충족하는 최소 조건」](../prototype/prototype-guide_v1.0.0.md#디자인-패턴을-충족하는-최소-조건)이 관리자라고 부르는 보관소를 생성 연산마다 키를 하나씩 고정해 둔 모양으로 읽으면 됩니다.
+
 **계열 분기를 품은 팩토리 하나와의 차이.** 구분 기준은 계열을 고르는 분기가 팩토리 구현 안에 있는지, 팩토리를 고르는 자리에 있는지입니다. 시나리오 3 의 4단계가 이 코드였어요.
 
 ```java no-compile
@@ -1022,6 +1024,7 @@ TypeScript 에는 한 가지가 더 있습니다. 타입 호환을 이름이 아
   - 생성 패턴 장, Builder(97쪽부터) — 단계적 조립과 마지막에 결과를 꺼내는 구조. Builder 비교의 근거
   - 생성 패턴 장, Prototype(117쪽부터) — 견본 복제로 제품을 얻는 구조. Prototype 비교의 근거
 - [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md) — 시나리오 1 의 확인 질문과 개념 정리의 인터페이스에 프로그래밍한다는 원칙과 위임, Factory Method 비교의 클래스 패턴과 객체 패턴, 구현 해설의 컴파일 시점 결합과 실행 시점 결합(정적·동적 디스패치)
+- [Prototype 가이드 「디자인 패턴을 충족하는 최소 조건」](../prototype/prototype-guide_v1.0.0.md#디자인-패턴을-충족하는-최소-조건) — 견본을 키로 보관하는 팩토리를 관리자로 읽는 조건. 비교 절 Prototype 대목의 포개짐 문단이 가리키는 자리
 - [refactoring.guru — Abstract Factory](https://refactoring.guru/design-patterns/abstract-factory) — 인터페이스와 클래스가 늘어 필요 이상으로 복잡해질 수 있다는 단점. 사용 목적의 "계열이 하나뿐임" 줄의 근거
 - [TypeScript Handbook — Type Compatibility](https://www.typescriptlang.org/docs/handbook/type-compatibility.html) — 구조적 타이핑과, `private`·`protected` 멤버가 있으면 같은 선언에서 나온 것만 호환으로 보는 규칙. 구현 해설의 `TS2322` 실험의 근거
 - [Document (Java SE 21 API)](https://docs.oracle.com/en/java/javase/21/docs/api/java.xml/org/w3c/dom/Document.html) — `createElement` 등의 팩토리 메서드와 `ownerDocument` 로 묶이는 노드. 실제 라이브러리 표 첫 행
