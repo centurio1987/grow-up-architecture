@@ -1,0 +1,7 @@
+1) shelf: NDA-2031 비밀유지계약 4p · MNA-0079 지분양수도계약 12p | scans loaded 0
+2) legal opens NDA-2031 p2: [NDA-2031 p2] 비밀정보는 서면으로 표시한 것에 한정한다 | scans loaded 1
+3) legal opens NDA-2031 p3: [NDA-2031 p3] 비밀정보는 서면으로 표시한 것에 한정한다 | scans loaded 1
+4) intern opens MNA-0079 p2: [denied] MNA-0079 p2 needs clearance 3 | scans loaded 1
+5) intern reads MNA-0079 digest: [MNA-0079 p1] 양수인은 잔금일에 지분... | scans loaded 2
+6) legal opens MNA-0079 p2: [MNA-0079 p2] 양수인은 잔금일에 지분 전부를 인수한다 | scans loaded 2
+7) no proxy, listing only: NDA-2031 비밀유지계약 4p · MNA-0079 지분양수도계약 12p | scans loaded 2

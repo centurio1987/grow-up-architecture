@@ -885,11 +885,11 @@
 - [Rust Book 18.2 Trait Objects](https://doc.rust-lang.org/book/ch18-02-trait-objects.html) — 정적/동적 디스패치 · 조회 2026-09-17
 
 ### 미해결 질문
-- **제약 추가(Adapter v1.0.0, 2026-09-27) — Decorator 편이 자유롭게 정할 수 없는 자리가 됐다.** Adapter 편이 예시 `CountingStock` 을 「Adapter 아님 — Decorator」 로 판정해 최소 조건 판정표(231행)에 박았는데, 그 클래스는 `StockSource` 에 없는 공개 메서드 `calls()` 를 갖는다. **Decorator 편이 「추가 메서드 금지」로 결정하면 두 편이 어긋난다.** 결정할 때 Adapter 편의 그 판정을 함께 보고, 다르게 정할 것이면 Adapter 편 231행도 같이 고쳐야 한다.
-- ConcreteDecorator가 Component에 없는 **추가 공개 메서드**를 가져도 되는가 — GoF 관련 패턴 절은 "인터페이스를 바꾸지 않는다", refactoring.guru는 "the same or gets extended", 기존 가이드는 변경 금지다. GoF 구조 다이어그램(이미지)의 `AddedBehavior` 표기는 이미지라 이번에 확인하지 못했다. 분석기 기준을 "기존 인터페이스 보존은 필수, 추가 메서드는 허용"으로 둘지 정해야 한다.
-- `Collections.unmodifiableList`·`synchronizedList`를 Decorator(refactoring.guru)로 볼지 보호 프록시로 볼지 — GoF는 보호 프록시가 데코레이터와 똑같이 구현될 수 있다고만 한다. 가이드에서 경계 사례로 쓸지 정해야 한다.
-- "전달 흐름을 끊지 않는다" 조건은 refactoring.guru 근거뿐이다. GoF 원문은 전달 전후 추가 연산만 말한다.
-- Head First Design Patterns의 Beverage 예 출처 주장은 확인하지 않았다(기존 참고 자료 승계).
+- ~~**제약 추가(Adapter v1.0.0)** — Decorator 편이 자유롭게 정할 수 없는 자리가 됐다~~ → **해소(Decorator v1.0.0, 2026-09-27)**: Decorator 편이 「허용」으로 정해 Adapter `:236` 의 `CountingStock` 판정이 그대로 유효하다. **Adapter 편 수정 불필요.**
+- ~~ConcreteDecorator가 Component에 없는 **추가 공개 메서드**를 가져도 되는가~~ → **닫힘(Decorator v1.0.0, 2026-09-27)**: **허용**한다(`[선택]` 조건 6번). 분석기 기준은 「기존 인터페이스 보존은 `[필수]`, 추가 메서드는 `[선택]`」이다. 근거 셋 — ① GoF 「인터페이스를 바꾸지 않는다」의 **대비 상대가 Adapter** 라, 금지하는 것은 인터페이스를 갈아 끼우는 일이지 그 위에 얹는 일이 아니다 ② 연산을 **빼면** 장식된 객체가 Component 자리에 못 들어가 조건이 즉시 깨지지만 **더하면** 안 깨지는 비대칭이 타입 수준에서 성립한다 ③ Adapter 편이 고정한 보호 프록시 경계 사례(거부해도 갈림 1 은 선언된 타입으로 판정)와 같은 뿌리다. 대가는 함께 적었다 — 그 연산을 부르는 쪽은 구체 타입에 묶이고 그 층을 다시 감싸면 못 부른다. **GoF 구조 다이어그램의 `AddedBehavior` 표기는 이번에도 확인 못 했다**(이미지) — 근거를 다이어그램이 아니라 관련 패턴 절 문장의 대비 상대에서 세웠다. Proxy 편 조건 8번과 같은 결론이고 세 편이 원리를 공유한다: **판정은 선언된 타입으로, 치환 가능성은 Client 가 무엇에 기대는가로.**
+- ~~`Collections.unmodifiableList`·`synchronizedList`를 Decorator(refactoring.guru)로 볼지 보호 프록시로 볼지~~ → **닫힘(Decorator v1.0.0, 2026-09-27)**: **갈림 2 로 갈라진다** — `synchronizedList` = **Decorator**(전달 전후에 잠금을 더한다, 모든 호출이 대상에 닿는다), `unmodifiableList` = **보호 프록시**(변경 요청이 대상에 닿지 않고 끝난다). Java 21 로 직접 돌려 실증했다(`add` → `UnsupportedOperationException`, backing 변경이 뷰에 비침). **refactoring.guru 가 둘을 함께 Decorator 사례로 드는 것과 갈리는 자리**이고 그 사실을 본문에 밝혔다.
+- **부분 해결(Decorator v1.0.0, 2026-09-27)** — ~~"전달 흐름을 끊지 않는다" 조건은 refactoring.guru 근거뿐이다~~ `[필수]` 근거는 **GoF Collaborations**(전달이 일어나고 그 전후에 추가 연산)로 세웠다. 다만 **절대형(「끊지 않는다」)의 출처가 refactoring.guru 라는 것을 조건 3번의 `빠지면:` 줄에 본문으로 밝혔다** — 원전이 못 박지 않았다는 사실을 독자에게 숨기지 않는 쪽을 골랐다.
+- Head First Design Patterns의 Beverage 예 출처 주장은 확인하지 않았다(기존 참고 자료 승계). **Decorator v1.0.0(2026-09-27)은 Beverage 예를 쓰지 않아 참고 자료에서 뺐다** — 확인 못 한 상태 그대로 남는다.
 
 ## Facade (퍼사드)
 
@@ -1168,7 +1168,7 @@
 ### 미해결 질문
 - refactoring.guru가 드는 `java.rmi.*`(remote proxy 스텁)와 `javax.persistence.PersistenceContext`·`javax.ejb.EJB`는 공식 문서를 확인하지 않았다. RMI를 remote proxy 사례로 쓰려면 Oracle RMI 문서 확인이 필요하다.
 - Rust `Rc`·`MutexGuard`는 `Deref`로 대상 **타입의 메서드**를 노출할 뿐 Subject 트레이트를 구현하지 않는다. "같은 인터페이스" 조건을 Deref 기반 투명성으로 인정할지 정해야 한다.
-- Java 동적 프록시의 `equals`/`hashCode` 디스패치가 동일성 불변식에 주는 영향은 해석이다. 가이드에 쓰려면 예제 검증이 필요하다.
+- Java 동적 프록시의 `equals`/`hashCode` 디스패치가 동일성 불변식에 주는 영향은 해석이다. 가이드에 쓰려면 예제 검증이 필요하다. **Proxy v1.0.0(2026-09-27)은 단정하지 않았다** — Javadoc 이 적은 사실(그 셋도 핸들러로 디스패치된다)만 쓰고 결과는 조건문으로 적었다. 예제 검증을 안 했으므로 **열린 채로 둔다.**
 - 기존 참고 자료의 Effective Java Item 22와 동적 프록시의 연결, Baeldung 글은 확인하지 않았다(Baeldung은 블로그 — 보조 출처 취급 필요).
 
 ## 교차 비교 메모

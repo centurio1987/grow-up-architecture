@@ -1,0 +1,8 @@
+1) plain desk: sent[order BOOK-042 shipped today]
+2) audited desk, 1st: sent[order BOOK-042 shipped today -- Bbangto Store CS 010-1234-5678]+audit#1
+3) audited desk, 2nd: sent[order PEN-007 shipped today -- Bbangto Store CS 010-1234-5678]+audit#2
+4) audit count 2, sms deliveries 3
+5) signature outside masking: sent[order BOOK-042 shipped today -- Bbangto Store CS 010-****-****]
+6) masking outside signature: sent[order BOOK-042 shipped today -- Bbangto Store CS 010-1234-5678]
+7) signature twice: sent[order BOOK-042 shipped today -- Bbangto Store CS 010-1234-5678 -- Bbangto Store CS 010-1234-5678]
+8) decorated is the same object as the sms notifier? false
