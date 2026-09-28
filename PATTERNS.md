@@ -38,7 +38,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
 | Chain of Responsibility (책임 연쇄) | 핸들러 체인으로 요청 처리 책임을 분산 | [chain-of-responsibility-guide_v0.1.0.md](pattern-guide/design-pattern-guide/chain-of-responsibility/chain-of-responsibility-guide_v0.1.0.md) |
-| Command (커맨드) | 요청을 객체로 캡슐화해 큐잉·undo 등을 지원 | [command-guide_v0.1.0.md](pattern-guide/design-pattern-guide/command/command-guide_v0.1.0.md) |
+| Command (커맨드) | 요청을 객체로 만들어 부르는 쪽이 실행 연산만 알게 함 | [command-guide_v1.0.0.md](pattern-guide/design-pattern-guide/command/command-guide_v1.0.0.md) |
 | Interpreter (인터프리터) | 간단한 DSL을 AST로 표현하고 평가 | [interpreter-guide_v0.1.0.md](pattern-guide/design-pattern-guide/interpreter/interpreter-guide_v0.1.0.md) |
 | Iterator (이터레이터) | 집계 객체의 내부 표현을 숨기고 순회 인터페이스 제공 | [iterator-guide_v0.1.0.md](pattern-guide/design-pattern-guide/iterator/iterator-guide_v0.1.0.md) |
 | Mediator (중재자) | 동료들이 서로를 참조하지 않고 중재자를 거쳐 협력하게 함 | [mediator-guide_v1.0.0.md](pattern-guide/design-pattern-guide/mediator/mediator-guide_v1.0.0.md) |
