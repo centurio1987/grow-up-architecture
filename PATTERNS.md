@@ -41,9 +41,9 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | Command (커맨드) | 요청을 객체로 캡슐화해 큐잉·undo 등을 지원 | [command-guide_v0.1.0.md](pattern-guide/design-pattern-guide/command/command-guide_v0.1.0.md) |
 | Interpreter (인터프리터) | 간단한 DSL을 AST로 표현하고 평가 | [interpreter-guide_v0.1.0.md](pattern-guide/design-pattern-guide/interpreter/interpreter-guide_v0.1.0.md) |
 | Iterator (이터레이터) | 집계 객체의 내부 표현을 숨기고 순회 인터페이스 제공 | [iterator-guide_v0.1.0.md](pattern-guide/design-pattern-guide/iterator/iterator-guide_v0.1.0.md) |
-| Mediator (중재자) | 다대다 객체 관계를 중재자로 모음 | [mediator-guide_v0.1.0.md](pattern-guide/design-pattern-guide/mediator/mediator-guide_v0.1.0.md) |
+| Mediator (중재자) | 동료들이 서로를 참조하지 않고 중재자를 거쳐 협력하게 함 | [mediator-guide_v1.0.0.md](pattern-guide/design-pattern-guide/mediator/mediator-guide_v1.0.0.md) |
 | Memento (메멘토) | 캡슐화를 깨지 않고 객체 상태를 보존·복원 | [memento-guide_v0.1.0.md](pattern-guide/design-pattern-guide/memento/memento-guide_v0.1.0.md) |
-| Observer (옵저버) | 1:N 의존성 관계에서 상태 변화 자동 통보 | [observer-guide_v0.1.0.md](pattern-guide/design-pattern-guide/observer/observer-guide_v0.1.0.md) |
+| Observer (옵저버) | 1:N 의존성 관계에서 상태 변화 자동 통보 | [observer-guide_v1.0.0.md](pattern-guide/design-pattern-guide/observer/observer-guide_v1.0.0.md) |
 | State (상태) | 내부 상태에 따라 객체 행동을 바꿈 | [state-guide_v0.1.0.md](pattern-guide/design-pattern-guide/state/state-guide_v0.1.0.md) |
 | Strategy (전략) | 알고리즘군을 캡슐화하고 런타임 교체 | [strategy-guide_v1.1.0.md](pattern-guide/design-pattern-guide/strategy/strategy-guide_v1.1.0.md) |
 | Template Method (템플릿 메서드) | 알고리즘 골격을 상위 클래스에, 단계는 하위 클래스에 | [template-method-guide_v0.1.0.md](pattern-guide/design-pattern-guide/template-method/template-method-guide_v0.1.0.md) |

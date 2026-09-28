@@ -1,0 +1,14 @@
+attach: dashboard, alert(5), audit
+ship 9
+  dashboard: 12 -> 3
+  alert: ON (3 < 5)
+  audit: line 1 (SKU-100 = 3)
+receive 4
+  dashboard: 3 -> 7
+  alert: OFF (7 >= 5)
+  audit: line 2 (SKU-100 = 7)
+attach: reorder(10) / detach: alert
+ship 5
+  dashboard: 7 -> 2
+  audit: line 3 (SKU-100 = 2)
+  reorder: order 8 (2 -> 10)

@@ -432,7 +432,7 @@
   - `Mediator` (DialogDirector) — Colleague 객체와 통신하는 인터페이스 정의
   - `ConcreteMediator` (FontDialogDirector) — Colleague들을 조율해 협력 행위를 구현. 자기 동료들을 알고 유지
   - `Colleague classes` (ListBox, EntryField) — 각 Colleague 클래스는 자기 Mediator 객체를 앎. 다른 동료와 통신했을 상황마다 대신 중재자와 통신
-- collaborations: 원문 "Colleague들은 Mediator와 요청을 주고받고, Mediator는 적절한 동료들 사이에 요청을 라우팅해 협력 행위를 구현한다" [GoF]. 모티베이션의 사건 순서(폰트 대화상자) [GoF]:
+- collaborations: 원문 "Colleague들은 Mediator와 요청을 주고받고, Mediator는 적절한 동료들 사이에 요청을 라우팅해 협력 행위를 구현한다" [GoF]. **(주의 2026-09-28 — 원문 Collaborations 절은 두 문장짜리 한 문단이고 번호 목록이 아니다. 아래 1~4 는 Motivation 소속이다.** `gof-creational-structural.md` 의 Flyweight, 같은 파일 Observer 에 이어 **세 번째로 나온 같은 유형**이라 `collaborations` 키를 인용할 때는 절마다 원문을 확인한다 — Mediator v1.0.0 집필자 확인) 모티베이션의 사건 순서(폰트 대화상자) [GoF]:
   1. 리스트 박스가 자기 director에게 변경되었다고 알림 — 왜: 동료는 누가 영향받는지 모름
   2. director가 리스트 박스에서 선택 항목을 가져옴
   3. director가 선택 항목을 입력 필드에 전달
@@ -519,6 +519,10 @@
 - 공식 문서로 Mediator 구조가 확인되는 현행 Java/TS/Rust 사용처를 찾지 못함. 후보: `javax.swing.ButtonGroup`(Javadoc으로 동작 확인 — 버튼끼리 서로 몰라도 그룹이 상호 배제를 조율. Mediator라고 명시한 신뢰 출처는 없음)
 - [RG] Java 사용 예(Timer·Executor·Method#invoke)를 채택할지 — 기존 가이드 참고 자료의 "`Executor`를 중재자적 사례"로 든 서술도 같은 근거 부족 문제
 - 기존 참고 자료의 Spring `ApplicationEventPublisher`는 Spring 문서가 "표준 Observer 디자인 패턴"이라고 부름(Observer 절 참조) — Mediator 참고 자료로 남길지
+- **확정(Mediator v1.0.0, 2026-09-28)** — **GoF Mediator 절 Consequences 는 5항목**이다(얻는 것 4 + 대가 1): limits subclassing · decouples colleagues · simplifies object protocols · abstracts how objects cooperate · **centralizes control**. 원서 HTML 사본에서 항목 머리 `It …` 를 전수 카운트해 확인했다. **이 노트의 「얻는 것 4 + 대가 1」 기재가 맞다.**
+- **`javax.swing.ButtonGroup` 조사 결과(Mediator v1.0.0, 2026-09-28, Java 21.0.11 직접 실행)** — Javadoc 에 `ButtonModel.setGroup(ButtonGroup)`/`getGroup()` 이 공개 인터페이스로 있어 **동료→중재자 참조가 선언으로 남아 있고**, 클래스 설명이 그룹 내 상호 배제를 적는다. 실행 확인: ① `add` 전에는 `getGroup()` 이 `null` ② 뒤에는 그 그룹을 가리킴 ③ 한 버튼을 켜면 다른 버튼이 꺼짐 ④ **`setSelected(false)` 는 무시됨**(어느 버튼에도 속하지 않는 규칙). **다만 Javadoc 이 이 클래스를 Mediator 라고 부르지는 않아** 가이드도 구조 대응만 적었다. 패턴명 출처는 **여전히 미확인**.
+- **비교 대상의 근거 위치를 갈라 적을 것(Mediator v1.0.0, 2026-09-28)** — **GoF Mediator 절 Related Patterns 에 실제로 나오는 이름은 Facade 와 Observer 둘뿐**이다. 이 노트 「비교 대상」의 Command·Chain of Responsibility 는 근거가 Related Patterns 가 아니라 **행위 패턴 토론(disc5)** 이다. 섞어 두면 앞 배치에서 난 귀속 오류(없는 이름을 그 절 근거로 달기)가 되풀이된다.
+- **Rust 절에 `Rc::new_cyclic` 경로를 추가할 것(Mediator v1.0.0, 2026-09-28, rustc 1.95.0 실측)** — 노트는 Top-Down Ownership 과 `Rc<RefCell<…>>` 흉내만 적는데, `Rc::new_cyclic` 으로 `Weak<dyn Trait>` 를 동료에게 나눠 주는 조립이 성립한다. 함께 실측한 둘: **양쪽을 `Rc` 로 두면 `Drop` 이 한 번도 안 불리고 한쪽을 `Weak` 로 바꾸면 둘 다 불린다** · 동료가 자기 빌림을 든 채 통지하면 `RefCell already mutably borrowed` 로 패닉하고 **종료 코드 101** 이다.
 
 ## Memento (메멘토)
 
@@ -635,8 +639,7 @@
   - `ConcreteObserver` — ConcreteSubject 참조 유지. 주체와 일관되게 유지할 상태 저장. Observer 갱신 인터페이스를 구현해 자기 상태를 주체와 일치시킴
 - collaborations [GoF]:
   1. ConcreteSubject는 옵저버 상태가 자신과 어긋나게 만들 수 있는 변경이 일어날 때마다 옵저버들에게 통지 — 왜: 주체는 옵저버가 몇이고 누구인지 신경 쓰지 않음
-  2. 통지받은 ConcreteObserver는 주체에게 정보를 질의할 수 있음
-  3. ConcreteObserver는 그 정보로 자기 상태를 주체와 맞춤
+  2. 통지받은 ConcreteObserver는 주체에게 정보를 질의할 수 있고, **그 정보로 자기 상태를 주체와 맞춤** — **(정정 2026-09-28: 원문 불릿은 둘이다.** 이 노트가 2·3 으로 나눠 적었던 것이 원문에서는 이 한 불릿이다. 원서 HTML 사본 대조, Observer v1.0.0 집필자와 독립 채점자가 각각 확인. **「항목 n」으로 인용하면 어긋난다** — `gof-creational-structural.md` 의 Flyweight `collaborations` 에서도 같은 유형을 찾았다)
   - 원문 부기: 변경을 요청한 옵저버도 주체의 통지를 받을 때까지 자기 갱신을 미룸 · `Notify`를 항상 주체가 호출하는 것은 아님(옵저버나 제3의 객체가 호출할 수도 있음)
 - consequences [GoF]: 주체와 옵저버를 독립적으로 변경·재사용, 주체나 다른 옵저버를 수정하지 않고 옵저버 추가
   - 얻는 것: **추상 결합** — 주체는 추상 Observer 인터페이스를 따르는 목록만 알므로 서로 다른 추상 계층에 속할 수 있음(하위 계층 주체가 상위 계층 옵저버에게 알려도 계층 유지)

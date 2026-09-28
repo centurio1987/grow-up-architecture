@@ -1,0 +1,9 @@
+1) select economy  | cabin=economy seat=10B mileage=off/free issue=on
+2) type 11A        | cabin=economy seat=11A mileage=off/free issue=on
+3) click issue     | cabin=economy seat=11A mileage=off/free issue=on | ticket QR4821 economy 11A fare=180000 discount=0 pay=180000
+4) toggle mileage  | cabin=economy seat=11A mileage=on/free issue=on
+5) click issue     | cabin=economy seat=11A mileage=on/free issue=on | ticket QR4821 economy 11A fare=180000 discount=30000 pay=150000
+6) select business | cabin=business seat=1B mileage=off/locked issue=on
+7) click issue     | cabin=business seat=1B mileage=off/locked issue=on | ticket QR4821 business 1B fare=480000 discount=0 pay=480000
+8) type 1A         | cabin=business seat=1A mileage=off/locked issue=off
+9) click issue     | cabin=business seat=1A mileage=off/locked issue=off
