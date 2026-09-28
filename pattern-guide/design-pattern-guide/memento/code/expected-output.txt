@@ -1,0 +1,7 @@
+0 init       ...#.... rem=7 next=A history=0
+1 reserve(2) AA.#.... rem=5 next=B history=1
+2 reserve(3) AA.#BBB. rem=2 next=C history=2
+3 undo       AA.#.... rem=5 next=B history=1
+4 reserve(5) AAB#BBBB rem=0 next=C history=2
+5 undo       AA.#.... rem=5 next=B history=1
+6 undo       ...#.... rem=7 next=A history=0

@@ -435,6 +435,18 @@
 - `CopyOnWriteArrayList`/`ConcurrentHashMap`의 약한 일관성 반복자 서술, Effective Java 아이템 번호는 이번에 확인 안 함
 - `FileVisitor`를 가이드에서 Iterator 쪽 비교 사례로 쓸지 Visitor 변형 사례로 쓸지(RG는 Visitor 예로 듦)
 
+### 집필 결과 되먹임 (2026-09-28, v1.0.0)
+- **미해결 해소** — 「기존 조건 ④(Aggregate 의 생성 책임 `[필수]`)를 `[선택]` 으로 내릴지」 → **`[선택]` 으로 내렸다.** 근거 셋 — Implementation 이 **다형적 순회자일 때만** 권하고, Sample Code 는 클라이언트가 순회자를 직접 만드는 코드를 먼저 보이며, Known Uses 의 Booch 큐가 이 연산 없이 구현한다. 그리고 **`[필수]` 로 두면 「Client 가 순회자를 조립한 판」에서 교차 판정 A≠B 가 실제로 생긴다**
+- **미해결 해소** — 「`FileVisitor` 를 Iterator 쪽 비교 사례로 쓸지」 → **쓰지 않았다.** Visitor 편이 아직 legacy 라 그쪽 판정과 충돌할 여지를 만들지 않았다. 비교 절은 「원소들이 공통 부모 타입을 갖는가」라는 구조 기준만 썼다 — **Visitor 편을 쓸 때 그 편이 정한다**
+- **★ 정정: 「순회자를 만드는 연산은 팩토리 메서드의 예」는 `Motivation` 절이다.** 이 노트도 Factory Method 편 `:1041` 도 **절 이름 없이** 적었다. Motivation 은 이 프로젝트가 `[필수]` 근거로 허용하는 다섯 절(Intent·Applicability·Participants·Collaborations·Consequences) **밖**이라, 절 이름을 모르고 인용하면 `[필수]` 로 잘못 올릴 위험이 있다(Factory Method 편은 `[필수]` 근거로 쓰지 않아 위반은 아니다 — 확인함)
+- **★ 정정: 최소 인터페이스(First·Next·IsDone·CurrentItem)는 `Implementation` 절이다.** 이 노트의 「최소 조건 후보」 셋째 항목이 그것을 `[필수]` 로 적어 두었는데, **이 프로젝트 기준으로는 `[선택]` 이어야 한다**(v1.0.0 은 `[선택]` 5번)
+- **확인** — Consequences 는 정확히 셋(순회 방식의 변형 지원 · 집합 인터페이스 단순화 · 겹친 순회)이고 대가 항목이 없다는 기재가 맞다. Related Patterns 는 Composite · Factory Method · Memento 셋
+- **여전히 미해결** — 원서 끝 쪽(pp. 257-271 의 271)은 이번에도 확인 못 해 본문·참고 자료에 시작 쪽 257 만 적었다. `CopyOnWriteArrayList`/`ConcurrentHashMap` 의 약한 일관성 서술과 Effective Java 아이템 번호도 확인 못 해 **본문에서 뺐다**
+- **세 언어 실측 (2026-09-28)**
+  - **TypeScript** — `implements` 표기만 떼면 **통과한다**(구조적 타이핑). `hasNext` 까지 지워야 52행 `TS2741` 이 난다. **막는 것은 표기가 아니라 선언된 반환 타입**이다
+  - **Rust** — 순회자가 집합을 `&self` 로 빌리므로 **`Rc`·`RefCell` 없이** 두 순회자를 동시에 둘 수 있다. 순회 중 변경은 `error[E0502]` 1건이고, 빌림을 놓은 뒤 부르면 통과해 원인을 역방향으로 재현했다
+  - **Java** — 같은 편집이 컴파일·실행 모두 통과하고 순회 결과가 **조용히 틀린다.** 손으로 쓴 순회자에 fail-fast 가 없는 것은 언어가 주는 것이 아니라 **컬렉션 저자가 넣는 것**이다
+
 ## Mediator (중재자)
 
 ### 원전 대응
@@ -638,6 +650,21 @@
 - 기존 참고 자료의 Spring `TransactionStatus`/Savepoint·Hibernate 스냅샷 더티 체킹을 Memento 사례로 본 근거, Effective Java 아이템 85~90 범위는 이번에 확인 안 함
 - 기존 가이드 조건 ④(불변성 [필수])의 문구 조정 여부
 - StateEdit·StateHolder 예시에서 "좁은 인터페이스"가 언어로 강제되지 않는 경우를 가이드 판정에서 [필수] 위반으로 볼지(원전은 언어 한계를 인정)
+
+### 집필 결과 되먹임 (2026-09-28, v1.0.0)
+- **★ 정정: Collaborations 는 원문 번호 항목이 둘이다.** 이 노트는 ①~④로 펼쳐 적었는데 원문은 ① Caretaker 가 메멘토를 청해 한동안 들고 있다가 그 Originator 에게 돌려준다 ② 메멘토는 수동적이다 — **둘뿐이다.** 노트의 ①~④는 노트가 펼친 것이라 **「항목 n」으로 인용하면 어긋난다**
+- **★ 정정: Related Patterns 에 나오는 이름은 Command 와 Iterator 둘뿐이다.** 이 노트 「비교 대상」의 **vs Prototype 은 [RG] 근거이지 GoF Related Patterns 가 아니다** — Mediator 편에서 난 귀속 오류와 같은 모양이라 갈라 적는다. v1.0.0 은 Prototype 비교에 GoF Related 근거를 달지 않았다
+- **확인** — Consequences 5항목(얻는 것 2 + 대가 3) · Applicability 2항목이고 둘이 `and` 로 묶인다는 기재가 맞다. Iterator 근거는 양방향이다(Iterator 절 Related Patterns 의 「반복자가 메멘토로 반복 상태를 붙잡아 안에 저장한다」 + 각주 「커서는 이 패턴의 단순한 예」)
+- **★ 노트에 없던 근거** — GoF Collaborations 의 「passes it back to **the** originator」(정관사)와 Participants 의 「Ideally, only the originator that **produced** the memento…」가 **떠낸 값을 같은 종류의 다른 객체에 심는 코드**를 걸러 내는 근거가 된다. v1.0.0 의 조건 2번이 이것을 쓴다(그 구성이 1라운드 조건을 실제로 통과했다)
+- **미해결 해소 ④** — 「좁은 인터페이스가 언어로 강제되지 않는 경우를 `[필수]` 위반으로 볼지」 → **「강제되지 않는 것」과 「타입이 여는 연산을 주는 것」은 다른 자리다.** `StateHolder` 의 `Object` 는 강제는 없지만 **좁다**(조건 3 만족). `StateEdit` 의 `Hashtable` 은 타입이 `get`·`put` 을 주고 Javadoc 이 편집이 끝날 때 중복 상태를 없앤다고 적어 담은 키·값이 전부 남는다고 보장하지 않는다(= 맡는 쪽이 실제로 안을 들여다본다) → **조건 3 빠짐**
+- **미해결 해소 ③** — 기존 조건 ④ 불변성 문구는 「불변이다」가 아니라 **「떠낸 시점의 상태로 되돌아간다」**는 관찰 가능한 결과로 적고, 불변·방어적 복사 같은 **수단은 `빠지면:` 줄로 내렸다**
+- **미해결 ①(`java.sql.Savepoint`)** — 사례로 쓰지 않았다(본문 단정 금지). 대신 「상태는 원본 안에 두고 식별자만 밖에 주는 코드」를 교차 판정 시험 사례로 넣고 **조건 2번에서 빠진다**고 판정했다
+- **세 언어 실측 — 9갈래로 원인을 바꿔 돌렸다. 셋 다 막지만 막는 지점과 힘이 다르다 (2026-09-28)**
+  - **TypeScript**: 「`private` 은 soft private」 기재는 맞지만 Memento 에서 중요한 사실 둘이 더 있다 — **`private` 은 Originator 까지 막고**(`TS2341` 3건), **공개 필드로 두면 구조적 타이핑 때문에 아무 객체 리터럴이나 메멘토 자리에 들어온다**(실행으로 확인). 심볼 브랜드 좁은 타입이 정본이고 그때 `TS2339` 1건
+  - **★ 「왜 그 진단이 나는가」** — 좁은 타입에 `readonly remaining: number;` 한 줄을 더하니 `TS2339` 가 사라지고 `TS2741` 로 자리가 옮겨간다. **막는 것은 `#` 비공개 필드가 아니라 좁은 타입의 멤버 목록**이다. `#` 이 따로 하는 일은 실행 시점에 있어, `private static vault` 로 바꾸면 컴파일된 JS 에서 금고가 밖에서 보인다
+  - **Java**: 중첩 비공개 클래스 + 비공개 필드면 2건, 클래스만 패키지 전용이면 1건, 클래스·필드 모두 패키지 전용이면 **0건**
+  - **Rust**: 모듈 가시성으로 `error[E0616]` 1건. 만들려 하면 `error[E0451]` 이 세 필드를 **한 진단에 묶어** 1건. 베끼지 않고 `&self.seats` 를 담도록 수명을 붙이면 진입점에서 `error[E0502]` 6건
+- `structuredClone` 은 쓰지 않았다 — `join('')`/스프레드로 충분했고 표준 라이브러리 제약과도 맞았다
 
 ## Observer (옵저버)
 

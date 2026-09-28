@@ -1,0 +1,5 @@
+ring oldest-first: SCN-03 SCN-04 SCN-05 SCN-06 SCN-07
+ring newest-first: SCN-07 SCN-06 SCN-05 SCN-04 SCN-03
+ring paired: SCN-03/SCN-07 SCN-04/SCN-06 SCN-05/SCN-05 SCN-06/SCN-04 SCN-07/SCN-03
+chain oldest-first: SCN-01 SCN-02 SCN-03 SCN-04 SCN-05 SCN-06 SCN-07
+total: ring=56 chain=98
