@@ -26,6 +26,18 @@
 
 ## Party (당사자)
 
+> **집필 결과 되먹임 (2026-09-29, v1.0.0 · 게이트 3R PASS)**
+> - **★ 최소 조건 후보 `[필수]` 3번이 두 조건이다.** 「공통만 Party 에 두고 한쪽에만 있는 것은 하위 타입에」의 **앞뒤를 갈라야 한다** — 앞은 성립 요건(`[필수]`), 뒤는 원전이 **갈래 없는 모델을 인정하므로** `[선택]`. **노트를 그대로 받으면 `[필수]` 를 잘못 올린다**
+> - **`[필수]` 2번(다른 개념이 Party 를 참조)에 존재 요건이 빠져 있다.** 원전의 사용 조건은 「공통 **행위**가 보일 때」이고 **식별자·이름만 공통인 모델은 통과시키면 안 된다.** 조건 문면에 「식별자와 이름 말고도」가 필요하다
+> - **★ 「DDD 매핑 후보」의 식별성(Evans Entity 정의)을 최소 조건으로 올리지 말 것.** `accountability.pdf` 전문에 identity·identifier·unique **0건**, 그림 2.1·2.2 에 식별자 속성 없음(실측). Evans 는 Party 를 언급한 적이 없다. **노트가 이 항목을 매핑 절에 둔 것이 옳고, 그 배치가 곧 표기를 가르는 신호다**(집필자가 1R 에 `[필수]` 로 올렸다 걸렸다)
+> - **★ 귀속 정정** — 「isn't one to turn to blindly」는 `roles.pdf` 가 아니라 **`accountability.pdf` 의 Party 「When to use it」**에 있다(`roles.txt` 에 `blindly` **0건**). `roles.pdf` 에 귀속할 수 있는 것은 "five broad categories" 와 다섯 이름뿐이다
+> - **조건 3 을 떠받치는 원전 *진술* 을 새로 찾았다** — `accountability.pdf` Party 절 Example: 통신 회사 고객이 개인일 수도 사업자일 수도 있는데 「다루는 방식이 같은 부분에서는 party 로 다루고, 다른 부분에서만 하위 타입으로 다룬다」. **그림 둘이 원전의 *실천* 이라면 이것은 *진술* 이라 근거로서 더 강하다**
+> - **`Post`(§2.9, Figure 2.15)는 원서 정의 미확인**이라 v1.0.0 이 본문에서 통째로 뺐다. 「등장 개념」에 **「정의 확인 전에는 가이드에 싣지 않음」**을 적어 두면 뒤 편이 같은 판단을 되풀이하지 않는다
+> - **연락 수단 다중도(미해결 2)는 여전히 미해결** — 본문은 `0..*` 를 **이 글의 모델**로만 적었다(원서 판독값은 `0..1` 이라 이 한정이 중요하다)
+> - **세 언어 실측 — TypeScript 브랜드 타입 네 조합**(노트의 TS 쟁점이 「판단 — 구조적 타이핑 일반론, 별도 문서 확인 안 함」이던 자리): 둘 다 브랜드 → `TS2345` 1건(`PurchaseOrderId`) · **받는 쪽만** → `TS2345` 1건(`string`) · **넘기는 쪽만 → 0건** · 둘 다 민짜 → 0건. **막아 주는 것은 받는 쪽 브랜드 하나뿐이고, 넘기는 쪽 브랜드는 진단 메시지의 이름만 바꾼다.** 브랜드 줄을 *지우면* `TS2552` 15건이 나고 뒤 줄 번호가 2줄 당겨진다 — 민짜 별칭으로 바꾸는 것과 다르다
+> - **함정 셋** — 도식은 `above: 'from'` 으로 계층을 선언해야 하고 `@relation` 은 `relate` 여야 한다(`branch` 는 VT-101 축과 어긋나 lint 가 막는다) · **`### 구현` 절에는 언어 펜스 셋 말고 어떤 펜스도 둘 수 없다** · **Rust 가 분량 상한에 가장 먼저 걸린다**(초안 421줄 → 247줄, 출력 불변)
+
+
 ### 원전 대응
 
 - 원서 위치: Chapter 2 「Accountability」 §2.1 「Party」(Pearson 목차 PDF, InformIT 목차로 교차 확인). 쪽은 확인 안 함(Part I 표제 15쪽, Chapter 3 시작 35쪽). 그림은 Figure 2.1, 2.2와 §2.9 「Post」의 Figure 2.15입니다(apchap2.pdf). 개정 초안(accountability.pdf)에는 독립 패턴 「Party (5)」로 있으며 의도문은 "An abstraction of people and organizational units"입니다.
@@ -1103,9 +1115,9 @@
     - 타당한 상황: 동기 계정 불변식(잔액 음수 금지)이 있을 때.
     - 근거: consideration 「Account와 Entry의 관계 설계」 종합 의견 B의 "시나리오 2 + 파생 value 하이브리드". TigerBeetle 계정의 누적 debits/credits와 한도 flag.
     - 약점: Entry 생성과 잔액 갱신의 원자성 — 두 aggregate 수정 또는 예약 방식이 필요합니다.
-  - ④-b Account가 **Entry 투영 VO 컬렉션**(예: `List<AccountLedger>`)을 가짐
+  - ④-b Account가 **Entry 투영 VO 컬렉션**(예: consideration 문서1 의 **정정 전** `List<AccountLedger>`)을 가짐
     - 타당한 상황: 계정별 내역이 작고, 계정 aggregate 안에서 내역 기반 규칙(예: 최근 N건 기준 한도)이 필요할 때(판단).
-    - 근거: consideration 「account-transaction-entry-modeling」.
+    - 근거: consideration 「account-transaction-entry-modeling」의 **정정 전(2026-09-29 이전)** 코드. 그 문서는 같은 날 이 프로젝트의 배정대로 정정돼 지금은 **①의 근거**다(그 문서 4절 머리에 정정 기록).
     - 약점: 컬렉션 무한 증가, 같은 사실의 이중 상태(Transaction 쪽 Leg와 Account 쪽 Ledger) 동기화. consideration 「Account와 Entry의 관계 설계」 시나리오 3의 (a)안 비판("lazy-load 유혹", "중복 상태 동기화 부담", 경계 혼란)이 그대로 적용됩니다.
 
 **5. consideration 두 문서는 어느 선택지인가 (결론·전제·논거)**
@@ -1113,9 +1125,9 @@
 - 「account-transaction-entry-modeling」(심화: Transaction과 Account의 관계 및 Entry 모델링)
   - 전제: "하나의 내부 구성원(Entity나 Value Object)이 두 개의 서로 다른 Aggregate Root(AR)에 동시에 소속될 수 없습니다." Transaction은 상태 연속성이 없어도 AR이 될 수 있습니다 — 필수 조건은 일관성 경계(생성 시 합 0 원자 검증)와 전역 식별성(환불·취소·영수증에서 id로 지목)이고, 연속성은 선택입니다.
   - 결론:
-    - 객체 모델에서는 Entry를 AR 관점마다 다른 VO로 나눕니다. Transaction AR은 `List<TransactionLeg>`(accountId, amount), Account AR은 `List<AccountLedger>`(transactionId, amount, postedAt)를 가집니다.
+    - 객체 모델에서는 Entry를 AR 관점마다 다른 VO로 나눕니다. Transaction AR은 `List<TransactionLeg>`(accountId, amount), Account AR은 (정정 전) `List<AccountLedger>`(transactionId, amount, postedAt)를 가집니다.
     - DB에서는 `entry` 테이블 하나(transaction_id FK, account_id FK)를 두고, 각 AR이 자기 FK로 조회해 자기 VO로 올립니다.
-    - `TransferService`가 Transaction을 만들고 `post()`로 합 0을 검증한 뒤 두 Account에 `addLedger`하고, 세 aggregate를 각각 save합니다.
+    - (정정 전) `TransferService`가 Transaction을 만들고 `post()`로 합 0을 검증한 뒤 두 Account에 `addLedger`하고, 세 aggregate를 각각 save했습니다. **2026-09-29 정정 후에는 `txRepo.save(tx)` 하나만 하고 `TransactionPosted` 를 발행하며, 계정별 내역은 AR 밖 `AccountLedgerView` 가 그 이벤트로 쌓습니다.**
   - 논거: 두 AR이 같은 Entry를 메모리 참조로 공유하면 캡슐화와 일관성 경계가 무너집니다. 외부 AR은 id로만 참조합니다. 관점별 VO 분리로 "서로 완전히 독립된 일관성 경계"를 얻습니다.
   - 선택지 대응: Transaction 쪽은 ①입니다(단, Entry가 id를 가진 child entity가 아니라 id 없는 VO). Account 쪽은 ④-b입니다. 뒤 문서의 용어로는 Account 쪽이 시나리오 1(id 없는 Composite Association value 컬렉션)에 해당합니다(판단).
   - 논거의 빈틈(판단):

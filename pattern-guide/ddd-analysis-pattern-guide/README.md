@@ -12,7 +12,7 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Party (당사자) | 사람·조직을 행위 주체라는 공통 추상으로 묶음 | [party-guide_v0.1.0.md](party/party-guide_v0.1.0.md) |
+| Party (당사자) | 사람과 조직을 한 이름으로 받아 공통인 것을 그 한 자리에 모음 | [party-guide_v1.0.0.md](party/party-guide_v1.0.0.md) |
 | Accountability (책임 관계) | 두 Party 사이의 책임·권한 관계를 객체로 명시화 | [accountability-guide_v0.1.0.md](accountability/accountability-guide_v0.1.0.md) |
 | Knowledge Level (지식 수준) | 운영 사실과 그 규칙·분류를 두 계층으로 분리 | [knowledge-level-guide_v0.1.0.md](knowledge-level/knowledge-level-guide_v0.1.0.md) |
 
@@ -44,6 +44,7 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 | Transaction (거래) | 함께 적어야 할 기록을 한 묶음으로 만들고, 만드는 자리에서 합을 0 으로 맞춤 | [transaction-guide_v1.0.0.md](transaction/transaction-guide_v1.0.0.md) |
 | Posting Rule (전기 규칙) | 무엇에 반응해 얼마를 어느 계정에 적을지를 규칙 하나가 쥔다 | [posting-rule-guide_v1.0.0.md](posting-rule/posting-rule-guide_v1.0.0.md) |
 | 심화: 객체 모델링 | Transaction과 Account의 관계 및 Entry 소속 딜레마 해소 가이드 | [account-transaction-entry-modeling.md](../consideration/account-transaction-entry-modeling.md) |
+| 심화: Account–Entry 경계 | Entry 를 Account 안에 둘지 세 시나리오로 가른 aggregate 경계 검토 — 회계 배경 확정안과 정합 | [Account와 Entry의 관계 설계.md](<../consideration/Account와 Entry의 관계 설계.md>) |
 
 ## 패턴 간 의존 관계
 

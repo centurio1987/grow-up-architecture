@@ -1,0 +1,11 @@
+PO-1001 supplier Han Jiwoo (individual) ships to Seoul Mapo-gu Yanghwa-ro 12
+PO-1002 supplier Daehan Steel (organization) ships to Incheon Namdong-gu Namdong-ro 77
+PO-1002 requester Purchasing Team (organization) ships to Seoul Mapo-gu Yanghwa-ro 12
+same name, different party: P-1001 vs P-1004 -> true
+Daehan Steel registration number: 1234567890
+Han Jiwoo registration number: none
+Purchasing Team registration number: none
+rejected (bad email): email must contain one @: jiwoo(at)example.com
+rejected (missing registration number): trading organization needs a 10-digit registration number
+rejected (unknown supplier): no party registered as P-9999
+after contact change PO-1001 Han Jiwoo (individual) ships to Seoul Yeongdeungpo-gu Yeouido-ro 5

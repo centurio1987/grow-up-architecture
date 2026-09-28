@@ -1234,7 +1234,7 @@ T2 · T3 · T4 전기
 - [참고 문서 「DDD 전술 용어」](../../reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.1.md) — Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식 · Repository. 상황 설정 표의 네 행을 읽는 데 필요한 용어
 - [회계 배경 확정안](../../research/accounting-context.md) — 상황 설정 표 네 칸, 정정을 역분개 한 가지로 고정한 판단, 「상황이 달라지면」의 Entry 소속 네 갈래와 ④-a · ④-b 구분
 - [Account와 Entry의 관계 설계](<../../consideration/Account와 Entry의 관계 설계.md>) — 시나리오 1 · 2 · 3, 요약 VO 하이브리드. 「상황이 달라지면」 둘째 · 셋째 · 넷째 행
-- [account-transaction-entry-modeling](../../consideration/account-transaction-entry-modeling.md) — `List<AccountLedger>` 모델. 「상황이 달라지면」 다섯째 행
+- [account-transaction-entry-modeling](../../consideration/account-transaction-entry-modeling.md) — **정정 전**의 `List<AccountLedger>` 모델. 「상황이 달라지면」 다섯째 행. 그 문서는 2026-09-29 에 이 프로젝트의 배정대로 정정됐고(4절 머리에 정정 기록), 지금 그 자리는 AR 밖의 읽기 모델이다
 - [Effective Aggregate Design Part I (Vernon)](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_1.pdf) — 작은 aggregate, 계속 커지는 컬렉션, 트랜잭션 하나에 aggregate 인스턴스 하나. 「상황이 달라지면」 둘째 · 넷째 행
 - [Effective Aggregate Design Part II (Vernon)](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf) — id 참조와 경계 밖 결과적 일관성. 상황 설정의 참조 칸과 id 참조를 뒤집어 본 표
 - [TigerBeetle: Account](https://docs.tigerbeetle.com/reference/account/) · [Data Modeling](https://docs.tigerbeetle.com/coding/data-modeling/) · [Transfer](https://docs.tigerbeetle.com/reference/transfer/) — 불변 계정 필드, 네 누적값, 한도 flag, pending → post/void. 실제 사례와 ④-a

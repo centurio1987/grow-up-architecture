@@ -1182,7 +1182,7 @@ class SettlementBatch {
 - [Account 가이드](../account/account-guide_v1.1.0.md) — 잔액이 Entry 합으로 정의되는 규칙과 계정 유효 검사, 잔액 읽기 모델. 이 글이 Account 쪽으로 넘긴 불변식 둘
 - [Quantity 가이드](../quantity/quantity-guide_v1.1.0.md) — 단위를 가진 값의 연산 규칙. 최소 조건 3 이 기대는 금액 개념
 - [Account와 Entry의 관계 설계](<../../consideration/Account와 Entry의 관계 설계.md>) — 시나리오 1 · 2, 요약 VO 하이브리드. 「상황이 달라지면」 둘째 · 셋째 · 넷째 행
-- [account-transaction-entry-modeling](../../consideration/account-transaction-entry-modeling.md) — 계정별 내역 목록 모델. 「상황이 달라지면」 다섯째 행
+- [account-transaction-entry-modeling](../../consideration/account-transaction-entry-modeling.md) — **정정 전**의 계정별 내역 목록 모델. 「상황이 달라지면」 다섯째 행. 그 문서는 2026-09-29 에 이 프로젝트의 배정대로 정정됐고(4절 머리에 정정 기록), 지금 그 자리는 AR 밖의 읽기 모델이다
 - [Effective Aggregate Design Part I (Vernon)](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_1.pdf) — 진짜 불변식만 한 경계에, 작은 aggregate, 트랜잭션 하나에 aggregate 인스턴스 하나. 「상황이 달라지면」 넷째 행과 경계 반례 표
 - [Effective Aggregate Design Part II (Vernon)](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf) — id 참조와 경계 밖 결과적 일관성. 상황 설정의 참조 칸과 id 참조를 뒤집어 본 표
 - [TigerBeetle: Transfer](https://docs.tigerbeetle.com/reference/transfer/) · [Reliable Transaction Submission](https://docs.tigerbeetle.com/coding/reliable-transaction-submission/) — 수정·삭제 불가와 정정 transfer, `flags.linked`, `id` 를 멱등성 키로, pending → post/void. 실제 사례와 「상황이 달라지면」 넷째 행

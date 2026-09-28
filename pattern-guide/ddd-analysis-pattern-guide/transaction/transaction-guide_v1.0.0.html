@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:39ea3106b13fd699c809890e799a2aa4808cd6ad6d14c3981782c498d8ffad98 -->
+<!-- guide-fp:7ba877b42675a6b7691692a3fc8cab4faae658d061daf6158a7e447da0211b83 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -1640,7 +1640,7 @@ After — Account 가 요약 VO를 가진다
 <li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.1.0.html">Account 가이드</a> — 잔액이 Entry 합으로 정의되는 규칙과 계정 유효 검사, 잔액 읽기 모델. 이 글이 Account 쪽으로 넘긴 불변식 둘</li>
 <li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.html">Quantity 가이드</a> — 단위를 가진 값의 연산 규칙. 최소 조건 3 이 기대는 금액 개념</li>
 <li><a href="../../consideration/Account%EC%99%80%20Entry%EC%9D%98%20%EA%B4%80%EA%B3%84%20%EC%84%A4%EA%B3%84.md">Account와 Entry의 관계 설계</a> — 시나리오 1 · 2, 요약 VO 하이브리드. 「상황이 달라지면」 둘째 · 셋째 · 넷째 행</li>
-<li><a href="../../consideration/account-transaction-entry-modeling.md">account-transaction-entry-modeling</a> — 계정별 내역 목록 모델. 「상황이 달라지면」 다섯째 행</li>
+<li><a href="../../consideration/account-transaction-entry-modeling.md">account-transaction-entry-modeling</a> — <strong>정정 전</strong>의 계정별 내역 목록 모델. 「상황이 달라지면」 다섯째 행. 그 문서는 2026-09-29 에 이 프로젝트의 배정대로 정정됐고(4절 머리에 정정 기록), 지금 그 자리는 AR 밖의 읽기 모델이다</li>
 <li><a href="https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_1.pdf">Effective Aggregate Design Part I (Vernon)</a> — 진짜 불변식만 한 경계에, 작은 aggregate, 트랜잭션 하나에 aggregate 인스턴스 하나. 「상황이 달라지면」 넷째 행과 경계 반례 표</li>
 <li><a href="https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_2.pdf">Effective Aggregate Design Part II (Vernon)</a> — id 참조와 경계 밖 결과적 일관성. 상황 설정의 참조 칸과 id 참조를 뒤집어 본 표</li>
 <li><a href="https://docs.tigerbeetle.com/reference/transfer/">TigerBeetle: Transfer</a> · <a href="https://docs.tigerbeetle.com/coding/reliable-transaction-submission/">Reliable Transaction Submission</a> — 수정·삭제 불가와 정정 transfer, <code>flags.linked</code>, <code>id</code> 를 멱등성 키로, pending → post/void. 실제 사례와 「상황이 달라지면」 넷째 행</li>

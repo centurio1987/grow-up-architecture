@@ -3,7 +3,12 @@ title: Account와 Entry의 관계 설계
 user: 유저
 ai: Claude
 created: 2026-06-30
-updated: 2026-06-30
+updated: 2026-09-29
+context: ../research/accounting-context.md
+context_note: 이 문서보다 뒤에 선 회계 배경 확정안이 9절에서 이 문서를 「정합」으로 판정했다. 본문은 그대로 둔다.
+cited_by:
+  - ../ddd-analysis-pattern-guide/account/account-guide_v1.1.0.md
+  - ../ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.0.md
 summary: |
   Account와 Entry를 어떤 aggregate 경계로 묶을지 세 가지 시나리오(① Composite Association value, ② 별도 Aggregate, ③ Aggregated Association value)를 검토했다. 결정 기준은 영속성 편의나 관계의 직관성이 아니라 "불변식이 어디에 있는가"이며, Vernon의 aggregate 4원칙(진짜 불변식만 한 경계에·작은 aggregate·id 참조·경계 밖은 결과적 일관성)이 기준선이다.
 
