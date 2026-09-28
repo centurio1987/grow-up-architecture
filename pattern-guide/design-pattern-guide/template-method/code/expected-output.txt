@@ -1,0 +1,4 @@
+[csv] ST-01 rows 4 kept 3 dropped 1 avg 186 max 203
+[fixed] ST-01 rows 3 kept 2 dropped 1 avg 173 max 179
+[fixed] warn dropped 1 - check column offsets
+[kv] ST-02 rows 3 kept 3 dropped 0 avg 195 max 214

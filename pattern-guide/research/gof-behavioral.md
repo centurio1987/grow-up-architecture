@@ -109,6 +109,14 @@
 - Express 미들웨어·DOM 버블링·Spring Security 필터 사슬을 CoR이라고 명시한 1차/공식 출처는 확인하지 못함
 - 기존 참고 자료의 OkHttp Interceptors 문서와 Effective Java 관련 항목은 이번에 확인 안 함
 
+### 집필 결과 되먹임 (2026-09-28, v1.0.0)
+- **미해결 해소** — 「모든 처리자가 처리하고 계속 넘기는 변형(`java.util.logging.Logger`)을 정통형과 같은 [필수] 로 판정할지」 → **아님.** 근거는 조건 4(Intent 의 「처리될 때까지 넘긴다」 + Participants 의 「처리 아니면 전달」)이고, `setUseParentHandlers` 는 **로거마다 한 번 정하는 설정**이지 기록 한 건을 보고 내리는 판단이 아니다
+- **미해결 해소** — 「refactoring.guru 가 `javax.servlet.Filter#doFilter()` 를 CoR 과 Strategy 양쪽에서 예로 듦」 → **CoR 사례로 채택.** `chain.doFilter` 를 부르지 않아 뒤를 막는 길이 API 의 정상 기능이다(조건 4). 이 저장소의 Strategy 가이드는 이 API 를 싣지 않아 편 사이 충돌도 없다
+- **확인** — 「기존 가이드 승계분」이 ②(successor 보유)를 [선택] 으로 내리는 것을 검토하라고 적었는데 v1.0.0 이 그렇게 했고, 채점이 원문으로 확인했다(Participants 의 `(optional)` 표기 + Implementation 의 기존 링크 재사용)
+- **TypeScript 쟁점에 예외 단서** — 「구조적 타이핑이라 `handle` 메서드 모양만 맞으면 Handler 로 통과」에 붙일 것: **`private`·`protected` 멤버는 모양이 아니라 어느 클래스에서 선언됐는지로 맞는다.** 실측 3갈래 — 양쪽 `private readonly` → `Types have separate declarations of a private property 'title'.` / 공개 + `private readonly` → `Property 'title' is private in type 'LimitApprover' but not in type 'ReceiptCheck'.` / 양쪽 공개 → 통과. 출처는 노트에 이미 있는 TypeScript Handbook 「Type Compatibility」
+- **목록 디스패치 변형 실측** — `Vec`/`List` 순회 + 조기 종료 변형이 successor 사슬 정본과 **글자 단위로 같은 출력**을 낸다. 노트의 「외부 루프가 순서와 중단 판단을 쥔다」는 우려는 **순회가 후보의 답만 보고 움직이는 한** 조건 2를 깨지 않는다
+- **[필수] 근거의 범위** — 조건 1의 「넘기는 쪽은 그 선언 타입으로만 후보를 든다」 조각은 Intent·Participants 가 덮지 않는다(그 내용은 **Motivation·Structure** 에 있다). 이 프로젝트가 [필수] 근거를 다섯 절로 좁히고 있어 v1.0.0 은 **그 조각을 [선택] 6번으로 내렸다**
+
 ## Command (커맨드)
 
 ### 원전 대응
@@ -126,6 +134,7 @@
   3. Invoker가 커맨드의 `Execute`를 호출해 요청을 발행. 커맨드가 undo 가능하면 ConcreteCommand가 `Execute` 전에 되돌리기용 상태를 저장
   4. ConcreteCommand가 receiver의 연산을 호출해 요청 수행 — 왜: Invoker를 Receiver(와 그 요청)로부터 분리
 - consequences [GoF]: 연산을 호출하는 객체와 수행법을 아는 객체를 분리 · 커맨드는 일급 객체라 다른 객체처럼 조작·확장 가능 · 커맨드를 복합 커맨드로 조립(MacroCommand, 일반적으로 Composite의 사례) · 기존 클래스를 바꾸지 않고 새 Command 추가가 쉬움. 원전 Consequences는 대가를 따로 나열하지 않음. [RG] 단점: 발신자와 수신자 사이에 새 계층이 생겨 코드가 복잡해질 수 있음
+- 원전 구현 쟁점 — **원문은 번호 넷이다**(2026-09-28 집필 시 원문 대조): ① How intelligent should a command be? ② Supporting undo and redo ③ Avoiding error accumulation in the undo process ④ Using C++ templates. `(근거: … Implementation n)` 을 정확히 달려면 이 번호를 쓴다
 - 원전 구현 쟁점(요지) [GoF]: 커맨드가 얼마나 똑똑해야 하나(receiver와 액션의 단순 바인딩 ~ receiver 없이 모든 것을 스스로 수행 ~ receiver를 동적으로 찾음) / undo·redo — Receiver, 인자, 요청 처리로 바뀔 수 있는 receiver의 원래 값을 추가 저장해야 할 수 있고, receiver는 이전 상태로 되돌리는 연산을 제공해야 함. 1단계 undo는 마지막 커맨드만, 다단계는 실행된 커맨드의 history list / 호출마다 상태가 다른 커맨드는 history에 넣기 전 복사해야 함(Prototype 역할) / undo·redo 반복 중 오차 누적(hysteresis) → Memento로 복원 정보 확보 / C++ 템플릿(undo 불가·인자 없는 커맨드)
 - Applicability [GoF]: 수행할 액션으로 객체를 매개변수화(절차형 언어의 콜백을 객체지향으로 대체) · 요청을 서로 다른 시점에 지정·큐잉·실행(원래 요청과 독립된 수명, 다른 프로세스로 전송 가능) · undo(`Unexecute` + history list) · 크래시 복구용 변경 로그(load/store 추가) · primitive 연산 위의 고수준 연산(트랜잭션)으로 시스템 구조화
 
@@ -173,6 +182,9 @@
   - 공식 Rust 책 21장 스레드 풀: `type Job = Box<dyn FnOnce() + Send + 'static>`을 채널로 보내 워커가 실행 = 커맨드 큐
   - 함정: `FnOnce`는 한 번만 호출 가능(Rust 책 13장) → redo처럼 재실행하는 커맨드에는 `Fn`/`FnMut` 또는 trait 필요
   - 함정: `std::process::Command`는 이름만 같은 "프로세스 빌더"(문서) — Command 패턴 사례로 인용 금지
+- **세 언어 공통 (2026-09-28 배치8 실측)**:
+  - **문자열 색인 단위가 언어마다 다르다** — Java·TypeScript 는 UTF-16 코드 단위, Rust 는 UTF-8 바이트다. **한글이 섞이면 같은 색인이 다른 자리를 가리켜** 세 언어 출력이 갈린다. 문자열을 색인으로 다루는 예제는 ASCII 로 고정해야 `--run` 이 통과한다
+  - **Rust 에서 「같은 객체를 두 곳이 함께 가리키는」 구조 (2026-09-28 정정)** — 먼저 `Rc<dyn Trait>` 를 본다. **처리 연산이 `&self` 를 받으면 `Rc<dyn Trait>` 만으로 두 곳이 같은 객체를 공유한다**(CoR 편이 rustc 1.95.0 / 2021 edition 에서 컴파일·실행 확인, `Rc::strong_count` 3). `RefCell` 은 **그 객체가 호출 사이에 자기 상태를 바꿀 때만** 필요하다 — Command 편이 `Rc<RefCell<dyn Trait>>` 를 쓴 것은 버튼 맵과 이력이 같은 객체를 보면서 그 객체의 되돌리기 상태가 바뀌어야 했기 때문이고, **일반 규칙이 아니다.** Java·TypeScript 는 참조를 그대로 넣으면 된다
 
 ### 실제 사용처
 - `java.lang.Runnable` + `java.util.concurrent.Executor` / `ExecutorService` (Java SE 21) — `Runnable`=Command, `Executor`=Invoker(작업 제출과 실행 방식 분리), 람다가 호출하는 대상=Receiver. 패턴명 명시: [RG] Java Command 페이지("All implementations of java.lang.Runnable") — https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Executor.html
@@ -213,9 +225,9 @@
 - [Rust std — std::process::Command](https://doc.rust-lang.org/std/process/struct.Command.html) — "A process builder" · 조회 2026-09-17
 
 ### 미해결 질문
-- Client와 Invoker가 같은 객체인 경우(람다를 만들어 곧바로 executor에 넘김)도 [필수] 조건 충족으로 볼지 — GoF는 역할을 나누지만 겸할 수 있는지 명시 없음
-- `UndoableEdit`/`UndoManager`, VS Code 커맨드 API를 Command 패턴이라고 명시한 공식·신뢰 출처 확인 못 함
-- 기존 가이드 조건 ④(자기 완결)를 [필수]로 둘지
+- ~~Client와 Invoker가 같은 객체인 경우도 [필수] 조건 충족으로 볼지~~ → **해소(2026-09-28, v1.0.0)**: 조건으로 만들지 않는 길로 풀었다. [필수] 1~3번이 *호출 지점이 무엇을 아는지* 로만 판정하고 역할을 누가 겸하는지는 보지 않는다(본문에 명시). 원전에 없는 것을 단정하지 않으면서 판정은 결정론적으로 선다
+- **여전히 미해결**: `UndoableEdit`/`UndoManager`, VS Code 커맨드 API를 Command 패턴이라고 **명시한** 출처를 2026-09-28 에도 못 찾았다(채점자가 Oracle 5개 페이지에서 `command pattern` 문자열 0건 확인). v1.0.0 본문은 Javadoc 이 말하는 것만 적고 **역할 매핑은 이 가이드의 판정이라고 밝혔다.** VS Code API 는 같은 이유로 싣지 않았다
+- ~~기존 가이드 조건 ④(자기 완결)를 [필수]로 둘지~~ → **해소(2026-09-28, v1.0.0)**: 둘로 쪼갰다. 「받을 대상과 인자를 자기 안에 묶는다」는 Participants·Collaborations 근거로 **[필수] 2번**, 「받을 대상이 *별도 객체* 인가」는 Implementation 근거로 **[선택] 7번**. 노트가 적은 긴장(receiver 를 동적으로 찾는 커맨드도 허용)이 이렇게 하면 사라진다
 - 기존 참고 자료의 Head First·Refactoring to Patterns·Fowler CQRS 내용은 이번에 확인 안 함
 
 ## Interpreter (인터프리터)
@@ -765,6 +777,8 @@
 - Applicability [GoF]: 객체 행위가 상태에 의존하고 런타임에 그 상태에 따라 바뀌어야 함 · 연산에 객체 상태에 의존하는 큰 다분기 조건문이 있고(상태는 보통 열거 상수로 표현), 여러 연산이 같은 조건 구조를 반복
 - Known Uses [GoF]: Johnson & Zweig의 TCP 연결 프로토콜 적용 · 그리기 편집기의 도구(HotDraw `DrawingController`→현재 `Tool`, Unidraw `Viewer`–`Tool`) — 사용자가 새 도구를 고르면 편집기가 현재 Tool 객체를 교체 · Coplien의 Envelope-Letter 이디엄과 관련
 
+- related patterns [GoF] (2026-09-28 원문 대조로 추가 — 노트에 이 줄이 없어 뒤 편이 찾기 어려웠다): 「Flyweight 가 State 객체를 언제 어떻게 공유할 수 있는지 설명한다」 · 「State 객체는 흔히 Singleton 이다」 두 문장
+
 ### 최소 조건 후보
 - [필수] 상태별 행위가 공통 State 인터페이스를 구현하는 별도 객체로 나뉨 — 반례: Context의 모든 메서드가 `switch (status)`를 반복(원전 Applicability가 해결 대상으로 지목한 모양)
 - [필수] Context는 상태 의존 요청을 현재 상태 객체에 위임하고, 클라이언트는 Context 인터페이스만 씀 — 반례: 클라이언트가 `ctx.getState().open(ctx)`를 직접 호출하면 상태가 노출됨
@@ -808,6 +822,11 @@
   - 책의 대안: 상태를 서로 다른 타입(`DraftPost` → `PendingReviewPost` → `Post`)으로 인코딩해 잘못된 상태·전이를 컴파일 오류로 만듦 — 전이가 캡슐화되지 않고 타입으로 드러나는 다른 트레이드오프
   - "왜 enum이 아닌가"(책): enum도 가능하나 값 검사 위치마다 match 필요. 결론: 소유권 같은 특성 때문에 객체지향 패턴이 Rust에서 항상 최선은 아님
   - refactoring.guru Rust 음악 재생기 예도 `self: Box<Self>` 방식 사용
+  - **`self: Box<Self>` 소비 방식이 유일한 길은 아니다 (2026-09-28 실측)** — 상태가 무상태 단위 구조체라면 `fn pay(&self, order: &mut Order, …) -> Box<dyn OrderState>` + `Option::take()` 로도 된다. `Rc<RefCell<>>`·`Weak` 없이 문맥과 상태가 서로를 오간다. 「전이하지 않음」은 `Box::new(자기타입)` 으로 표현하고, 이것이 원전 Consequences 의 「인스턴스 변수가 없으면 공유 가능」과 같은 자리다
+- **세 언어 공통 (2026-09-28 배치8 실측)**:
+  - **「Context 안에 상태로 가르는 분기가 없을 것」 조건의 기계 검출력이 언어마다 갈린다** — Context 의 상태 필드만 구체 상태 타입으로 좁히면 Java 4건(`incompatible types`)·Rust 2건(`error[E0308]`)이 막는데 **TypeScript 는 구조적 타이핑이라 통과하고 출력까지 같다.** 판별 필드(`readonly kind: "…"`)를 두어야 타입으로 막힌다
+  - **원인을 바꿔 가며 재현했다** — Java 에서 **생성자 인자만** 좁히면 오류 0건이고 출력도 그대로다. **막는 것은 생성자 인자가 아니라 필드 타입이다**
+  - **「부분 결제」 상태 하나를 더할 때의 편집 범위** — State 판은 새 클래스 1개 + 앞 상태 1메서드, Context 는 **0줄**. 같은 결과를 내는 열거형 + `switch` 판은 Context 안 **10줄**(열거형 선언 1줄 + `pay`·`ship`·`cancel` 세 `switch` 전부). 10줄은 `diff` 의 지운 줄 + 더한 줄 합계라 세는 기준을 밝혀 쓴다
 
 ### 실제 사용처
 - (공식 문서 예제) The Rust Programming Language 18.3 블로그 `Post` — `Post`=Context, `State` trait=State, `Draft`·`PendingReview`·`Published`=ConcreteState. 라이브러리가 아니라 책의 예제 — https://doc.rust-lang.org/book/ch18-03-oo-design-patterns.html
@@ -841,9 +860,10 @@
 
 ### 미해결 질문
 - 공식 문서로 GoF State 구조가 확인되는 현행 Java/TS 라이브러리 사용처를 찾지 못함(목표 미달). [RG]의 JSF `Lifecycle` 주장 채택 여부
-- 기존 가이드 조건 ③(전이 결정권은 상태 측 [필수])이 원전과 충돌 — 새 가이드 [선택] 전환과 Strategy 편 비교 문구 동기화 필요
-- 기존 참고 자료 `java.nio.channels.SelectionKey`가 State 사례라는 근거 확인 못 함(이번에 Javadoc도 보지 않음). Spring Statemachine·Harel Statecharts 내용도 확인 안 함
-- enum+match / sealed+switch / union switch 형태를 가이드에서 State 구현으로 인정할지, "대안"으로만 둘지
+- ~~기존 가이드 조건 ③(전이 결정권은 상태 측 [필수])이 원전과 충돌~~ → **해소(2026-09-28, v1.0.0)**: **[선택] 4번**으로 내렸고 근거를 GoF Collaborations(「Context 든 ConcreteState 든」)로 달았다. Strategy 편 `:336` 이 이미 같은 기준을 적고 있어 동기화는 이미 돼 있었다 — 고칠 것이 없었다
+- **여전히 미해결**: 공식 문서로 GoF State 구조가 확인되는 현행 Java/TS **라이브러리** 사용처를 2026-09-28 에도 못 찾아 v1.0.0 은 `### 실제 라이브러리에서` 를 **생략**했다(GG5 정당한 생략으로 채점 확인). Rust 책 18.3 의 `Post` 는 교재 예제라 라이브러리가 아니고, [RG]의 JSF `Lifecycle` 주장은 공식 문서로 구조를 확인 못 해 PG21 에 걸린다. 기존 참고 자료 `java.nio.channels.SelectionKey`가 State 사례라는 근거 확인 못 함(이번에 Javadoc도 보지 않음). Spring Statemachine·Harel Statecharts 내용도 확인 안 함
+- ~~enum+match / sealed+switch / union switch 형태를 State 구현으로 인정할지~~ → **결정(2026-09-28, v1.0.0): 인정하지 않는다.** 최소 조건 1번(상태마다 별도 구현 단위)과 2번(Context 안에 상태로 가르는 분기가 없을 것)에서 함께 빠진다. 비교 절에 「열거형 + `switch`」 항목을 두어 **대안**으로 다뤘다
+- **v1.0.0 집필 중 드러난 것 (2026-09-28)**: 최소 조건 3번의 초안이 「대입이 요청을 처리하는 흐름 안에서 실행된다」를 요구했는데 **근거로 댄 Intent·Applicability 가 받치는 것은 「실행 중에 바뀐다」까지였다.** 그 결과 같은 편의 비교 절이 원전 Known Uses(그리기 편집기의 도구 교체)를 State 로 인정해 **한 편이 같은 코드를 두 번 반대로 판정**했다. 3번을 「만든 뒤에 바뀐다」로 넓혀 닫았고, 넓힌 대가로 **설치 연산을 둔 Strategy 가 필수 셋을 통과**하게 되어 판정 표에 그 행을 넣어 막았다. 뒤 편은 **`[필수]` 조건에서 근거 괄호를 지우고 남은 것이 조건의 문면을 전부 덮는지** 조각 단위로 확인한다
 
 ## Strategy (전략)
 
@@ -1139,6 +1159,20 @@
 - 기존 가이드 조건 ①의 `final` 봉인을 [필수]에서 분리할지
 - `JdbcTemplate`을 Template Method로 소개하는 흔한 설명의 근거 — 공식 Javadoc은 콜백 인터페이스 위임만 서술
 - TS final 제안 이슈의 종료 사유(메인테이너 코멘트 원문)는 라벨만 확인하고 본문은 확인 안 함
+
+### 집필 결과 되먹임 (2026-09-28, v1.0.0)
+- **미해결 해소** — 「Rust trait 제공 메서드를 Template Method 로 인정할지」 → **인정.** 근거 셋 — ① 원전이 AbstractClass 에 요구하는 것은 데이터가 아니라 **연산 둘**(골격 구현 + 아래가 채울 단계 선언, Participants)이고 trait 은 제공 메서드·필수 메서드로 그대로 한다 ② 제어 방향이 같다(골격이 단계를 부른다, Rust Book 10.2) ③ 표 1.1 이 클래스 패턴을 「상속으로 맺어져 **컴파일 시점에 고정**」으로 정의하는데 어느 타입이 어느 trait 을 구현하는지도 컴파일 때 정해진다. 갈리는 두 자리(상위 타입이 데이터를 못 가짐 · 골격 봉인 수단 없음)는 **둘 다 [선택] 급**이라 판정을 뒤집지 않는다
+- **미해결 해소** — 「기존 조건 ①의 `final` 봉인을 [필수] 에서 분리할지」 → **분리함([선택] 5번).** 그 문장은 원전에서 **Implementation(C++ 접근 제어)** 자리에만 있고 Intent·Participants·Collaborations 어디에도 없다. `InputStream.read(b,off,len)` 은 문서가 재정의를 **권장**하고, TypeScript 에는 `final` 수정자가 없고 Rust trait 에는 제공 메서드 고정 수단이 없어 **필수로 올리면 두 언어의 모든 Template Method 가 탈락한다**
+- **여전히 미해결** — `JdbcTemplate`(v1.0.0 본문 언급 0회) · TypeScript `final` 제안 이슈의 종료 사유 본문(본문은 「둘 다 닫힌 제안」까지만 적는다)
+- **표 1.1 직접 대조** — 행위 패턴 열하나 가운데 **클래스 범위는 Interpreter(243)·Template Method(325) 둘**. 같은 절이 클래스 패턴을 「상속으로 맺어져 컴파일 시점에 고정」으로 정의한다 — Rust 판정의 근거가 이 문장이다
+- **원전 절 구조** — Consequences 는 할리우드 원칙 + 연산 다섯 종류(구체 · 구체 AbstractClass · primitive · factory method · hook) + 훅/추상 명시 + 상위 호출 누락 문제. Applicability 셋 · Participants 2역할 · Collaborations **한 문장** · Related Patterns 둘. **Also Known As 절은 없다**
+- **`std::io::Read` 는 필수 1 + 제공 14**(문서 기준, 안정 API 는 여덟). 노트가 `Iterator` 만 들고 있어 보탠다
+- **`impl Read for &[u8]` 가 제공 메서드 일곱을 덮어쓴다**(`read_buf`·`read_vectored`·`is_read_vectored`·`read_exact`·`read_buf_exact`·`read_to_end`·`read_to_string`, `library/std/src/io/impls.rs`). 노트의 「제공 메서드는 구현자가 재정의할 수 있음」에 붙일 실례
+- **「비final 골격이 흔하다」가 실측으로 확인됐다** — JDK 21 `src.zip` 의 `BufferedInputStream.java:395` · `ByteArrayInputStream.java:174` 가 `read(byte[], int, int)` 를 다시 선언한다
+- **Spring `AbstractApplicationContext`** — 클래스 설명이 Template Method 패턴을 명시하고 `refreshBeanFactory()` 는 `protected abstract`, `onRefresh()`·`onClose()` 는 본문 있는 `protected` 다. **그 문서가 뒤 둘도 "template method" 라 부르는데 원전 어휘로는 훅**이라는 점을 v1.0.0 본문이 밝혔다
+- **세 언어 실측** — 훅 미구현은 세 언어 모두 막는다(javac 1 · `TS2515` 1 · `error[E0046]` 1). **TypeScript 가 구조적 타이핑이라 안 막힐까 싶었는데 추상 멤버는 상속 관계에서 검사해 그대로 막혔다.** 가시성만 올려도 Java·TS 진단이 글자까지 같아 **막는 것은 가시성이 아니라 본문 없는 선언**이고, Rust 는 trait 항목에 수정자를 붙이면 `error[E0449]` 라 그 실험 자체가 성립하지 않는다. **골격 봉인은 Java 만 있다** — `final` 한 낱말만 떼면 오류가 사라지고 csv 줄이 `avg 186 max 203` → `avg 389 max 999` 로 조용히 틀린다(TS·Rust 는 처음부터 통과하고 같은 389)
+- **조건 4 의 판정 단위는 상위 타입 하나가 아니라 상위·하위 타입의 짝이다** — 이것을 놓쳐 1라운드에 교차 판정 A≠B 2건이 났다(`InputStream`·`Read`). 근거는 원전 문장의 주어 — **Collaborations 한 문장의 주어가 AbstractClass 가 아니라 ConcreteClass** 다
+- **남은 회색 1건** — 편의 오버로드(`final int read(byte[] b) { return read(b,0,b.length); }`)가 조건 4 의 「내려보내지 않은 계산」에 걸리는지. `b.length` 를 계산으로 읽으면 경로 A 가 TM 을 내는데 원전 기준으로는 골격이 아니다. 조건 4 의 「계산」에 **「단계 호출의 인자를 만드는 것은 세지 않는다」** 를 넣으면 지워진다
 
 ## Visitor (방문자)
 

@@ -1,0 +1,5 @@
+R1 80000 seen=ReceiptCheck>TeamLead -> TeamLead approved
+R2 700000 seen=ReceiptCheck>TeamLead>DeptHead -> DeptHead approved
+R3 5000000 seen=ReceiptCheck>TeamLead>DeptHead>Finance -> Finance approved
+R4 30000000 seen=ReceiptCheck>TeamLead>DeptHead>Finance -> unhandled
+R5 80000 seen=ReceiptCheck -> rejected(no-receipt)
