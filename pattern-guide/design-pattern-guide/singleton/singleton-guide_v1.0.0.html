@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:0619d2e0b2baae1fc713f61e38076670ea2c8f6c1df7ba0a3af47c00c9c78e7b -->
+<!-- guide-fp:bec2fa40ea8afd276f79fa4693d2db995d5ad51984d47722ec8d99c1ff652bce -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -615,7 +615,7 @@ new OrderNumberIssuer()       web/OrderDesk        (프로그램 시작 때)
 </li>
 <li>[필수] 잘 알려진 연산 하나가 언제 불러도 같은 인스턴스를 돌려줍니다 — 그 연산은 타입에 속한 공개 연산(정적 메서드·클래스 메서드·모듈이 내보내는 함수·타입 자체를 부르는 호출)이고, 정해진 범위 안에서 호출 시점이나 호출자와 무관하게 같은 객체를 돌려줍니다. 이것이 이 패턴의 불변식이라 코드가 그 범위를 밝혀야 해요. 시나리오 1 의 2·5·7단계가 창구 둘이 같은 객체를 받는 자리이고, 구현 예시의 출력 두 번째 줄이 그 결과입니다 (근거: GoF 원서 Singleton 절 Intent·Collaborations — 유일 인스턴스에 이르는 전역 접근점을 제공하고, 클라이언트는 오직 그 Instance 연산으로만 인스턴스에 닿는다).
 <ul>
-<li>빠지면: 접근점이 인자를 받아 인자마다 다른 객체를 돌려주면 유일성이 사라집니다. 키별로 객체를 캐시해 돌려주는 <code>instance(key)</code> 가 그 모양인데, 그것은 공유 대상이 여럿인 구조라 비교 절의 기준으로 Flyweight 쪽이에요. 호출할 때마다 새 객체를 만들어 주는 연산은 이름이 <code>instance</code> 여도 그냥 생성 메서드입니다.</li>
+<li>빠지면: 접근점이 인자를 받아 인자마다 다른 객체를 돌려주면 유일성이 사라집니다. 키별로 객체를 캐시해 돌려주는 <code>instance(key)</code> 가 그 모양인데, 그것은 공유 대상이 여럿인 구조라 비교 절의 기준으로 Flyweight 쪽이에요. 다만 키 캐시가 있다고 그것만으로 Flyweight 가 되지는 않습니다 — 자리마다 달라지는 값을 공유 객체 밖으로 빼 연산 인자로 넘기는 일이 더 있어야 하고, 그 기준은 <a href="design-pattern-guide/flyweight/flyweight-guide_v1.0.0.html#디자인-패턴을-충족하는-최소-조건">Flyweight 가이드의 최소 조건 1·2번</a>에 있어요. 그 둘까지 보면 키 캐시만 있는 코드는 어느 쪽도 아닌 인스턴스 통제 캐시입니다. 호출할 때마다 새 객체를 만들어 주는 연산은 이름이 <code>instance</code> 여도 그냥 생성 메서드입니다.</li>
 </ul>
 </li>
 <li>[선택] 동시에 접근점에 들어와도 두 번째 인스턴스가 생기지 않습니다 — 보관 자리를 확인하고 채우는 구간이 한 번에 하나씩만 지나가도록 잠금이나 언어 차원의 초기화 보장으로 묶여 있습니다. 실행 환경에 스레드가 없으면 이 조건은 저절로 만족돼요. 시나리오 3 의 4단계가 이 묶음이 없을 때의 결과입니다 (근거: 이 가이드의 정책 — 원전은 이 조건을 패턴의 성립 요건으로 적지 않고 단일 스레드 예제를 전제하므로, 필수로 올리면 스레드가 없는 프로그램의 멀쩡한 싱글톤까지 패턴 아님으로 판정된다. 3번을 여러 스레드 환경에서 실행 중에도 지키려는 구현 조건으로 둔다).</li>
@@ -1113,6 +1113,7 @@ final class IssuerB {
 </ul>
 </li>
 <li><a href="reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.html">참고 문서 「GoF 공통 어휘」</a> — 개요의 클래스 패턴과 객체 패턴(이 패턴이 객체 범위인 이유), Flyweight 비교의 내재 상태와 외재 상태(공유 단위가 키별로 갈리는 자리)</li>
+<li><a href="design-pattern-guide/flyweight/flyweight-guide_v1.0.0.html">Flyweight 가이드</a> — 최소 조건 3번의 <code>빠지면:</code> 이 보낸 곳. <code>instance(key)</code> 가 Flyweight 로 판정되려면 무엇이 더 있어야 하는지를 그 편의 최소 조건 1·2번이 가른다</li>
 <li><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Runtime.html">Runtime (Java SE 21 API)</a> — 애플리케이션마다 인스턴스가 하나라는 서술과 <code>getRuntime</code>. 「실제 라이브러리에서」 첫 줄의 근거이고, 비공개 생성자는 <code>javap -p</code> 로 따로 확인했습니다</li>
 <li><a href="https://nodejs.org/api/modules.html">Modules: CommonJS modules | Node.js</a> — 같은 파일로 해석되는 <code>require</code> 가 같은 객체를 돌려준다는 캐시 규칙과 경로가 갈릴 때의 예외. 「실제 라이브러리에서」의 두 번째 줄과 최소 조건 3번의 범위 표</li>
 <li><a href="https://doc.rust-lang.org/std/sync/struct.OnceLock.html">OnceLock (Rust std)</a> — 값을 한 번만 채우고 채우는 동안 다른 호출을 기다리게 하는 동기화 타입. 구현 해설에서 Rust 판이 선택 조건 4번을 표준 라이브러리에서 얻는다고 한 근거</li>

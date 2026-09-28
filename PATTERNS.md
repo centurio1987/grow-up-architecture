@@ -25,10 +25,10 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | --- | --- | --- |
 | Adapter (어댑터) | 호환되지 않는 인터페이스 사이를 변환 | [adapter-guide_v1.0.0.md](pattern-guide/design-pattern-guide/adapter/adapter-guide_v1.0.0.md) |
 | Bridge (브릿지) | 추상(Abstraction)과 구현(Implementor)을 분리해 독립적으로 확장 | [bridge-guide_v1.0.0.md](pattern-guide/design-pattern-guide/bridge/bridge-guide_v1.0.0.md) |
-| Composite (컴포지트) | 부분-전체 계층을 같은 인터페이스로 다룸 | [composite-guide_v0.1.0.md](pattern-guide/design-pattern-guide/composite/composite-guide_v0.1.0.md) |
+| Composite (컴포지트) | 부분-전체 계층을 같은 인터페이스로 다루고, 묶음의 답은 자식들의 답을 모아 만듦 | [composite-guide_v1.0.0.md](pattern-guide/design-pattern-guide/composite/composite-guide_v1.0.0.md) |
 | Decorator (데코레이터) | 객체에 동적으로 책임을 추가 | [decorator-guide_v1.0.0.md](pattern-guide/design-pattern-guide/decorator/decorator-guide_v1.0.0.md) |
 | Facade (퍼사드) | 서브시스템에 통합된 단순한 진입점 제공 | [facade-guide_v1.0.0.md](pattern-guide/design-pattern-guide/facade/facade-guide_v1.0.0.md) |
-| Flyweight (플라이웨이트) | 다수의 미세 객체를 공유로 효율화 | [flyweight-guide_v0.1.0.md](pattern-guide/design-pattern-guide/flyweight/flyweight-guide_v0.1.0.md) |
+| Flyweight (플라이웨이트) | 다수의 미세 객체를 공유로 효율화 | [flyweight-guide_v1.0.0.md](pattern-guide/design-pattern-guide/flyweight/flyweight-guide_v1.0.0.md) |
 | Proxy (프록시) | 다른 객체에 대한 접근을 대리/제어 | [proxy-guide_v1.0.0.md](pattern-guide/design-pattern-guide/proxy/proxy-guide_v1.0.0.md) |
 
 ## Behavioral Patterns (행위 패턴)

@@ -792,6 +792,11 @@
 - "노드 타입이 하나인 단순 트리 자료구조는 Composite가 아니다"라는 기존 가이드 주장의 외부 출처를 찾지 못했다. GoF 의도(개별·합성의 균일한 취급)에서 끌어낸 해석으로 표기할지 정해야 한다.
 - DOM 노드의 `Text` 등 잎 타입 목록과 `Element`의 Composite 대응은 MDN Node 요약 수준에서만 확인했다(하위 인터페이스별 자식 허용 규칙 전체는 대조 안 함).
 - `javax.swing.JComponent`(기존 참고 자료)와 JSF `UIComponent`(refactoring.guru)는 Javadoc을 확인하지 않았다.
+- **★ 원전 귀속 예방(Composite v1.0.0, 2026-09-28 원전 HTML판 직접 확인)** — **GoF Composite 절 Related Patterns 는 Chain of Responsibility · Decorator · Flyweight · Iterator · Visitor 다섯이고, Adapter·Proxy 는 없다.** 근거 괄호를 이 절에 달 때 이 목록 밖의 이름을 쓰지 않는다. 앞 배치에서 Facade 편이 그 절에 없는 Adapter 를 근거로 달았다가 채점에 잡혔고, **실행으로는 검증되지 않는 종류**라 원문을 열어야만 걸린다.
+- **최소 조건 후보의 불변식 항목에 두 층을 명시할 것(Composite v1.0.0, 2026-09-28)** — 이 노트의 불변식 항목은 「부모 참조를 두는 설계에서는 한 컴포넌트의 부모가 하나다」로 한정을 걸어 뒀는데, 집필자가 초안에서 그 한정을 떼고 `[필수]` 로 올렸다가 채점에 걸렸다. **비순환은 성립 요건(Intent)이고 단일 부모는 구현 쟁점(Implementation 쟁점 2 Sharing components)** 이다. 섞으면 analyzer 가 **공유 트리를 「Composite 아님」으로 오판**한다. 가이드는 비순환만 `[필수]`, 단일 부모는 `[선택]` 9번으로 두었다.
+- **「단순 트리 자료구조는 Composite 가 아니다」의 외부 출처는 이번에도 못 찾았다(Composite v1.0.0, 2026-09-28).** 대신 **이 가이드의 최소 조건으로 판정하는 방식**으로 풀었다 — 노드 종류가 하나뿐이라 조건 1번이 요구하는 「서로 다른 종류가 같은 타입을 구현」이 없고, 끝을 내는 것이 타입이 아니라 `null` 검사라 조건 4번도 없다. 다음 편이 같은 조사를 되풀이하지 않도록 적어 둔다.
+- **실측 보탬(Composite v1.0.0, 2026-09-28)** — 자식을 `Vec<Box<dyn Parcel>>` 로 **소유**하는 Rust 구현에서는 순환·다중 부모를 만드는 것 자체가 `error[E0382]: use of moved value` 로 막힌다(가이드 실제 코드로 확인). 노트의 「세 언어 구현 쟁점 · Rust」는 `Rc`/`Weak` 로 부모 참조를 다루는 쪽만 적는데, **소유 기반 자식 목록이 트리 불변식을 컴파일러에게 넘긴다**는 점을 보탠다.
+- **출처 재확인(2026-09-28)** — MDN `Node.appendChild()` 의 `HierarchyRequestError` 조건에 「삽입이 고리를 만들 때(child 가 그 노드의 조상일 때)」가 명시돼 있다(노트 서술 정확). `java.awt.Container` 는 첫 문장 정의 · `Container extends Component` · `add(Component)`·`getComponents()` 확인. 덧붙여 **`java.awt.Component` 쪽 `add` 는 `add(PopupMenu)` 뿐**이라 자식 관리 연산이 아니다. `javax.swing.JComponent` 와 JSF `UIComponent` Javadoc 은 **여전히 미확인**.
 
 ## Decorator (데코레이터)
 
@@ -991,7 +996,7 @@
   - `UnsharedConcreteFlyweight` (Row, Column) — 모든 Flyweight 서브클래스가 공유될 필요는 없다. Flyweight 인터페이스는 공유를 가능하게 할 뿐 강제하지 않는다. 흔히 ConcreteFlyweight를 자식으로 가진다.
   - `FlyweightFactory` — 플라이웨이트를 만들고 관리한다. 적절한 공유를 보장한다 — 요청이 오면 기존 인스턴스를 주거나 없으면 만든다.
   - `Client` — 플라이웨이트에 대한 참조를 유지한다. 플라이웨이트의 외재 상태를 계산하거나 저장한다.
-- collaborations:
+- collaborations: **(정정 2026-09-28 — 원문은 불릿 두 개다.** 아래 1번과 3번이 원문에서는 **한 항목**이고 2번이 둘째다. 내용 분해는 맞지만 **「항목 n」으로 인용하면 어긋난다** — Flyweight v1.0.0 집필 중 원문 재조회로 확인)
   1. 플라이웨이트가 동작하는 데 필요한 상태를 내재 또는 외재로 구분한다. 내재 상태는 ConcreteFlyweight에, 외재 상태는 Client가 저장·계산한다. — 왜: 컨텍스트마다 다른 상태를 빼내야 적은 수의 공유 객체로 많은 객체를 대신할 수 있다.
   2. 클라이언트는 ConcreteFlyweight를 직접 인스턴스화하지 않고 FlyweightFactory에서만 얻는다. — 왜: 공유가 제대로 되도록.
   3. 클라이언트는 연산을 호출할 때 외재 상태를 플라이웨이트에 넘긴다.
@@ -1074,10 +1079,11 @@
 - [Arc (Rust std)](https://doc.rust-lang.org/std/sync/struct.Arc.html) — 스레드 안전 참조 카운트 포인터 · 조회 2026-09-17
 
 ### 미해결 질문
-- 내재 상태의 **불변성**을 [필수]로 쓸지 — refactoring.guru는 "Flyweight objects are immutable"이라 단언하고 기존 가이드도 필수로 두었지만, GoF 원문은 "공유 가능·컨텍스트 독립"만 요구하고 Wikipedia는 가변 객체도 재초기화로 공유할 수 있다고 적는다. "공유 중 변경 금지"로 완화할지 결정이 필요하다.
-- `Integer#valueOf`에는 외재 상태가 없다 — 외재 상태 전달이 없는 사례를 Flyweight 실례로 쓸지, "인스턴스 통제 캐시(부분 대응)"로만 쓸지 정해야 한다. 기존 가이드 조건 4("외재 상태는 메서드 인자로")와 충돌한다.
-- TypeScript·Rust 표준 라이브러리에서 공식 문서가 확인되는 Flyweight 실례를 찾지 못했다.
-- 기존 참고 자료의 OpenJDK `IntegerCache` 소스는 확인하지 않았다(Javadoc의 캐시 보장만 확인).
+- ~~내재 상태의 **불변성**을 [필수]로 쓸지~~ → **닫힘(Flyweight v1.0.0, 2026-09-28)**: **`[선택]` 5번으로 완화.** 근거는 PG27 이다 — 원전은 ConcreteFlyweight 에 「공유 가능할 것」과 「저장 상태가 맥락과 독립일 것」만 요구하고 **immutable 이라는 낱말을 쓰지 않는다**(채점 워커가 절 전문으로 재확인). `[필수]` 로 올리면 쓰기 전에 값을 다시 채워 공유하는 구현이 전부 「패턴 아님」으로 떨어진다. "공유 중 변경 금지"로 완화할지 결정이 필요하다.
+- ~~`Integer#valueOf`에는 외재 상태가 없다 — 실례로 쓸지 "인스턴스 통제 캐시(부분 대응)"로만 쓸지 정해야 한다~~ → **닫힘(Flyweight v1.0.0, 2026-09-28)**: **「부분 대응」으로 싣되 최소 조건 2번이 빠진다고 본문에 명시.** 넘길 외재 상태가 아예 없어서다. 구 가이드 조건 4 와 충돌하던 자리를 이렇게 풀었다. 실행 확인 — `Integer.valueOf(120)==Integer.valueOf(120)` 참 / `(300)` 거짓, `Boolean.valueOf(true)` 참, `new String` 둘은 거짓이나 `intern()` 끼리는 참(2026-09-28).
+- TypeScript·Rust 표준 라이브러리에서 공식 문서가 확인되는 Flyweight 실례를 찾지 못했다. **Flyweight v1.0.0(2026-09-28)도 찾지 못해 Java 사례 셋만 실었다** — 열린 채로 둔다.
+- 기존 참고 자료의 OpenJDK `IntegerCache` 소스는 확인하지 않았다(Javadoc의 캐시 보장만 확인). **Flyweight v1.0.0(2026-09-28)도 미확인** — 소스 대신 Javadoc 서술 + 직접 실행으로 대체했다.
+- **실측 보탬(Flyweight v1.0.0, 2026-09-28)** — 원문 Implementation 의 「외재 상태 종류가 공유 전 객체 수만큼 많으면 절약이 없음」에 붙일 값이 나왔다: **같은 1,200칸에 대해 보관소 키가 품목 코드일 때 규격 객체 4개, 키에 위치를 더하면 1,200개.** 총무게는 양쪽 1,959,780g 으로 동일하다. 측정 장치는 규격 클래스 **밖**에 둔 카운터의 구간 전후 차이고, 안에 두면 공유 객체가 호출마다 바뀌는 값을 들게 되어 가이드 선택 조건 5번에 걸린다.
 
 ## Proxy (프록시)
 

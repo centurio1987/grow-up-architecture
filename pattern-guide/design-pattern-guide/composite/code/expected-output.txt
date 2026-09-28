@@ -1,0 +1,13 @@
+1) mug alone: 320 g
+2) gift box GIFT-301: 560 g
+3) contents of GIFT-301:
+[box] GIFT-301 +120 g wrap
+  - mug 320 g
+  [box] extras +45 g wrap
+    - tea bags 60 g
+    - postcard 15 g
+4) freebie box added: 645 g
+5) gift card added: 650 g
+6) chilled wrap around GIFT-301: 900 g
+7) box holding a chilled mug: 590 g
+8) empty box: 10 g
