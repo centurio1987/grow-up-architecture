@@ -1,0 +1,8 @@
+A awaiting-payment ship rejected(not paid yet) -> awaiting-payment
+A awaiting-payment pay 48000 (paid 48000/48000) -> paid
+A paid ship invoice issued -> shipped
+A shipped cancel rejected(already shipped) -> shipped
+B awaiting-payment pay 12000 (paid 12000/30000) -> partially-paid
+B partially-paid pay 18000 (paid 30000/30000) -> paid
+B paid cancel refund 30000 -> cancelled
+B cancelled pay rejected(order cancelled) -> cancelled

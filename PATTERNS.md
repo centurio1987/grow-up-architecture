@@ -44,7 +44,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | Mediator (중재자) | 동료들이 서로를 참조하지 않고 중재자를 거쳐 협력하게 함 | [mediator-guide_v1.0.0.md](pattern-guide/design-pattern-guide/mediator/mediator-guide_v1.0.0.md) |
 | Memento (메멘토) | 캡슐화를 깨지 않고 객체 상태를 보존·복원 | [memento-guide_v0.1.0.md](pattern-guide/design-pattern-guide/memento/memento-guide_v0.1.0.md) |
 | Observer (옵저버) | 1:N 의존성 관계에서 상태 변화 자동 통보 | [observer-guide_v1.0.0.md](pattern-guide/design-pattern-guide/observer/observer-guide_v1.0.0.md) |
-| State (상태) | 내부 상태에 따라 객체 행동을 바꿈 | [state-guide_v0.1.0.md](pattern-guide/design-pattern-guide/state/state-guide_v0.1.0.md) |
+| State (상태) | 상태마다 객체를 두고 요청을 위임하며, 그 상태 객체가 실행 중에 바뀜 | [state-guide_v1.0.0.md](pattern-guide/design-pattern-guide/state/state-guide_v1.0.0.md) |
 | Strategy (전략) | 알고리즘군을 캡슐화하고 런타임 교체 | [strategy-guide_v1.1.0.md](pattern-guide/design-pattern-guide/strategy/strategy-guide_v1.1.0.md) |
 | Template Method (템플릿 메서드) | 알고리즘 골격을 상위 클래스에, 단계는 하위 클래스에 | [template-method-guide_v0.1.0.md](pattern-guide/design-pattern-guide/template-method/template-method-guide_v0.1.0.md) |
 | Visitor (방문자) | 데이터 구조와 연산을 분리, double dispatch | [visitor-guide_v0.1.0.md](pattern-guide/design-pattern-guide/visitor/visitor-guide_v0.1.0.md) |
