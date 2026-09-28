@@ -5,20 +5,13 @@
 
 ## 백로그
 <!-- 아직 착수 결정 전. 우선순위 미정 후보 풀. 백로그→할 일 이동이 "할지 고민" → "하기로 확정" 전환점. -->
-- `KAN-001.5-6HF35H` 분석 패턴 8편 재집필 — 생성:ai · 최종:ai · 갱신:2026-09-17
-  - 상위: `KAN-001-YXTC2C` (진행 중)
-  - 짧은 제목: 분석 패턴 8편 재집필
-  - 목적: 나머지 8편을 analysis-guide spec으로 다시 쓰고 consideration 2편과 정합시킨다
-  - 이유: 회계 3부작이 aggregate 경계 정의 없이 쓰여 독자를 오도한다
-  - 목표: 8편 PASS, 회계 3부작 동일 배경 인용, consideration 교차 참조·모순 0
-  - 실행 문서: KANBAN/cards/KAN-001.5-6HF35H.md (0/9 · 최근 09-28)
 - `KAN-001.6-HB5NH9` 인덱스·stale 정리·최종 검증 — 생성:ai · 최종:ai · 갱신:2026-09-17
   - 상위: `KAN-001-YXTC2C` (진행 중)
   - 짧은 제목: 인덱스·stale 정리·최종 검증
   - 목적: 인덱스 3종과 README를 새 구조에 맞추고, 4언어 실행 하니스의 처분을 정해 반영하고, 전체 검증을 돌려 검토서를 만든다
   - 이유: 링크가 깨진 인덱스는 재집필을 보이지 않게 하고, README가 선언한 4언어 실습 환경과 세 언어 가이드가 어긋난 채 두면 다음 사람이 틀린 쪽을 따른다
   - 목표: 링크 깨짐 0, 33편 검사 0 오류, HTML 33편 fresh, 하니스·analysis/ 처분 반영(기본 유지 + README 표 개정), 검토서 승인
-  - 실행 문서: KANBAN/cards/KAN-001.6-HB5NH9.md (0/8 · 최근 09-28)
+  - 실행 문서: KANBAN/cards/KAN-001.6-HB5NH9.md (0/8 · 최근 09-29)
 - `KAN-001.7-4MRJ1B` 추가 패턴 4편 집필 — Dependency Injection · Temporal Property · Null Object · Specification — 생성:ai · 최종:ai · 갱신:2026-09-27
   - 상위: `KAN-001-YXTC2C` (진행 중)
   - 짧은 제목: 추가 패턴 4편
@@ -49,13 +42,13 @@
     ```text
     전체 가이드 재집필을 수행해라.
     ```
-- `KAN-001.4-BJT8JD` GoF 22편 재집필 — 생성:ai · 최종:ai · 갱신:2026-09-27
+- `KAN-001.5-6HF35H` 분석 패턴 8편 재집필 — 생성:ai · 최종:ai · 갱신:2026-09-28
   - 상위: `KAN-001-YXTC2C` (진행 중)
-  - 짧은 제목: GoF 22편 재집필
-  - 목적: 나머지 GoF 22편을 gof-guide spec으로 다시 쓴다
-  - 이유: 요청서의 재집필 본체이고 analyzer가 읽는 최소 조건이 여기서 갱신된다
-  - 목표: 22편 게이트 PASS, 헤딩·placeholder·mermaid·컴파일 검사 0 오류, analyzer 스팟체크 통과
-  - 실행 문서: KANBAN/cards/KAN-001.4-BJT8JD.md (22/22 · 최근 09-28)
+  - 짧은 제목: 분석 패턴 8편 재집필
+  - 목적: 나머지 8편을 analysis-guide spec으로 다시 쓰고 consideration 2편과 정합시킨다
+  - 이유: 회계 3부작이 aggregate 경계 정의 없이 쓰여 독자를 오도한다
+  - 목표: 8편 PASS, 회계 3부작 동일 배경 인용, consideration 교차 참조·모순 0
+  - 실행 문서: KANBAN/cards/KAN-001.5-6HF35H.md (2/9 · 최근 09-29)
 
 ## 검토
 
@@ -84,3 +77,10 @@
   - 목표: 3편 PASS(H축 0) + HTML 탭 렌더, spec 1.1 + exemplar spec마다 1건 + batch_size_works 확정, 유저의 문체·HTML 화면 승인, .4·.5·.6 배치 문서 생성
   - 실행 문서: KANBAN/cards/KAN-001.3-Q6FYKP.md (12/12 · 최근 09-27)
   - 검토 문서: KANBAN/reviews/KAN-001.3-Q6FYKP.review.md (승인 16/16 · 철회 4 · 추가 의견 총 49 · 승인)
+- `KAN-001.4-BJT8JD` GoF 22편 재집필 — 생성:ai · 최종:ai · 갱신:2026-09-28
+  - 상위: `KAN-001-YXTC2C` (진행 중)
+  - 짧은 제목: GoF 22편 재집필
+  - 목적: 나머지 GoF 22편을 gof-guide spec으로 다시 쓴다
+  - 이유: 요청서의 재집필 본체이고 analyzer가 읽는 최소 조건이 여기서 갱신된다
+  - 목표: 22편 게이트 PASS, 헤딩·placeholder·mermaid·컴파일 검사 0 오류, analyzer 스팟체크 통과
+  - 실행 문서: KANBAN/cards/KAN-001.4-BJT8JD.md (22/22 · 최근 09-28)

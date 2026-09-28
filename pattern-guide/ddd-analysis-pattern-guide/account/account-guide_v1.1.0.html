@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:a5a421682f07e1b06c1c80d5ad614c0e8936db045be9920acd4926810c8e9839 -->
+<!-- guide-fp:d9e4d52c5466ee23d1f77bb2ddbef7c084f0c6ef40ccfd39d594dd90634ba729 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -489,7 +489,7 @@ date: 2026-09-21</p>
 <blockquote>
 <p>기억법 — 잔액은 적어 두는 숫자가 아니라 Entry 를 더해서 얻는 답.</p>
 </blockquote>
-<p>분류는 Fowler 『Analysis Patterns』 의 회계 패턴이고(근거: Analysis Patterns 6장 「Inventory and Accounting」 §6.1 Account), 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.html">Quantity</a>(단위를 가진 금액) · <a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v0.1.0.html">Transaction</a>(합이 0 인 Entry 묶음) · <a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v0.1.0.html">Posting Rule</a>(업무 사건에서 거래를 만드는 규칙)입니다. 이 글의 예제는 복식부기 원장을 배경으로 삼아요. 차변과 대변의 부호 규약 · 원장과 전기 · 역분개 같은 회계 기초는 <a href="reference/accounting-model/accounting-model-ref_v1.0.1.html">참고 문서 「복식부기와 회계 모델」</a>이 풀어 두었으니, 이 글은 그 위에서 4월 거래의 값으로만 말합니다. 시나리오 셋을 따라갈 거예요. 거래가 원장에 쌓여 잔액이 나오는 길, 틀린 금액을 정정하는 길, 규칙을 어기면 어느 단계에서 어떤 값이 어긋나는지요. 끝까지 읽으면 어떤 모델을 Account 패턴이라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, Entry 를 누가 소유할지 네 갈래 가운데 하나를 고르는 기준도 함께 얻습니다.</p>
+<p>분류는 Fowler 『Analysis Patterns』 의 회계 패턴이고(근거: Analysis Patterns 6장 「Inventory and Accounting」 §6.1 Account), 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.html">Quantity</a>(단위를 가진 금액) · <a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.0.html">Transaction</a>(합이 0 인 Entry 묶음) · <a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.0.0.html">Posting Rule</a>(업무 사건에서 거래를 만드는 규칙)입니다. 이 글의 예제는 복식부기 원장을 배경으로 삼아요. 차변과 대변의 부호 규약 · 원장과 전기 · 역분개 같은 회계 기초는 <a href="reference/accounting-model/accounting-model-ref_v1.0.1.html">참고 문서 「복식부기와 회계 모델」</a>이 풀어 두었으니, 이 글은 그 위에서 4월 거래의 값으로만 말합니다. 시나리오 셋을 따라갈 거예요. 거래가 원장에 쌓여 잔액이 나오는 길, 틀린 금액을 정정하는 길, 규칙을 어기면 어느 단계에서 어떤 값이 어긋나는지요. 끝까지 읽으면 어떤 모델을 Account 패턴이라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, Entry 를 누가 소유할지 네 갈래 가운데 하나를 고르는 기준도 함께 얻습니다.</p>
 <h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
 <h3 id="시나리오-1--4월-거래-둘이-원장에-쌓이고-45-현금-잔액이-나오기까지">시나리오 1 — 4월 거래 둘이 원장에 쌓이고 4/5 현금 잔액이 나오기까지</h3>
 <p>원장을 막 연 회사에 4월 거래가 둘 들어옵니다. 4/1 에 매출 100,000원이 현금으로 들어왔고(T1), 4/5 에 임대료 30,000원을 현금으로 냈어요(T2). 계정은 현금(1010) · 매출(4010) · 임대료(5010) 셋이고 통화는 모두 KRW 입니다. 나와야 하는 답은 하나예요 — 4/5 기준 현금 잔액 70,000 KRW. 이 장면에 다섯 이름이 나옵니다. 금액 기록이 모이는 이름표인 Account, 계정 하나에 금액 하나가 오간 기록 한 건인 Entry, 한 업무 사건이 만든 Entry 묶음인 Transaction, 금액과 통화를 묶은 값인 Money, 그리고 계정을 자산·부채·자본·수익·비용으로 가르는 분류인 AccountType 이에요. 이름은 여기서 한 구절씩만 소개하고 정식 정의는 개념 정리가 맡습니다.</p>
@@ -571,7 +571,7 @@ date: 2026-09-21</p>
 <li><strong>Transaction</strong>(거래) — 업무 사건 하나가 만든 Entry 묶음이고, 묶인 Entry 금액의 합은 통화별로 0 입니다.
 <ul>
 <li>책임: 날짜를 갖고, 합이 0 인지 판정하고, 정정 거래라면 되돌리는 원 거래를 가리킵니다(시나리오 2 의 2단계).</li>
-<li>협력: Entry 를 2개 이상 묶습니다. 거래 자체의 규칙은 <a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v0.1.0.html">Transaction 가이드</a>가 맡고, 이 글은 Entry 가 어디서 오는지를 설명하는 만큼만 다뤄요.</li>
+<li>협력: Entry 를 2개 이상 묶습니다. 거래 자체의 규칙은 <a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.0.html">Transaction 가이드</a>가 맡고, 이 글은 Entry 가 어디서 오는지를 설명하는 만큼만 다뤄요.</li>
 </ul>
 </li>
 <li><strong>Money</strong>(금액) — 금액과 통화를 묶은 값입니다. 이 가이드의 예제는 금액을 정수 최소 단위로 적어요(KRW 는 1원).
@@ -771,7 +771,7 @@ GeneralLedger           저장소와 전기 서비스를 메모리로 흉내 낸
 </thead>
 <tbody>
 <tr><td>bounded context</td><td>총계정원장 전기 컨텍스트 — 다른 컨텍스트의 업무 사건을 균형 잡힌 거래로 전기하고 계정별 잔액을 파생</td></tr>
-<tr><td>불변식의 위치</td><td>① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → <code>Transaction</code> root 의 Factory <code>Transaction.create</code>, 동기 ② 전기된 Transaction 과 그 Entry 는 수정·삭제하지 않음 — 각 Entry 의 값뿐 아니라 그 거래에 어떤 Entry 가 속하는지도 전기 뒤에 바뀌지 않음 → <code>Transaction</code> root, 생성 뒤 상태를 바꾸는 메서드가 없어 Entry 를 더하거나 뺄 수 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 검사 시점 기준으로 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 <code>Account</code> root 의 <code>checkPostable</code> 을 호출, 동기 (검사와 저장 사이에 계정이 닫히는 경합은 허용, 통화가 다른 금액의 덧셈은 <code>Money</code> 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 <code>AccountBalance</code> 읽기 모델이 <code>TransactionPosted</code> 이벤트로 반영 위치(<code>lastAppliedSeq</code>)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제)</td></tr>
+<tr><td>불변식의 위치</td><td>① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → <code>Transaction</code> root 의 Factory <code>Transaction.create</code> 와 <code>Transaction.reverse</code>, 동기 ② 전기된 Transaction 과 그 Entry 는 수정·삭제하지 않음 — 각 Entry 의 값뿐 아니라 그 거래에 어떤 Entry 가 속하는지도 전기 뒤에 바뀌지 않음 → <code>Transaction</code> root, 생성 뒤 상태를 바꾸는 메서드가 없어 Entry 를 더하거나 뺄 수 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 검사 시점 기준으로 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 <code>Account</code> root 의 <code>checkPostable</code> 을 호출, 동기 (검사와 저장 사이에 계정이 닫히는 경합은 허용, 통화가 다른 금액의 덧셈은 <code>Money</code> 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 <code>AccountBalance</code> 읽기 모델이 <code>TransactionPosted</code> 이벤트로 반영 위치(<code>lastAppliedSeq</code>)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제)</td></tr>
 <tr><td>root·entity·VO 배정</td><td><code>Account</code> = aggregate root (식별자·이름·계정 종류 id·통화·열림/닫힘만, Entry 목록과 잔액 필드 없음) · <code>Transaction</code> = 별도 aggregate root · <code>Entry</code> = <code>Transaction</code> 안의 불변 child entity (식별자 = 거래 id + 순번 <code>seq</code>, 같은 거래 안에서는 <code>seq</code> 로 비교) · <code>Money</code> · <code>AccountAmount</code> = VO · <code>AccountBalance</code> = 읽기 모델 (aggregate 아님) · <code>TransactionPosted</code> = 값만 담는 도메인 이벤트</td></tr>
 <tr><td>타 aggregate 참조 방식</td><td>id 참조 — <code>Entry</code> → <code>Account</code> 는 <code>AccountId</code>, 역분개 <code>Transaction</code> → 원 <code>Transaction</code> 은 <code>TransactionId</code>, <code>AccountBalance</code> → <code>Account</code> 는 <code>AccountId</code>, <code>Account</code> → 지식 층위의 계정 종류는 <code>AccountTypeId</code>. 어느 aggregate 도 다른 aggregate 의 객체를 필드나 메서드 시그니처에 두지 않음</td></tr>
 </tbody>

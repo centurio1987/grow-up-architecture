@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 32,
+  "next_seq": 34,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -134,12 +134,12 @@
       ]
     },
     "KAN-001.4-BJT8JD": {
-      "col": "doing",
+      "col": "done",
       "title": "GoF 22편 재집필",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-27",
+      "갱신": "2026-09-28",
       "title_hash": "9ddc2c90f88b19191cc14dcf8851e0b8a855343c",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "GoF 22편 재집필",
@@ -159,12 +159,12 @@
       ]
     },
     "KAN-001.5-6HF35H": {
-      "col": "backlog",
+      "col": "doing",
       "title": "분석 패턴 8편 재집필",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-17",
+      "갱신": "2026-09-28",
       "title_hash": "7fa3c41842ecde55032767bb327acef269673590",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "분석 패턴 8편 재집필",
@@ -248,16 +248,36 @@
     }
   },
   "order": [
-    "KAN-001.5-6HF35H",
     "KAN-001.6-HB5NH9",
     "KAN-001.7-4MRJ1B",
     "KAN-001-YXTC2C",
-    "KAN-001.4-BJT8JD",
     "KAN-001.1-P5N9NF",
     "KAN-001.2-4NWK0T",
-    "KAN-001.3-Q6FYKP"
+    "KAN-001.3-Q6FYKP",
+    "KAN-001.4-BJT8JD",
+    "KAN-001.5-6HF35H"
   ],
   "recent": [
+    {
+      "seq": 33,
+      "t": "2026-09-28T23:56",
+      "a": "ai",
+      "id": "KAN-001.5-6HF35H",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "backlog",
+      "to": "doing"
+    },
+    {
+      "seq": 32,
+      "t": "2026-09-28T23:52",
+      "a": "ai",
+      "id": "KAN-001.4-BJT8JD",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "doing",
+      "to": "done"
+    },
     {
       "seq": 31,
       "t": "2026-09-27T04:01",

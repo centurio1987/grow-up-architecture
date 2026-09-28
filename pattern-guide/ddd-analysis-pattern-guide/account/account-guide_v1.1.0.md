@@ -46,7 +46,7 @@ After — 잔액은 Entry 를 더해서 얻는 값
 
 > 기억법 — 잔액은 적어 두는 숫자가 아니라 Entry 를 더해서 얻는 답.
 
-분류는 Fowler 『Analysis Patterns』 의 회계 패턴이고(근거: Analysis Patterns 6장 「Inventory and Accounting」 §6.1 Account), 함께 쓰는 패턴은 [Quantity](../quantity/quantity-guide_v1.1.0.md)(단위를 가진 금액) · [Transaction](../transaction/transaction-guide_v0.1.0.md)(합이 0 인 Entry 묶음) · [Posting Rule](../posting-rule/posting-rule-guide_v0.1.0.md)(업무 사건에서 거래를 만드는 규칙)입니다. 이 글의 예제는 복식부기 원장을 배경으로 삼아요. 차변과 대변의 부호 규약 · 원장과 전기 · 역분개 같은 회계 기초는 [참고 문서 「복식부기와 회계 모델」](../../reference/accounting-model/accounting-model-ref_v1.0.1.md)이 풀어 두었으니, 이 글은 그 위에서 4월 거래의 값으로만 말합니다. 시나리오 셋을 따라갈 거예요. 거래가 원장에 쌓여 잔액이 나오는 길, 틀린 금액을 정정하는 길, 규칙을 어기면 어느 단계에서 어떤 값이 어긋나는지요. 끝까지 읽으면 어떤 모델을 Account 패턴이라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, Entry 를 누가 소유할지 네 갈래 가운데 하나를 고르는 기준도 함께 얻습니다.
+분류는 Fowler 『Analysis Patterns』 의 회계 패턴이고(근거: Analysis Patterns 6장 「Inventory and Accounting」 §6.1 Account), 함께 쓰는 패턴은 [Quantity](../quantity/quantity-guide_v1.1.0.md)(단위를 가진 금액) · [Transaction](../transaction/transaction-guide_v1.0.0.md)(합이 0 인 Entry 묶음) · [Posting Rule](../posting-rule/posting-rule-guide_v1.0.0.md)(업무 사건에서 거래를 만드는 규칙)입니다. 이 글의 예제는 복식부기 원장을 배경으로 삼아요. 차변과 대변의 부호 규약 · 원장과 전기 · 역분개 같은 회계 기초는 [참고 문서 「복식부기와 회계 모델」](../../reference/accounting-model/accounting-model-ref_v1.0.1.md)이 풀어 두었으니, 이 글은 그 위에서 4월 거래의 값으로만 말합니다. 시나리오 셋을 따라갈 거예요. 거래가 원장에 쌓여 잔액이 나오는 길, 틀린 금액을 정정하는 길, 규칙을 어기면 어느 단계에서 어떤 값이 어긋나는지요. 끝까지 읽으면 어떤 모델을 Account 패턴이라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, Entry 를 누가 소유할지 네 갈래 가운데 하나를 고르는 기준도 함께 얻습니다.
 
 ## 패턴 자세히 들여다보기
 
@@ -135,7 +135,7 @@ After — 잔액은 Entry 를 더해서 얻는 값
   - 협력: 정확히 한 Account 에 속하고 balance 계산의 재료가 됩니다. 복식부기에서는 한 Transaction 에도 묶여요(시나리오 1 의 2단계).
 - **Transaction**(거래) — 업무 사건 하나가 만든 Entry 묶음이고, 묶인 Entry 금액의 합은 통화별로 0 입니다.
   - 책임: 날짜를 갖고, 합이 0 인지 판정하고, 정정 거래라면 되돌리는 원 거래를 가리킵니다(시나리오 2 의 2단계).
-  - 협력: Entry 를 2개 이상 묶습니다. 거래 자체의 규칙은 [Transaction 가이드](../transaction/transaction-guide_v0.1.0.md)가 맡고, 이 글은 Entry 가 어디서 오는지를 설명하는 만큼만 다뤄요.
+  - 협력: Entry 를 2개 이상 묶습니다. 거래 자체의 규칙은 [Transaction 가이드](../transaction/transaction-guide_v1.0.0.md)가 맡고, 이 글은 Entry 가 어디서 오는지를 설명하는 만큼만 다뤄요.
 - **Money**(금액) — 금액과 통화를 묶은 값입니다. 이 가이드의 예제는 금액을 정수 최소 단위로 적어요(KRW 는 1원).
   - 책임: 통화가 다른 금액끼리는 더하지 않습니다.
   - 협력: Entry 의 금액과 balance 의 값이 Money 예요. 금액을 단위를 가진 수량의 한 종류로 보는 관점은 [Quantity 가이드](../quantity/quantity-guide_v1.1.0.md)가 풉니다.
@@ -352,7 +352,7 @@ GeneralLedger           저장소와 전기 서비스를 메모리로 흉내 낸
 | 항목 | 이 가이드의 설정 |
 | --- | --- |
 | bounded context | 총계정원장 전기 컨텍스트 — 다른 컨텍스트의 업무 사건을 균형 잡힌 거래로 전기하고 계정별 잔액을 파생 |
-| 불변식의 위치 | ① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → `Transaction` root 의 Factory `Transaction.create`, 동기 ② 전기된 Transaction 과 그 Entry 는 수정·삭제하지 않음 — 각 Entry 의 값뿐 아니라 그 거래에 어떤 Entry 가 속하는지도 전기 뒤에 바뀌지 않음 → `Transaction` root, 생성 뒤 상태를 바꾸는 메서드가 없어 Entry 를 더하거나 뺄 수 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 검사 시점 기준으로 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 `Account` root 의 `checkPostable` 을 호출, 동기 (검사와 저장 사이에 계정이 닫히는 경합은 허용, 통화가 다른 금액의 덧셈은 `Money` 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 `AccountBalance` 읽기 모델이 `TransactionPosted` 이벤트로 반영 위치(`lastAppliedSeq`)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제) |
+| 불변식의 위치 | ① 한 거래의 Entry 금액 합 = 0(통화별), Entry 2개 이상 → `Transaction` root 의 Factory `Transaction.create` 와 `Transaction.reverse`, 동기 ② 전기된 Transaction 과 그 Entry 는 수정·삭제하지 않음 — 각 Entry 의 값뿐 아니라 그 거래에 어떤 Entry 가 속하는지도 전기 뒤에 바뀌지 않음 → `Transaction` root, 생성 뒤 상태를 바꾸는 메서드가 없어 Entry 를 더하거나 뺄 수 없고 Entry 객체를 밖으로 내보내지 않음 ③ Entry 가 속할 Account 가 검사 시점 기준으로 있고 열려 있으며 통화가 같음 → 전기 서비스가 저장 전에 `Account` root 의 `checkPostable` 을 호출, 동기 (검사와 저장 사이에 계정이 닫히는 경합은 허용, 통화가 다른 금액의 덧셈은 `Money` 가 거절) ④ 잔액 = 그 Account 에 속한 Entry 금액의 합 → aggregate 경계 밖의 `AccountBalance` 읽기 모델이 `TransactionPosted` 이벤트로 반영 위치(`lastAppliedSeq`)까지 갱신, 결과적 일관성 (이벤트가 전기 순서대로 전달된다는 전제) |
 | root·entity·VO 배정 | `Account` = aggregate root (식별자·이름·계정 종류 id·통화·열림/닫힘만, Entry 목록과 잔액 필드 없음) · `Transaction` = 별도 aggregate root · `Entry` = `Transaction` 안의 불변 child entity (식별자 = 거래 id + 순번 `seq`, 같은 거래 안에서는 `seq` 로 비교) · `Money` · `AccountAmount` = VO · `AccountBalance` = 읽기 모델 (aggregate 아님) · `TransactionPosted` = 값만 담는 도메인 이벤트 |
 | 타 aggregate 참조 방식 | id 참조 — `Entry` → `Account` 는 `AccountId`, 역분개 `Transaction` → 원 `Transaction` 은 `TransactionId`, `AccountBalance` → `Account` 는 `AccountId`, `Account` → 지식 층위의 계정 종류는 `AccountTypeId`. 어느 aggregate 도 다른 aggregate 의 객체를 필드나 메서드 시그니처에 두지 않음 |
 
