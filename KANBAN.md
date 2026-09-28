@@ -18,7 +18,7 @@
   - 목적: 인덱스 3종과 README를 새 구조에 맞추고, 4언어 실행 하니스의 처분을 정해 반영하고, 전체 검증을 돌려 검토서를 만든다
   - 이유: 링크가 깨진 인덱스는 재집필을 보이지 않게 하고, README가 선언한 4언어 실습 환경과 세 언어 가이드가 어긋난 채 두면 다음 사람이 틀린 쪽을 따른다
   - 목표: 링크 깨짐 0, 33편 검사 0 오류, HTML 33편 fresh, 하니스·analysis/ 처분 반영(기본 유지 + README 표 개정), 검토서 승인
-  - 실행 문서: KANBAN/cards/KAN-001.6-HB5NH9.md (0/5 · 최근 09-27)
+  - 실행 문서: KANBAN/cards/KAN-001.6-HB5NH9.md (0/5 · 최근 09-28)
 - `KAN-001.7-4MRJ1B` 추가 패턴 4편 집필 — Dependency Injection · Temporal Property · Null Object · Specification — 생성:ai · 최종:ai · 갱신:2026-09-27
   - 상위: `KAN-001-YXTC2C` (진행 중)
   - 짧은 제목: 추가 패턴 4편
