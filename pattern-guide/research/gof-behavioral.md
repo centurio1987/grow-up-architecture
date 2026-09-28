@@ -326,6 +326,21 @@
 - sealed+record+switch, TS union switch, Rust enum match 형태(해석이 노드 밖)를 가이드에서 Interpreter 구현으로 인정할지 판정 기준 필요
 - 기존 참고 자료의 Fowler *Domain-Specific Languages*, Kerievsky 항목명은 이번에 확인 안 함
 
+### 집필 결과 되먹임 (2026-09-28, v1.0.0)
+- **★ 항목 수를 세는 법이 틀릴 수 있다 — 절 이름 *첫 등장* 으로 자르면 어긋난다.** Consequences 안에 Implementation 으로 가는 **상호참조 링크**가 있어 그렇게 자르면 Consequences 3 · Implementation 4 로 나온다. `<H2>` 경계로 자른 **참값은 Consequences 4 · Implementation 3 · Collaborations 3 · Applicability 2 · Motivation 3** 이다
+- **★ 정정: Collaborations 는 원문 `<li>` 가 셋인데 이 노트는 ①~④로 펼쳐 적었다.** Memento 절·Visitor 절과 같은 유형이 **세 편에서 반복됐다** — 「항목 n」으로 인용하기 전에 원문을 연다
+- **정정: `vs Visitor` 근거 귀속이 두 절로 갈린다** — 「해석 수행에 방문자 적용」은 **Visitor 절** Related Patterns, 「AST 각 노드 행위를 한 클래스에 모음」은 **Interpreter 절** Related Patterns 다. 노트가 「[GoF] Related」 한 괄호로 묶었다
+- **정정: OpenJDK 의 「`Slice` 계열 = Terminal 성격」은 재귀 기저가 아니다** — `CharProperty.match`(4109~4110행)·`Slice.match`(4268행)가 `next.match(...)` 를 부른다. 이 편의 조건 4 로는 그 코드가 탈락한다
+- **미해결 해소 ①** — refactoring.guru Interpreter 는 2026-09-28 조회에서도 **HTTP 404**. 참고 자료에서 뺐다
+- **미해결 해소 ③** — sealed+record+switch · TS union switch · Rust `enum` `match` 를 **Interpreter 로 인정한다.** 해석 위치는 `[선택]` 6번이고 원전 Implementation 이 열어 뒀다(방문자 판·enum 판을 지어 정본과 같은 출력 확인)
+- **최소 조건 후보 보강** — 「작은 언어」의 **작은** 은 **Applicability 의 적합 조건이지 성립 요건이 아니다.** 그리고 실무 판정의 표식인 **「문법이 규칙 형태로 적혀 있는가」가 후보 목록에 없는데**, 출처가 **Known Uses** 라 `[선택]` 으로만 둘 수 있다
+- **SpEL 보강** — `toStringAST()` 가 같은 트리에 얹은 **두 번째 해석**이다(노트에 없음). `getChild(int)`·`getChildCount()` 가 하위 접근 연산
+- **★ Rust 판정** — 클래스 범위 성격이 Template Method 와 **다른 자리**에서 온다. 두 편의 근거 ①②③ 이 같은 순서이고 **셋째에서 무엇이 고정되는가만 다르다** — TM 은 「어느 타입이 어느 trait 을 구현하는가」, 이 편은 **「문법 규칙과 노드 종류의 대응」**. **TM 은 패턴이 도는 구조 자체가 상속인데 Interpreter 는 도는 동안의 관계가 보유(합성)이고 상속은 문법을 넓힐 때 쓰인다**(근거: Participants·Consequences)
+- **세 언어 실측 (2026-09-28)**
+  - **TypeScript 에서 도메인 타입을 `Event` 로 두면 `@types/node` 전역과 부딪혀 `TS2740` 5건**이 난다. 세 언어 공통 이름에서 **`Event`·`Error`·`Request` 류를 피한다**
+  - **구조적 타이핑: 모양이 똑같은 형제 노드는 `private` 표시가 있을 때만 막힌다**(탐침 2건 → 1건)
+  - Rust 는 해석 연산이 `&self` 면 `Rc` 없이 `Box<dyn Expression>` 으로 충분(노트 서술 확인됨). `enum` 판은 누락을 `error[E0004]` 1건으로 잡는다
+
 ## Iterator (반복자)
 
 ### 원전 대응
@@ -1322,6 +1337,19 @@
 - 기존 가이드 조건 ②(타입별 오버로드 [필수])가 원전 각주 10과 충돌 — 문구 수정 필요
 - 기존 참고 자료의 ASM `ClassVisitor`, Eclipse JDT `ASTVisitor` 링크와 내용, Wadler "The Expression Problem"(1998) 원문은 이번에 확인 안 함
 - `FileVisitor`를 Visitor 사례로 쓸지(RG) Iterator 쪽 비교 사례로 쓸지
+
+### 집필 결과 되먹임 (2026-09-28, v1.0.0)
+- **미해결 해소** — 「`FileVisitor` 를 Visitor 사례로 쓸지 Iterator 쪽 비교 사례로 쓸지」 → **둘 다 아니다. Visitor 아님 — 「순회 이벤트 콜백」으로 판정했다.** 연산 넷이 원소 타입이 아니라 **순회 이벤트와 1:1** 로 맞고, 경로 타입에 방문자를 받는 연산이 없으며 넷을 고르는 쪽이 `Files.walkFileTree` 다(조건 1·2번 빠짐). Iterator 편이 이 편 소관으로 미룬 판정이다
+- **미해결 해소** — 「`accept` 없는 패턴 매칭을 Visitor 로 인정할지」 → **대안으로만 둔다.** `accept` 를 `[필수]` 로 두는 근거가 **Participants**(허용 다섯 절 안)에 있다
+- **미해결 해소** — 「기존 조건 ②(타입별 오버로드 `[필수]`)가 각주 10과 충돌」 → 조건 1번을 **「이름을 나누든 겹치든 받는 타입이 갈라져 있으면 된다」** 로 적고 이름 구분을 `[선택]` 으로 내렸다. 실측이 받친다 — **이름 겹치기는 Java 에서만 된다**(Rust 18건: `E0201` 9 · `E0428` 3 · `E0308` 3 · `E0046` 3, TypeScript `TS2393`)
+- **★ 정정: Consequences 는 원문이 여섯 항목**(새 연산 쉬움 / 관련 연산 모음 / 새 ConcreteElement 어려움 / 계층 가로질러 방문 / 상태 누적 / 캡슐화 파괴)이고 이 노트처럼 「얻는 것 / 대가」 두 덩이가 아니다
+- **★ 정정: `vs Interpreter` 항목이 두 서술을 「[GoF] Related」 하나로 묶었다** — 앞 절반만 **Visitor 절** Related Patterns 이고 「AST 노드별 행위를 한 클래스에 모음」은 **Interpreter 절** Related Patterns 다
+- **★ 정정: 「최소 조건 후보」의 `[필수]` 둘째(더블 디스패치)는 출처가 `Implementation`** 이다. 이 프로젝트가 `[필수]` 근거를 다섯 절로 좁히고 있어 그대로 받으면 PG27 에 걸린다 — v1.0.0 은 **「이중 디스패치」라는 이름을 조건 문면에서 빼고** 그 사실을 본문에 밝혔다
+- **새 사실** — `javax.lang.model.type.TypeVisitor` + `TypeMirror.accept(TypeVisitor<R,P>, P)` 도 같은 짝의 표준 라이브러리 사례다(노트에 없음)
+- **세 언어 실측 (2026-09-28)**
+  - **TypeScript 에서 방문자를 묶는 것은 `implements` 표기가 아니라 방문자를 받는 자리의 선언된 매개변수 타입이다** — 표기만 떼면 0건, 거기서 메서드 하나를 지우면 `TS2345` 3건, 표기를 두고 같은 메서드를 지우면 `TS2420` 이 더 붙어 4건. **표기가 하는 일은 진단 자리를 하나 늘리는 것뿐이다**(Iterator 편 실측과 같은 결론)
+  - TypeScript 는 봉인 계층 없이 판별 유니온 + `never` 로 망라성 검사가 되지만(`TS2322`), **반환 타입을 넓히면 그 진단이 사라진다 — 막은 것이 망라성 검사가 아니라 반환 타입이다**
+  - Rust 는 방문자가 `&mut self`, 원소가 `&self` 라 빌림이 겹치지 않아 **`Rc`·`RefCell` 없이 선다.** 오버로딩은 Java 전용
 
 ## 교차 비교 메모
 

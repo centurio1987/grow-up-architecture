@@ -39,7 +39,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | --- | --- | --- |
 | Chain of Responsibility (책임 연쇄) | 후보를 한 줄로 세워 요청을 흘려보내고, 맡을 수 있는 첫 후보가 처리하고 멈춤 | [chain-of-responsibility-guide_v1.0.0.md](pattern-guide/design-pattern-guide/chain-of-responsibility/chain-of-responsibility-guide_v1.0.0.md) |
 | Command (커맨드) | 요청을 객체로 만들어 부르는 쪽이 실행 연산만 알게 함 | [command-guide_v1.0.0.md](pattern-guide/design-pattern-guide/command/command-guide_v1.0.0.md) |
-| Interpreter (인터프리터) | 간단한 DSL을 AST로 표현하고 평가 | [interpreter-guide_v0.1.0.md](pattern-guide/design-pattern-guide/interpreter/interpreter-guide_v0.1.0.md) |
+| Interpreter (인터프리터) | 문법 규칙 하나를 타입 하나로 세우고, 문장의 뜻을 트리에서 합성 | [interpreter-guide_v1.0.0.md](pattern-guide/design-pattern-guide/interpreter/interpreter-guide_v1.0.0.md) |
 | Iterator (이터레이터) | 순회 위치를 집합 밖의 순회자에 들려, 내부 표현을 숨긴 채 원소를 차례로 내줌 | [iterator-guide_v1.0.0.md](pattern-guide/design-pattern-guide/iterator/iterator-guide_v1.0.0.md) |
 | Mediator (중재자) | 동료들이 서로를 참조하지 않고 중재자를 거쳐 협력하게 함 | [mediator-guide_v1.0.0.md](pattern-guide/design-pattern-guide/mediator/mediator-guide_v1.0.0.md) |
 | Memento (메멘토) | 되돌릴 상태를 통째로 떠서, 아무도 못 여는 값으로 맡김 | [memento-guide_v1.0.0.md](pattern-guide/design-pattern-guide/memento/memento-guide_v1.0.0.md) |
@@ -47,7 +47,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | State (상태) | 상태마다 객체를 두고 요청을 위임하며, 그 상태 객체가 실행 중에 바뀜 | [state-guide_v1.0.0.md](pattern-guide/design-pattern-guide/state/state-guide_v1.0.0.md) |
 | Strategy (전략) | 알고리즘군을 캡슐화하고 런타임 교체 | [strategy-guide_v1.1.0.md](pattern-guide/design-pattern-guide/strategy/strategy-guide_v1.1.0.md) |
 | Template Method (템플릿 메서드) | 알고리즘 골격을 상위 타입에, 달라지는 단계만 하위 타입에 | [template-method-guide_v1.0.0.md](pattern-guide/design-pattern-guide/template-method/template-method-guide_v1.0.0.md) |
-| Visitor (방문자) | 데이터 구조와 연산을 분리, double dispatch | [visitor-guide_v0.1.0.md](pattern-guide/design-pattern-guide/visitor/visitor-guide_v0.1.0.md) |
+| Visitor (방문자) | 원소 타입마다 갈리는 연산을 원소 밖 한 클래스에 모으고, 어느 연산인지는 원소가 고름 | [visitor-guide_v1.0.0.md](pattern-guide/design-pattern-guide/visitor/visitor-guide_v1.0.0.md) |
 
 ## 빠른 비교가 자주 필요한 페어
 

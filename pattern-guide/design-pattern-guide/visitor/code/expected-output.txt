@@ -1,0 +1,12 @@
+1) total weight: 995 g
+2) contents list:
+[box] GIFT-301 wrap 120 g
+[item] mug 320 g
+[box] extras wrap 45 g
+[item] tea bags 60 g
+[item] postcard 15 g
+[card] thank-you 5 g
+[cold] coolant 250 g
+[item] chocolate 180 g
+3) contents count: 5
+4) desk with two parcels: 1315 g, count 6

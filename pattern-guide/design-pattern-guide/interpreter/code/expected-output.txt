@@ -1,0 +1,12 @@
+grammar rule ::= term | not rule | rule and rule | rule or rule
+        term ::= level>=n | team=word
+rule A = (team=infra and level>=3)
+  level=4 team=infra   -> send checked=2
+  level=5 team=billing -> skip checked=1
+rule B = (team=infra or level>=5)
+  level=4 team=infra   -> send checked=1
+  level=5 team=billing -> send checked=2
+rule C = ((team=infra and level>=3) or (not team=billing))
+  level=4 team=infra   -> send checked=2
+  level=5 team=billing -> skip checked=2
+  level=2 team=infra   -> send checked=3
