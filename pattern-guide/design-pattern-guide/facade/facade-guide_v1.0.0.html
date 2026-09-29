@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:8a06c1468755feb7fca17eea26233785120f1fa535ee88a3be9c9e8d68a8ca45 -->
+<!-- guide-fp:c26a9ba4af03be1a6969f4a930a1d826360f43f3462db1a41f9ed40a400315bd -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -620,7 +620,7 @@ hiring/InterviewSlotJob     roomsFor → isFree →          hold → assign →
 <li>빠지면: 창구가 점유 표를 자기 안에 들고 직접 답하면 서브시스템을 단순화한 것이 아니라 대체한 것입니다. 장부가 두 벌이 되어, 총무팀이 <code>ScheduleBook</code> 을 직접 쓴 시나리오 2 의 1단계 다음부터 두 벌의 답이 갈려요.</li>
 </ul>
 </li>
-<li>[필수] 서브시스템 클래스가 Facade 를 <strong>모릅니다</strong> — 서브시스템 클래스의 필드·생성자 인자·메서드 인자·반환 타입 어디에도 Facade 타입이 없고, 서브시스템 코드가 Facade 의 연산을 부르지 않습니다. 시나리오 3 의 1단계가 이 조건을 어겼을 때의 자리예요 (근거: GoF 원서 Facade 절 Related Patterns — Mediator 의 동료들은 중재자를 알고 그와 통신하지만 Facade 의 서브시스템 클래스는 Facade 를 알지 못한다는 대비).
+<li>[필수] 서브시스템 클래스가 Facade 를 <strong>모릅니다</strong> — 서브시스템 클래스의 필드·생성자 인자·메서드 인자·반환 타입 어디에도 Facade 타입이 없고, 서브시스템 코드가 Facade 의 연산을 부르지 않습니다. 시나리오 3 의 1단계가 이 조건을 어겼을 때의 자리예요 (근거: GoF 원서 Facade 절 <strong>Participants</strong> — 서브시스템 클래스의 역할을 「facade 를 알지 못하고, <strong>그것을 가리키는 참조를 하나도 두지 않는다</strong>」로 적는다. 같은 절 Related Patterns 도 Mediator 대비로 같은 말을 한다).
 <ul>
 <li>빠지면: 가운데 객체를 안쪽이 알고 부르기 시작하면 Mediator 쪽입니다. 그 전에 컴파일이 먼저 막는 경우도 많은데, 시나리오 3 의 1단계에 실은 진단이 그것이에요. 억지로 세워도 서브시스템을 단독으로 쓸 수 없게 됩니다.</li>
 </ul>

@@ -137,6 +137,15 @@ REFS_HEADING = "참고 자료"
 # PG30 — 원서를 읽었다는 전제로 자리를 가리키는 표현. (근거: …) 괄호와 `## 참고 자료` 절 밖에서는 오류다.
 BASIS_PAREN = re.compile(r"\(근거:(?:[^()]|\([^()]*\))*\)")     # 한 단계 중첩 허용
 LINK_DEST = re.compile(r"\]\([^)]*\)")                          # 마크다운 링크 대상 `](…)`
+# PG27 보강(2026-09-29) — 근거 괄호가 대는 원전 자리(절 번호·그림 번호)가 `## 참고 자료` 에도 있어야 한다.
+# 배치5 채점자 제안. 이 유형이 세 편에서 났다 — 절 번호가 같은 글 안에서 혼자 틀림(Measurement 1R) ·
+# 인용을 다른 절로 귀속(Range 1R) · 근거를 좁히고 참고 자료가 안 따라옴(Observation 1R).
+# 셋 다 사람이 원문을 열어야 잡히던 것이고, 마지막 유형만 기계로 잡힌다.
+BASIS_SEC = re.compile(r"§\s?([0-9]+(?:\.[0-9]+)?)")
+BASIS_FIGPFX = re.compile(r"그림|Figure")
+BASIS_NUM = re.compile(r"\b[0-9]+\.[0-9]+\b")
+# 「그림 6.20 · 6.28」처럼 접두어 하나에 번호가 여럿 달린다
+BASIS_FIGRUN = re.compile(r"(?:그림|Figure)\s*((?:[0-9]+\.[0-9]+)(?:\s*[·,]\s*(?:그림\s*)?[0-9]+\.[0-9]+)*)")
 LOCATORS = [re.compile(p) for p in (
     r"그림\s*\d+(?:\.\d+)?",
     r"Figure\s*\d+(?:\.\d+)?",
@@ -164,7 +173,11 @@ CONTEXT_KEYWORDS = [
 ]
 # PG27 — [필수] 조건의 근거로 인정하는 원전 표기. 여기 없는 말로 근거를 대면 검사가 막는다.
 BASIS_SOURCES = ["GoF", "원서", "원전", "Fowler", "Analysis Patterns", "eaaDev", "apsupp",
-                 "martinfowler", "Evans", "Vernon", "DDD Reference"]
+                 "martinfowler", "Evans", "Vernon", "DDD Reference",
+                 # 2026-09-29 — KAN-001.7 의 Null Object 가 Woolf 의 PLoP 논문을 원전으로 쓴다.
+                 # Fowler bliki(DI)는 위 "Fowler"·"martinfowler" 가 이미 받는다.
+                 # 이 목록은 resolve 번들 밖이라 고쳐도 spec 해시가 바뀌지 않는다(발행본 33편의 게이트 기록 유지).
+                 "Woolf", "PLoP"]
 # AG3 — 상황 설정 표에서 칸을 채우지 않은 것으로 보는 말들.
 BLANK_CELLS = {"-", "—", "–", "해당 없음", "해당없음", "N/A", "n/a", "NA", "없음", "미정", "TBD", "TODO", "?"}
 CELL_MIN = 8
@@ -703,6 +716,48 @@ def check_min_conditions(md: Md) -> tuple[bool, list[str], int]:
     return True, errors, count
 
 
+def _basis_tokens(line: str, loose: bool) -> set[str]:
+    """한 줄에서 원전 자리 토큰(§절·그림번호)을 뽑는다.
+
+    loose=True(참고 자료 쪽)면 그림 접두어가 한 번이라도 나온 줄의 모든 `N.N` 을 그림 번호로 본다 —
+    그 절은 출처 목록이고 「그림 3.1·3.2(설명), 3.6(설명), 3.7(설명)」처럼 접두어 하나에
+    괄호 설명을 끼운 번호가 줄줄이 달리기 때문이다(실측: 이 완화 없이는 최신본 33편 중 4편이 헛걸린다).
+    """
+    out = {"§" + m.group(1) for m in BASIS_SEC.finditer(line)}
+    if BASIS_FIGPFX.search(line):
+        if loose:
+            out |= {"그림" + n for n in BASIS_NUM.findall(line)}
+        else:
+            for m in BASIS_FIGRUN.finditer(line):
+                out |= {"그림" + n for n in BASIS_NUM.findall(m.group(1))}
+    return out
+
+
+def check_basis_refs(md: Md) -> list[str]:
+    """PG27 보강 — 근거 괄호가 대는 원전 자리가 `## 참고 자료` 에도 실려 있어야 한다.
+
+    본문 근거가 §3.5 를 대는데 참고 자료가 그 절을 안 들면, 독자가 그 자리를 찾아갈 길이 없다.
+    2026-09-29 실측에서 최신 발행본 33편 전부 통과(누락 0)라 회귀 가드로 넣었다.
+    """
+    refs = md.section(2, REFS_HEADING)
+    if not refs:
+        return []
+    body: set[str] = set()
+    for i, line in enumerate(md.lines):
+        if md.masked[i] or refs[0] <= i < refs[1]:
+            continue
+        for m in BASIS_PAREN.finditer(line):
+            body |= _basis_tokens(m.group(0), False)
+    have: set[str] = set()
+    for i in range(refs[0], refs[1]):
+        have |= _basis_tokens(md.lines[i], True)
+    missing = sorted(body - have)
+    if not missing:
+        return []
+    return [f"근거 괄호가 대는 원전 자리가 `## {REFS_HEADING}` 에 없습니다(PG27) — "
+            f"{' · '.join(missing)}: 그 절·그림을 참고 자료에 올리거나 근거 괄호를 고칩니다"]
+
+
 def check_self_contained(md: Md) -> tuple[list[str], int]:
     """PG30 — 본문이 원서의 자리(그림·절·구현 쟁점 번호·원서의 ~ 설명)를 가리키면 오류.
 
@@ -954,6 +1009,11 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         for e in errs:
             rep.add(M, "self-contained", False, e, f)
         rep.add(M, "self-contained", True, f"권위 인용 문장 {cites}개 — 각 문장의 이유가 본문에 따로 있는지 채점이 본다(PG31)", f)
+        errs = check_basis_refs(md)
+        for e in errs:
+            rep.add(M, "basis-refs", False, e, f)
+        if not errs:
+            rep.add(M, "basis-refs", True, "", f)
         if "detail.scenario" in ids:
             errs, n_sc = check_scenarios(md, spec)
             for e in errs:
