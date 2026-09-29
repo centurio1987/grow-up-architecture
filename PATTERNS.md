@@ -49,6 +49,26 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | Template Method (템플릿 메서드) | 알고리즘 골격을 상위 타입에, 달라지는 단계만 하위 타입에 | [template-method-guide_v1.0.0.md](pattern-guide/design-pattern-guide/template-method/template-method-guide_v1.0.0.md) |
 | Visitor (방문자) | 원소 타입마다 갈리는 연산을 원소 밖 한 클래스에 모으고, 어느 연산인지는 원소가 고름 | [visitor-guide_v1.0.0.md](pattern-guide/design-pattern-guide/visitor/visitor-guide_v1.0.0.md) |
 
+## 분석 패턴 (Analysis Patterns)
+
+Martin Fowler 『Analysis Patterns』(1997)의 분석 패턴이다. GoF 가 **구현 설계**의 반복을 다룬다면 이쪽은 **도메인을 개념으로 모델링하는 단계**의 반복을 다룬다 — 사람·조직·관계·측정·회계처럼 업무 시스템의 뼈대가 되는 구조다.
+계열별 분류와 패턴 간 의존 흐름은 [분석 패턴 인덱스](pattern-guide/ddd-analysis-pattern-guide/README.md)에 있다.
+
+| 패턴 | 한 줄 요약 | 가이드 |
+| --- | --- | --- |
+| Party (당사자) | 사람과 조직을 한 이름으로 받아 공통인 것을 그 한 자리에 모음 | [party-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/party/party-guide_v1.0.0.md) |
+| Accountability (책임 관계) | 두 당사자를 잇는 관계를 칸이 아니라 개념으로 세워 종류·기간을 닮 | [accountability-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/accountability/accountability-guide_v1.0.0.md) |
+| Knowledge Level (지식 수준) | 사실을 해석하는 규칙을 사실과 다른 층에 인스턴스로 세움 | [knowledge-level-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.0.md) |
+| Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.md) |
+| Range (범위) | 두 끝과 「그 끝을 포함하는가」를 한 값에 담아 경계 판정을 한 곳에 모음 | [range-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/range/range-guide_v1.0.0.md) |
+| Measurement (측정) | 값 하나를 대상·항목과 묶어 기록 한 건으로 세운다 | [measurement-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.0.md) |
+| Observation (관찰) | 대상에 대한 사실을 값의 종류와 상관없이 한 층으로 다룬다 | [observation-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/observation/observation-guide_v1.0.0.md) |
+| Account (계정) | 잔액을 항목(Entry)의 합으로 도출 | [account-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/account/account-guide_v1.1.0.md) |
+| Transaction (거래) | 함께 적어야 할 기록을 한 묶음으로 만들고, 만드는 자리에서 합을 0 으로 맞춤 | [transaction-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.0.md) |
+| Posting Rule (전기 규칙) | 무엇에 반응해 얼마를 어느 계정에 적을지를 규칙 하나가 쥔다 | [posting-rule-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.0.0.md) |
+
+> 분석 패턴의 「최소 조건」은 코드 구조가 아니라 **개념적 책임 분리**를 기준으로 판정한다 — 같은 모델이 상속·인터페이스·값 객체·규칙 엔진 등 여러 형태로 실현되기 때문이다.
+
 ## 빠른 비교가 자주 필요한 페어
 
 각 가이드의 「비슷한 패턴·안티패턴과의 차이」 절에서 더 자세히 다룬다.

@@ -261,6 +261,12 @@ class Ctx:
             try:
                 _d = json.loads(pj.read_text(encoding="utf-8")).get("dirs", {})
                 self.dirs.update({k: v for k, v in _d.items() if isinstance(v, str)})
+                # 2026-09-30 — `index` 만 목록도 받는다. 인덱스가 둘로 갈려 있어서다(GoF 는 PATTERNS.md,
+                # 분석 패턴은 ddd-analysis-pattern-guide/README.md). 위 줄이 str 만 받아 목록을 버리던
+                # 동안 분석 패턴 인덱스가 `--pointers` 밖에 있었고, 그래서 낡은 채로 남아 있었다.
+                _ix = _d.get("index")
+                if isinstance(_ix, list) and all(isinstance(x, str) for x in _ix) and _ix:
+                    self.dirs["index"] = _ix
                 if isinstance(_d.get("tracks"), dict):
                     self.tracks = {k: v for k, v in _d["tracks"].items() if isinstance(v, str)}
             except (OSError, json.JSONDecodeError) as e:
@@ -1408,10 +1414,19 @@ def mode_resolve_hash(ctx: Ctx, rep: Report, sid: str) -> None:
 def mode_pointers(ctx: Ctx, rep: Report) -> None:
     """포인터 신선도 — 인덱스와 기준 예시가 각 폴더의 **최신본**을 가리키는가."""
     M = "pointers"
-    idx = ctx.project / ctx.dirs.get("index", "PATTERNS.md")
-    text = idx.read_text(encoding="utf-8") if idx.exists() else ""
-    if not idx.exists():
-        rep.add(M, "index", False, f"인덱스가 없습니다: {ctx.rel(idx)}")
+    # 2026-09-30 — `dirs.index` 는 값 하나도 목록도 받는다. 하나만 받던 동안 분석 패턴 인덱스가
+    # 검사 밖에 있었고, 그래서 링크 텍스트 열 줄이 폐지된 구 파일명으로, Account·Quantity 행이
+    # 낡은 판으로, 머리말이 명세 1.2.0 에서 폐지된 골격 정본을 가리킨 채 남아 있었다(실측).
+    raw_idx = ctx.dirs.get("index", "PATTERNS.md")
+    idx_rels = [raw_idx] if isinstance(raw_idx, str) else list(raw_idx)
+    idxs = [ctx.project / r for r in idx_rels]
+    for i in idxs:
+        if not i.exists():
+            rep.add(M, "index", False, f"인덱스가 없습니다: {ctx.rel(i)}")
+    # 어느 인덱스에 실렸는지를 따로 본다 — 한 인덱스가 모든 편을 실을 의무는 없고(GoF 인덱스와
+    # 분석 패턴 인덱스가 갈려 있다), 낡은 판을 가리키는 것만 오류다.
+    idx_texts = [(i, i.read_text(encoding="utf-8")) for i in idxs if i.exists()]
+    text = "\n".join(t for _, t in idx_texts)
     listed = 0
     for track in ctx.tracks.values():
         base = ctx.project / ctx.dirs["content"] / track
@@ -1422,9 +1437,14 @@ def mode_pointers(ctx: Ctx, rep: Report) -> None:
             latest = latest_published(folder)
             if not vs or latest is None:
                 continue
+            for i, itext in idx_texts:
+                olds = [f.name for f in vs if f != latest and f.name in itext]
+                if olds:
+                    rep.add(M, "index", False,
+                            f"인덱스가 발행본이 아닌 판을 가리킵니다: {olds} (최신 발행본 {latest.name})", ctx.rel(i))
             olds = [f.name for f in vs if f != latest and f.name in text]
             if olds:
-                rep.add(M, "index", False, f"인덱스가 발행본이 아닌 판을 가리킵니다: {olds} (최신 발행본 {latest.name})", ctx.rel(idx))
+                pass
             elif latest.name in text:
                 listed += 1
     rep.info(M, "index_latest", listed)

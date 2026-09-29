@@ -1,0 +1,650 @@
+<!doctype html>
+<!-- guide-fp:1337ba92c31275895c1e8ebdff273639b3f8ab784e1feec0ac06bb8a2c19a0ee -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="generator" content="scripts/render-guides.py">
+<title>DDD 분석 패턴 가이드 인덱스</title>
+<style>
+/* pattern-guide HTML — render-guides.py 가 HTML 에 인라인한다. 외부 폰트·이미지 요청 없음. */
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --fg: #1c1e22;
+  --muted: #5a606b;
+  --border: #dcdfe4;
+  --border-strong: #b9bec7;
+  --accent: #1f4fb8;
+  --accent-soft: #e8eefb;
+  --code-bg: #f3f4f6;
+  --code-fg: #1c1e22;
+  --inline-code-bg: #eceef1;
+  --quote-fg: #454a54;
+  --quote-bar: #c5cad3;
+  --th-bg: #f1f2f4;
+  --focus: #1f4fb8;
+  --diagram-filter: none;
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR",
+    "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, "D2Coding", Consolas, "Cascadia Mono",
+    "Liberation Mono", "Noto Sans Mono CJK KR", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141619;
+    --surface: #1b1e22;
+    --fg: #e3e5e9;
+    --muted: #a1a7b1;
+    --border: #2d3138;
+    --border-strong: #464c56;
+    --accent: #8db0ff;
+    --accent-soft: #1f2a40;
+    --code-bg: #1c1f24;
+    --code-fg: #dfe2e7;
+    --inline-code-bg: #262a30;
+    --quote-fg: #b9bec7;
+    --quote-bar: #464c56;
+    --th-bg: #1f2227;
+    --focus: #8db0ff;
+    --diagram-filter: invert(0.88) hue-rotate(180deg);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141619;
+  --surface: #1b1e22;
+  --fg: #e3e5e9;
+  --muted: #a1a7b1;
+  --border: #2d3138;
+  --border-strong: #464c56;
+  --accent: #8db0ff;
+  --accent-soft: #1f2a40;
+  --code-bg: #1c1f24;
+  --code-fg: #dfe2e7;
+  --inline-code-bg: #262a30;
+  --quote-fg: #b9bec7;
+  --quote-bar: #464c56;
+  --th-bg: #1f2227;
+  --focus: #8db0ff;
+  --diagram-filter: invert(0.88) hue-rotate(180deg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.guide {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;
+}
+
+@media (min-width: 40rem) {
+  .guide {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ── 헤딩 ─────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.35;
+  font-weight: 700;
+  scroll-margin-top: 1rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.875rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 3.25rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+h5,
+h6 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* ── 본문 블록 ─────────────────────────────────────── */
+p,
+ul,
+ol,
+blockquote,
+.table-wrap,
+pre,
+.code-tabs,
+.mermaid-figure {
+  margin: 0 0 1.1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+li > ul,
+li > ol {
+  margin: 0.25rem 0 0.25rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+li > p {
+  margin: 0 0 0.6rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 3px solid var(--quote-bar);
+  color: var(--quote-fg);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── 코드 ─────────────────────────────────────────── */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--inline-code-bg);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 4;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+pre > code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ── 표 ───────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+th,
+td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+  min-width: 6rem;
+}
+
+th {
+  background: var(--th-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── mermaid 도식(렌더 시점 인라인 SVG) ───────────── */
+.mermaid-figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid-figure svg {
+  height: auto;
+  filter: var(--diagram-filter);
+}
+
+/* ── 세 언어 탭 ───────────────────────────────────── */
+.code-tabs__list {
+  display: none;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__list {
+  display: flex;
+}
+
+.code-tabs__tab {
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 1rem;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.9375rem/1 var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.code-tabs__tab:hover {
+  color: var(--fg);
+}
+
+.code-tabs__tab[aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.code-tabs__tab:focus-visible {
+  outline-offset: -2px;
+  border-radius: 6px 6px 0 0;
+}
+
+.code-tabs__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.code-tabs[data-enhanced] .code-tabs__label {
+  display: none;
+}
+
+.code-tabs__panel > pre {
+  margin-bottom: 1.1rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__panel > pre {
+  margin-bottom: 0;
+}
+
+.code-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── 꼬리말 ───────────────────────────────────────── */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ── 인쇄: 탭 패널 전부, 라이트 색 ───────────────── */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #ffffff !important;
+    --surface: #ffffff !important;
+    --fg: #000000 !important;
+    --muted: #444444 !important;
+    --border: #bbbbbb !important;
+    --accent: #000000 !important;
+    --code-bg: #f6f6f6 !important;
+    --code-fg: #000000 !important;
+    --inline-code-bg: #eeeeee !important;
+    --quote-fg: #222222 !important;
+    --quote-bar: #999999 !important;
+    --th-bg: #eeeeee !important;
+    --diagram-filter: none !important;
+  }
+
+  body {
+    font-size: 10.5pt;
+  }
+
+  .guide {
+    max-width: none;
+    padding: 0;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__list,
+  .code-tabs__list {
+    display: none !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__label,
+  .code-tabs__label {
+    display: block !important;
+  }
+
+  .code-tabs__panel,
+  .code-tabs__panel[hidden] {
+    display: block !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__panel > pre {
+    margin-bottom: 1.1rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow: visible;
+  }
+
+  .table-wrap,
+  .mermaid-figure {
+    overflow: visible;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="guide">
+<main>
+<h1 id="ddd-분석-패턴-가이드-인덱스">DDD 분석 패턴 가이드 인덱스</h1>
+<p>Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제시한 핵심 분석 패턴(Analysis Pattern)의 한국어 가이드 모음. 각 문서는 명세 <code>analysis-guide</code>(<code>.claude/authoring/specs/analysis-guide/</code>)의 절 구성을 따른다. 구본(<code>*_v0.1.0.md</code>)은 명세 이전의 구 9섹션 골격이고 <code>status: legacy</code> 다.</p>
+<p>분석 패턴은 GoF의 구현 설계 패턴과 달리, 도메인을 개념적으로 모델링하는 단계에서 반복적으로 등장하는 객체 모델의 추상이다. 사람·조직·관계·측정·회계처럼 업무 시스템의 뼈대가 되는 구조를 다룬다.</p>
+<blockquote>
+<p>GoF 디자인 패턴 인덱스: <a href="../../PATTERNS.md">../PATTERNS.md</a></p>
+</blockquote>
+<h2 id="기반-추상-foundational">기반 추상 (Foundational)</h2>
+<p>행위 주체와 그 관계를 모델링하는 가장 기초적인 추상.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>패턴</th><th>한 줄 요약</th><th>가이드</th></tr>
+</thead>
+<tbody>
+<tr><td>Party (당사자)</td><td>사람과 조직을 한 이름으로 받아 공통인 것을 그 한 자리에 모음</td><td><a href="ddd-analysis-pattern-guide/party/party-guide_v1.0.0.html">party-guide_v1.0.0.md</a></td></tr>
+<tr><td>Accountability (책임 관계)</td><td>두 당사자를 잇는 관계를 칸이 아니라 개념으로 세워 종류·기간을 닮</td><td><a href="ddd-analysis-pattern-guide/accountability/accountability-guide_v1.0.0.html">accountability-guide_v1.0.0.md</a></td></tr>
+<tr><td>Knowledge Level (지식 수준)</td><td>사실을 해석하는 규칙을 사실과 다른 층에 인스턴스로 세움</td><td><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.0.html">knowledge-level-guide_v1.0.0.md</a></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="값-모델링-value">값 모델링 (Value)</h2>
+<p>단위·구간을 가진 값을 안전하게 다루는 값 객체 패턴.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>패턴</th><th>한 줄 요약</th><th>가이드</th></tr>
+</thead>
+<tbody>
+<tr><td>Quantity (수량)</td><td>값과 단위를 묶어 단위 안전 연산 제공</td><td><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.html">quantity-guide_v1.1.0.md</a></td></tr>
+<tr><td>Range (범위)</td><td>두 끝과 「그 끝을 포함하는가」를 한 값에 담아 경계 판정을 한 곳에 모음</td><td><a href="ddd-analysis-pattern-guide/range/range-guide_v1.0.0.html">range-guide_v1.0.0.md</a></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="관찰측정-observation">관찰/측정 (Observation)</h2>
+<p>대상에 대한 정량·정성 사실을 통일된 구조로 기록.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>패턴</th><th>한 줄 요약</th><th>가이드</th></tr>
+</thead>
+<tbody>
+<tr><td>Measurement (측정)</td><td>값 하나를 대상·항목과 묶어 기록 한 건으로 세운다</td><td><a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.0.html">measurement-guide_v1.0.0.md</a></td></tr>
+<tr><td>Observation (관찰)</td><td>대상에 대한 사실을 값의 종류와 상관없이 한 층으로 다룬다</td><td><a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.0.0.html">observation-guide_v1.0.0.md</a></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="회계거래-accounting">회계/거래 (Accounting)</h2>
+<p>금액·가치의 누적과 이동을 무결성 있게 표현.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>패턴</th><th>한 줄 요약</th><th>가이드</th></tr>
+</thead>
+<tbody>
+<tr><td>Account (계정)</td><td>잔액을 항목(Entry)의 합으로 도출</td><td><a href="ddd-analysis-pattern-guide/account/account-guide_v1.1.0.html">account-guide_v1.1.0.md</a></td></tr>
+<tr><td>Transaction (거래)</td><td>함께 적어야 할 기록을 한 묶음으로 만들고, 만드는 자리에서 합을 0 으로 맞춤</td><td><a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.0.html">transaction-guide_v1.0.0.md</a></td></tr>
+<tr><td>Posting Rule (전기 규칙)</td><td>무엇에 반응해 얼마를 어느 계정에 적을지를 규칙 하나가 쥔다</td><td><a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.0.0.html">posting-rule-guide_v1.0.0.md</a></td></tr>
+<tr><td>심화: 객체 모델링</td><td>Transaction과 Account의 관계 및 Entry 소속 딜레마 해소 가이드</td><td><a href="../consideration/account-transaction-entry-modeling.md">account-transaction-entry-modeling.md</a></td></tr>
+<tr><td>심화: Account–Entry 경계</td><td>Entry 를 Account 안에 둘지 세 시나리오로 가른 aggregate 경계 검토 — 회계 배경 확정안과 정합</td><td><a href="../consideration/Account%EC%99%80%20Entry%EC%9D%98%20%EA%B4%80%EA%B3%84%20%EC%84%A4%EA%B3%84.md">Account와 Entry의 관계 설계.md</a></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="패턴-간-의존-관계">패턴 간 의존 관계</h2>
+<p>분석 패턴은 서로 층층이 쌓인다. 아래는 대표적인 의존 흐름이다.</p>
+<ul>
+<li>Party → Accountability: 행위 주체(Party) 위에 관계(Accountability)를 세운다.</li>
+<li>Knowledge Level은 Accountability(타입), Measurement/Observation(현상 유형), Posting Rule(규칙)에 두루 결합된다.</li>
+<li>Quantity → Measurement: 측정값은 단위를 가진 Quantity로 표현된다.</li>
+<li>Range는 Accountability 유효 기간, Measurement 정상 범위, Posting Rule 적용 기간 등에 쓰인다.</li>
+<li>Account → Transaction → Posting Rule: 잔액(Account) 위에 균형 거래(Transaction)를, 그 위에 규칙(Posting Rule)을 얹어 회계 도메인을 완성한다.</li>
+</ul>
+<h2 id="비고">비고</h2>
+<p>분석 패턴은 분석/모델링 단계의 개념 추상이므로, 구현 시에는 상속·인터페이스·값 객체·규칙 엔진 등 다양한 형태로 실현된다. 따라서 각 가이드의 "최소 조건"은 코드 구조보다 개념적 책임 분리를 기준으로 판정한다.</p>
+</main>
+<footer class="guide-footer">
+<p>원본은 <code>pattern-guide/ddd-analysis-pattern-guide/README.md</code>입니다. 이 HTML 은 원본 md 에서 생성한 파생물이라, 고칠 곳이 있으면 md 를 고친 뒤 다시 렌더합니다.</p>
+</footer>
+</div>
+<script>
+/* pattern-guide HTML — 세 언어 코드 탭. render-guides.py 가 HTML 에 인라인한다.
+ * JS 가 없으면 모든 패널이 보인다(마크업 기본값). 초기화하면서 선택 안 된 패널에 hidden 을 건다.
+ * 키보드: ←/→ 이웃 탭, Home/End 처음/끝 탭(WAI-ARIA APG Tabs, 자동 활성화).
+ */
+(function () {
+  "use strict";
+
+  var STORE_KEY = "pattern-guide:code-lang";
+  var widgets = [];
+
+  function readPref() {
+    try {
+      return window.localStorage.getItem(STORE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writePref(lang) {
+    try {
+      window.localStorage.setItem(STORE_KEY, lang);
+    } catch (e) {
+      /* 저장소를 못 쓰면 이번 페이지 안에서만 유지한다 */
+    }
+  }
+
+  function select(widget, tab, moveFocus) {
+    widget.tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+    if (moveFocus) tab.focus();
+  }
+
+  function tabForLang(widget, lang) {
+    for (var i = 0; i < widget.tabs.length; i++) {
+      if (widget.tabs[i].getAttribute("data-lang") === lang) return widget.tabs[i];
+    }
+    return null;
+  }
+
+  function activate(widget, tab, moveFocus) {
+    select(widget, tab, moveFocus);
+    var lang = tab.getAttribute("data-lang");
+    if (!lang) return;
+    writePref(lang);
+    widgets.forEach(function (other) {
+      if (other === widget) return;
+      var match = tabForLang(other, lang);
+      if (match) select(other, match, false);
+    });
+  }
+
+  function init(root) {
+    var list = root.querySelector(".code-tabs__list");
+    if (!list) return;
+    var tabs = Array.prototype.slice.call(list.querySelectorAll(".code-tabs__tab"));
+    if (!tabs.length) return;
+    var widget = { root: root, tabs: tabs };
+    widgets.push(widget);
+
+    list.addEventListener("click", function (event) {
+      var tab = event.target.closest(".code-tabs__tab");
+      if (tab && tabs.indexOf(tab) !== -1) activate(widget, tab, false);
+    });
+
+    list.addEventListener("keydown", function (event) {
+      var current = event.target.closest(".code-tabs__tab");
+      var index = tabs.indexOf(current);
+      if (index === -1) return;
+      var next = null;
+      switch (event.key) {
+        case "ArrowRight":
+          next = tabs[(index + 1) % tabs.length];
+          break;
+        case "ArrowLeft":
+          next = tabs[(index - 1 + tabs.length) % tabs.length];
+          break;
+        case "Home":
+          next = tabs[0];
+          break;
+        case "End":
+          next = tabs[tabs.length - 1];
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      activate(widget, next, true);
+    });
+
+    var initial = tabForLang(widget, readPref());
+    if (!initial) {
+      initial = tabs.filter(function (t) {
+        return t.getAttribute("aria-selected") === "true";
+      })[0] || tabs[0];
+    }
+    select(widget, initial, false);
+    root.setAttribute("data-enhanced", "");
+  }
+
+  function boot() {
+    Array.prototype.forEach.call(document.querySelectorAll(".code-tabs"), init);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>

@@ -12,7 +12,10 @@
     "research": "pattern-guide/research",
     "gate_results": "pattern-guide/gate-results.jsonl",
     "gate_logs": "pattern-guide/gate-logs",
-    "index": "PATTERNS.md",
+    "index": [
+      "PATTERNS.md",
+      "pattern-guide/ddd-analysis-pattern-guide/README.md"
+    ],
     "draft": "KANBAN/reports",
     "report": "KANBAN/reports"
   },
