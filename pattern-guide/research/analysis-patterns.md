@@ -826,6 +826,20 @@
 
 ## Observation (관찰)
 
+> **집필 결과 되먹임 (2026-09-29, v1.0.0 · 게이트 2R PASS · 분석 패턴 마지막 편)**
+> - **★ 그림 3.6 에는 Observation 칸이 없다.** 상위 타입은 **§3.5 의 그림 3.7 에서 처음 선다.** 즉 **「Measurement 만 있는 모델」은 원전에서도 이 패턴 이전 단계**다 — 이것이 Measurement 편과 이 편이 갈리는 근거이자 발행본 판정의 뿌리다. v1.0.0 은 **개체 수준**(「수치 관측 하나는 그 자체로 관측」)과 **모델 수준**(「수치 관측만 있는 모델은 아직 이 패턴이 아니다」)을 갈라 적어 두 편을 화해시켰다
+> - **★ 그림 → 절 대조표**(이 계열 편들이 되풀이해 쓸 자리) — 3.1·3.2 = **§3.1** · 3.3 = §3.2 · 3.4·3.5 = §3.3 · **3.6 = §3.4** · **3.7 = §3.5** · 3.11 = §3.8 · 3.12 = §3.9 · 3.13 = §3.10 · 3.14 = §3.11
+> - **★ 새 미해결 — 그림 3.8·3.10 의 절 귀속은 확인 불가다.** `apchap3.pdf` 에 절 번호가 없고 목차에 그림 번호가 없다. 그림 번호 순서로만 좁히면 **3.8 ∈ {§3.5, §3.6}, 3.10 ∈ {§3.6, §3.7}** 이다. v1.0.0 이 이 미확정을 본문에 명시했다
+> - **미해결 2「명칭 결정」 처분됨** — 원서대로 상위 타입 **Observation**, 하위는 **수치 관측(Measurement)** 과 **범주형 관측(Category Observation)**. Measurement 편이 정하고 이 편이 따랐다
+> - **미해결 4 해소** — 그림 3.8 은 Observation 자기 연관 둘, 양쪽 `*`, 이름 **evidence·assessment**. **방향 화살표는 없다**
+> - **미해결 3 부분 해소** — 그림 3.9 에서 Category 자리에 Phenomenon 이 서고 `Phenomenon Type 1 — * Phenomenon` 이 새로 붙는다. **이름 교체가 아니라 항목 소속이 더해진 정교화**다
+> - **★ 그림 4.11 vs 4.12** — Status Type 하위는 **4.11 에서 Actual·Planned 둘뿐**이고 Comparative/Simple Status Type 은 **4.12** 다. 적어 두면 다음 편이 셋째를 만들 여지가 없다
+> - **★ 노트에 없는 그림 — 4.21.** 대상이 Person 이 아니라 **Object of Care** 이고, 항목 연결이 Measurement→Phenomenon Type / Category Observation→Observation Concept 으로 **하위 종류로 내려가 있다.** 「항목 연결이 상위 층에 붙는가」가 **그림마다 다르다**는 근거다
+> - **판독 차이 하나** — 이 노트는 그림 3.12 를 「Observation 과 1—* 연관」으로, 참고 문서와 Measurement 편은 「«dynamic» 하위 타입」으로 읽는다. v1.0.0 은 **발행본 둘의 판독을 따랐다**
+> - **FHIR R5 재확인(2026-09-29)** — `value[x]` 13종 · `code` 1..1 · `subject` 0..1 · `effective[x]` 0..1 · `issued` 0..1 · `status` 1..1 · **`dataAbsentReason` 존재**(「값이 빠진 이유」로 Absence/Presence 와 다르다) · `derivedFrom`·`hasMember`·`interpretation` 0..*
+> - **비교 대상 후보 추가 — 「지시·처방(order)」.** `[필수]` 다섯을 통과하면서 이 편의 이분법 어느 쪽도 아닌 갈래다(채점자가 반대 방향으로 지어 1R 에 걸었고, 비교 축을 「대상에 대한 서술인가, 일어난 일이나 해야 할 일인가」로 넓혀 닫았다)
+
+
 ### 원전 대응
 
 - 원서 위치: Chapter 3 §3.5 「Observation」(Pearson 목차 PDF). 변형은 §3.6 Subtyping Observation Concepts, §3.7 Protocol, §3.8 Dual Time Record, §3.9 Rejected Observation, §3.10 Active Observation, Hypothesis, and Projection, §3.11 Associated Observation, §3.12 Process of Observation, 그리고 Chapter 4 §4.4 Phenomenon with Range입니다. 쪽은 확인 안 함. 그림은 Figure 3.7–3.14, 4.9, 4.11, 4.21, 4.22입니다(apchap3/4.pdf).

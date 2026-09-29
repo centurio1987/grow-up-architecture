@@ -32,7 +32,7 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
 | Measurement (측정) | 값 하나를 대상·항목과 묶어 기록 한 건으로 세운다 | [measurement-guide_v1.0.0.md](measurement/measurement-guide_v1.0.0.md) |
-| Observation (관찰) | 정성적(범주형) 사실을 현상 분류로 객체화 | [observation-guide_v0.1.0.md](observation/observation-guide_v0.1.0.md) |
+| Observation (관찰) | 대상에 대한 사실을 값의 종류와 상관없이 한 층으로 다룬다 | [observation-guide_v1.0.0.md](observation/observation-guide_v1.0.0.md) |
 
 ## 회계/거래 (Accounting)
 

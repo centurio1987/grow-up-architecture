@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 34,
+  "next_seq": 35,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -159,12 +159,12 @@
       ]
     },
     "KAN-001.5-6HF35H": {
-      "col": "doing",
+      "col": "done",
       "title": "분석 패턴 8편 재집필",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-28",
+      "갱신": "2026-09-29",
       "title_hash": "7fa3c41842ecde55032767bb327acef269673590",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "분석 패턴 8편 재집필",
@@ -258,6 +258,16 @@
     "KAN-001.5-6HF35H"
   ],
   "recent": [
+    {
+      "seq": 34,
+      "t": "2026-09-29T14:11",
+      "a": "ai",
+      "id": "KAN-001.5-6HF35H",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "doing",
+      "to": "done"
+    },
     {
       "seq": 33,
       "t": "2026-09-28T23:56",
