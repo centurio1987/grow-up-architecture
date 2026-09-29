@@ -147,6 +147,18 @@
 
 ## Accountability (책임 관계)
 
+> **집필 결과 되먹임 (2026-09-29, v1.0.0 · 3R FAIL 뒤 조건부 판정으로 발행)**
+> - **★ `[필수]` 후보 4 의 문면을 바꿨다.** 「양 끝의 역할(commissioner/responsible 또는 parent/child)이 **구별된다**」는 **이름을 조건으로 삼게 읽힌다.** 원전 안에서 이름 쌍이 갈리고(원서 그림은 commissioner/responsible, 초안은 parent/child), **이름으로 읽으면 대칭 연결이 그대로 통과한다.** 판정 가능한 형태는 **「두 끝을 맞바꾸면 다른 사실이 되는가」** 다
+> - **★ 조건 3 의 근거로 쓰면 안 되는 문장이 이 노트에 있다.** 「비교 대상」 절 Object Graph 인용 옆의 「**흔히** 연관에 타입이 붙는다」는 **연관 객체 일반의 흔한 규칙**이라 단독 근거로 쓰면 PG27 에 걸린다(그 문장이 Accountability 를 직접 지목해 더 위험하다). 쓸 수 있는 것은 도입부 「typed according to the kind of link」와 「Making it work」의 인스턴스 생성 지침이다
+> - **노트에 없는 원전 사실 셋** — ① 초안 「Object Graph」가 실무의 그래프는 「**대개**(Most)」 비순환이라 적는다(순환 금지를 `[선택]` 으로 두는 근거) ② 초안 「When to use it」이 **권한 계통이 여럿인 것**을 이 패턴을 쓰는 동기로 적는다(위임된 책임 없는 연결을 거르는 근거) ③ **기본형의 accountability type 은 「흥미로운 행동이 없다」** — Knowledge Level 편과 가르는 자리다(그 편 `[필수]` 2「이름표가 아니라 규칙을 쥔다」를 통과하지 못한다)
+> - **「선택지 C」 기술은 정확하지만 「지양 후보」로만 적으면 오해를 부른다** — 초안 생성자가 양 끝 Party 모두에 자기를 등록하고 순환 검사가 그 컬렉션을 탄다. **그것이 원전의 예제 모양이다**
+> - **식별성: 원전에 근거가 없다**(집필자·채점자 각각 실측) — `accountability.pdf`(25쪽)·`apchap2.pdf` 두 파일 모두 **identity·identifier·unique 각각 0건**, 그림 2.8~2.15 에 식별자 속성 없음. **Party 편이 미뤄 둔 판단을 받아 보니 이쪽에도 근거가 없어 같은 `[선택]` 표기가 됐다**
+> - **미해결 1(§2.4·§2.5 쪽)은 여전히 확인 못 함** — 쪽 없이 장·절만 쓴다
+> - **실측 보탬** — OFBiz `PartyRelationship` 필드가 **14개**(노트가 「등」으로 줄인 것에 `statusId`·`relationshipName`·`securityGroupId`·`priorityTypeId`·`permissionsEnumId`·`positionTitle`·`comments` 포함). AOM 논문은 그림 4 가 종류 층/운영 층을 가르고 IDPH 공중보건 시스템을 Party·Accountability·Observation 기반 사례로 든다
+> - **★ 이 편 고유의 함정** — **양 끝이 둘 다 `PartyId`** 라 두 끝을 맞바꿔 넘기면 **진단 0건 · 실행 거절 0건**이고 출력 12줄 중 **2줄만 조용히 바뀐다. 브랜드 타입으로도 못 막는다**
+> - **`### 구현` 절 펜스 함정을 실제로 밟았다** — **해설에** ```text 을 넣었더니 `--compile` 이 「실제 4개」로 막았다. **해설도 그 절 안**이다. **Rust 가 분량 상한에 먼저 걸리고**(367 → 240줄) **가장 효과적인 줄이기는 「불변식의 위치」 표에 없는 검사를 빼는 것**이다 — 그러면 표↔코드 1:1 이 오히려 또렷해진다
+
+
 ### 원전 대응
 
 - 원서 위치: Chapter 2 「Accountability」 §2.4 「Accountability」(Pearson 목차 PDF). 변형은 §2.5 「Accountability Knowledge Level」, §2.6 「Party Type Generalizations」, §2.7 「Hierarchic Accountability」, §2.8 「Operating Scopes」, §2.9 「Post」이고, 도입 단계는 §2.2 「Organization Hierarchies」, §2.3 「Organization Structure」입니다. 쪽은 확인 안 함. 그림은 Figure 2.3–2.15(apchap2.pdf). 개정 초안에는 「Accountability (17)」로 있으며 의도문은 "Represents a complex graph of relationships between parties"입니다.
@@ -266,6 +278,17 @@
 ---
 
 ## Knowledge Level (지식 수준)
+
+> **집필 결과 되먹임 (2026-09-29, v1.0.0 · 게이트 3R PASS)**
+> - **★ `[필수]` 후보 2 는 `[선택]` 이 맞다.** 원문이 **"It's a **common convention** to make the connection between the knowledge and operational level through associations between a 'thing' and a 'thing type'."** 이다. 이 노트의 「등장 개념」 절이 이미 「**관례적** 연결」로 적어 둔 것과 일치하니 「최소 조건 후보」 쪽 표기를 내린다. **그리고 `[필수]` 로 올리면 발행된 Posting Rule 편이 이 패턴에서 탈락해 그 편 `:276` 과 충돌한다**(그 모델에서 원천 사건은 규칙을 가리키지 않고 `(사건 종류, 발생 시점)` 조회가 답한다) — **조건을 세울 때 발행본을 판정해 보는 검사가 필요하다**
+> - **★ 「모델 불변식」의 「허용 조합」도 성립 요건이 아니다** — "Connection rules … provide a simple yet very flexible **form** of knowledge level" 이고, **Levelled Accountability Type** 절이 "Connection rules are **the most common way** … but **a simpler alternative** is to list the levels" 로 대안을 나란히 둔다
+> - **★ 요점 선언의 한정어가 조건 둘을 가른다** — "whose **instances** affect the behavior of a group of operational objects, **typically** allowing you to alter a system 'without programming'" 에서 **`typically` 는 「프로그래밍 없이」만 한정하고 `instances` 는 한정 없이 선다**
+> - **그림 위/아래 배치는 "Another personal convention"** 이고 표준이 아니라고 저자가 적는다(노트 서술과 일치, 원문 확인)
+> - **Evans DDD Reference 원문 확인** — 문제 서술 "Classes that have the same data and behavior may multiply just to accommodate different assembly rules.", 해법 "Create a distinct set of objects that can be used to **describe and constrain** the structure and behavior of the basic model."
+> - **미해결 2 는 여전히 확인 못 함** — 초안에서 **층의 수를 규정한 문장을 찾지 못했다.** 그래서 「대개 두 단계면 충분」을 본문에서 다루지 않았고 `[선택]` 후보 「층위 3단 이상」도 조건에 넣지 않았다. 미해결 3(소급)도 원전에 없어 조건을 「이 가이드의 정책」으로 뒀다
+> - **실측 보탬** — OFBiz `PartyRelationshipType` 이 노트에 필드 둘로 적혀 있는데 실측은 **일곱**이고, `RoleType` 으로 가는 관계 둘과 **자기 자신으로 가는 Parent 관계**가 있다 — 마지막 것이 「지식 객체끼리의 연관」 사례다. FHIR R5 Observation `code` = `1..1 CodeableConcept` 확인
+> - **도식 실측** — 도식이 **층을 주장하면 `@relation` 은 `layered`**(`groups:` 로 경계를 선언하면 lint 신호와 맞는다), **링크가 자기 자리를 갖는다는 주장이면 `relate`**(Accountability 편이 그쪽). `above` 계층 선언은 양쪽 다 필요하다. **같은 층 두 칸 사이 통로가 56px 뿐이라 `1..*` 라벨이 칸에 덮인다**
+
 
 ### 원전 대응
 

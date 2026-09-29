@@ -13,8 +13,8 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
 | Party (당사자) | 사람과 조직을 한 이름으로 받아 공통인 것을 그 한 자리에 모음 | [party-guide_v1.0.0.md](party/party-guide_v1.0.0.md) |
-| Accountability (책임 관계) | 두 Party 사이의 책임·권한 관계를 객체로 명시화 | [accountability-guide_v0.1.0.md](accountability/accountability-guide_v0.1.0.md) |
-| Knowledge Level (지식 수준) | 운영 사실과 그 규칙·분류를 두 계층으로 분리 | [knowledge-level-guide_v0.1.0.md](knowledge-level/knowledge-level-guide_v0.1.0.md) |
+| Accountability (책임 관계) | 두 당사자를 잇는 관계를 칸이 아니라 개념으로 세워 종류·기간을 닮 | [accountability-guide_v1.0.0.md](accountability/accountability-guide_v1.0.0.md) |
+| Knowledge Level (지식 수준) | 사실을 해석하는 규칙을 사실과 다른 층에 인스턴스로 세움 | [knowledge-level-guide_v1.0.0.md](knowledge-level/knowledge-level-guide_v1.0.0.md) |
 
 ## 값 모델링 (Value)
 

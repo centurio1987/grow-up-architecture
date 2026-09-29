@@ -1,0 +1,12 @@
+functional parent of Busan Purchasing Team on 2026-05-01: Purchasing Division
+regional parent of Busan Purchasing Team on 2026-05-01: Busan Office
+supervision parent of Han Jiwoo on 2026-05-01: Busan Purchasing Team
+supervision parent of Han Jiwoo on 2026-08-01: none
+audit parent of Han Jiwoo on 2026-08-01: Audit Office
+lines where Han Jiwoo is responsible on 2026-08-01: mentoring, audit
+mentoring parent of Han Jiwoo on 2026-08-01: Choi Minseo
+audit parent of Choi Minseo on 2026-08-01: Han Jiwoo
+rejected (same party on both ends): both ends must be different parties
+rejected (cycle): Audit Office is already an ancestor of Choi Minseo under audit
+rejected (unknown party): no party registered as P-9999
+rejected (unknown accountability type): no accountability type registered as AT-9
