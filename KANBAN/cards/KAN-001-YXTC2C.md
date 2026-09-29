@@ -140,12 +140,16 @@ python3 scripts/check-guides.py --all          # 33편: 헤딩 순서·placehold
 python3 scripts/check-guides.py --compile      # 구현 절 33×3 블록: javac(21) / 로컬 tsc --noEmit / rustc(edition 고정) 전부 0, 도구 버전 출력
 python3 scripts/check-guides.py --gates        # gate-results.jsonl: 33건 존재 · verdict PASS · resolve 해시 = 현재 lock
 python3 scripts/render-guides.py --all && python3 scripts/check-guides.py --derived   # html 33편 fresh
-grep -l '^### 디자인 패턴을 충족하는 최소 조건' pattern-guide/design-pattern-guide/*.md | wc -l   # 23
+ls pattern-guide/design-pattern-guide/*/*-guide_v*.md | grep -v v0.1.0 | xargs grep -l '^### 디자인 패턴을 충족하는 최소 조건' | wc -l      # 24
+ls pattern-guide/ddd-analysis-pattern-guide/*/*-guide_v*.md | grep -v v0.1.0 | xargs grep -l '^### 디자인 패턴을 충족하는 최소 조건' | wc -l  # 12
 python3 scripts/check-guides.py --links PATTERNS.md README.md pattern-guide/ddd-analysis-pattern-guide/README.md
+python3 scripts/check-guides.py --pointers     # 인덱스 셋이 가리키는 자리가 전부 최신 발행본인가 (2026-09-30 추가 — dirs.index 가 목록이 되기 전에는 분석 인덱스가 검사 밖이었다)
 diff -rq .claude/skills .agents/skills ; git status --porcelain ; git tag --list 'kan/KAN-001-YXTC2C/*' | wc -l
 python3 ~/.claude/skills/manage-kanban/scripts/kanban.py validate .            # errors 0
 python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <각 하위>
 ```
+
+> **위 두 줄의 기대값이 23·10 이 아닌 이유** (2026-09-30 실측). 한 편이 폴더 하나를 갖는 구조로 바뀌어 `design-pattern-guide/*.md` 는 이제 아무것도 매치하지 않는다 — 옛 명령은 실행조차 안 되고 `wc -l` 이 0 을 내므로 **통과로 오해된다.** 그리고 파일 수는 편 수보다 많다: 파일럿으로 먼저 쓴 v1.0.0 과 개정 v1.1.0 이 함께 남은 편이 GoF 에 하나(strategy), 분석 패턴에 둘(account·quantity)이다. 최신본만 세면 23·10 이 맞고, 위 명령은 **파일을 세므로** 24·12 다. 최신본이 무엇인지는 인덱스(`PATTERNS.md`)가 가리키는 판으로 확인한다.
 
 **work 단위로만 실행**(외부 모델 호출): `bash $PLUGIN/scripts/review-external.sh --axes scripts/review-axes-pattern.md <f>`. 결과는 `pattern-guide/gate-results.jsonl`에 남고 발행 카드는 `--gates`로 센다.
 
@@ -174,3 +178,4 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <
 - 2026-09-27T02:46 · s:00758e49 — `실행 계획` 섹션 교체
 - 2026-09-27T04:29 · s:00758e49 — `전략` 섹션 교체
 - 2026-09-27T04:30 · s:00758e49 — `전략` 섹션 교체
+- 2026-09-30T02:42 · s:00758e49 — `검증` 섹션 교체

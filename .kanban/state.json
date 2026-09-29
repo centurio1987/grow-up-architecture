@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 36,
+  "next_seq": 37,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -185,12 +185,12 @@
       ]
     },
     "KAN-001.6-HB5NH9": {
-      "col": "doing",
+      "col": "done",
       "title": "인덱스·stale 정리·최종 검증",
       "verbatim": "",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-09-29",
+      "갱신": "2026-09-30",
       "title_hash": "580411f179d5791c7c1e0a47efc4efed7601ca45",
       "verbatim_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
       "short": "인덱스·stale 정리·최종 검증",
@@ -258,6 +258,16 @@
     "KAN-001.6-HB5NH9"
   ],
   "recent": [
+    {
+      "seq": 36,
+      "t": "2026-09-30T02:47",
+      "a": "ai",
+      "id": "KAN-001.6-HB5NH9",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "doing",
+      "to": "done"
+    },
     {
       "seq": 35,
       "t": "2026-09-29T18:22",
