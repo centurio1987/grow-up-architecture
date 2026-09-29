@@ -23,7 +23,7 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
 | Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-guide_v1.1.0.md](quantity/quantity-guide_v1.1.0.md) |
-| Range (범위) | 시작·끝 구간을 값 객체로 캡슐화 | [range-guide_v0.1.0.md](range/range-guide_v0.1.0.md) |
+| Range (범위) | 두 끝과 「그 끝을 포함하는가」를 한 값에 담아 경계 판정을 한 곳에 모음 | [range-guide_v1.0.0.md](range/range-guide_v1.0.0.md) |
 
 ## 관찰/측정 (Observation)
 
@@ -31,7 +31,7 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Measurement (측정) | 정량적 사실을 대상·항목·Quantity로 객체화 | [measurement-guide_v0.1.0.md](measurement/measurement-guide_v0.1.0.md) |
+| Measurement (측정) | 값 하나를 대상·항목과 묶어 기록 한 건으로 세운다 | [measurement-guide_v1.0.0.md](measurement/measurement-guide_v1.0.0.md) |
 | Observation (관찰) | 정성적(범주형) 사실을 현상 분류로 객체화 | [observation-guide_v0.1.0.md](observation/observation-guide_v0.1.0.md) |
 
 ## 회계/거래 (Accounting)

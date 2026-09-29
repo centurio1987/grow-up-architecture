@@ -19,7 +19,7 @@ Quantity 가이드의 「개념 정리」 절은 Unit · Conversion Ratio · Com
 
 ```text
 값     Quantity       62.5 kg                       수치 + 단위
-기록   Measurement    김OO · 몸무게 · 62.5 kg         누구의 · 무엇을 · 얼마
+기록   Measurement    김OO · 몸무게 · 62.5 kg         누구를 · 무엇을 · 얼마
 사실   Observation    위 기록 + 잰 날 · 적은 날 · 거부 여부
 ```
 
