@@ -35,7 +35,7 @@ After : 판이 값 셋을 한 덩이로 떠서 연산 없는 값으로 내놓음
                                 seats · remaining · nextCode 가 함께 돌아감
 ```
 
-이 패턴의 이름은 GoF(Gang of Four, 1994년에 나온 *Design Patterns* 의 저자 네 명을 함께 부르는 이름)가 붙인 것이고 다른 이름은 Token 이에요(근거: GoF Memento 절 Also Known As). 분류는 행위 패턴이고, 함께 쓰는 패턴은 Command(되돌리기에 필요한 상태를 커맨드 대신 맡아 둘 때)와 Iterator(반복자가 훑던 자리를 메멘토로 떠 둘 때)입니다(근거: GoF Memento 절 Related Patterns). 이 글은 시나리오 셋을 따라갑니다. 예약 둘이 이력에 쌓이고 한 걸음 되돌아가는 길, 자리가 흩어져 배정되고 판에 값이 하나 더 늘 때 무엇이 안 바뀌는가, 되돌리기를 바깥에 맡기면 어느 단계에서 무엇이 어긋나는가. 끝까지 읽으면 어떤 코드를 Memento 라고 불러도 되는지 필수 조건 넷으로 판정할 수 있고, 구조가 닮은 Command·Prototype 코드와도 구분할 수 있게 됩니다.
+이 패턴의 이름은 GoF(Gang of Four, 1994년에 나온 *Design Patterns* 의 저자 네 명을 함께 부르는 이름)가 붙인 것이고 다른 이름은 Token 이에요(근거: GoF Memento 절 Also Known As). 분류는 행위 패턴이고, 함께 쓰는 패턴은 [Command](../command/command-guide_v1.0.0.md)(되돌리기에 필요한 상태를 커맨드 대신 맡아 둘 때)와 [Iterator](../iterator/iterator-guide_v1.0.0.md)(반복자가 훑던 자리를 메멘토로 떠 둘 때)입니다(근거: GoF Memento 절 Related Patterns). 이 글은 시나리오 셋을 따라갑니다. 예약 둘이 이력에 쌓이고 한 걸음 되돌아가는 길, 자리가 흩어져 배정되고 판에 값이 하나 더 늘 때 무엇이 안 바뀌는가, 되돌리기를 바깥에 맡기면 어느 단계에서 무엇이 어긋나는가. 끝까지 읽으면 어떤 코드를 Memento 라고 불러도 되는지 필수 조건 넷으로 판정할 수 있고, 구조가 닮은 Command·Prototype 코드와도 구분할 수 있게 됩니다.
 
 ## 패턴 자세히 들여다보기
 
@@ -282,7 +282,7 @@ Memento : 이력에 쌓인 것을 건넨다
 
 되돌아간 자리는 한 번도 존재한 적이 없는 상태입니다. 최소 조건으로 보면 3번이 빠진 것이고, 빠진 이유는 창구가 받아 드는 자리의 타입이 `SeatChart` 라 예약 연산까지 딸려 왔기 때문이에요. Memento 를 고르면 맡아 둔 과거를 아무도 고칠 수 없는 대신, 떠낸 것으로 다른 일을 할 자유는 포기합니다. 두 패턴은 목적도 갈려요 — Prototype 은 견본을 복제해 **새 객체를 얻는** 쪽이고, Memento 는 같은 객체를 **과거 상태로 되돌리는** 쪽입니다. 자세한 것은 [Prototype 가이드](../prototype/prototype-guide_v1.0.0.md)에 있어요.
 
-**Iterator 와의 차이.** 구분 기준은 떠 두는 것이 원본의 업무 상태인지, 원본을 훑던 자리인지입니다. 다만 이 기준은 둘 중 하나를 고르라는 물음이 아니에요. 둘은 겨루는 사이가 아니라 포개지는 사이라, 훑던 자리를 떠 둔 값도 조건 1~4번을 만족하면 메멘토입니다. 반복자가 자기가 어디까지 훑었는지를 메멘토로 떠서 안에 들고 있으면, 훑는 대상의 내부 표현을 드러내지 않고도 자리를 기억할 수 있습니다(근거: GoF Memento 절 Related Patterns — 메멘토가 반복에 쓰일 수 있다고 적고, Iterator 절은 반복자가 반복 상태를 메멘토로 붙잡아 안에 저장한다고 적는다). 이 편의 좌석판에는 순회가 없어서 포개지는 자리가 나오지 않지만, 판정은 같은 조건으로 합니다. 반복자가 맡는 쪽이고 집합이 원본이면 조건 1~4번을 그대로 적용해요.
+**Iterator 와의 차이.** 구분 기준은 떠 두는 것이 원본의 업무 상태인지, 원본을 훑던 자리인지입니다. 다만 이 기준은 둘 중 하나를 고르라는 물음이 아니에요. 둘은 겨루는 사이가 아니라 포개지는 사이라, 훑던 자리를 떠 둔 값도 조건 1~4번을 만족하면 메멘토입니다. 반복자가 자기가 어디까지 훑었는지를 메멘토로 떠서 안에 들고 있으면, 훑는 대상의 내부 표현을 드러내지 않고도 자리를 기억할 수 있습니다(근거: GoF Memento 절 Related Patterns — 메멘토가 반복에 쓰일 수 있다고 적고, Iterator 절은 반복자가 반복 상태를 메멘토로 붙잡아 안에 저장한다고 적는다). [Iterator 편](../iterator/iterator-guide_v1.0.0.md)도 같은 자리를 자기 쪽에서 적었어요. 이 편의 좌석판에는 순회가 없어서 포개지는 자리가 나오지 않지만, 판정은 같은 조건으로 합니다. 반복자가 맡는 쪽이고 집합이 원본이면 조건 1~4번을 그대로 적용해요.
 
 ```text
 반복자가 훑던 자리를 메멘토로 떠 두면 역할이 이렇게 앉는다
@@ -978,6 +978,7 @@ Rust 도 원인을 바꿔 봤습니다. 창구가 `SeatMemento` 를 직접 만�
   - 5장 Behavioral Patterns 의 패턴 토론(Objects as Arguments) — 인자로 건네는 토큰을 두고 Command 에서는 다형적 실행 연산이 중요하고 Memento 의 인터페이스는 좁아서 값으로만 전달된다는 대비. Command 비교의 구분 기준의 근거
 - [Command 가이드](../command/command-guide_v1.0.0.md) — 「비슷한 패턴·안티패턴과의 차이」가 같은 갈림을 Command 쪽에서 적고, 「사용 목적」이 역연산으로 짜기 어려우면 이 패턴을 먼저 보라고 적은 자리. Command 비교의 기준과 사용 목적 단서 2 를 맞춘 근거
 - [Prototype 가이드](../prototype/prototype-guide_v1.0.0.md) — 견본을 복제해 새 객체를 얻는 쪽을 다루는 자리. Prototype 비교에서 목적의 갈림을 맡긴 곳
+- [Iterator 가이드](../iterator/iterator-guide_v1.0.0.md) — 「한눈에 보는 개요」가 순회 상태를 밖에 담아 두었다 이어 가는 자리로 이 패턴을 드는 곳. Iterator 비교의 포개짐을 맞춘 근거
 - [JEP 395: Records](https://openjdk.org/jeps/395) — `record` 는 컴포넌트마다 공개 접근자를 자동으로 만든다는 사실. 최소 조건 절에서 불변 값 객체가 3번에 걸리는 이유
 - [Jakarta Faces 4.0 — StateHolder](https://jakarta.ee/specifications/faces/4.0/apidocs/jakarta/faces/component/stateholder) — `Object saveState(FacesContext)` · `void restoreState(FacesContext, Object)` 의 시그니처, 두 메서드를 상속 계층의 다른 수준에 나눠 둘 수 없다는 계약, 돌려주는 값이 직렬화 가능해야 하고 `saveState` 가 상태를 바꾸면 안 된다는 요구
 - [Java SE 21 — javax.swing.undo.StateEditable](https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/undo/StateEditable.html) — `storeState(Hashtable<Object,Object>)` · `restoreState(Hashtable<?,?>)` 의 시그니처

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:93e77626d6e1baeebfb8fe012b88c2045f20745dbe7323ec4c4ae24764a5229e -->
+<!-- guide-fp:3d12007ea09e4732355d608ca1985378abb7585f462e2bdd759ef02bde1495de -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -482,7 +482,7 @@ After : 기록함이 「어디까지 봤는지」를 든 순회자를 만들어 
 
   기록함.newestFirst() ──▶ 다른 순회자 ──▶ SCN-07 SCN-06 SCN-05 SCN-04 SCN-03
              기록함의 저장 코드는 한 줄도 안 바뀐다</code></pre>
-<p>이 패턴의 분류는 행위 패턴이고 다른 이름은 Cursor 예요. 자주 함께 쓰는 패턴은 셋입니다. 트리 같은 재귀 구조를 순회할 때 쓰는 <a href="design-pattern-guide/composite/composite-guide_v1.0.0.html">Composite</a>, 순회자를 내주는 연산 자리에서 겹치는 <a href="design-pattern-guide/factory-method/factory-method-guide_v1.0.0.html">Factory Method</a>, 그리고 순회 상태를 밖에 담아 두었다 이어 갈 때의 Memento 고요. 이 글은 시나리오 셋을 따라갑니다. 기록 다섯 건이 들어온 순서대로 나오는 길, 최신 우선 순회가 더해지고 두 순회가 겹쳐 도는 때, 순회 위치를 기록함 안으로 들였을 때 어디서 깨지는가. 끝까지 읽으면 어떤 코드를 Iterator 라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, Composite 나 색인 루프와도 구분할 수 있게 됩니다.</p>
+<p>이 패턴의 분류는 행위 패턴이고 다른 이름은 Cursor 예요. 자주 함께 쓰는 패턴은 셋입니다. 트리 같은 재귀 구조를 순회할 때 쓰는 <a href="design-pattern-guide/composite/composite-guide_v1.0.0.html">Composite</a>, 순회자를 내주는 연산 자리에서 겹치는 <a href="design-pattern-guide/factory-method/factory-method-guide_v1.0.0.html">Factory Method</a>, 그리고 순회 상태를 밖에 담아 두었다 이어 갈 때의 <a href="design-pattern-guide/memento/memento-guide_v1.0.0.html">Memento</a> 고요. 이 글은 시나리오 셋을 따라갑니다. 기록 다섯 건이 들어온 순서대로 나오는 길, 최신 우선 순회가 더해지고 두 순회가 겹쳐 도는 때, 순회 위치를 기록함 안으로 들였을 때 어디서 깨지는가. 끝까지 읽으면 어떤 코드를 Iterator 라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, Composite 나 색인 루프와도 구분할 수 있게 됩니다.</p>
 <h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
 <h3 id="시나리오-1--스캔-기록-일곱-건-중-남은-다섯-건이-들어온-순서대로-나오는-길">시나리오 1 — 스캔 기록 일곱 건 중 남은 다섯 건이 들어온 순서대로 나오는 길</h3>
 <p>기록함 <code>RingScanLog</code> 는 칸이 다섯인 배열을 들고 있고, 오늘 <code>SCN-01</code> 부터 <code>SCN-07</code> 까지 일곱 건이 들어왔습니다. 여섯 번째부터는 앞 칸을 덮어썼으니 남아 있는 것은 <code>SCN-03</code>(7건) · <code>SCN-04</code>(21건) · <code>SCN-05</code>(9건) · <code>SCN-06</code>(15건) · <code>SCN-07</code>(4건) 다섯이고, 배열에는 <code>SCN-06 · SCN-07 · SCN-03 · SCN-04 · SCN-05</code> 순으로 놓여 있어요. 보고서가 받아야 할 것은 들어온 순서대로 줄지은 <code>SCN-03 SCN-04 SCN-05 SCN-06 SCN-07</code> 한 줄입니다. 이 장면에는 넷이 등장해요. 기록을 담아 둔 기록함 <code>RingScanLog</code>(패턴에서는 ConcreteAggregate 라고 부르는 역할), 어디까지 봤는지를 들고 다니는 <code>OldestFirst</code>(ConcreteIterator), 순회자들이 공통으로 따르는 연산 모양 <code>hasNext()</code>·<code>next()</code> 를 선언한 <code>ScanCursor</code>(Iterator), 그리고 기록함에 순회자를 청해 한 줄을 만드는 보고서 코드(Client)입니다. 이름은 여기서 한 번씩만 소개하고 정식 정의는 개념 정리에서 해요.</p>

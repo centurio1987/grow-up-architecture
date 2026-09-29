@@ -338,7 +338,7 @@ final class Order {
 ```text
                        Strategy (Checkout)          State (Order)
 구현 객체가 나타내는 것  같은 계산의 대안               주문이 오가는 상태 (갈라지거나 되돌아가도 됨)
-구현 객체를 바꾸는 곳    Client 의 설치 코드           요청 처리 흐름 안 (상태 객체 또는 Context)
+구현 객체를 바꾸는 곳    Client 의 설치 코드           대개 요청 처리 흐름 안 (상태 객체 또는 Context)
 구현 객체끼리           서로 모름 (시나리오 2 의 1단계)   다음 상태를 알 수도 있음 (Context 가 전이를 정하면 모름)
 ```
 
@@ -364,7 +364,7 @@ final class WeightShippingCheckout extends Checkout {
 }
 ```
 
-이 코드에서 무게별 배송비로 결제하는 객체는 만들어지는 순간 `WeightShippingCheckout` 으로 정해지고, 그 객체를 정액 배송비로 바꿀 방법이 없습니다. 클래스가 곧 계산 방법이니까요. 시나리오 2 의 1~3단계를 이 코드에 넣으면 새 요금제는 새 하위 클래스가 되고, 사용 목적의 단서 2 에서 센 대로 할인까지 나뉘면 조합마다 클래스가 생겨요. 계산 순서는 두 쪽 다 고정돼요. Template Method 는 상위 클래스의 `final` 메서드가, Strategy 는 구현 절의 `Checkout.total()` 처럼 Context 메서드가 순서를 정합니다. 달라지는 것은 끼우는 단위예요. 하위 클래스가 상위 클래스의 필드와 protected 연산(하위 클래스에서만 부를 수 있게 열어 둔 메서드)을 바로 쓰던 내부 접근이 사라지고, 전략은 Context 가 넘긴 값이나 공개한 조회 연산으로만 데이터를 얻습니다. 시나리오 1 의 4단계에서 본 통신 부담을 떠안게 되는 거죠.
+이 코드에서 무게별 배송비로 결제하는 객체는 만들어지는 순간 `WeightShippingCheckout` 으로 정해지고, 그 객체를 정액 배송비로 바꿀 방법이 없습니다. 클래스가 곧 계산 방법이니까요. 시나리오 2 의 1~3단계를 이 코드에 넣으면 새 요금제는 새 하위 클래스가 되고, 사용 목적의 단서 2 에서 센 대로 할인까지 나뉘면 조합마다 클래스가 생겨요. 계산 순서는 두 쪽 다 고정돼요. Template Method 는 (이 예제에서는) 상위 클래스의 `final` 메서드가, Strategy 는 구현 절의 `Checkout.total()` 처럼 Context 메서드가 순서를 정합니다. 달라지는 것은 끼우는 단위예요. 하위 클래스가 상위 클래스의 필드와 protected 연산(하위 클래스에서만 부를 수 있게 열어 둔 메서드)을 바로 쓰던 내부 접근이 사라지고, 전략은 Context 가 넘긴 값이나 공개한 조회 연산으로만 데이터를 얻습니다. 시나리오 1 의 4단계에서 본 통신 부담을 떠안게 되는 거죠.
 
 **Command 와의 차이.** 구분 기준은 구현 객체가 Context 의 요청 처리 중 한 단계를 같은 목적의 다른 방법으로 맡는지, 수행할 요청 하나를 객체로 담고 있는지입니다. 반환값은 기준이 아니에요. 앞쪽이면 구현 객체는 그 요청 처리 흐름 안에서 불리고, 돌려주는 값이 없어도 Strategy 입니다. 뒤쪽이면 요청 객체가 요청 하나를 대표하고, 호출하는 쪽은 그 일이 무엇인지 모른 채 실행 연산만 부릅니다. Command 의 세 역할(Invoker · Receiver · Command 객체)과 Receiver 없이 명령이 스스로 일을 다 하는 모양도 허용된다는 점은 [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md)의 「Invoker · Receiver · Command 객체」에 있고, 그래서 필드 모양은 기준으로 쓰지 않아요. refactoring.guru 도 두 패턴이 객체를 어떤 동작으로 매개변수화한다는 점은 같고 목적이 다르다고 봅니다. Command 는 연산 자체를 객체로 바꿔(연산의 매개변수가 객체의 필드가 됨) 실행 지연·큐잉·이력·원격 실행을 가능하게 하고, Strategy 는 같은 일을 하는 다른 방법을 바꿔 끼웁니다([refactoring.guru — Strategy](https://refactoring.guru/design-patterns/strategy)).
 

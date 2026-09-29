@@ -6,7 +6,7 @@ spec_version: 1.0.0
 version: 1.0.1
 status: published
 date: 2026-09-21
-serves: [strategy]
+serves: [strategy, factory-method, abstract-factory, builder, prototype, singleton, bridge, facade, flyweight, proxy, chain-of-responsibility, command, iterator, observer, state, template-method]
 ---
 
 # GoF 공통 어휘 — 패턴 이름보다 먼저 서야 하는 여섯 낱말
@@ -174,6 +174,24 @@ Command 가 할 때  :  execute() { document.paste(); }           Receiver 의 �
 - [Strategy 가이드 「비슷한 패턴·안티패턴과의 차이」](../../design-pattern-guide/strategy/strategy-guide_v1.1.0.md#비슷한-패턴안티패턴과의-차이) — Template Method 비교의 상속으로 일부를, 위임으로 전체를 바꾼다는 구분과 상속으로 맺는 관계·객체로 맺는 관계의 대비 → 위임(delegation) · 클래스 패턴과 객체 패턴 · Command 비교가 세 역할과 Receiver 없이 명령이 스스로 일을 다 하는 모양을 이 문서에 맡기는 자리 → Invoker · Receiver · Command 객체
 - [Strategy 가이드 「구현」](../../design-pattern-guide/strategy/strategy-guide_v1.1.0.md#구현) — 세 언어 관용 표 아래 해설이 Rust 의 trait 객체와 제네릭이 갈리는 지점을 결합 시점이라 적고 동적 디스패치·정적 디스패치의 정의를 이 문서에 맡기는 자리 → 컴파일 시점 결합과 실행 시점 결합
 - [Strategy 가이드 「실제 라이브러리에서」](../../design-pattern-guide/strategy/strategy-guide_v1.1.0.md#실제-라이브러리에서) — `HashMap<K, V, S>` 에서 어떤 `S` 를 쓸지가 맵 타입의 일부라서 컴파일할 때 정해진다는 설명 → 컴파일 시점 결합과 실행 시점 결합
+
+아래 열다섯 편도 같은 낱말들을 이 문서에 맡깁니다.
+
+- [Factory Method 가이드](../../design-pattern-guide/factory-method/factory-method-guide_v1.0.0.md) — 「한눈에 보는 개요」와 Abstract Factory 비교 → 클래스 패턴과 객체 패턴 / 시나리오 1 의 4단계와 구현 해설 → 컴파일 시점 결합과 실행 시점 결합(정적·동적 디스패치)
+- [Abstract Factory 가이드](../../design-pattern-guide/abstract-factory/abstract-factory-guide_v1.0.0.md) — 시나리오 1 의 확인 질문과 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / Factory Method 비교 → 클래스 패턴과 객체 패턴 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
+- [Builder 가이드](../../design-pattern-guide/builder/builder-guide_v1.0.0.md) — 「개념 정리」에서 제품을 넘겨 처리를 맡기는 관계를 부르는 이름 → 위임(delegation)
+- [Prototype 가이드](../../design-pattern-guide/prototype/prototype-guide_v1.0.0.md) — 「개념 정리」에서 계층이 하나라는 말을 풀 때 → 클래스 패턴과 객체 패턴
+- [Singleton 가이드](../../design-pattern-guide/singleton/singleton-guide_v1.0.0.md) — 「한눈에 보는 개요」가 이 패턴이 객체 범위인 이유를 풀 때 → 클래스 패턴과 객체 패턴 / Flyweight 비교가 공유 단위가 키별로 갈리는 자리를 짚을 때 → 내재 상태와 외재 상태
+- [Bridge 가이드](../../design-pattern-guide/bridge/bridge-guide_v1.0.0.md) — 「개념 정리」 → 위임 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
+- [Facade 가이드](../../design-pattern-guide/facade/facade-guide_v1.0.0.md) — 「개념 정리」의 Facade 항목이 일을 넘기는 방식을 부를 때 → 위임(delegation)
+- [Flyweight 가이드](../../design-pattern-guide/flyweight/flyweight-guide_v1.0.0.md) — 「한눈에 보는 개요」와 「개념 정리」가 두 낱말의 정의를 맡기는 자리 → 내재 상태와 외재 상태
+- [Proxy 가이드](../../design-pattern-guide/proxy/proxy-guide_v1.0.0.md) — 「한눈에 보는 개요」가 이 패턴이 객체 범위인 이유를 풀 때 → 클래스 패턴과 객체 패턴
+- [Chain of Responsibility 가이드](../../design-pattern-guide/chain-of-responsibility/chain-of-responsibility-guide_v1.0.0.md) — 「한눈에 보는 개요」 → 위임 / Mediator·Command 비교 → Invoker · Receiver · Command 객체 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
+- [Command 가이드](../../design-pattern-guide/command/command-guide_v1.0.0.md) — 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
+- [Iterator 가이드](../../design-pattern-guide/iterator/iterator-guide_v1.0.0.md) — 「실제 라이브러리에서」 표가 `iterator()` 와 `into_iter()` 의 결합 시점을 가를 때 → 컴파일 시점 결합과 실행 시점 결합
+- [Observer 가이드](../../design-pattern-guide/observer/observer-guide_v1.0.0.md) — 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / Command 비교 → Invoker · Receiver · Command 객체 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
+- [State 가이드](../../design-pattern-guide/state/state-guide_v1.0.0.md) — 「개념 정리」 → 위임 · 인터페이스에 프로그래밍한다 / 「한눈에 보는 개요」와 최소 조건 8번 → 내재 상태와 외재 상태
+- [Template Method 가이드](../../design-pattern-guide/template-method/template-method-guide_v1.0.0.md) — 「한눈에 보는 개요」 → 클래스 패턴과 객체 패턴 / Strategy 비교 → 위임
 
 ## 참고 자료
 

@@ -348,7 +348,7 @@ TypeCatalog         지식 층위 등록부 — 등록 서비스이자 저장소
 SiteLog             운영 층위 장부 — 기록 서비스이자 저장소 (구현 전용)
 ```
 
-아래 표는 DDD(Domain-Driven Design, 도메인 주도 설계)의 전술 용어를 씁니다. Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식 여섯은 이 가이드의 주제 밖이라 [참고 문서 「DDD 전술 용어」](../../reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.1.md)가 풀어 두었어요. 그 문서에 없는 낱말 둘만 여기서 한 줄씩 펴 둡니다.
+아래 표는 DDD(Domain-Driven Design, 도메인 주도 설계)의 전술 용어를 씁니다. Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식 일곱은 이 가이드의 주제 밖이라 [참고 문서 「DDD 전술 용어」](../../reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.1.md)가 풀어 두었어요. 그 문서에 없는 낱말 둘만 여기서 한 줄씩 펴 둡니다.
 
 - **Factory**(팩토리) — 불변식을 검사한 뒤에만 aggregate 를 만들어 돌려주는 생성 책임이에요. 여기서는 `Inspection.record` 입니다.
 - **도메인 서비스** — 한 aggregate 에 속하지 않고 여러 aggregate 를 식별자로 찾아 함께 다루는 작업이에요. 여기서는 기록 서비스 `SiteLog.record` 와 등록 서비스 `TypeCatalog` 의 등록 메서드가 그 자리입니다.

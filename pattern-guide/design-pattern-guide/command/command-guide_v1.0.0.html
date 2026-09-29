@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:7837dca4d5a6d6f304e58ba8c0f9a18ccec8fe37da950909c15ff29838754b86 -->
+<!-- guide-fp:dd44463df004d4a2587a3df903d14bb64ff1b811aba541b5b970c2ff8d934c48 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -1410,7 +1410,7 @@ final class Dispatcher {
 <ul>
 <li>Erich Gamma · Richard Helm · Ralph Johnson · John Vlissides, <em>Design Patterns: Elements of Reusable Object-Oriented Software</em>, Addison-Wesley, 1994. 5장 행위 패턴의 쪽 번호는 원서 표 1.1(Design pattern space)의 교차참조 표기를 따랐고 종이책과 대조하지 않았습니다.
 <ul>
-<li>5장 Behavioral Patterns, Command(233쪽부터) — 의도(Intent: 요청을 객체로 캡슐화)·다른 이름(Also Known As: Action, Transaction)·적용 대상(Applicability: 액션으로 객체를 매개변수화, 요청의 지정·큐잉·실행 시점 분리, 되돌리기, 변경 로그, 고수준 연산)·참여자(Participants: Command·ConcreteCommand·Client·Invoker·Receiver)·협력(Collaborations: Client 가 만들며 receiver 를 지정, Invoker 가 보관, Invoker 가 실행 연산을 불러 요청을 발행하며 되돌릴 수 있는 커맨드는 그 전에 상태를 저장, ConcreteCommand 가 receiver 의 연산을 호출)·결과(Consequences: 호출하는 객체와 수행법을 아는 객체의 분리, 일급 객체, 복합 커맨드 조립, 새 커맨드 추가)·구현(Implementation: 커맨드가 얼마나 똑똑해야 하는가, 되돌리기와 다시 하기, 되돌리기 과정의 오차 누적)·관련 패턴(Related Patterns: Composite·Memento·Prototype). 개요·시나리오 1~3·개념 정리·사용 목적·최소 조건·비교 절의 근거</li>
+<li>5장 Behavioral Patterns, Command(233쪽부터) — 의도(Intent: 요청을 객체로 캡슐화)·다른 이름(Also Known As: Action, Transaction)·적용 대상(Applicability: 액션으로 객체를 매개변수화, 요청의 지정·큐잉·실행 시점 분리, 되돌리기, 변경 로그, 고수준 연산)·참여자(Participants: Command·ConcreteCommand·Client·Invoker·Receiver)·협력(Collaborations: Client 가 만들며 receiver 를 지정, Invoker 가 보관, Invoker 가 실행 연산을 불러 요청을 발행하며 되돌릴 수 있는 커맨드는 그 전에 상태를 저장, ConcreteCommand 가 receiver 의 연산을 호출)·결과(Consequences: 호출하는 객체와 수행법을 아는 객체의 분리, 일급 객체, 복합 커맨드 조립, 새 커맨드 추가)·구현(Implementation: 커맨드가 얼마나 똑똑해야 하는가, 되돌리기와 다시 하기, 되돌리기 과정의 오차 누적, C++ 템플릿 쓰기)·관련 패턴(Related Patterns: Composite·Memento·Prototype). 개요·시나리오 1~3·개념 정리·사용 목적·최소 조건·비교 절의 근거</li>
 <li>5장 Behavioral Patterns 끝의 토론(Discussion of Behavioral Patterns) — 인자로 건네는 토큰을 두고 Command 에서는 다형적 실행 연산이 중요하고 Memento 의 인터페이스는 좁아 값으로만 전달된다는 대비, 보내는 쪽과 받는 쪽을 떼어 놓는 방식의 비교(Command 는 그 바인딩을 별도 객체에 정의한다, Observer 는 주체가 옵저버를 여럿 가질 수 있고 그 수가 실행 중에 변해 Command 보다 느슨하다, Mediator 는 제삼의 객체를 거치고 Chain of Responsibility 는 후보의 사슬로 넘긴다). Observer·Memento·Mediator·Chain of Responsibility 비교의 근거</li>
 </ul>
 </li>

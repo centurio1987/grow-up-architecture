@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:e9cdc7a7845dc1eaef442b4275e511b8004b64ab3166051e5677d5900f1b5c43 -->
+<!-- guide-fp:eec3bcd15f74fc707a17a3ff21370d5d6f6667bb417a7366641bd8df2d35fe51 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -460,7 +460,7 @@ spec_version: 1.0.0
 version: 1.0.1
 status: published
 date: 2026-09-21
-serves: [strategy]</p>
+serves: [strategy, factory-method, abstract-factory, builder, prototype, singleton, bridge, facade, flyweight, proxy, chain-of-responsibility, command, iterator, observer, state, template-method]</p>
 <hr>
 <h1 id="gof-공통-어휘--패턴-이름보다-먼저-서야-하는-여섯-낱말">GoF 공통 어휘 — 패턴 이름보다 먼저 서야 하는 여섯 낱말</h1>
 <h2 id="이-문서가-답하는-것">이 문서가 답하는 것</h2>
@@ -590,6 +590,24 @@ Command 가 할 때  :  execute() { document.paste(); }           Receiver 의 �
 <li><a href="design-pattern-guide/strategy/strategy-guide_v1.1.0.html#비슷한-패턴안티패턴과의-차이">Strategy 가이드 「비슷한 패턴·안티패턴과의 차이」</a> — Template Method 비교의 상속으로 일부를, 위임으로 전체를 바꾼다는 구분과 상속으로 맺는 관계·객체로 맺는 관계의 대비 → 위임(delegation) · 클래스 패턴과 객체 패턴 · Command 비교가 세 역할과 Receiver 없이 명령이 스스로 일을 다 하는 모양을 이 문서에 맡기는 자리 → Invoker · Receiver · Command 객체</li>
 <li><a href="design-pattern-guide/strategy/strategy-guide_v1.1.0.html#구현">Strategy 가이드 「구현」</a> — 세 언어 관용 표 아래 해설이 Rust 의 trait 객체와 제네릭이 갈리는 지점을 결합 시점이라 적고 동적 디스패치·정적 디스패치의 정의를 이 문서에 맡기는 자리 → 컴파일 시점 결합과 실행 시점 결합</li>
 <li><a href="design-pattern-guide/strategy/strategy-guide_v1.1.0.html#실제-라이브러리에서">Strategy 가이드 「실제 라이브러리에서」</a> — <code>HashMap&lt;K, V, S&gt;</code> 에서 어떤 <code>S</code> 를 쓸지가 맵 타입의 일부라서 컴파일할 때 정해진다는 설명 → 컴파일 시점 결합과 실행 시점 결합</li>
+</ul>
+<p>아래 열다섯 편도 같은 낱말들을 이 문서에 맡깁니다.</p>
+<ul>
+<li><a href="design-pattern-guide/factory-method/factory-method-guide_v1.0.0.html">Factory Method 가이드</a> — 「한눈에 보는 개요」와 Abstract Factory 비교 → 클래스 패턴과 객체 패턴 / 시나리오 1 의 4단계와 구현 해설 → 컴파일 시점 결합과 실행 시점 결합(정적·동적 디스패치)</li>
+<li><a href="design-pattern-guide/abstract-factory/abstract-factory-guide_v1.0.0.html">Abstract Factory 가이드</a> — 시나리오 1 의 확인 질문과 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / Factory Method 비교 → 클래스 패턴과 객체 패턴 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합</li>
+<li><a href="design-pattern-guide/builder/builder-guide_v1.0.0.html">Builder 가이드</a> — 「개념 정리」에서 제품을 넘겨 처리를 맡기는 관계를 부르는 이름 → 위임(delegation)</li>
+<li><a href="design-pattern-guide/prototype/prototype-guide_v1.0.0.html">Prototype 가이드</a> — 「개념 정리」에서 계층이 하나라는 말을 풀 때 → 클래스 패턴과 객체 패턴</li>
+<li><a href="design-pattern-guide/singleton/singleton-guide_v1.0.0.html">Singleton 가이드</a> — 「한눈에 보는 개요」가 이 패턴이 객체 범위인 이유를 풀 때 → 클래스 패턴과 객체 패턴 / Flyweight 비교가 공유 단위가 키별로 갈리는 자리를 짚을 때 → 내재 상태와 외재 상태</li>
+<li><a href="design-pattern-guide/bridge/bridge-guide_v1.0.0.html">Bridge 가이드</a> — 「개념 정리」 → 위임 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합</li>
+<li><a href="design-pattern-guide/facade/facade-guide_v1.0.0.html">Facade 가이드</a> — 「개념 정리」의 Facade 항목이 일을 넘기는 방식을 부를 때 → 위임(delegation)</li>
+<li><a href="design-pattern-guide/flyweight/flyweight-guide_v1.0.0.html">Flyweight 가이드</a> — 「한눈에 보는 개요」와 「개념 정리」가 두 낱말의 정의를 맡기는 자리 → 내재 상태와 외재 상태</li>
+<li><a href="design-pattern-guide/proxy/proxy-guide_v1.0.0.html">Proxy 가이드</a> — 「한눈에 보는 개요」가 이 패턴이 객체 범위인 이유를 풀 때 → 클래스 패턴과 객체 패턴</li>
+<li><a href="design-pattern-guide/chain-of-responsibility/chain-of-responsibility-guide_v1.0.0.html">Chain of Responsibility 가이드</a> — 「한눈에 보는 개요」 → 위임 / Mediator·Command 비교 → Invoker · Receiver · Command 객체 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합</li>
+<li><a href="design-pattern-guide/command/command-guide_v1.0.0.html">Command 가이드</a> — 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합</li>
+<li><a href="design-pattern-guide/iterator/iterator-guide_v1.0.0.html">Iterator 가이드</a> — 「실제 라이브러리에서」 표가 <code>iterator()</code> 와 <code>into_iter()</code> 의 결합 시점을 가를 때 → 컴파일 시점 결합과 실행 시점 결합</li>
+<li><a href="design-pattern-guide/observer/observer-guide_v1.0.0.html">Observer 가이드</a> — 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / Command 비교 → Invoker · Receiver · Command 객체 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합</li>
+<li><a href="design-pattern-guide/state/state-guide_v1.0.0.html">State 가이드</a> — 「개념 정리」 → 위임 · 인터페이스에 프로그래밍한다 / 「한눈에 보는 개요」와 최소 조건 8번 → 내재 상태와 외재 상태</li>
+<li><a href="design-pattern-guide/template-method/template-method-guide_v1.0.0.html">Template Method 가이드</a> — 「한눈에 보는 개요」 → 클래스 패턴과 객체 패턴 / Strategy 비교 → 위임</li>
 </ul>
 <h2 id="참고-자료">참고 자료</h2>
 <p>웹 자료는 모두 2026-09-21 에 확인했습니다. 원서 쪽 번호는 원서 표 1.1(Design pattern space)의 교차참조 표기를 옮긴 것이고 종이책과 대조하지 않았습니다.</p>

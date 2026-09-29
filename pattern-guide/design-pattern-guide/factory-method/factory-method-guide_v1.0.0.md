@@ -258,7 +258,7 @@ final class SlipFactory {
 | 반환 타입이 `MonthlySlip` 인 `createSlip` | 빠짐 | 충족 | 충족 | 충족 | 충족 | 아님 (컴파일 실패) |
 | `final` 로 봉인된 `createSlip` | 충족 | 빠짐 | 충족 | 빠짐 | 충족 | 아님 |
 
-여기서 헷갈리기 쉬운 포인트는 이름으로 판정하려는 것입니다. `create` 나 `newInstance` 로 시작한다고 팩토리 메서드가 아니고, 반대로 이름에 `create` 가 없어도 위 다섯을 만족하면 팩토리 메서드예요. Java 표준 라이브러리의 `Calendar.getInstance()` 나 `NumberFormat.getInstance()` 는 이름만 보면 딱 그것 같지만 `static` 이라 2번에서 빠집니다. 반대로 `iterator()` 는 이름에 `create` 가 없는데도 다섯을 다 만족해요 — 아래 「실제 라이브러리에서」에 그 대응이 있습니다.
+여기서 헷갈리기 쉬운 포인트는 이름으로 판정하려는 것입니다. `create` 나 `newInstance` 로 시작한다고 팩토리 메서드가 아니고, 반대로 이름에 `create` 가 없어도 위 다섯을 만족하면 팩토리 메서드예요. Java 표준 라이브러리의 [`Calendar.getInstance()`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Calendar.html#getInstance()) 나 [`NumberFormat.getInstance()`](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/NumberFormat.html#getInstance()) 는 이름만 보면 딱 그것 같지만 `static` 이라 2번에서 빠집니다. 반대로 `iterator()` 는 이름에 `create` 가 없는데도 다섯을 다 만족해요 — 아래 「실제 라이브러리에서」에 그 대응이 있습니다.
 
 > 이름이 아니라 재정의할 수 있는 자리인가를 본다.
 
@@ -1038,7 +1038,7 @@ IntoIterator::into_iter       컴파일할 때 — 연관 타입 IntoIter 로 �
   - 3장 생성 패턴, Abstract Factory(87쪽부터) — 관련 패턴(Related Patterns)의 "각 생성 연산은 흔히 팩토리 메서드로 구현된다"는 서술. Abstract Factory 비교의 근거
   - 3장 생성 패턴의 토론 절 — 인스턴스화할 클래스가 바뀌지 않거나 이미 재정의하기 쉬운 초기화 연산 안에서 생성이 일어날 때는 팩토리 메서드가 필요 없다는 서술. 사용 목적의 「쓰지 말아야 할 상황」 첫 두 줄의 근거
   - 1장 서론, 표 1.1(Design pattern space) — 생성 패턴 다섯 중 Factory Method 만 클래스 범위라는 분류. 개요의 분류 한 줄의 근거
-  - 5장 행위 패턴, Iterator(257쪽부터) — 순회자를 만드는 연산을 팩토리 메서드의 예로 드는 서술. 「실제 라이브러리에서」 `Iterable` 행 대응의 근거
+  - 5장 행위 패턴, Iterator(257쪽부터) — **Motivation 절**이 순회자를 만드는 연산을 팩토리 메서드의 예로 드는 서술(Motivation 은 `[필수]` 근거로 쓰기 까다로운 자리라 절 이름을 적어 둔다). 「실제 라이브러리에서」 `Iterable` 행 대응의 근거
 - [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.md) — 개요와 Abstract Factory 비교의 클래스 패턴과 객체 패턴, 시나리오 1 의 4단계와 구현 해설의 컴파일 시점 결합과 실행 시점 결합(정적·동적 디스패치)
 - [Refactoring.Guru — Factory Method](https://refactoring.guru/design-patterns/factory-method) — 다른 생성 패턴과의 관계, 장단점 정리
 - [Refactoring.Guru — Factory Comparison](https://refactoring.guru/design-patterns/factory-comparison) — 생성 메서드·정적 생성 메서드·Simple Factory·Factory Method 를 가르는 기준. Simple Factory 비교의 근거

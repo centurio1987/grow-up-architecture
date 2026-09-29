@@ -843,8 +843,39 @@ def check_serves(ctx: "Ctx", meta: dict, in_layout: bool) -> list[str]:
     if not in_layout:
         return []
     tracks = [t for sid, t in ctx.tracks.items() if sid != REFERENCE_SPEC]
-    return [f"serves 의 '{s}' 에 해당하는 가이드 폴더가 없습니다 — {ctx.dirs['content']}/{{{'|'.join(tracks)}}}/{s}/"
+    errs = [f"serves 의 '{s}' 에 해당하는 가이드 폴더가 없습니다 — {ctx.dirs['content']}/{{{'|'.join(tracks)}}}/{s}/"
             for s in serves if not ctx.slug_exists(s)]
+    errs += _serves_reverse(ctx, meta, serves)
+    return errs
+
+
+def _serves_reverse(ctx: "Ctx", meta: dict, serves: list[str]) -> list[str]:
+    """역방향 대조 — 이 참고 문서를 실제로 링크하는 최신 발행본의 slug 가 serves 에 다 있는가.
+
+    2026-09-29 에 넣었다. 그때까지 이 검사가 없어서 `serves` 가 조용히 썩었다 — 실측으로
+    gof-vocabulary 가 `[strategy]` 하나인데 **열여섯 편**이 링크하고 있었고, accounting-model 은
+    카드에 미반영분이 적혀 있지도 않았는데 세 편이 빠져 있었다. 편마다 patch 를 내면 판올림이
+    서로를 튕기므로 갱신을 한 자리에 모으는데, 모아 두면 사람이 기억해야만 맞는 상태가 된다.
+    구본(status: legacy)은 재집필 대상이라 세지 않는다 — `latest_docs()` 가 이미 빼고 준다.
+    """
+    slug = str(meta.get("slug") or "").strip()
+    if not slug:
+        return []
+    needle = f"{ctx.dirs['reference'].split('/')[-1]}/{slug}/"
+    linked: set[str] = set()
+    for sid, path in ctx.latest_docs():
+        if sid == REFERENCE_SPEC:
+            continue
+        try:
+            if needle in path.read_text(encoding="utf-8"):
+                linked.add(path.parent.name)
+        except OSError:
+            continue
+    missing = sorted(linked - set(serves))
+    if not missing:
+        return []
+    return [f"이 참고 문서를 링크하는데 serves 에 없는 가이드가 있습니다 — {', '.join(missing)}: "
+            f"머리말 serves 와 「가이드로 돌아가기」에 함께 넣습니다"]
 
 
 def _cells(row: str) -> list[str]:

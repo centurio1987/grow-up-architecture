@@ -6,7 +6,7 @@ spec_version: 1.0.0
 version: 1.0.1
 status: published
 date: 2026-09-21
-serves: [quantity]
+serves: [quantity, measurement, observation, range]
 ---
 
 # 수량·측정·관측 모델 — 값 위에 기록이, 기록 위에 사실이 앉는 세 층
@@ -153,7 +153,7 @@ Rejected Observation 은 틀렸다고 판정된 관측입니다. 지우지 않�
 - Quantity 여럿이 Unit 하나를 가리킵니다. 0.3 kg 과 2.5 kg 은 같은 kg 을 가리켜요.
 - Conversion Ratio 하나는 from Unit 하나와 to Unit 하나를 가리키고, 반대로 Unit 하나는 from 쪽으로도 to 쪽으로도 여러 비율에 걸립니다. 그래서 선이 둘이에요.
 - Compound Unit 은 Unit 의 한 종류입니다.
-- Range 는 upper 와 lower 로 Quantity 하나씩을 듭니다. 그림의 선 하나가 그 둘을 대신하고, 둘이라는 것은 칸 안의 속성 두 줄이 말해요.
+- Range 는 이 문서의 그림에서는 upper 와 lower 로 Quantity 하나씩을 듭니다. 그림의 선 하나가 그 둘을 대신하고, 둘이라는 것은 칸 안의 속성 두 줄이 말해요.
 
 ```text
 층      칸              들어오는 선(한 종류)                      나가는 선(가리킨다)
@@ -173,6 +173,9 @@ Rejected Observation 은 틀렸다고 판정된 관측입니다. 지우지 않�
 
 - [Quantity 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.md#개념-정리) — Quantity · Unit · Conversion Ratio · Compound Unit · Money 의 정의와 그 절의 도식이 이 문서의 앞 다섯 개념을 씁니다.
 - [Quantity 가이드 「비슷한 패턴·안티패턴과의 차이」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.md#비슷한-패턴안티패턴과의-차이) — Measurement 와의 차이가 이 문서의 「Measurement」를, 그 문단이 잰 시각 · 적은 시각과 거부 표시를 넘기는 자리가 「Observation」 · 「Rejected Observation」을, Money 와의 차이가 「Money」를 씁니다.
+- [Measurement 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.0.md#개념-정리) — Observation 항목이 잰 시각 · 적은 시각이 왜 그 층에 붙는지를 이 문서의 「Observation」으로, Rejected Observation 항목이 값을 지우지 않는 이유를 「Rejected Observation」으로 넘깁니다. 「한눈에 보는 개요」는 이웃 개념들이 놓이는 자리를 「개념 사이의 관계」에서 받아요.
+- [Observation 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/observation/observation-guide_v1.0.0.md#개념-정리) — 거부한 관측을 지우지 않는 이유를 이 문서의 「Rejected Observation」으로 보냅니다. 「한눈에 보는 개요」는 Quantity · Measurement · Observation 의 층 관계를 「개념 사이의 관계」에서 받아요.
+- [Range 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/range/range-guide_v1.0.0.md#개념-정리) — Quantity 항목이 끝점에 오는 값의 정의와 단위 환산을 이 문서의 「Quantity」 · 「Unit」 · 「Conversion Ratio」로 넘깁니다. 「한눈에 보는 개요」는 Range 가 Quantity 위에 놓이는 자리를 「Range」와 「개념 사이의 관계」에서 받아요.
 
 
 ## 참고 자료

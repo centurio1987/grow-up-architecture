@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:ee1f18ab5086c66765930f09f1d69820d03c8b83d586f8952afaac6a0c006e12 -->
+<!-- guide-fp:3665ba8f2a9433584feaaa5cb95658bdc3aa1d0903620428efe6b2ff181e2cbe -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -683,7 +683,7 @@ StudioRun        ──────▶     ProjectSlip
 </tbody>
 </table>
 </div>
-<p>여기서 헷갈리기 쉬운 포인트는 이름으로 판정하려는 것입니다. <code>create</code> 나 <code>newInstance</code> 로 시작한다고 팩토리 메서드가 아니고, 반대로 이름에 <code>create</code> 가 없어도 위 다섯을 만족하면 팩토리 메서드예요. Java 표준 라이브러리의 <code>Calendar.getInstance()</code> 나 <code>NumberFormat.getInstance()</code> 는 이름만 보면 딱 그것 같지만 <code>static</code> 이라 2번에서 빠집니다. 반대로 <code>iterator()</code> 는 이름에 <code>create</code> 가 없는데도 다섯을 다 만족해요 — 아래 「실제 라이브러리에서」에 그 대응이 있습니다.</p>
+<p>여기서 헷갈리기 쉬운 포인트는 이름으로 판정하려는 것입니다. <code>create</code> 나 <code>newInstance</code> 로 시작한다고 팩토리 메서드가 아니고, 반대로 이름에 <code>create</code> 가 없어도 위 다섯을 만족하면 팩토리 메서드예요. Java 표준 라이브러리의 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Calendar.html#getInstance()"><code>Calendar.getInstance()</code></a> 나 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/text/NumberFormat.html#getInstance()"><code>NumberFormat.getInstance()</code></a> 는 이름만 보면 딱 그것 같지만 <code>static</code> 이라 2번에서 빠집니다. 반대로 <code>iterator()</code> 는 이름에 <code>create</code> 가 없는데도 다섯을 다 만족해요 — 아래 「실제 라이브러리에서」에 그 대응이 있습니다.</p>
 <blockquote>
 <p>이름이 아니라 재정의할 수 있는 자리인가를 본다.</p>
 </blockquote>
@@ -1445,7 +1445,7 @@ interface ReportParts {
 <li>3장 생성 패턴, Abstract Factory(87쪽부터) — 관련 패턴(Related Patterns)의 "각 생성 연산은 흔히 팩토리 메서드로 구현된다"는 서술. Abstract Factory 비교의 근거</li>
 <li>3장 생성 패턴의 토론 절 — 인스턴스화할 클래스가 바뀌지 않거나 이미 재정의하기 쉬운 초기화 연산 안에서 생성이 일어날 때는 팩토리 메서드가 필요 없다는 서술. 사용 목적의 「쓰지 말아야 할 상황」 첫 두 줄의 근거</li>
 <li>1장 서론, 표 1.1(Design pattern space) — 생성 패턴 다섯 중 Factory Method 만 클래스 범위라는 분류. 개요의 분류 한 줄의 근거</li>
-<li>5장 행위 패턴, Iterator(257쪽부터) — 순회자를 만드는 연산을 팩토리 메서드의 예로 드는 서술. 「실제 라이브러리에서」 <code>Iterable</code> 행 대응의 근거</li>
+<li>5장 행위 패턴, Iterator(257쪽부터) — <strong>Motivation 절</strong>이 순회자를 만드는 연산을 팩토리 메서드의 예로 드는 서술(Motivation 은 <code>[필수]</code> 근거로 쓰기 까다로운 자리라 절 이름을 적어 둔다). 「실제 라이브러리에서」 <code>Iterable</code> 행 대응의 근거</li>
 </ul>
 </li>
 <li><a href="reference/gof-vocabulary/gof-vocabulary-ref_v1.0.1.html">참고 문서 「GoF 공통 어휘」</a> — 개요와 Abstract Factory 비교의 클래스 패턴과 객체 패턴, 시나리오 1 의 4단계와 구현 해설의 컴파일 시점 결합과 실행 시점 결합(정적·동적 디스패치)</li>

@@ -51,13 +51,13 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 
 ## 빠른 비교가 자주 필요한 페어
 
-각 가이드의 "흔히 오해하는 지점" 섹션에서 더 자세히 다룬다.
+각 가이드의 「비슷한 패턴·안티패턴과의 차이」 절에서 더 자세히 다룬다.
 
-- Factory Method ↔ Abstract Factory: 제품 1종 vs 제품군
-- Strategy ↔ State: 외부 교체 vs 내부 전이
+- Factory Method ↔ Abstract Factory: 생성을 제품을 쓰는 클래스 **자신의 하위 클래스**에 미루는가(제품 한 종류) vs **별개의 팩토리 객체**에 미루는가(서로 맞물리는 제품군)
+- Strategy ↔ State: 구현 객체들이 같은 계산의 대안인가 vs 객체가 오가는 상태인가 — 요청 처리 결과로 다음 구현이 정해지는 코드가 있는지는 **먼저 보는 곳**이고, 밖에서 온 선택으로 갈아 끼워도 State 일 수 있다
 - Adapter ↔ Decorator ↔ Proxy: 인터페이스 변환 vs 행위 추가 vs 접근 제어
-- Builder ↔ Abstract Factory: 단계적 조립 vs 제품군 일관성
-- Mediator ↔ Facade: 동료 간 중재 vs 서브시스템 단순 진입점
+- Builder ↔ Abstract Factory: 조립 단계를 순서대로 부르고 마지막에 결과를 꺼내는가 vs 호출 한 번에 완성된 제품을 받는가
+- Mediator ↔ Facade: 가운데 객체를 **안쪽 객체들도** 아는가 vs **바깥 Client 만** 아는가 — 갈리는 것은 방향이다
 
 ## 참고 문서
 
