@@ -1,0 +1,10 @@
+loan L-1001 M-01 "Cosmos" due day 114
+mail -> M-01 : "Cosmos" due day 114
+loan L-1002 M-02 "The Selfish Gene" due day 114
+loan L-1003 M-03 "Guns, Germs, and Steel" due day 114
+sms -> M-03 : "Guns, Germs, and Steel" due day 114
+loan L-1004 M-04 "Sapiens" due day 114
+-- closing --
+mail sent 1
+sms sent 1
+silent sent 0

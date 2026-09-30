@@ -1,6 +1,6 @@
 {
   "next_id": 2,
-  "next_seq": 38,
+  "next_seq": 39,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "doing",
@@ -221,7 +221,7 @@
       ]
     },
     "KAN-001.7-4MRJ1B": {
-      "col": "doing",
+      "col": "done",
       "title": "추가 패턴 4편 집필 — Dependency Injection · Temporal Property · Null Object · Specification",
       "verbatim": "다섯 모두 채택, 기준선은 파일럿 회고 직후 새 하위 카드로, 나머지 넷은 인덱스 정리 카드 뒤 새 하위 카드 하나로. (KAN-001.1-P5N9NF 검토서 1번 항목 승인, 2026-09-27)\n\n채택하면 가이드가 후보마다 한 편씩 늘고 인덱스와 검증 숫자(23편·33편)가 바뀝니다.",
       "생성": "ai",
@@ -258,6 +258,16 @@
     "KAN-001.7-4MRJ1B"
   ],
   "recent": [
+    {
+      "seq": 38,
+      "t": "2026-09-30T17:30",
+      "a": "ai",
+      "id": "KAN-001.7-4MRJ1B",
+      "op": "move",
+      "w": "CEX9MB",
+      "from": "doing",
+      "to": "done"
+    },
     {
       "seq": 37,
       "t": "2026-09-30T14:33",

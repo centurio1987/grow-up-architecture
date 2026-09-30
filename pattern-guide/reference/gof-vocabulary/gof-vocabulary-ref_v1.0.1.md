@@ -6,7 +6,7 @@ spec_version: 1.0.0
 version: 1.0.1
 status: published
 date: 2026-09-21
-serves: [strategy, factory-method, abstract-factory, builder, prototype, singleton, bridge, facade, flyweight, proxy, chain-of-responsibility, command, iterator, observer, state, template-method]
+serves: [strategy, factory-method, abstract-factory, builder, prototype, singleton, bridge, facade, flyweight, proxy, chain-of-responsibility, command, iterator, observer, state, template-method, null-object, dependency-injection]
 ---
 
 # GoF 공통 어휘 — 패턴 이름보다 먼저 서야 하는 여섯 낱말

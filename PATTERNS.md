@@ -56,6 +56,8 @@ GoF 23편에는 없지만 같은 층에서 쓰이는 설계 패턴이다. 원전
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
 | Specification (명세) | 후보가 기준을 만족하는지 판정하는 책임을 후보와 분리된 객체에 두고, 그 객체를 조합해 기준을 쌓음 | [specification-guide_v1.0.0.md](pattern-guide/design-pattern-guide/specification/specification-guide_v1.0.0.md) |
+| Dependency Injection (의존성 주입) | 협력 객체를 스스로 만들거나 찾지 않고, 조립자가 추상 타입의 구현을 생성자·설치 연산으로 넣어 줌 | [dependency-injection-guide_v1.0.0.md](pattern-guide/design-pattern-guide/dependency-injection/dependency-injection-guide_v1.0.0.md) |
+| Null Object (널 객체) | 협력자가 없는 상태를 빈 참조가 아니라 같은 인터페이스의 중립 동작 객체로 표현해, 쓰는 쪽에서 부재 검사를 없앰 | [null-object-guide_v1.0.0.md](pattern-guide/design-pattern-guide/null-object/null-object-guide_v1.0.0.md) |
 
 ## 분석 패턴 (Analysis Patterns)
 

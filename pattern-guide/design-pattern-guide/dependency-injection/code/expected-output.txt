@@ -1,0 +1,9 @@
+ops: notice M-101 "Data Structures" 2 days late
+ops: notice M-337 "Discrete Math" 7 days late
+ops: today=120 sent=2
+test: today=127 sent=4
+test: recorded 4
+test: log M-101 "Data Structures" 9 days late
+test: log M-204 "Operating Systems" 7 days late
+test: log M-101 "Compiler Design" 2 days late
+test: log M-337 "Discrete Math" 14 days late

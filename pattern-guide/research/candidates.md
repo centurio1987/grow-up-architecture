@@ -57,12 +57,15 @@
   - 리팩터링으로는 "Introduce Special Case"(별칭 "Introduce Null Object")가 있습니다([refactoring.com](https://refactoring.com/catalog/introduceSpecialCase.html), 조회 2026-09-17).
 - 기존 33편과의 경계: Strategy와 가장 가깝습니다. 구조로 보면 "아무것도 하지 않는 구체 전략"이지만, Strategy의 의도는 알고리즘 교체이고 Null Object의 의도는 **부재의 표현**입니다. Wikipedia도 이 패턴을 State·Strategy의 특수한 경우로 봅니다.
 - 필요한 spec: gof-guide
+- **★ 정정(2026-09-30 실측) — 아래 첫 근거는 재집필로 사라졌다.** 현행 발행본 전체에서 `Null Object`·`널 객체` 는 **0회**다. 근거로 든 `strategy-pattern.md:84` 의 `NoDiscountStrategy` 자리는 그 편이 도메인을 배송 요금(`ShippingPolicy`)으로 바꿔 쓰면서 **없어졌다** — 「무할인」·「할인 없」 으로도 잡히지 않는다.
+  **그래서 이 편의 근거는 나머지 둘이 진다.** ① Rust 에 null 참조가 없어 `Option` 을 쓰므로 **「언어가 부재를 타입으로 강제할 때도 이 패턴이 필요한가」** 가 세 언어 대조에서 드러난다 ② 원전 쪽에 「오류를 정상 실행처럼 보이게 한다」는 비판이 있어 안티패턴 갈래의 소재가 이미 있다. 둘 다 재집필과 무관하게 유효하다.
 - 가치 근거:
-  - `pattern-guide/design-pattern-guide/strategy-pattern.md:84`가 `NoDiscountStrategy`를 "Null Object 형태"라고 부르지만 정의는 없습니다. 요청서의 "등장하는 개념 빠짐없이 정의"를 지키려면 정의할 자리가 필요합니다.
+  - (**재집필로 소멸 — 위 정정 참고**) `pattern-guide/design-pattern-guide/strategy-pattern.md:84`가 `NoDiscountStrategy`를 "Null Object 형태"라고 부르지만 정의는 없습니다. 요청서의 "등장하는 개념 빠짐없이 정의"를 지키려면 정의할 자리가 필요합니다.
   - Wikipedia 비판 절에 "can make errors/bugs appear as normal program execution"이라는 문장이 있어, 경계·안티패턴 절에 쓸 소재가 원전 쪽에 이미 있습니다.
   - Rust에는 null 참조가 없고 `Option`을 씁니다(["there are no "null" references"](https://doc.rust-lang.org/std/option/index.html), 조회 2026-09-17). 세 언어 비교에서 "언어가 부재를 타입으로 강제할 때도 Null Object가 필요한가"라는 차이가 드러납니다.
 - 비용 신호: Java·TS는 인터페이스 구현, Rust는 trait 구현으로 세 블록 모두 짧고 자기완결입니다. 외부 crate도 필요 없습니다(판단).
 - 추천: **채택 권고** — 기존 편이 이미 이 용어를 쓰고 있고, 세 언어 예시를 만드는 비용이 낮습니다.
+- **미해결 질문(2026-09-30 발행 뒤 남음)** — 원전 Implementation 3 「Clients don't agree on null behavior」가 **pluggable variables 로 실행 중에 do-nothing 방식을 바꾸는 널 객체**를 인정한다(「If the do nothing behavior must be customized at run time, the NullObject class will require pluggable variables」). 이 모양은 발행본의 `[필수]` 4번(자기 필드를 바꾸는 코드가 없고 동작을 가르는 분기가 없다)에 걸린다. 즉 **이 가이드가 원전보다 좁은 자리가 State 말고 하나 더 있다.** 채점자가 1라운드에서 찾아 본문의 전칭(「좁게 잡은 자리는 여기 하나뿐」)만 걷어 냈고, 이 자리를 본문에서 다루려면 집필 단계로 돌아가야 한다. `[선택]` 로 한 항목을 더하거나 조건 4 의 문면을 「만들 때 정한 방식이 실행 중에 바뀌지 않는다」로 넓히는 두 길이 있는데, 어느 쪽이든 조건을 쓰는 자리를 전수로 따라 고쳐야 한다(`.4` 카드 12번).
 
 ### Specification
 - 갈래: GoF 밖 설계
@@ -87,7 +90,9 @@
   - "Inversion of Control"이라는 이름은 너무 일반적이라("like saying my car is special because it has wheels") DI라는 이름을 제안했습니다.
 - 기존 33편과의 경계: Strategy와 겹칩니다. Strategy도 생성자·setter 주입을 최소 조건으로 둡니다(`strategy-pattern.md` 최소 조건 3). 다만 Strategy의 의도는 "교체 가능한 알고리즘"이고, DI의 의도는 "구성과 사용의 분리"이며 알고리즘이 아닌 모든 협력 객체에 적용됩니다.
 - 필요한 spec: gof-guide
-- 가치 근거: 기존 GoF 가이드 6편이 DI를 정의 없이 언급합니다.
+- **★ 정정(2026-09-30 실측) — 아래 「6편이 정의 없이 언급」은 재집필 전 상태다.** 33편을 다시 쓴 뒤 현행 발행본에서 `의존성 주입`·`Dependency Injection` 을 세어 보면 **singleton 편 3회뿐**이고 나머지 다섯(strategy · factory-method · abstract-factory · flyweight · mediator)은 **0회**다. 게다가 남은 셋도 「정의 없이」가 아니다 — `singleton:174` 가 「의존성 주입(Dependency Injection, 객체가 쓸 협력 객체를 바깥에서 넣어 주는 방식)」으로 **괄호 안에서 짧게 푼다.** 아래 줄 번호는 전부 폐지된 `*-pattern.md` 기준이라 지금 파일에는 없다.
+  **그래서 채택 근거가 바뀐다.** 「6편이 참조하는 개념의 정본 자리」가 아니라 **「singleton 편이 비교 절에서 `의존성 주입 컨테이너의 단일 스코프` 를 갈래로 다루는데 그 갈래를 풀 자리가 괄호 한 줄뿐이다」** 가 지금의 근거다(`singleton:245`·`:270`). Fowler 원전의 Service Locator 논쟁과 세 형태(Constructor · Setter · Interface)는 그대로 유효하다.
+- 가치 근거(**재집필 전 상태 — 위 정정을 먼저 읽는다**): 기존 GoF 가이드 6편이 DI를 정의 없이 언급합니다.
   - `singleton-pattern.md:164`, `:198`
   - `strategy-pattern.md:264`
   - `factory-method-pattern.md:189`, `:196`, `:213`
