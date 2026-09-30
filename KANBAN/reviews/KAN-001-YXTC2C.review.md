@@ -24,9 +24,13 @@ status: 검토 대기
 | 베이스 | `b62d572` |
 | 변경 훑기 | `git diff b62d572...HEAD` |
 
-**커밋 99건**
+**커밋 103건**
 
 ```text
+05e2c85 kanban: KAN-001.7-4MRJ1B S3·S4 — Dependency Injection 과 Null Object 발행, 37편 완성
+e2384dd kanban: KAN-001.7-4MRJ1B S1·S2 — Specification 과 Temporal Property 발행
+cc8b0ea kanban: KAN-001.7-4MRJ1B 착수 — 트랙 확정과 배치1 계획
+58a39f0 kanban: KAN-001.6-HB5NH9 S3 — 전체 검증과 루트 검토서 발행
 ded973e kanban: KAN-001.6-HB5NH9 S8 — analyzer 계약에 경쟁 후보 대조를 넣는다
 6447595 kanban: KAN-001.6-HB5NH9 S2 — stale 잔여 처분
 5a383ed kanban: KAN-001.6-HB5NH9 S1 — 인덱스 정비와 검사기 다중 인덱스 지원
@@ -128,14 +132,14 @@ b931916 kanban: KAN-001.1-P5N9NF 백로그 → 진행 중
 d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 ```
 
-**변경 파일 574개 (+163971 −1441)**
+**변경 파일 611개 (+177279 −1439)**
 
 | 파일 | 상태 | 추가 | 삭제 |
 |---|:--:|---:|---:|
 | `.agents/skills/design-pattern-analyzer/SKILL.md` | M | 129 | 16 |
 | `.agents/skills/design-pattern-analyzer/checklist.md` | M | 6 | 2 |
 | `.agents/skills/design-pattern-analyzer/report-template.md` | M | 21 | 4 |
-| `.agents/skills/design-pattern-guide/SKILL.md` | M | 186 | 69 |
+| `.agents/skills/design-pattern-guide/SKILL.md` | M | 200 | 69 |
 | `.agents/skills/design-pattern-guide/analysis-guide-canvas.md` | M | 111 | 0 |
 | `.agents/skills/design-pattern-guide/gof-guide-canvas.md` | M | 88 | 0 |
 | `.agents/skills/design-pattern-guide/reference-note-canvas.md` | M | 35 | 0 |
@@ -154,24 +158,26 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `.claude/skills/design-pattern-analyzer/SKILL.md` | M | 129 | 16 |
 | `.claude/skills/design-pattern-analyzer/checklist.md` | M | 6 | 2 |
 | `.claude/skills/design-pattern-analyzer/report-template.md` | M | 21 | 4 |
-| `.claude/skills/design-pattern-guide/SKILL.md` | M | 186 | 69 |
+| `.claude/skills/design-pattern-guide/SKILL.md` | M | 200 | 69 |
 | `.claude/skills/design-pattern-guide/analysis-guide-canvas.md` | M | 111 | 0 |
 | `.claude/skills/design-pattern-guide/gof-guide-canvas.md` | M | 88 | 0 |
 | `.claude/skills/design-pattern-guide/reference-note-canvas.md` | M | 35 | 0 |
 | `.claude/skills/design-pattern-guide/template.md` | M | 0 | 132 |
 | `.gitignore` | M | 8 | 0 |
-| `.kanban/log.md` | M | 22 | 0 |
+| `.kanban/log.md` | M | 25 | 0 |
 | `.kanban/reviews/.gitkeep` | M | 0 | 0 |
+| `.kanban/reviews/KAN-001-YXTC2C.events.jsonl` | M | 9 | 0 |
+| `.kanban/reviews/KAN-001-YXTC2C.review.json` | M | 21 | 0 |
 | `.kanban/reviews/KAN-001.1-P5N9NF.events.jsonl` | M | 44 | 0 |
 | `.kanban/reviews/KAN-001.1-P5N9NF.review.json` | M | 27 | 0 |
 | `.kanban/reviews/KAN-001.2-4NWK0T.events.jsonl` | M | 74 | 0 |
 | `.kanban/reviews/KAN-001.2-4NWK0T.review.json` | M | 27 | 0 |
 | `.kanban/reviews/KAN-001.3-Q6FYKP.events.jsonl` | M | 114 | 0 |
 | `.kanban/reviews/KAN-001.3-Q6FYKP.review.json` | M | 27 | 0 |
-| `.kanban/state.json` | M | 302 | 26 |
+| `.kanban/state.json` | M | 331 | 25 |
 | `.npmrc` | M | 2 | 0 |
 | `KANBAN.board.html` | M | 28 | 5 |
-| `KANBAN.md` | M | 60 | 43 |
+| `KANBAN.md` | M | 54 | 36 |
 | `KANBAN/batches/KAN-001-YXTC2C.batch3.md` | M | 31 | 0 |
 | `KANBAN/batches/KAN-001.2-4NWK0T.batch3.md` | M | 35 | 0 |
 | `KANBAN/batches/KAN-001.2-4NWK0T.batch4.md` | M | 35 | 0 |
@@ -201,19 +207,22 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `KANBAN/batches/KAN-001.6-HB5NH9.batch1.md` | M | 46 | 0 |
 | `KANBAN/batches/KAN-001.6-HB5NH9.batch2.md` | M | 33 | 0 |
 | `KANBAN/batches/KAN-001.6-HB5NH9.batch3.md` | M | 86 | 0 |
-| `KANBAN/cards/KAN-001-YXTC2C.md` | M | 34 | 20 |
+| `KANBAN/batches/KAN-001.7-4MRJ1B.batch1.md` | M | 62 | 0 |
+| `KANBAN/batches/KAN-001.7-4MRJ1B.batch2.md` | M | 77 | 0 |
+| `KANBAN/cards/KAN-001-YXTC2C.md` | M | 44 | 24 |
 | `KANBAN/cards/KAN-001.1-P5N9NF.md` | M | 19 | 8 |
 | `KANBAN/cards/KAN-001.2-4NWK0T.md` | M | 47 | 12 |
 | `KANBAN/cards/KAN-001.3-Q6FYKP.md` | M | 77 | 11 |
 | `KANBAN/cards/KAN-001.4-BJT8JD.md` | M | 286 | 32 |
 | `KANBAN/cards/KAN-001.5-6HF35H.md` | M | 54 | 17 |
-| `KANBAN/cards/KAN-001.6-HB5NH9.md` | M | 105 | 6 |
-| `KANBAN/cards/KAN-001.7-4MRJ1B.md` | M | 62 | 0 |
+| `KANBAN/cards/KAN-001.6-HB5NH9.md` | M | 108 | 7 |
+| `KANBAN/cards/KAN-001.7-4MRJ1B.md` | M | 72 | 0 |
 | `KANBAN/reports/KAN-001-YXTC2C.report.draft.md` | M | 13 | 13 |
 | `KANBAN/reports/KAN-001-YXTC2C.report.html` | M | 31 | 31 |
 | `KANBAN/requests/doing/.gitkeep` | M | 0 | 0 |
 | `KANBAN/requests/doing/KAN-001-YXTC2C.request.md` | R | 0 | 0 |
 | `KANBAN/reviews/.gitkeep` | M | 0 | 0 |
+| `KANBAN/reviews/KAN-001-YXTC2C.review.md` | M | 947 | 0 |
 | `KANBAN/reviews/KAN-001.1-P5N9NF.review.html` | M | 1282 | 0 |
 | `KANBAN/reviews/KAN-001.1-P5N9NF.review.md` | M | 357 | 0 |
 | `KANBAN/reviews/KAN-001.2-4NWK0T.review.html` | M | 1354 | 0 |
@@ -221,7 +230,7 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `KANBAN/reviews/KAN-001.3-Q6FYKP.review.html` | M | 1326 | 0 |
 | `KANBAN/reviews/KAN-001.3-Q6FYKP.review.md` | M | 760 | 0 |
 | `PATTERNS.html` | M | 695 | 0 |
-| `PATTERNS.md` | M | 61 | 29 |
+| `PATTERNS.md` | M | 72 | 29 |
 | `README.md` | M | 27 | 22 |
 | `analysis/strategy-ShippingApp-20260926-2325.md` | M | 152 | 0 |
 | `assets/fonts/fonts.css` | M | 58 | 0 |
@@ -236,7 +245,7 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `"pattern-guide/consideration/Account\354\231\200 Entry\354\235\230 \352\264\200\352\263\204 \354\204\244\352\263\204.md"` | M | 6 | 1 |
 | `pattern-guide/consideration/account-transaction-entry-modeling.md` | M | 62 | 32 |
 | `pattern-guide/ddd-analysis-pattern-guide/README.html` | M | 650 | 0 |
-| `pattern-guide/ddd-analysis-pattern-guide/README.md` | M | 13 | 12 |
+| `pattern-guide/ddd-analysis-pattern-guide/README.md` | M | 15 | 13 |
 | `pattern-guide/ddd-analysis-pattern-guide/account-pattern.md` | M | 0 | 169 |
 | `pattern-guide/ddd-analysis-pattern-guide/account/account-guide_v1.0.0.html` | M | 1802 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/account/account-guide_v1.0.0.md` | M | 1225 | 0 |
@@ -291,8 +300,8 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `pattern-guide/ddd-analysis-pattern-guide/party/diagrams/PartyModel.tsx` | M | 53 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/party/diagrams/party-model.png` | B | 0 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/party/party-guide_v0.1.0.md` | R | 9 | 0 |
-| `pattern-guide/ddd-analysis-pattern-guide/party/party-guide_v1.0.0.html` | M | 1778 | 0 |
-| `pattern-guide/ddd-analysis-pattern-guide/party/party-guide_v1.0.0.md` | M | 1167 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/party/party-guide_v1.0.0.html` | M | 1827 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/party/party-guide_v1.0.0.md` | M | 1193 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/posting-rule/code/PostingRuleExample.java` | M | 249 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/posting-rule/code/expected-output.txt` | M | 14 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/posting-rule/code/main.rs` | M | 249 | 0 |
@@ -322,6 +331,14 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `pattern-guide/ddd-analysis-pattern-guide/range/range-guide_v0.1.0.md` | R | 9 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/range/range-guide_v1.0.0.html` | M | 1735 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/range/range-guide_v1.0.0.md` | M | 1160 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/temporal-property/code/TemporalPropertyExample.java` | M | 233 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/temporal-property/code/expected-output.txt` | M | 16 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/temporal-property/code/main.rs` | M | 249 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/temporal-property/code/main.ts` | M | 225 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/temporal-property/diagrams/TemporalPropertyModel.tsx` | M | 64 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/temporal-property/diagrams/temporal-property-model.png` | B | 0 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.0.0.html` | M | 1704 | 0 |
+| `pattern-guide/ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.0.0.md` | M | 1127 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/transaction/code/TransactionExample.java` | M | 230 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/transaction/code/expected-output.txt` | M | 12 | 0 |
 | `pattern-guide/ddd-analysis-pattern-guide/transaction/code/main.rs` | M | 246 | 0 |
@@ -419,6 +436,14 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `pattern-guide/design-pattern-guide/decorator/diagrams/DecoratorStructure.tsx` | M | 38 | 0 |
 | `pattern-guide/design-pattern-guide/decorator/diagrams/decorator-flow.png` | B | 0 | 0 |
 | `pattern-guide/design-pattern-guide/decorator/diagrams/decorator-structure.png` | B | 0 | 0 |
+| `pattern-guide/design-pattern-guide/dependency-injection/code/OverdueNotice.java` | M | 154 | 0 |
+| `pattern-guide/design-pattern-guide/dependency-injection/code/expected-output.txt` | M | 9 | 0 |
+| `pattern-guide/design-pattern-guide/dependency-injection/code/main.rs` | M | 165 | 0 |
+| `pattern-guide/design-pattern-guide/dependency-injection/code/main.ts` | M | 152 | 0 |
+| `pattern-guide/design-pattern-guide/dependency-injection/dependency-injection-guide_v1.0.0.html` | M | 1505 | 0 |
+| `pattern-guide/design-pattern-guide/dependency-injection/dependency-injection-guide_v1.0.0.md` | M | 929 | 0 |
+| `pattern-guide/design-pattern-guide/dependency-injection/diagrams/DependencyInjectionStructure.tsx` | M | 70 | 0 |
+| `pattern-guide/design-pattern-guide/dependency-injection/diagrams/dependency-injection-structure.png` | B | 0 | 0 |
 | `pattern-guide/design-pattern-guide/facade/code/BookingDeskApp.java` | M | 159 | 0 |
 | `pattern-guide/design-pattern-guide/facade/code/expected-output.txt` | M | 6 | 0 |
 | `pattern-guide/design-pattern-guide/facade/code/main.rs` | M | 181 | 0 |
@@ -496,6 +521,14 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `pattern-guide/design-pattern-guide/memento/memento-guide_v0.1.0.md` | R | 9 | 0 |
 | `pattern-guide/design-pattern-guide/memento/memento-guide_v1.0.0.html` | M | 1572 | 0 |
 | `pattern-guide/design-pattern-guide/memento/memento-guide_v1.0.0.md` | M | 985 | 0 |
+| `pattern-guide/design-pattern-guide/null-object/code/LibraryLoanDesk.java` | M | 106 | 0 |
+| `pattern-guide/design-pattern-guide/null-object/code/expected-output.txt` | M | 10 | 0 |
+| `pattern-guide/design-pattern-guide/null-object/code/main.rs` | M | 136 | 0 |
+| `pattern-guide/design-pattern-guide/null-object/code/main.ts` | M | 104 | 0 |
+| `pattern-guide/design-pattern-guide/null-object/diagrams/NullObjectStructure.tsx` | M | 57 | 0 |
+| `pattern-guide/design-pattern-guide/null-object/diagrams/null-object-structure.png` | B | 0 | 0 |
+| `pattern-guide/design-pattern-guide/null-object/null-object-guide_v1.0.0.html` | M | 1312 | 0 |
+| `pattern-guide/design-pattern-guide/null-object/null-object-guide_v1.0.0.md` | M | 758 | 0 |
 | `pattern-guide/design-pattern-guide/observer/code/StockroomApp.java` | M | 154 | 0 |
 | `pattern-guide/design-pattern-guide/observer/code/expected-output.txt` | M | 14 | 0 |
 | `pattern-guide/design-pattern-guide/observer/code/main.rs` | M | 177 | 0 |
@@ -540,6 +573,14 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `pattern-guide/design-pattern-guide/singleton/singleton-guide_v0.1.0.md` | R | 9 | 0 |
 | `pattern-guide/design-pattern-guide/singleton/singleton-guide_v1.0.0.html` | M | 1246 | 0 |
 | `pattern-guide/design-pattern-guide/singleton/singleton-guide_v1.0.0.md` | M | 680 | 0 |
+| `pattern-guide/design-pattern-guide/specification/code/ContainerAssignment.java` | M | 143 | 0 |
+| `pattern-guide/design-pattern-guide/specification/code/expected-output.txt` | M | 8 | 0 |
+| `pattern-guide/design-pattern-guide/specification/code/main.rs` | M | 215 | 0 |
+| `pattern-guide/design-pattern-guide/specification/code/main.ts` | M | 144 | 0 |
+| `pattern-guide/design-pattern-guide/specification/diagrams/SpecificationStructure.tsx` | M | 67 | 0 |
+| `pattern-guide/design-pattern-guide/specification/diagrams/specification-structure.png` | B | 0 | 0 |
+| `pattern-guide/design-pattern-guide/specification/specification-guide_v1.0.0.html` | M | 1442 | 0 |
+| `pattern-guide/design-pattern-guide/specification/specification-guide_v1.0.0.md` | M | 882 | 0 |
 | `pattern-guide/design-pattern-guide/state/code/OrderApp.java` | M | 212 | 0 |
 | `pattern-guide/design-pattern-guide/state/code/expected-output.txt` | M | 8 | 0 |
 | `pattern-guide/design-pattern-guide/state/code/main.rs` | M | 208 | 0 |
@@ -624,7 +665,7 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `pattern-guide/gate-logs/strategy/strategy.r4.external.txt` | M | 27 | 0 |
 | `pattern-guide/gate-logs/strategy/strategy.r4.score.md` | M | 62 | 0 |
 | `pattern-guide/gate-logs/strategy/strategy.r5.score.md` | M | 31 | 0 |
-| `pattern-guide/gate-results.jsonl` | M | 44 | 0 |
+| `pattern-guide/gate-results.jsonl` | M | 48 | 0 |
 | `pattern-guide/reference/accounting-model/accounting-model-ref_v1.0.0.html` | M | 720 | 0 |
 | `pattern-guide/reference/accounting-model/accounting-model-ref_v1.0.0.md` | M | 218 | 0 |
 | `pattern-guide/reference/accounting-model/accounting-model-ref_v1.0.1.html` | M | 724 | 0 |
@@ -651,13 +692,13 @@ d64e679 kanban: KAN-001-YXTC2C 할 일 → 진행 중 (orca 워크트리 착수)
 | `pattern-guide/reference/observation-model/observation-model-ref_v1.0.1.md` | M | 191 | 0 |
 | `pattern-guide/research/accounting-context.md` | M | 187 | 0 |
 | `pattern-guide/research/analysis-patterns.md` | M | 1711 | 0 |
-| `pattern-guide/research/candidates.md` | M | 422 | 0 |
+| `pattern-guide/research/candidates.md` | M | 427 | 0 |
 | `pattern-guide/research/gof-behavioral.md` | M | 1395 | 0 |
 | `pattern-guide/research/gof-creational-structural.md` | M | 1214 | 0 |
 | `scripts/assets/guide-tabs.js` | M | 114 | 0 |
 | `scripts/assets/guide.css` | M | 439 | 0 |
 | `scripts/audit-rolebox.ts` | M | 108 | 0 |
-| `scripts/check-guides.py` | M | 2041 | 0 |
+| `scripts/check-guides.py` | M | 2073 | 0 |
 | `scripts/fixtures/analyzer/README.md` | M | 89 | 0 |
 | `scripts/fixtures/analyzer/case2-optional-missing.ts` | M | 33 | 0 |
 | `scripts/fixtures/analyzer/case3-required-missing.ts` | M | 41 | 0 |
@@ -737,12 +778,12 @@ python3 $PLUGIN/scripts/authoring.py validate --all
 python3 $PLUGIN/scripts/authoring.py resolve --voice ppangtolab-teacher --spec gof-guide --profile main --frozen
 python3 $PLUGIN/scripts/authoring.py resolve --voice ppangtolab-teacher --spec analysis-guide --profile main --frozen
 python3 scripts/check-guides.py --spec-shared  # 두 spec.md 공유 블록: 마커 존재·파일당 1쌍·내용 동일
-python3 scripts/check-guides.py --all          # 33편: 헤딩 순서·placeholder(final 0)·scan_ai_style B+·mermaid·상대 링크·[필수]/[선택]
-python3 scripts/check-guides.py --compile      # 구현 절 33×3 블록: javac(21) / 로컬 tsc --noEmit / rustc(edition 고정) 전부 0, 도구 버전 출력
-python3 scripts/check-guides.py --gates        # gate-results.jsonl: 33건 존재 · verdict PASS · resolve 해시 = 현재 lock
-python3 scripts/render-guides.py --all && python3 scripts/check-guides.py --derived   # html 33편 fresh
-ls pattern-guide/design-pattern-guide/*/*-guide_v*.md | grep -v v0.1.0 | xargs grep -l '^### 디자인 패턴을 충족하는 최소 조건' | wc -l      # 24
-ls pattern-guide/ddd-analysis-pattern-guide/*/*-guide_v*.md | grep -v v0.1.0 | xargs grep -l '^### 디자인 패턴을 충족하는 최소 조건' | wc -l  # 12
+python3 scripts/check-guides.py --all          # 37편: 헤딩 순서·placeholder(final 0)·scan_ai_style B+·mermaid·상대 링크·[필수]/[선택]
+python3 scripts/check-guides.py --compile      # 구현 절 37×3 블록: javac(21) / 로컬 tsc --noEmit / rustc(edition 고정) 전부 0, 도구 버전 출력
+python3 scripts/check-guides.py --gates        # gate-results.jsonl: 37편 존재 · verdict PASS · resolve 해시 = 현재 lock
+python3 scripts/render-guides.py --all && python3 scripts/check-guides.py --derived   # html 37편 + 참고 문서 4편 fresh
+ls pattern-guide/design-pattern-guide/*/*-guide_v*.md | grep -v v0.1.0 | xargs grep -l '^### 디자인 패턴을 충족하는 최소 조건' | wc -l      # 27
+ls pattern-guide/ddd-analysis-pattern-guide/*/*-guide_v*.md | grep -v v0.1.0 | xargs grep -l '^### 디자인 패턴을 충족하는 최소 조건' | wc -l  # 13
 python3 scripts/check-guides.py --links PATTERNS.md README.md pattern-guide/ddd-analysis-pattern-guide/README.md
 python3 scripts/check-guides.py --pointers     # 인덱스 셋이 가리키는 자리가 전부 최신 발행본인가 (2026-09-30 추가 — dirs.index 가 목록이 되기 전에는 분석 인덱스가 검사 밖이었다)
 diff -rq .claude/skills .agents/skills ; git status --porcelain ; git tag --list 'kan/KAN-001-YXTC2C/*' | wc -l
@@ -750,7 +791,7 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py validate .            #
 python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <각 하위>
 ```
 
-> **위 두 줄의 기대값이 23·10 이 아닌 이유** (2026-09-30 실측). 한 편이 폴더 하나를 갖는 구조로 바뀌어 `design-pattern-guide/*.md` 는 이제 아무것도 매치하지 않는다 — 옛 명령은 실행조차 안 되고 `wc -l` 이 0 을 내므로 **통과로 오해된다.** 그리고 파일 수는 편 수보다 많다: 파일럿으로 먼저 쓴 v1.0.0 과 개정 v1.1.0 이 함께 남은 편이 GoF 에 하나(strategy), 분석 패턴에 둘(account·quantity)이다. 최신본만 세면 23·10 이 맞고, 위 명령은 **파일을 세므로** 24·12 다. 최신본이 무엇인지는 인덱스(`PATTERNS.md`)가 가리키는 판으로 확인한다.
+> **위 두 줄의 기대값이 26·11 이 아닌 이유** (2026-09-30 실측, `.7` 발행 뒤 갱신). 한 편이 폴더 하나를 갖는 구조로 바뀌어 `design-pattern-guide/*.md` 는 이제 아무것도 매치하지 않는다 — 옛 명령은 실행조차 안 되고 `wc -l` 이 0 을 내므로 **통과로 오해된다.** 그리고 파일 수는 편 수보다 많다: 파일럿으로 먼저 쓴 v1.0.0 과 개정 v1.1.0 이 함께 남은 편이 GoF 에 하나(strategy), 분석 패턴에 둘(account·quantity)이다. 최신본만 세면 **26·11**(합계 37편)이 맞고, 위 명령은 **파일을 세므로** 27·13 이다. `.7` 이 GoF 트랙에 셋(Specification · Dependency Injection · Null Object), 분석 트랙에 하나(Temporal Property)를 더했다. 최신본이 무엇인지는 인덱스(`PATTERNS.md`)가 가리키는 판으로 확인한다.
 
 **work 단위로만 실행**(외부 모델 호출): `bash $PLUGIN/scripts/review-external.sh --axes scripts/review-axes-pattern.md <f>`. 결과는 `pattern-guide/gate-results.jsonl`에 남고 발행 카드는 `--gates`로 센다.
 
@@ -761,30 +802,43 @@ python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card <
 **실행 결과**
 
 ```text
-착수 직전 커밋 b62d572 기준, 2026-09-30 에 메인이 워크트리에서 직접 실행한 결과다. 검토자가 같은 명령을 다시 돌릴 필요는 없다.
+착수 직전 커밋 b62d572 기준, 2026-09-30 에 메인이 워크트리에서 직접 실행한 결과다. **`.7` 발행으로 37편이 선 뒤 전부 다시 돌렸다.** 검토자가 같은 명령을 다시 돌릴 필요는 없다.
 
-[authoring-kit 0.3.0]  네 명령 전부 종료코드 0
-  status / lock(드리프트 없음) / validate --all("통과 — 갈래 위반 0 · waiver 타깃 정상 · 참조 해소 정상")
-  resolve --frozen  gof-guide · analysis-guide 둘 다 0
+[authoring-kit 0.3.0]  다섯 전부 종료코드 0
+  status · lock(드리프트 없음) · validate --all("갈래 위반 0 · waiver 타깃 정상 · 참조 해소 정상")
+  resolve --frozen  gof-guide(해시 64a1b7cbbe60b81f) · analysis-guide(해시 adbe0518cf3c3222)
 
-[check-guides.py]  여덟 모드 전부 종료코드 0, 전부 "전체: 통과"
+[check-guides.py]  여덟 모드 전부 "전체: 통과"
   --spec-shared   두 spec.md 공유 블록 동일
-  --all           헤딩 순서 · placeholder 0 · scan_ai_style B+ · mermaid · 상대 링크 · [필수]/[선택]
-  --compile       구현 절 3언어 블록 javac(21) / tsc --noEmit / rustc 전부 0
-  --run           3언어 출력이 글자 단위로 동일
-  --gates         gate-results.jsonl verdict PASS · resolve 해시 = 현재 lock
-  --derived       HTML 전편 fresh
-  --pointers      인덱스가 가리키는 자리가 전부 최신 발행본
+  --all           헤딩 순서 · placeholder 0 · 문체 등급 · mermaid · 상대 링크 · [필수]/[선택] · **prose-run(2026-09-30 추가)**
+  --compile       구현 절 3언어 블록 전부 0 — javac 21.0.11 · tsc 5.9.3 · rustc 1.95.0(edition 2021)
+  --run           3언어 출력이 글자 단위로 동일 (PASS 83건)
+  --gates         gate-results.jsonl 37편 · verdict PASS · resolve 해시 = 현재 lock
+  --derived       HTML 37편 + 참고 문서 4편 전부 fresh
+  --pointers      인덱스 셋이 가리키는 자리가 전부 최신 발행본
   --links         PATTERNS.md · README.md · 분석 인덱스 깨짐 0
 
 [구조]
-  최소 조건 절 보유:  GoF 파일 24(= 23편 + strategy 파일럿 v1.0.0) · 분석 파일 12(= 10편 + account·quantity 파일럿)
+  최소 조건 절 보유 파일:  GoF 27 · 분석 13 (= 편 수 26·11 + 파일럿 판이 남은 셋)
+  status: published 37 · **draft 0**
   status: legacy 구본 33편 — analyzer 가 기준으로 쓰지 않는다
   diff -rq .claude/skills .agents/skills  출력 없음
-  git tag kan/KAN-001-YXTC2C/*  4건
-  kanban validate  errors 0 · warnings 3
+  kanban validate  errors 0
+
+[이번 세션에 검사기로 옮긴 것 셋]  사람 기억에 맡기던 규칙을 기계가 잡게 했다.
+  check_prose_run   voice 규칙 3(산문이 그림·표 없이 3문단 이상이면 위반). 넣자마자 발행본 party 가 5 로 잡혀 고쳤다
+  _serves_reverse   참고 문서를 링크하는 최신본의 slug 가 그 문서의 serves 에 다 있는가
+  dirs.index 목록화  분석 인덱스가 --pointers 검사 밖에 있던 것을 넣었다(index_latest 27 → 37)
 
 [메인이 대신 확인한 판단 항목]  아래 3항의 ①②⑦ 에 결과를 붙였다.
+
+[analyzer 실행 검증 — 판단 항목 ⑦ 의 답]  2026-09-30, 메인이 대신 돌렸다.
+  시험 셋 가운데 **가장 중요한 하나가 실패**했고 계약 결함 여섯을 찾아 고쳤다.
+  고친 계약으로 재시험해 통과했다 — 후보가 셋 → 열 편으로 늘고 넷이 실제로 동시 통과,
+  최종 판정 「동시 통과 — 둘 다 맞음」. 상세는 3항 ⑦ 의 추가 의견에 있다.
+  리포트 넷: analysis/strategy-ContainerAssignment-20260930-{1735,1751}.md ·
+             analysis/factory-method-ReportApp-20260930-1742.md ·
+             analysis/singleton-OrderDeskApp-20260930-1748.md
 ```
 
 ## 3. 판단 항목 — 스크립트가 판정할 수 없는 것
