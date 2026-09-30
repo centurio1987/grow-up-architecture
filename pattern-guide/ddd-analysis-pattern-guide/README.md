@@ -18,12 +18,13 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 ## 값 모델링 (Value)
 
-단위·구간을 가진 값을 안전하게 다루는 값 객체 패턴.
+단위·구간을 가진 값을 안전하게 다루는 값 객체 패턴. Temporal Property 는 그 구간을 **부품으로 써서** 속성 값의 이력을 조회하는 쪽이라 Range 와 경쟁하지 않고 포개진다.
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
 | Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-guide_v1.1.0.md](quantity/quantity-guide_v1.1.0.md) |
 | Range (범위) | 두 끝과 「그 끝을 포함하는가」를 한 값에 담아 경계 판정을 한 곳에 모음 | [range-guide_v1.0.0.md](range/range-guide_v1.0.0.md) |
+| Temporal Property (시간 속성) | 시간에 따라 바뀌는 속성을 유효 기간이 붙은 값들의 이력으로 두고, 시점을 인자로 받는 접근자로 조회 | [temporal-property-guide_v1.0.0.md](temporal-property/temporal-property-guide_v1.0.0.md) |
 
 ## 관찰/측정 (Observation)
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:afb7a9e3d7044504fda6ee9c115e3972e0826b9d39e613639cf6fe1cd6aa115b -->
+<!-- guide-fp:c5fc1f4176fac63748d24c572f9dc6c209d609c98dade28b7a1d974f5d5af0c4 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -724,9 +724,32 @@ final class Invoice {
     CustomerId customerId;                 // 참조의 끝점이 하나            (조건 3)
 }</code></pre>
 <p>이 모델은 <strong>필수 조건 셋을 다 만족합니다.</strong> 그런데 Han Jiwoo 가 고객이면서 공급자이기도 한 순간 <code>Customer</code> 와 별도로 <code>Supplier</code> 계층이 생기고, 같은 사람에 레코드가 둘 서요. 시나리오 3 의 3단계가 잰 값 그대로입니다. 주소를 한쪽만 고치면 발송지가 Yeouido 와 Yanghwa-ro 로 갈립니다. 최소 조건만으로는 이 형태가 걸러지지 않으니 여기서 밝혀 둡니다. 필수 조건 셋을 다 만족해도 상위 개념의 이름이 맥락에 묶인 역할이면, 그 맥락이 하나로 유지되는 동안만 Party 처럼 동작해요. 가르는 기준은 최소 조건이 아니라 역할 패턴 행의 기준, 곧 "한 주체가 두 역할을 겸할 때 레코드가 갈라지는가"입니다. 조건 8 이 <code>[선택]</code> 인 이유도 같아요. 원전이 역할 표현을 여러 선택지로 두었으므로 이 글이 그것을 성립 요건으로 올릴 수는 없고, 대신 구분 기준으로 세웁니다.</p>
-<p>필수 조건 셋을 <strong>다 만족하고도</strong> 이 패턴으로 쓰면 곤란한 모양은 둘입니다. 하나가 방금 본 <code>Customer</code> 처럼 상위 이름이 역할인 모델이고, 다른 하나는 선택 조건 4 를 버려 식별자 없이 이름으로 가리키는 모델이에요. 무너지는 순간도 다릅니다. 앞은 한 주체가 맥락을 둘 갖는 순간 레코드가 갈라지고, 뒤는 같은 이름이 둘 생기는 순간 답이 정해지지 않아요. 둘 다 최소 조건으로는 걸러지지 않습니다 — 앞은 이 절의 역할 패턴 행이 가르고, 뒤는 선택 조건 4 가 가릅니다.</p>
+<p>필수 조건 셋을 <strong>다 만족하고도</strong> 이 패턴으로 쓰면 곤란한 모양은 둘입니다. 무너지는 순간도 다릅니다. 둘 다 최소 조건으로는 걸러지지 않습니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>곤란한 모양</th><th>무너지는 순간</th><th>무엇이 가르는가</th></tr>
+</thead>
+<tbody>
+<tr><td>방금 본 <code>Customer</code> 처럼 상위 이름이 역할인 모델</td><td>한 주체가 맥락을 둘 갖는 순간 레코드가 갈라짐</td><td>이 절의 역할 패턴 행</td></tr>
+<tr><td>선택 조건 4 를 버려 식별자 없이 이름으로 가리키는 모델</td><td>같은 이름이 둘 생기는 순간 답이 정해지지 않음</td><td>선택 조건 4</td></tr>
+</tbody>
+</table>
+</div>
 <p>조건 2 에는 읽기를 잘못하면 빠져나가는 모양이 하나 더 있습니다. <strong>공통이 식별자와 이름뿐인 모델</strong>이에요. 사람과 조직을 한 이름으로 담고(조건 1), 가리키는 쪽도 그 이름 하나를 잡는데(조건 3), 정작 그 이름에 올라간 것이 식별자와 상호뿐인 경우입니다. 조건 2 는 식별자와 이름을 빼고 공통이 있을 것을 요구하므로 <strong>문면대로 읽으면 여기서 걸려요.</strong> 빠져나가는 것은 조건 2 를 「있는 것을 위에 둔다」는 배치 규칙으로만 읽을 때입니다 — 그렇게 읽으면 올릴 것이 없으니 어긴 적도 없는 셈이 되거든요. 가려내는 방법은 시나리오 1 의 4단계를 실제로 돌려 보는 것이에요. 갈래를 묻지 않는 조회가 읽어 낼 것이 식별자와 이름뿐이면 상위 이름이 이름값만 하고 있는 겁니다. 앞 절의 「쓰지 말아야 할 때」 마지막 항목이 그 경우이고, 원전이 이 패턴의 요점을 공통 행위가 있는지 살피는 데 둔 것도 같은 이유예요.</p>
-<p><strong>위 표의 첫 행 기준은 이 두 자리에서 틀린 답을 냅니다.</strong> 「공통으로 붙는 것이 한 자리에 있는가」만 물으면 방금 본 모델도, 시나리오 3 의 2단계처럼 연락 수단은 Party 에 올려 두고 발주서 칸만 둘로 나눈 모델도 Party 쪽으로 답해요. 그 기준은 갈래 둘을 나란히 둔 모델과 가르는 데 쓰는 것이고, 이 두 자리를 가르는 것은 최소 조건입니다 — 앞은 조건 2, 뒤는 조건 3 이에요. 기준 하나로 전부 가리려 하지 않는 것이 이 표를 쓰는 법입니다.</p>
+<p><strong>위 표의 첫 행 기준은 이 두 자리에서 틀린 답을 냅니다.</strong> 그 기준은 갈래 둘을 나란히 둔 모델과 가르는 데 쓰는 것이고, 이 두 자리를 가르는 것은 최소 조건입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>첫 행 기준이 틀린 답을 내는 자리</th><th>「공통으로 붙는 것이 한 자리에 있는가」만 물으면</th><th>실제로 가르는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>방금 본 모델</td><td>Party 쪽으로 답함</td><td>조건 2</td></tr>
+<tr><td>시나리오 3 의 2단계처럼 연락 수단은 Party 에 올려 두고 발주서 칸만 둘로 나눈 모델</td><td>Party 쪽으로 답함</td><td>조건 3</td></tr>
+</tbody>
+</table>
+</div>
+<p>기준 하나로 전부 가리려 하지 않는 것이 이 표를 쓰는 법입니다.</p>
 <p>Accountability 와의 경계는 훨씬 또렷합니다. Party 는 혼자 존재할 수 있어요. Han Jiwoo 는 아무 관계가 없어도 Party 입니다. 반면 "Purchasing Team 이 Han Jiwoo 를 관리한다"는 것은 Party 둘이 있어야 성립하고, 지우면 두 Party 는 남습니다. 시나리오 2 의 1단계에서 부서를 Party 로 등록해 둔 것이 그 관계를 얹을 자리를 미리 만든 것이에요 — 관계의 양 끝이 모두 Party 라야 링크를 한 종류로 표현할 수 있으니까요.</p>
 <h2 id="구현-예시">구현 예시</h2>
 <h3 id="상황-설정">상황 설정</h3>
@@ -1551,10 +1574,36 @@ fn main() -&gt; Result&lt;(), String&gt; {
 </tbody>
 </table>
 </div>
-<p>상황 설정 표의 네 칸도 같은 방식으로 코드에 나타납니다. 불변식 ①은 갈래를 바꾸는 메서드가 <strong>없다</strong>는 것으로 지켜져요. Java 의 <code>Party</code> 는 <code>kind</code> 를 <code>final</code> 로 두고(48~51행 부근의 필드 선언), TypeScript 는 <code>private readonly kind</code>(55행), Rust 는 <code>kind</code> 를 바꾸는 메서드를 아예 두지 않습니다. 불변식 ②는 <code>requireContact</code>(Java 85 · TypeScript 83 · Rust 99)가 Factory 둘과 <code>changeContact</code>(Java 98 · TypeScript 96 · Rust 114) 세 자리에서만 불리는 모양이고, 갈래를 보는 분기가 그 안에 없다는 점이 핵심이에요. 불변식 ③은 조직 Factory 안(Java 67 · TypeScript 65 · Rust 77)에서만 검사하고, 불변식 ④는 <code>issue</code> 가 저장 전에 <code>require</code> 를 두 번 부르는 자리(Java 145 · TypeScript 152 · Rust 164)입니다. 참조 칸은 <code>PurchaseOrder</code> 가 Party 를 가리키는 필드를 전부 식별자 타입으로 두었다는 것으로 확인해요(Java 118 · TypeScript 118 · Rust 130). 세 판 어디에도 <code>Party</code> 타입이 <code>PurchaseOrder</code> 의 필드나 시그니처에 없습니다.</p>
-<p>언어 차이는 갈래를 무엇으로 담느냐에서 나옵니다. Java 는 <code>sealed interface PartyKind</code>(34행)로 갈래 집합을 닫고, TypeScript 는 <code>label</code> 리터럴을 가진 유니온(47행)으로 좁히며, Rust 는 <code>enum PartyKind</code>(55행 부근)를 씁니다. 셋 다 "갈래는 이 둘뿐"을 컴파일러가 알게 하는 장치이고, <strong>상속이 없는 Rust 에서도 패턴이 그대로 선다</strong>는 점이 이 패턴의 성격을 드러내요 — 최소 조건은 상속을 요구하지 않고 공통이 한 자리에 있기만을 요구하니까요.</p>
-<p>식별자 쪽에는 언어별로 조심할 자리가 하나 있습니다. Java 는 <code>record PartyId</code>(11행)와 <code>record PurchaseOrderId</code>(18행)가 서로 다른 타입이라 섞으면 컴파일이 막고, Rust 도 newtype 둘이 같은 일을 해요. TypeScript 는 구조적 타이핑이라 <code>type PartyId = string</code> 으로 두면 <strong>아무 문자열이나 들어갑니다.</strong> 그래서 6~7행에서 브랜드를 붙였어요. 실제로 확인해 보면 이렇습니다.</p>
-<p>발주서 식별자를 Party 식별자 자리에 넘긴 채 <code>tsc --noEmit</code> 을 돌려 본 결과입니다. 브랜드를 뗀다는 것은 그 줄을 지우는 것이 아니라 <code>type PartyId = string;</code> 처럼 <strong>민짜 별칭으로 바꾸는 것</strong>이에요. 줄을 지우면 이름을 못 찾는 진단이 잔뜩 나고 뒤 줄 번호까지 당겨져 재현이 달라집니다. 네 조합을 모두 돌렸어요.</p>
+<p>상황 설정 표의 네 칸도 같은 방식으로 코드에 나타납니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>표의 칸</th><th>코드에서 그 자리</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>불변식의 위치</code> ①</td><td>갈래를 바꾸는 메서드가 <strong>없다</strong>는 것으로 지켜짐</td><td><code>kind</code> 를 <code>final</code> 로 둠 — 48~51 부근의 필드 선언</td><td><code>private readonly kind</code> — 55</td><td><code>kind</code> 를 바꾸는 메서드를 아예 두지 않음</td></tr>
+<tr><td><code>불변식의 위치</code> ②</td><td><code>requireContact</code> 가 Factory 둘과 <code>changeContact</code> 세 자리에서만 불리고, 갈래를 보는 분기가 그 안에 없다는 점이 핵심</td><td><code>requireContact</code> 85 · <code>changeContact</code> 98</td><td>83 · 96</td><td>99 · 114</td></tr>
+<tr><td><code>불변식의 위치</code> ③</td><td>조직 Factory 안에서만 검사</td><td>67</td><td>65</td><td>77</td></tr>
+<tr><td><code>불변식의 위치</code> ④</td><td><code>issue</code> 가 저장 전에 <code>require</code> 를 두 번 부름</td><td>145</td><td>152</td><td>164</td></tr>
+<tr><td><code>타 aggregate 참조 방식</code></td><td><code>PurchaseOrder</code> 가 Party 를 가리키는 필드를 전부 식별자 타입으로 두었음</td><td>118</td><td>118</td><td>130</td></tr>
+</tbody>
+</table>
+</div>
+<p>세 판 어디에도 <code>Party</code> 타입이 <code>PurchaseOrder</code> 의 필드나 시그니처에 없습니다. 언어 차이는 갈래를 무엇으로 담느냐에서 나옵니다. Java 는 <code>sealed interface PartyKind</code>(34행)로 갈래 집합을 닫고, TypeScript 는 <code>label</code> 리터럴을 가진 유니온(47행)으로 좁히며, Rust 는 <code>enum PartyKind</code>(55행 부근)를 씁니다. 셋 다 "갈래는 이 둘뿐"을 컴파일러가 알게 하는 장치이고, <strong>상속이 없는 Rust 에서도 패턴이 그대로 선다</strong>는 점이 이 패턴의 성격을 드러내요 — 최소 조건은 상속을 요구하지 않고 공통이 한 자리에 있기만을 요구하니까요.</p>
+<p>식별자 쪽에는 언어별로 조심할 자리가 하나 있습니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>언어</th><th>식별자를 무엇으로 담았나</th><th>그래서 어떻게 되나</th></tr>
+</thead>
+<tbody>
+<tr><td>Java</td><td><code>record PartyId</code>(11)와 <code>record PurchaseOrderId</code>(18)가 서로 다른 타입</td><td>섞으면 컴파일이 막음</td></tr>
+<tr><td>TypeScript</td><td>구조적 타이핑이라 <code>type PartyId = string</code> 으로 둠</td><td><strong>아무 문자열이나 들어감</strong></td></tr>
+<tr><td>Rust</td><td>newtype 둘</td><td>Java 와 같은 일을 함</td></tr>
+</tbody>
+</table>
+</div>
+<p>그래서 6~7행에서 브랜드를 붙였어요. 실제로 확인해 보면 이렇습니다. 발주서 식별자를 Party 식별자 자리에 넘긴 채 <code>tsc --noEmit</code> 을 돌려 본 결과입니다. 브랜드를 뗀다는 것은 그 줄을 지우는 것이 아니라 <code>type PartyId = string;</code> 처럼 <strong>민짜 별칭으로 바꾸는 것</strong>이에요. 줄을 지우면 이름을 못 찾는 진단이 잔뜩 나고 뒤 줄 번호까지 당겨져 재현이 달라집니다. 네 조합을 모두 돌렸어요.</p>
 <div class="table-wrap" tabindex="0">
 <table>
 <thead>

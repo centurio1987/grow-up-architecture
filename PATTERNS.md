@@ -49,6 +49,14 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | Template Method (템플릿 메서드) | 알고리즘 골격을 상위 타입에, 달라지는 단계만 하위 타입에 | [template-method-guide_v1.0.0.md](pattern-guide/design-pattern-guide/template-method/template-method-guide_v1.0.0.md) |
 | Visitor (방문자) | 원소 타입마다 갈리는 연산을 원소 밖 한 클래스에 모으고, 어느 연산인지는 원소가 고름 | [visitor-guide_v1.0.0.md](pattern-guide/design-pattern-guide/visitor/visitor-guide_v1.0.0.md) |
 
+## GoF 밖 설계 패턴
+
+GoF 23편에는 없지만 같은 층에서 쓰이는 설계 패턴이다. 원전이 원서가 아니라 **논문이나 저자 공개 자료**이고, 그래서 근거 괄호가 장·절 번호 대신 **문서 제목과 절 이름**을 적는다.
+
+| 패턴 | 한 줄 요약 | 가이드 |
+| --- | --- | --- |
+| Specification (명세) | 후보가 기준을 만족하는지 판정하는 책임을 후보와 분리된 객체에 두고, 그 객체를 조합해 기준을 쌓음 | [specification-guide_v1.0.0.md](pattern-guide/design-pattern-guide/specification/specification-guide_v1.0.0.md) |
+
 ## 분석 패턴 (Analysis Patterns)
 
 Martin Fowler 『Analysis Patterns』(1997)의 분석 패턴이다. GoF 가 **구현 설계**의 반복을 다룬다면 이쪽은 **도메인을 개념으로 모델링하는 단계**의 반복을 다룬다 — 사람·조직·관계·측정·회계처럼 업무 시스템의 뼈대가 되는 구조다.
@@ -61,6 +69,7 @@ Martin Fowler 『Analysis Patterns』(1997)의 분석 패턴이다. GoF 가 **�
 | Knowledge Level (지식 수준) | 사실을 해석하는 규칙을 사실과 다른 층에 인스턴스로 세움 | [knowledge-level-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.0.md) |
 | Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.md) |
 | Range (범위) | 두 끝과 「그 끝을 포함하는가」를 한 값에 담아 경계 판정을 한 곳에 모음 | [range-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/range/range-guide_v1.0.0.md) |
+| Temporal Property (시간 속성) | 시간에 따라 바뀌는 속성을 유효 기간이 붙은 값들의 이력으로 두고, 시점을 인자로 받는 접근자로 그 시점의 값을 돌려줌 | [temporal-property-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.0.0.md) |
 | Measurement (측정) | 값 하나를 대상·항목과 묶어 기록 한 건으로 세운다 | [measurement-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.0.md) |
 | Observation (관찰) | 대상에 대한 사실을 값의 종류와 상관없이 한 층으로 다룬다 | [observation-guide_v1.0.0.md](pattern-guide/ddd-analysis-pattern-guide/observation/observation-guide_v1.0.0.md) |
 | Account (계정) | 잔액을 항목(Entry)의 합으로 도출 | [account-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/account/account-guide_v1.1.0.md) |

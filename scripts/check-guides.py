@@ -597,6 +597,36 @@ def check_style(ctx: Ctx, path: Path) -> tuple[bool, str]:
     return grade in ("A", "B"), msg
 
 
+PROSE_RUN_MAX = 2
+
+
+def check_prose_run(ctx: Ctx, path: Path, sid: str) -> tuple[bool, str]:
+    """voice 규칙 3(V1) — 산문이 그림·표 없이 몇 문단까지 이어지는가.
+
+    2026-09-30 에 넣었다. 그때까지 이 값은 채점자만 재고 기계는 안 봤다 — `scan_ai_style` 의
+    문체 등급과 **다른 항목**이라, 집필자가 「기계 전수 통과 · 문체 A」를 맞게 보고해도 이 MUST 가
+    빈 채로 게이트에 올 수 있었다. 실측으로 발행본 `party_v1.0.0` 이 **5** 였다(전수 측정 2026-09-30) —
+    「지금까지 우연히 안 걸렸다」가 아니라 실제로 한 편이 새어 나가 발행돼 있었다.
+    """
+    script = ctx.plugin / "scripts/golden.py"
+    if not script.exists():
+        return False, f"golden.py 가 없습니다: {script}"
+    r = subprocess.run([sys.executable, str(script), "measure", str(path),
+                        "--spec", sid, "--project", str(ctx.project), "--voice", VOICE],
+                       capture_output=True, text=True)
+    try:
+        data = json.loads(r.stdout)
+    except json.JSONDecodeError:
+        return False, f"golden.py exit {r.returncode}, JSON 아님: {(r.stderr or r.stdout).strip()[:400]}"
+    run = data.get("voice_compliance", {}).get("max_prose_run_without_visual")
+    if not isinstance(run, int):
+        return False, f"max_prose_run_without_visual 을 읽을 수 없습니다: {run!r}"
+    if run > PROSE_RUN_MAX:
+        return False, (f"산문이 그림·표 없이 {run}문단 이어집니다(상한 {PROSE_RUN_MAX}) — "
+                       f"도식·표를 사이에 넣거나 붙은 펜스를 나눕니다")
+    return True, f"산문 연속 {run} (상한 {PROSE_RUN_MAX})"
+
+
 def check_fences(md: Md) -> list[str]:
     errors = []
     for f in md.fences:
@@ -1013,6 +1043,8 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         rep.add(M, "placeholder", ok, msg, f)
         ok, msg = check_style(ctx, p)
         rep.add(M, "style", ok, msg, f)
+        ok, msg = check_prose_run(ctx, p, sid)
+        rep.add(M, "prose-run", ok, msg, f)
         errs = check_fences(md)
         for e in errs:
             rep.add(M, "mermaid", False, e, f)

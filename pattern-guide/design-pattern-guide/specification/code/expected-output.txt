@@ -1,0 +1,8 @@
+1) validate CG-5521 -> REEFER-01 : accepted
+2) validate CG-5521 -> REEFER-02 : rejected
+3) validate CG-5521 -> DRYBOX-11 : rejected
+4) validate CG-5521 -> REEFER-03 : accepted
+5) select CG-5521 : REEFER-01, REEFER-03
+6) select CG-5521 with humidity rule : REEFER-01
+7) select CG-7702 : REEFER-01, REEFER-02, REEFER-03
+8) select CG-9033 : REEFER-01, REEFER-02, DRYBOX-11
