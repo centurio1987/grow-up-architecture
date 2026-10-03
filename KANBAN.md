@@ -17,7 +17,7 @@
   - 요청서: KANBAN/requests/doing/KAN-001-YXTC2C.request.md (자유 형식 · 유저)
   - 실행 문서: KANBAN/cards/KAN-001-YXTC2C.md (3/7 · 최근 09-30)
   - 계획 리포트: KANBAN/reports/KAN-001-YXTC2C.report.html (낡음)
-  - 검토 문서: KANBAN/reviews/KAN-001-YXTC2C.review.md (승인 1/7 · 추가 의견 1 · 추가 의견 총 2 · 검토 대기)
+  - 검토 문서: KANBAN/reviews/KAN-001-YXTC2C.review.md (승인 4/7 · 추가 의견 1 · 추가 의견 총 5 · 검토 대기)
   - 원문:
     ```text
     전체 가이드 재집필을 수행해라.
