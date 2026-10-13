@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>거래 등록 와이어프레임 명세</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: 명세서(스펙 시트) 한 장. 상단 메타 → 스키마 발췌 → 캔버스+주석 2열 → 계약 표들.
+   색은 두 계열만 쓴다: 문서 크롬(차가운 잉크)과 와이어프레임(무채색). 강조색은 '주석(레드라인)' 하나뿐. */
+:root {
+  --paper: #f3f5f7;
+  --surface: #ffffff;
+  --ink: #1a1e23;
+  --ink-2: #57606b;
+  --line: #d6dbe0;
+  --anno: #c8185f;
+  --anno-soft: #fbe6ef;
+  --anno-ink: #ffffff;
+
+  --wf-bg: #ffffff;
+  --wf-fill: #eceef0;
+  --wf-hatch: #dadde1;
+  --wf-stroke: #8e959d;
+  --wf-stroke-2: #c7ccd1;
+  --wf-text: #33383e;
+  --wf-muted: #8a9198;
+  --canvas: #e6e9ec;
+  --canvas-dot: #c9ced4;
+
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #111316; --surface: #191c20; --ink: #e5e8eb; --ink-2: #9ba4ae; --line: #2c3238;
+    --anno: #ff5d9b; --anno-soft: #3b1527; --anno-ink: #1a0610;
+    --wf-bg: #1d2024; --wf-fill: #292d32; --wf-hatch: #33383e; --wf-stroke: #6f7780; --wf-stroke-2: #3c4248;
+    --wf-text: #d4d8dc; --wf-muted: #8b939b; --canvas: #15181b; --canvas-dot: #2a2f35;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #111316; --surface: #191c20; --ink: #e5e8eb; --ink-2: #9ba4ae; --line: #2c3238;
+  --anno: #ff5d9b; --anno-soft: #3b1527; --anno-ink: #1a0610;
+  --wf-bg: #1d2024; --wf-fill: #292d32; --wf-hatch: #33383e; --wf-stroke: #6f7780; --wf-stroke-2: #3c4248;
+  --wf-text: #d4d8dc; --wf-muted: #8b939b; --canvas: #15181b; --canvas-dot: #2a2f35;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 15px/1.65 var(--font-body);
+  padding-inline: 24px; padding-block: 0 64px;
+}
+@media (max-width: 640px) { body { padding-inline: 16px; } }
+.doc { max-width: 1440px; margin: 0 auto; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.3; }
+code, .mono { font-family: var(--font-mono); font-size: .86em; }
+p { margin: 0; max-width: 68ch; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--anno); outline-offset: 2px; }
+
+/* ── 문서 머리말 ─────────────────────── */
+.masthead { padding-block: 40px 28px; display: grid; gap: 20px; border-bottom: 1px solid var(--line); }
+.eyebrow { font: 600 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); display: flex; gap: 12px; flex-wrap: wrap; }
+.eyebrow .id { color: var(--anno); }
+.masthead h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -.01em; }
+.masthead .lede { color: var(--ink-2); font-size: 16px; }
+.meta { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.meta > div { background: var(--surface); padding: 10px 14px; display: grid; gap: 2px; min-width: 0; }
+.meta dt { font: 500 11px/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.meta dd { margin: 0; font-size: 14px; }
+.review { display: flex; gap: 6px; flex-wrap: wrap; }
+.review span { font-size: 12px; padding: 1px 8px; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
+.review .ok::before { content: "✓ "; }
+.review .wip::before { content: "◐ "; }
+
+.pipeline { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: stretch; }
+.pipeline .col { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.pipeline h3 { font: 600 11px/1.4 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.pipeline ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.pipeline li { font-size: 13px; padding: 5px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; }
+.pipeline .here { align-self: center; display: grid; justify-items: center; gap: 4px; font: 600 13px/1.3 var(--font-mono); padding: 14px 18px; border: 2px solid var(--ink); border-radius: 6px; background: var(--surface); text-align: center; }
+.pipeline .here small { font-weight: 400; color: var(--ink-2); font-family: var(--font-body); }
+@media (max-width: 760px) { .pipeline { grid-template-columns: 1fr; } }
+
+/* ── 섹션 공통 ───────────────────────── */
+section.sec { padding-block: 40px 8px; display: grid; gap: 16px; }
+.sec-head { display: grid; gap: 6px; }
+.sec-head h2 { font-size: 22px; font-weight: 700; display: flex; gap: 12px; align-items: baseline; }
+.sec-head h2 .num { font: 500 14px/1 var(--font-mono); color: var(--ink-2); }
+.sec-head p { color: var(--ink-2); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 13px; color: var(--ink-2); }
+.legend span { display: inline-flex; gap: 8px; align-items: center; }
+.sw { width: 18px; height: 12px; border: 1.5px solid var(--wf-stroke); background: var(--wf-fill); border-radius: 2px; }
+.legend .pin-demo { position: static; }
+.legend code { color: var(--ink); background: var(--surface); border: 1px solid var(--line); padding: 0 5px; border-radius: 3px; }
+
+/* 흐름 */
+.flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.flow .node { padding: 8px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; font-size: 13px; display: grid; }
+.flow .node small { font: 500 11px/1.3 var(--font-mono); color: var(--ink-2); }
+.flow .node.cur { border: 2px solid var(--anno); }
+.flow .edge { font: 500 11px/1.2 var(--font-mono); color: var(--ink-2); display: grid; justify-items: center; }
+.flow .edge::after { content: "──▶"; letter-spacing: -2px; color: var(--ink-2); }
+.flow-note { font-size: 13px; color: var(--ink-2); }
+
+/* 스키마 발췌 */
+.schema-wrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 900px) { .schema-wrap { grid-template-columns: 1fr; } }
+pre.schema { margin: 0; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; overflow-x: auto; font: 13px/1.7 var(--font-mono); color: var(--ink); }
+pre.schema .k { font-weight: 600; }
+pre.schema .s { color: var(--ink-2); }
+pre.schema .r { color: var(--anno); }
+.side-note { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; display: grid; gap: 10px; font-size: 14px; align-content: start; }
+.side-note h3 { font-size: 14px; }
+.lifecycle { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: 13px var(--font-mono); }
+.lifecycle b { padding: 2px 8px; border: 1.5px solid var(--ink); border-radius: 999px; font-weight: 500; }
+.lifecycle i { font-style: normal; color: var(--ink-2); font-size: 12px; }
+
+/* ── 툴바 ─────────────────────────── */
+.toolbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center;
+  padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+}
+.tgroup { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.tgroup > .lbl { font: 500 11px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+.seg button { font: 500 13px/1 var(--font-body); padding: 8px 11px; border: 0; background: transparent; color: var(--ink); cursor: pointer; border-right: 1px solid var(--line); }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.check { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; cursor: pointer; }
+.check input { accent-color: var(--anno); width: 16px; height: 16px; }
+
+/* ── 캔버스 + 주석 ───────────────────── */
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
+@media (max-width: 1180px) { .stage { grid-template-columns: 1fr; } }
+.canvas {
+  overflow-x: auto; padding: 28px 24px; border-radius: 6px;
+  background-color: var(--canvas);
+  background-image: radial-gradient(var(--canvas-dot) 1px, transparent 1.2px);
+  background-size: 16px 16px;
+}
+.frame-label { font: 500 11px/1 var(--font-mono); color: var(--ink-2); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; }
+.wf-frame { width: 1000px; container: wf / inline-size; transition: width .25s ease; }
+.wf-frame[data-vp="mobile"] { width: 375px; }
+@media (prefers-reduced-motion: reduce) { .wf-frame { transition: none; } }
+
+.annos { display: grid; gap: 10px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 76px); max-height: calc(100vh - 96px); overflow-y: auto; padding-right: 4px; }
+@media (max-width: 1180px) { .annos { position: static; max-height: none; overflow: visible; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); } }
+.anno { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: grid; gap: 6px; font-size: 13px; line-height: 1.6; transition: opacity .15s, border-color .15s; cursor: default; }
+.anno.is-active { border-color: var(--anno); box-shadow: 0 0 0 1px var(--anno); }
+.anno.is-dim { opacity: .45; }
+.anno header { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.anno h3 { font-size: 14px; font-weight: 600; }
+.anno .bind { font: 12px/1.5 var(--font-mono); background: var(--anno-soft); color: var(--ink); padding: 4px 8px; border-radius: 3px; overflow-wrap: anywhere; }
+.anno ul { margin: 0; padding-left: 18px; color: var(--ink-2); }
+.anno li + li { margin-top: 2px; }
+.anno li code { color: var(--ink); }
+.tag { font: 500 10.5px/1 var(--font-mono); padding: 3px 6px; border: 1px solid var(--line); border-radius: 3px; color: var(--ink-2); letter-spacing: .03em; }
+.anno .hiddenhint { font-size: 12px; color: var(--ink-2); font-style: italic; }
+.anno:not(.is-dim) .hiddenhint { display: none; }
+
+.pin {
+  position: absolute; top: -10px; left: -10px; z-index: 5;
+  width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--anno); color: var(--anno-ink);
+  font: 600 11px/1 var(--font-mono); cursor: pointer; border: 0; padding: 0;
+  box-shadow: 0 0 0 2px var(--wf-bg);
+}
+.pin.r { left: auto; right: -10px; }
+.wf-field > .pin { top: -4px; left: auto; right: -4px; }
+.cell.amt > .pin { left: auto; right: -10px; }
+.legend .pin, .anno .pin { position: static; box-shadow: none; flex: none; }
+.wf-frame.hide-pins .pin { display: none; }
+[data-anno].is-hl { outline: 2px solid var(--anno); outline-offset: 3px; }
+
+/* ── 와이어프레임(무채색 전용) ──────────── */
+.wf-app {
+  position: relative; display: grid; grid-template-columns: 164px minmax(0, 1fr);
+  min-height: 680px; background: var(--wf-bg); color: var(--wf-text);
+  border: 1.5px solid var(--wf-stroke); font: 13px/1.5 var(--font-body);
+}
+.wf-nav { background: var(--wf-fill); border-right: 1px solid var(--wf-stroke-2); padding: 14px 10px; display: grid; gap: 4px; align-content: start; }
+.wf-logo { height: 26px; margin-bottom: 14px; display: grid; place-items: center; border: 1.5px dashed var(--wf-stroke); font: 500 11px var(--font-mono); color: var(--wf-muted); }
+.wf-nav .item { display: flex; gap: 8px; align-items: center; padding: 6px 8px; border-radius: 3px; color: var(--wf-muted); }
+.wf-nav .item::before { content: ""; width: 14px; height: 14px; border: 1.5px solid currentColor; border-radius: 2px; flex: none; }
+.wf-nav .item.on { color: var(--wf-text); background: var(--wf-bg); font-weight: 600; }
+
+.wf-main { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.wf-progress { height: 3px; background: var(--wf-fill); display: none; }
+.wf-progress::after { content: ""; display: block; height: 100%; width: 60%; background: var(--wf-text); }
+.wf-topbar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--wf-stroke-2); color: var(--wf-muted); gap: 12px; }
+.wf-topbar .crumb b { color: var(--wf-text); font-weight: 600; }
+.wf-topbar .back { display: none; color: var(--wf-text); font-weight: 600; }
+.wf-avatar { display: flex; align-items: center; gap: 8px; }
+.wf-avatar::after { content: ""; width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--wf-stroke); background: var(--wf-fill); }
+
+.wf-alert { margin: 14px 16px 0; padding: 10px 12px; border: 2px solid var(--wf-text); display: none; gap: 2px; position: relative; }
+.wf-alert b::before { content: "⚠ "; }
+.wf-alert span { color: var(--wf-muted); }
+
+.wf-pagehead { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 16px 0; flex-wrap: wrap; }
+.wf-title { display: flex; align-items: center; gap: 10px; }
+.wf-title h4 { margin: 0; font-size: 18px; font-weight: 700; }
+.wf-chip { position: relative; font-size: 11.5px; padding: 1px 9px; border: 1.5px solid var(--wf-stroke); border-radius: 999px; }
+.wf-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.wf-btn { position: relative; font: 600 12.5px/1 var(--font-body); padding: 9px 14px; border: 1.5px solid var(--wf-stroke); border-radius: 3px; background: var(--wf-bg); color: var(--wf-text); white-space: nowrap; }
+.wf-btn.primary { background: var(--wf-text); border-color: var(--wf-text); color: var(--wf-bg); }
+.wf-btn.is-disabled { background: var(--wf-fill); border-style: dashed; border-color: var(--wf-stroke); color: var(--wf-muted); }
+.wf-btn.ghost { border-color: transparent; text-decoration: underline; padding-inline: 4px; }
+.wf-why { flex-basis: 100%; text-align: right; font-size: 11.5px; color: var(--wf-muted); display: none; }
+
+.wf-body { display: grid; grid-template-columns: minmax(0, 1fr) 232px; gap: 16px; padding: 16px; align-items: start; }
+.wf-colmain { display: grid; gap: 16px; min-width: 0; }
+.wf-card { position: relative; border: 1px solid var(--wf-stroke-2); padding: 14px; display: grid; gap: 12px; min-width: 0; }
+.wf-card > h5 { margin: 0; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; gap: 8px; }
+.wf-card > h5 small { font-weight: 400; color: var(--wf-muted); }
+
+.wf-fields { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 12px; }
+.wf-field { position: relative; display: grid; gap: 4px; min-width: 0; }
+.wf-field.full { grid-column: 1 / -1; }
+.wf-field label { font-size: 11.5px; color: var(--wf-muted); }
+.wf-field label .req::after { content: " *"; }
+.wf-in { min-height: 34px; border: 1px solid var(--wf-stroke); border-radius: 3px; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; background: var(--wf-bg); min-width: 0; overflow: hidden; }
+.wf-in .ph { color: var(--wf-muted); }
+.wf-in .ic { color: var(--wf-muted); font-size: 11px; flex: none; }
+.wf-in.tall { min-height: 56px; align-items: flex-start; }
+.wf-in.err { border: 2px solid var(--wf-text); }
+.wf-err { font-size: 11.5px; font-weight: 600; display: none; }
+.wf-err::before { content: "⚠ "; }
+.wf-field.has-err .wf-err { display: block; }
+.wf-ro { padding: 6px 0; font-weight: 500; }
+
+/* 분개 */
+.legs { display: grid; gap: 6px; }
+.leg-row { position: relative; display: grid; grid-template-columns: 22px minmax(0, 1fr) 124px 124px 28px; gap: 8px; align-items: center; padding: 3px; border-radius: 3px; }
+.leg-row.head { font-size: 11px; color: var(--wf-muted); padding-block: 0; }
+.leg-row.head > :nth-child(3), .leg-row.head > :nth-child(4) { text-align: right; }
+.leg-row.is-focus { background: var(--wf-fill); }
+.leg-row .no { font: 11px var(--font-mono); color: var(--wf-muted); text-align: center; }
+.cell { position: relative; min-width: 0; }
+.amt .wf-in { justify-content: flex-end; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.amt .wf-in.off { background: repeating-linear-gradient(135deg, var(--wf-fill) 0 4px, var(--wf-hatch) 4px 5px); border-style: dashed; }
+.amt .wf-ro { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.del { width: 26px; height: 26px; border: 1px solid var(--wf-stroke); border-radius: 3px; display: grid; place-items: center; color: var(--wf-muted); font-size: 14px; }
+.del.is-disabled { border-style: dashed; opacity: .55; }
+.add-row { position: relative; border: 1.5px dashed var(--wf-stroke); padding: 8px; text-align: center; color: var(--wf-muted); font-weight: 600; font-size: 12.5px; border-radius: 3px; }
+
+.balance { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 124px 124px 28px; gap: 8px; align-items: center; border-top: 2px solid var(--wf-text); padding: 10px 3px 0 33px; }
+.balance .lab { font-weight: 700; }
+.balance .lab small { display: block; font-weight: 500; color: var(--wf-muted); font-size: 11.5px; }
+.balance .lab.bad small { color: var(--wf-text); font-weight: 700; }
+.balance .lab.bad small::before { content: "⚠ "; }
+.balance .tot { text-align: right; font: 600 13px var(--font-mono); font-variant-numeric: tabular-nums; display: grid; }
+.balance .tot small { font: 400 10.5px var(--font-body); color: var(--wf-muted); }
+
+/* 미리보기 패널 */
+.wf-preview { position: relative; border: 1px solid var(--wf-stroke-2); padding: 14px; display: grid; gap: 10px; align-content: start; }
+.wf-preview h5 { margin: 0; font-size: 13px; font-weight: 700; }
+.wf-preview .acct { font-weight: 600; }
+.wf-preview .acct small { display: block; font-weight: 400; color: var(--wf-muted); font-size: 11.5px; }
+.kv { display: grid; gap: 4px; font-size: 12px; }
+.kv div { display: flex; justify-content: space-between; gap: 8px; }
+.kv dt { color: var(--wf-muted); }
+.kv dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.kv .sum { border-top: 1px solid var(--wf-stroke-2); padding-top: 4px; font-weight: 700; }
+.lines { display: grid; gap: 6px; }
+.lines div { display: flex; justify-content: space-between; gap: 8px; }
+.lines span { height: 8px; background: var(--wf-fill); border-radius: 2px; }
+.empty-hint { color: var(--wf-muted); font-size: 12px; border: 1.5px dashed var(--wf-stroke-2); padding: 14px 10px; text-align: center; }
+
+.wf-toast { position: absolute; right: 16px; bottom: 16px; z-index: 4; background: var(--wf-text); color: var(--wf-bg); padding: 10px 14px; border-radius: 3px; font-size: 12.5px; display: none; }
+.wf-mobilebar { display: none; }
+.wf-noperm { display: none; padding: 48px 24px; text-align: center; gap: 10px; justify-items: center; }
+.wf-noperm .box { width: 56px; height: 56px; border: 1.5px dashed var(--wf-stroke); border-radius: 50%; }
+
+/* 상태별 표시 규칙 */
+.wf-frame[data-state="saving"] .wf-progress { display: block; }
+.wf-frame[data-state="saving"] .wf-colmain { opacity: .55; }
+.wf-frame[data-state="error"] .wf-alert { display: grid; }
+.wf-frame[data-state="unbalanced"] .wf-why { display: block; }
+.wf-frame[data-state="posted"] .wf-toast { display: block; }
+.wf-frame[data-state="posted"] .add-row,
+.wf-frame[data-state="posted"] .leg-row .del,
+.wf-frame[data-state="posted"] .leg-row.head > :last-child { visibility: hidden; }
+.wf-frame[data-state="posted"] .add-row { display: none; }
+.wf-frame[data-state="noperm"] .wf-pagehead,
+.wf-frame[data-state="noperm"] .wf-body,
+.wf-frame[data-state="noperm"] .wf-mobilebar { display: none !important; }
+.wf-frame[data-state="noperm"] .wf-noperm { display: grid; }
+
+/* 모바일 375 — 같은 명세, 다른 배치 */
+@container wf (max-width: 560px) {
+  .wf-app { grid-template-columns: 1fr; min-height: 720px; }
+  .wf-nav { display: none; }
+  .wf-topbar .crumb, .wf-avatar span { display: none; }
+  .wf-topbar .back { display: block; }
+  .wf-pagehead .wf-actions { display: none; }
+  .wf-body { grid-template-columns: 1fr; padding: 12px; padding-bottom: 96px; }
+  .wf-preview { display: none; }
+  .wf-fields { grid-template-columns: 1fr; }
+  .leg-row.head { display: none; }
+  .leg-row { grid-template-columns: 22px minmax(0, 1fr) minmax(0, 1fr) 28px; grid-template-areas: "no acct acct del" ". dr cr ."; border: 1px solid var(--wf-stroke-2); padding: 8px; row-gap: 8px; }
+  .leg-row .no { grid-area: no; } .leg-row .acct { grid-area: acct; } .leg-row .dr { grid-area: dr; } .leg-row .cr { grid-area: cr; } .leg-row .del { grid-area: del; }
+  .amt::before { content: attr(data-label); display: block; font-size: 10.5px; color: var(--wf-muted); margin-bottom: 2px; }
+  .acct .wf-in .info { display: inline; }
+  .balance { grid-template-columns: 1fr 1fr; padding-left: 3px; }
+  .balance .lab { grid-column: 1 / -1; }
+  .balance > :last-child { display: none; }
+  .wf-mobilebar { display: flex; position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 10px 12px; gap: 8px; align-items: center; border-top: 1.5px solid var(--wf-stroke); background: var(--wf-bg); }
+  .wf-mobilebar .diff { flex: 1; font-size: 11.5px; color: var(--wf-muted); min-width: 0; }
+  .wf-mobilebar .diff b { display: block; color: var(--wf-text); font-family: var(--font-mono); font-size: 12.5px; }
+  .wf-toast { left: 12px; right: 12px; bottom: 72px; }
+  .wf-alert { margin: 10px 12px 0; }
+  .wf-pagehead { padding: 12px 12px 0; }
+}
+.acct .wf-in .info { display: none; font-size: 11px; color: var(--wf-muted); border: 1px solid var(--wf-stroke); border-radius: 50%; width: 16px; height: 16px; text-align: center; line-height: 14px; flex: none; }
+
+/* ── 표 ──────────────────────────── */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font: 600 11px/1.4 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); background: var(--paper); white-space: nowrap; }
+td code { white-space: nowrap; }
+td.n { font-family: var(--font-mono); font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+.matrix td, .matrix th { min-width: 128px; }
+.matrix th:first-child, .matrix td:first-child { min-width: 112px; font-weight: 600; position: sticky; left: 0; background: var(--surface); }
+.matrix th:first-child { background: var(--paper); }
+.matrix td.same { color: var(--ink-2); }
+.status { font: 500 11px/1 var(--font-mono); padding: 3px 7px; border-radius: 3px; border: 1px solid var(--line); white-space: nowrap; }
+.status.open { border-color: var(--anno); color: var(--anno); }
+.schema-impact { font-size: 12px; color: var(--anno); font-weight: 600; }
+
+.ac { display: grid; gap: 10px; }
+.ac li { list-style: none; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 4px 12px; font-size: 14px; }
+.ac ol { margin: 0; padding: 0; display: grid; gap: 10px; }
+.ac .id { font: 600 12px/1.6 var(--font-mono); color: var(--ink-2); grid-row: span 3; }
+.ac b { font: 600 11px var(--font-mono); letter-spacing: .05em; color: var(--ink-2); margin-right: 6px; }
+
+.dod { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 8px; }
+.dod li { display: flex; gap: 10px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; font-size: 14px; }
+.dod li::before { content: ""; flex: none; width: 14px; height: 14px; margin-top: 4px; border: 1.5px solid var(--ink); border-radius: 2px; }
+.dod li.no::before { border-style: dashed; border-color: var(--ink-2); }
+.dod li.no { color: var(--ink-2); }
+
+footer.end { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--ink-2); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="doc">
+
+<header class="masthead">
+  <div class="eyebrow"><span class="id">WF-LEDGER-03</span><span>와이어프레임 명세</span><span>Lo-fi · 구조 / 데이터 / 행동</span></div>
+  <h1>거래 등록 (복식부기 분개 입력)</h1>
+  <p class="lede">회계 담당자가 한 건의 거래를 여러 계정의 차변·대변으로 나눠 입력하고, 합계가 맞으면 장부에 전기한다. 이 문서는 디자인과 개발이 같은 화면을 같은 단어로 이야기하기 위한 계약서다. 시각 스타일은 담지 않는다.</p>
+  <dl class="meta">
+    <div><dt>에픽</dt><dd>EP-02 장부 기록</dd></div>
+    <div><dt>시나리오</dt><dd>SC-02-01 · 02 · 03 · 04</dd></div>
+    <div><dt>개념 스키마</dt><dd><code>ledger-schema v0.4</code></dd></div>
+    <div><dt>버전</dt><dd>v0.3 · 2026-10-13</dd></div>
+    <div><dt>리뷰</dt><dd class="review"><span class="ok">기획</span><span class="ok">디자인</span><span class="wip">개발</span><span class="wip">QA</span></dd></div>
+    <div><dt>사용자 · 기기</dt><dd>회계 담당 · 데스크톱 주, 모바일 보조</dd></div>
+  </dl>
+  <div class="pipeline" aria-label="이 문서의 위치">
+    <div class="col">
+      <h3>받는 입력물</h3>
+      <ul>
+        <li>에픽 목표와 성공 지표</li>
+        <li>시나리오: 주 흐름 · 대안 · 예외</li>
+        <li>개념 스키마 · 상태 모델 · 규칙(BR)</li>
+        <li>역할·권한, 커맨드/쿼리 목록</li>
+        <li>실제 데이터 표본, 플랫폼 제약</li>
+      </ul>
+    </div>
+    <div class="here">WF-LEDGER-03<small>이 문서</small></div>
+    <div class="col">
+      <h3>내보내는 산출물</h3>
+      <ul>
+        <li>클릭 프로토타입 (흐름 검증)</li>
+        <li>API 계약 초안 · 오류 코드 매핑</li>
+        <li>컴포넌트 목록 → 스타일 가이드</li>
+        <li>수용 기준 → QA 테스트 케이스</li>
+        <li>스키마 변경 요청 (§8 미결정 사항)</li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<section class="sec" id="read">
+  <div class="sec-head"><h2><span class="num">1</span>읽는 법</h2>
+  <p>회색은 구조만 뜻한다. 색이 들어간 것은 모두 주석이다. 와이어프레임에 색과 폰트를 넣지 않는 이유는 리뷰가 "이 버튼 색이 별로"로 흐르지 않고 "이 버튼은 무엇을 호출하나"에 머물게 하기 위해서다.</p></div>
+  <div class="legend">
+    <span><i class="sw"></i>구조 요소 (시각 디자인 아님)</span>
+    <span><b class="pin">4</b>주석 번호 · 오른쪽 목록과 연결 (마우스를 올려 보세요)</span>
+    <span><code>Transaction.occurredOn</code>개념 스키마 바인딩</span>
+    <span><code>BR-01</code>비즈니스 규칙 (§6)</span>
+    <span><code>SC-02-03</code>시나리오</span>
+  </div>
+</section>
+
+<section class="sec" id="flow">
+  <div class="sec-head"><h2><span class="num">2</span>화면 흐름과 목적</h2>
+  <p>주 흐름 SC-02-01은 목록 → 등록 → 전기 → 상세다. 불균형 수정(SC-02-03)은 이 화면 안에서 끝나고, 전기된 거래의 취소(SC-02-04)는 수정이 아니라 상쇄 거래 등록으로 이어진다.</p></div>
+  <div class="flow" role="list">
+    <div class="node" role="listitem"><small>WF-LEDGER-02</small>거래 목록</div>
+    <div class="edge">새 거래</div>
+    <div class="node cur" role="listitem"><small>WF-LEDGER-03</small>거래 등록</div>
+    <div class="edge">전기 200</div>
+    <div class="node" role="listitem"><small>WF-LEDGER-03 · Posted</small>거래 상세 (읽기 전용)</div>
+    <div class="edge">상쇄 거래 만들기</div>
+    <div class="node" role="listitem"><small>WF-LEDGER-04</small>상쇄 거래 등록</div>
+  </div>
+  <p class="flow-note">성공 기준(EP-02): 거래 1건 등록 중앙값 90초 이하, 전기 시도 중 서버 불균형 거절(422) 0%. 두 번째 지표 때문에 대차 검증을 클라이언트에서 먼저 보여 준다(주석 8).</p>
+</section>
+
+<section class="sec" id="schema">
+  <div class="sec-head"><h2><span class="num">3</span>개념 스키마 발췌</h2>
+  <p>이 화면이 읽고 쓰는 부분만 옮겼다. 와이어프레임의 모든 입력 칸은 아래 속성 중 하나에 연결되거나 "파생/UI 전용"으로 표시된다.</p></div>
+  <div class="schema-wrap">
+<pre class="schema"><span class="k">Transaction</span>                 <span class="s">«Aggregate Root» · 이 화면이 생성</span>
+  id            TransactionId       <span class="s">서버 발급 TX-YYYY-NNNNNN</span>
+  occurredOn    LocalDate           <span class="r">BR-05</span> <span class="s">마감일 이후</span>
+  description   String(1..100)
+  memo          String(0..500)?
+  status        Draft | Posted | Reversed
+  legs          TransactionLeg[2..20]   <span class="r">BR-02</span>
+  reversalOf    TransactionId?      <span class="s">상쇄 거래일 때만</span>
+  <span class="r">불변식  Σ legs.amount = 0      BR-01 · post() 시점</span>
+
+<span class="k">TransactionLeg</span>              <span class="s">«Value Object» · Transaction 내부</span>
+  accountId     AccountId           <span class="s">Account를 ID로만 참조</span>
+  amount        Money               <span class="s">+ 차변 / − 대변</span>
+
+<span class="k">Account</span>                     <span class="s">«Aggregate Root» · 이 화면은 읽기만</span>
+  id · code · name · isActive
+  type          Asset | Liability | Equity | Revenue | Expense
+  ledgers       AccountLedger[]     <span class="s">조회 모델로만 노출</span>
+
+<span class="k">Money</span>                       <span class="s">«Value Object»</span>
+  value         Decimal(18,0)       <span class="s">KRW 정수</span>
+  currency      KRW                 <span class="r">BR-06</span> <span class="s">v1 단일 통화</span></pre>
+    <div class="side-note">
+      <h3>상태 모델</h3>
+      <div class="lifecycle"><b>Draft</b><i>post()</i>→<b>Posted</b><i>reverse()</i>→<b>Reversed</b></div>
+      <p>Draft만 편집할 수 있다. Posted는 수정·삭제할 수 없고(BR-04), 되돌리려면 부호를 뒤집은 새 거래를 만든다.</p>
+      <h3>UI와 모델이 다른 곳</h3>
+      <p>화면은 차변·대변 두 칸, 모델은 부호 있는 <code>amount</code> 하나다. 회계 담당자에게 익숙한 표기를 지키되 변환 책임은 클라이언트 매퍼에 둔다. 이런 불일치를 명시하는 것이 와이어프레임 명세의 핵심 일이다.</p>
+      <h3>애그리거트 경계</h3>
+      <p>계정 미리보기(주석 9)는 Account 쪽 조회 모델이다. 전기 요청에는 <code>accountId</code>만 실려 가고, 잔액은 Account가 스스로 갱신한다.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="wireframe">
+  <div class="sec-head"><h2><span class="num">4</span>와이어프레임</h2>
+  <p>상태를 바꿔 가며 같은 화면이 어떻게 달라지는지 확인한다. 상태마다 별도 화면을 그리지 않고, 한 화면의 변형으로 정의한다. 주석 번호에 마우스를 올리면 해당 설명이, 설명에 올리면 화면 요소가 강조된다.</p></div>
+
+  <div class="toolbar" role="toolbar" aria-label="와이어프레임 보기 설정">
+    <div class="tgroup"><span class="lbl">상태</span>
+      <div class="seg" id="stateSeg">
+        <button type="button" data-state="empty">빈 상태</button>
+        <button type="button" data-state="filled" aria-pressed="true">입력 · 균형</button>
+        <button type="button" data-state="unbalanced">불균형</button>
+        <button type="button" data-state="saving">전기 중</button>
+        <button type="button" data-state="error">서버 오류</button>
+        <button type="button" data-state="posted">전기 완료</button>
+        <button type="button" data-state="noperm">권한 없음</button>
+      </div>
+    </div>
+    <div class="tgroup"><span class="lbl">폭</span>
+      <div class="seg" id="vpSeg">
+        <button type="button" data-vp="desktop" aria-pressed="true">데스크톱 1000</button>
+        <button type="button" data-vp="mobile">모바일 375</button>
+      </div>
+    </div>
+    <label class="check" for="pinToggle"><input type="checkbox" id="pinToggle" checked>주석 번호</label>
+  </div>
+
+  <div class="stage">
+    <div class="canvas">
+      <div class="frame-label"><span id="frameCaption">WF-LEDGER-03 / 입력 · 균형 / 데스크톱</span><span>Lo-fi</span></div>
+      <div class="wf-frame" id="frame" data-state="filled" data-vp="desktop">
+        <div class="wf-app">
+          <nav class="wf-nav" aria-hidden="true">
+            <div class="wf-logo">LOGO</div>
+            <div class="item">장부 홈</div>
+            <div class="item on">거래</div>
+            <div class="item">계정과목</div>
+            <div class="item">회계기간</div>
+            <div class="item">보고서</div>
+          </nav>
+          <div class="wf-main">
+            <div class="wf-progress"></div>
+            <div class="wf-topbar">
+              <span class="crumb">거래 / <b id="crumbCur">새 거래</b></span>
+              <span class="back">← 거래</span>
+              <span class="wf-avatar"><span>회계 담당</span></span>
+            </div>
+
+            <div class="wf-alert" role="alert">
+              <b>전기하지 못했습니다.</b>
+              <span>거래일: 2025-09 회계기간은 마감되었습니다. 2025-10-01 이후 날짜로 바꾼 뒤 다시 전기하세요.</span>
+            </div>
+
+            <div class="wf-pagehead">
+              <div class="wf-title">
+                <h4 id="pageTitle">새 거래</h4>
+                <span class="wf-chip" data-anno="1"><b class="pin r" data-n="1">1</b><span id="chipText">초안</span></span>
+              </div>
+              <div class="wf-actions" id="actions"></div>
+            </div>
+
+            <div class="wf-body">
+              <div class="wf-colmain">
+                <div class="wf-card">
+                  <h5>거래 정보</h5>
+                  <div class="wf-fields" id="fields"></div>
+                </div>
+                <div class="wf-card">
+                  <h5>분개 <small id="legCount">3 / 20행</small></h5>
+                  <div class="legs" id="legs"></div>
+                  <div class="add-row" data-anno="7"><b class="pin" data-n="7">7</b>+ 행 추가</div>
+                  <div class="balance" id="balance" data-anno="8"></div>
+                </div>
+              </div>
+              <aside class="wf-preview" id="preview" data-anno="9"></aside>
+            </div>
+
+            <div class="wf-noperm">
+              <div class="box"></div>
+              <b>거래를 등록할 권한이 없습니다</b>
+              <span style="color:var(--wf-muted)">장부 관리자에게 '회계 담당' 역할을 요청하세요.</span>
+              <span class="wf-btn">거래 목록으로</span>
+            </div>
+
+            <div class="wf-mobilebar" id="mobilebar"></div>
+            <div class="wf-toast" role="status">거래 TX-2026-001284를 전기했습니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="annos" id="annos" aria-label="주석"></aside>
+  </div>
+</section>
+
+<section class="sec" id="binding">
+  <div class="sec-head"><h2><span class="num">5</span>데이터 바인딩</h2>
+  <p>개발자가 화면을 보지 않고도 요청·응답 모양을 쓸 수 있어야 한다. "파생"은 서버에 저장하지 않는 계산값이다.</p></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>#</th><th>UI 요소</th><th>스키마</th><th>타입 · 제약</th><th>필수</th><th>기본값</th><th>흐름</th></tr></thead>
+    <tbody>
+      <tr><td class="n">1</td><td>상태 칩</td><td><code>Transaction.status</code></td><td>Draft · Posted · Reversed</td><td>—</td><td>Draft</td><td>응답</td></tr>
+      <tr><td class="n">2</td><td>거래일</td><td><code>Transaction.occurredOn</code></td><td>LocalDate, &gt; closedUntil</td><td>필수</td><td>오늘 (Asia/Seoul)</td><td>요청</td></tr>
+      <tr><td class="n">3</td><td>적요</td><td><code>Transaction.description</code></td><td>String 1–100</td><td>필수</td><td>—</td><td>요청</td></tr>
+      <tr><td class="n">4</td><td>메모</td><td><code>Transaction.memo</code></td><td>String 0–500</td><td>선택</td><td>빈 값</td><td>요청</td></tr>
+      <tr><td class="n">5</td><td>계정</td><td><code>TransactionLeg.accountId</code></td><td>AccountId, 활성 계정만</td><td>필수</td><td>—</td><td>요청 (코드·이름은 조회용)</td></tr>
+      <tr><td class="n">6</td><td>차변 / 대변</td><td><code>TransactionLeg.amount</code></td><td>Money KRW 정수, ≠ 0, 부호 = 방향</td><td>둘 중 하나</td><td>—</td><td>요청 (매퍼 변환)</td></tr>
+      <tr><td class="n">8</td><td>차변·대변 합계, 차액</td><td><em>파생</em></td><td>Money</td><td>—</td><td>0</td><td>클라이언트 계산</td></tr>
+      <tr><td class="n">9</td><td>현재 잔액 · 최근 내역</td><td><code>Account</code> 조회 모델</td><td>Money, AccountLedger 3건</td><td>—</td><td>—</td><td><code>GET /accounts/{id}/summary</code></td></tr>
+      <tr><td class="n">—</td><td>거래 번호</td><td><code>Transaction.id</code></td><td>TX-YYYY-NNNNNN</td><td>—</td><td>서버 발급</td><td>응답</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="sec" id="states">
+  <div class="sec-head"><h2><span class="num">6</span>상태 매트릭스와 규칙</h2>
+  <p>영역 × 상태. 빈 칸이 있으면 명세가 끝나지 않은 것이다. "동일"은 왼쪽 상태와 같다는 뜻이다.</p></div>
+  <div class="tbl-wrap"><table class="matrix">
+    <thead><tr><th>영역</th><th>빈 상태</th><th>입력 · 균형</th><th>불균형</th><th>전기 중</th><th>서버 오류</th><th>전기 완료</th><th>권한 없음</th></tr></thead>
+    <tbody>
+      <tr><td>헤더</td><td>새 거래 · 초안</td><td class="same">동일</td><td class="same">동일</td><td class="same">동일</td><td class="same">동일</td><td>TX 번호 · 전기됨</td><td rowspan="6">화면 전체를 권한 안내로 대체. 목록의 '새 거래' 버튼은 애초에 숨김</td></tr>
+      <tr><td>거래 정보</td><td>기본값, 적요 비어 있음</td><td>입력값</td><td class="same">동일</td><td>읽기 전용, 흐리게</td><td>거래일 오류 표시, 다른 값 유지</td><td>텍스트로 표시</td></tr>
+      <tr><td>분개</td><td>빈 행 2개</td><td>입력값, 포커스 행 강조</td><td class="same">동일</td><td>읽기 전용</td><td>입력값 유지</td><td>텍스트, 추가·삭제 없음</td></tr>
+      <tr><td>합계 바</td><td>0 / 0 · 금액을 입력하세요</td><td>균형 · 차액 0</td><td>차액과 방향 문구</td><td class="same">동일</td><td class="same">동일</td><td>확정 합계</td></tr>
+      <tr><td>계정 미리보기</td><td>안내 문구</td><td>포커스 계정</td><td class="same">동일</td><td class="same">동일</td><td class="same">동일</td><td>반영된 잔액</td></tr>
+      <tr><td>주 액션</td><td>전기 비활성</td><td>전기 활성</td><td>전기 비활성 + 이유</td><td>'전기 중…' 비활성</td><td>전기 활성 (수정 후 재시도)</td><td>상쇄 거래 만들기 · 복제</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>규칙</th><th>내용</th><th>클라이언트 (UX)</th><th>서버 (최종 판정)</th></tr></thead>
+    <tbody>
+      <tr><td class="n">BR-01</td><td>차변 합계 = 대변 합계 (Σ amount = 0)</td><td>합계 바, 전기 비활성</td><td><code>post()</code> 불변식 → 422 UNBALANCED</td></tr>
+      <tr><td class="n">BR-02</td><td>분개 2–20행, 행마다 금액 &gt; 0, 한 행에 한 방향</td><td>삭제·추가 비활성, 반대 칸 비활성</td><td>400 VALIDATION</td></tr>
+      <tr><td class="n">BR-03</td><td>비활성 계정에는 분개할 수 없다</td><td>검색 결과에서 제외</td><td>400 ACCOUNT_INACTIVE</td></tr>
+      <tr><td class="n">BR-04</td><td>전기된 거래는 수정·삭제할 수 없고 상쇄 거래로만 취소한다</td><td>전기 완료 상태는 읽기 전용</td><td>409 ALREADY_POSTED</td></tr>
+      <tr><td class="n">BR-05</td><td>거래일은 마감된 회계기간에 둘 수 없다</td><td>마감일 이전 날짜 선택 막음</td><td>409 PERIOD_CLOSED</td></tr>
+      <tr><td class="n">BR-06</td><td>v1은 KRW 단일 통화, 원 단위 정수</td><td>소수점 입력 무시</td><td>400 VALIDATION</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="sec" id="events">
+  <div class="sec-head"><h2><span class="num">7</span>인터랙션과 커맨드</h2>
+  <p>버튼 하나는 커맨드 하나 또는 화면 이동 하나에 연결된다. 실패 열이 비어 있으면 오류 화면이 누락된 것이다.</p></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>트리거</th><th>동작</th><th>커맨드 / API</th><th>성공</th><th>실패</th></tr></thead>
+    <tbody>
+      <tr><td>계정 칸 입력</td><td>활성 계정 검색 (1자 이상, 300ms 디바운스)</td><td><code>GET /accounts?active=true&amp;q=</code></td><td>최대 10건: 코드 · 이름 · 유형</td><td>0건: "일치하는 활성 계정이 없습니다"</td></tr>
+      <tr><td>금액 입력</td><td>반대 칸 비활성, 합계 재계산</td><td>없음 (클라이언트)</td><td>합계 바 갱신</td><td>숫자 외 입력 무시</td></tr>
+      <tr><td>행 포커스</td><td>미리보기 갱신</td><td><code>GET /accounts/{id}/summary</code></td><td>잔액 · 최근 3건</td><td>패널에 "잔액을 불러오지 못했습니다 · 다시 시도"</td></tr>
+      <tr><td>임시 저장</td><td>초안 저장 (불균형 허용)</td><td><code>SaveDraftTransaction</code><br><code>POST /transactions</code> · <code>PUT /transactions/{id}</code></td><td>토스트 "초안을 저장했습니다", URL을 <code>/transactions/{id}/edit</code>로 교체</td><td>필드 오류 표시</td></tr>
+      <tr><td>전기하기</td><td>전기</td><td><code>PostTransaction</code><br><code>POST /transactions/{id}/post</code><br><span class="mono">Idempotency-Key</span> 헤더</td><td>전기 완료 상태 + 토스트</td><td>422 → 합계 바 강조 · 409 → 거래일 오류 + 상단 요약 · 403 → 권한 없음</td></tr>
+      <tr><td>변경 후 이탈</td><td>이탈 확인</td><td>없음</td><td>—</td><td>"저장하지 않은 변경이 있습니다. 나가면 입력이 사라집니다."</td></tr>
+      <tr><td>상쇄 거래 만들기</td><td>화면 이동</td><td>→ WF-LEDGER-04 <code>?reversalOf={id}</code></td><td>부호를 뒤집은 분개로 미리 채움</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="sec" id="ac">
+  <div class="sec-head"><h2><span class="num">8</span>수용 기준과 미결정 사항</h2>
+  <p>수용 기준은 QA가 그대로 테스트 케이스로 옮길 수 있는 문장으로 쓴다. 미결정 사항은 와이어프레임을 그리다가 발견해 기획·스키마로 되돌려 보내는 질문이다.</p></div>
+  <div class="ac"><ol>
+    <li><span class="id">AC-1</span><span><b>GIVEN</b>차변 합계 1,200,000원, 대변 합계 1,109,091원</span><span><b>WHEN</b>사용자가 분개를 입력하는 중</span><span><b>THEN</b>'전기하기'는 비활성이고 "차변이 90,909원 많습니다"가 보인다</span></li>
+    <li><span class="id">AC-2</span><span><b>GIVEN</b>균형이 맞는 초안</span><span><b>WHEN</b>'전기하기'를 누르고 서버가 200을 반환</span><span><b>THEN</b>상태가 전기됨으로 바뀌고 모든 입력이 읽기 전용이 되며 '상쇄 거래 만들기'가 나타난다</span></li>
+    <li><span class="id">AC-3</span><span><b>GIVEN</b>거래일이 마감된 2025-09-30</span><span><b>WHEN</b>전기를 요청</span><span><b>THEN</b>409 응답에 따라 상단 오류 요약과 거래일 칸 오류가 보이고 나머지 입력값은 유지된다</span></li>
+    <li><span class="id">AC-4</span><span><b>GIVEN</b>전기 요청이 진행 중</span><span><b>WHEN</b>사용자가 '전기하기'를 다시 누른다</span><span><b>THEN</b>요청은 한 번만 서버에 도달한다</span></li>
+  </ol></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>#</th><th>질문</th><th>담당</th><th>영향</th><th>상태</th></tr></thead>
+    <tbody>
+      <tr><td class="n">Q1</td><td>한 거래에서 같은 계정을 차변과 대변에 동시에 쓰는 것을 허용하나?</td><td>기획 (도메인)</td><td>BR 추가 여부</td><td><span class="status open">열림</span></td></tr>
+      <tr><td class="n">Q2</td><td>초안 저장 없이 한 번에 전기할 수 있어야 하나? 지금은 저장 → 전기 두 번 요청한다.</td><td>개발</td><td>API 계약</td><td><span class="status open">열림</span></td></tr>
+      <tr><td class="n">Q3</td><td>분개 행 순서를 보존해야 하나? 보존하면 <code>TransactionLeg.position</code>이 필요하다.</td><td>개발 · 디자인</td><td><span class="schema-impact">스키마 변경</span></td><td><span class="status open">열림</span></td></tr>
+      <tr><td class="n">Q4</td><td>v1에서 통화를 KRW 하나로 고정하나?</td><td>기획</td><td><code>Money.currency</code></td><td><span class="status">결정 10-08: KRW 고정</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section class="sec" id="inputs">
+  <div class="sec-head"><h2><span class="num">9</span>이 명세에 필요한 입력물</h2>
+  <p>와이어프레임을 시작하기 전에 있어야 하는 것과, 없을 때 어디서 문제가 터지는지.</p></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>입력물</th><th>이 문서에서 쓰인 곳</th><th>없으면</th></tr></thead>
+    <tbody>
+      <tr><td>에픽 목표와 성공 지표</td><td>§2 목적, 클라이언트 선검증 결정</td><td>화면이 무엇을 최적화해야 하는지 판단할 근거가 없다</td></tr>
+      <tr><td>시나리오 (주 · 대안 · 예외)</td><td>§2 흐름, §4 상태 탭</td><td>해피 패스만 그려지고 오류·빈 상태가 개발 중에 발견된다</td></tr>
+      <tr><td>개념 스키마 (엔티티 · 속성 · 타입 · 카디널리티 · 관계)</td><td>§3, §5, 주석의 바인딩 줄</td><td>필드 누락과 타입 불일치가 API 설계 때 터진다</td></tr>
+      <tr><td>상태 모델 (생애주기)</td><td>상태 칩, 읽기 전용 규칙, 상쇄 흐름</td><td>"수정 버튼이 언제 사라지나"를 아무도 답하지 못한다</td></tr>
+      <tr><td>비즈니스 규칙 · 불변식</td><td>§6 BR 표, 비활성 조건과 이유 문구</td><td>버튼이 왜 비활성인지 사용자에게 설명할 수 없다</td></tr>
+      <tr><td>역할 · 권한 매트릭스</td><td>권한 없음 상태</td><td>403이 빈 화면으로 나간다</td></tr>
+      <tr><td>커맨드 · 쿼리 목록 (API 초안 수준)</td><td>§7 인터랙션 표</td><td>버튼이 무엇을 호출하는지 모른 채 그려진다</td></tr>
+      <tr><td>실제 데이터 표본 (값 범위, 최장 문자열, 행 수)</td><td>예시 값, 20행 제한, 금액 칸 폭</td><td>레이아웃이 실제 데이터에서 깨진다</td></tr>
+      <tr><td>플랫폼 제약 (브레이크포인트, 접근성, 기존 컴포넌트)</td><td>모바일 375 배치</td><td>모바일 화면이 나중에 따로 발명된다</td></tr>
+    </tbody>
+  </table></div>
+  <p style="color:var(--ink-2)">스타일 가이드(색, 타이포그래피, 아이콘)는 입력물이 아니다. 이 명세의 컴포넌트 목록이 스타일 가이드의 입력이 된다. 다만 그리드, 간격 단위, 기존 컴포넌트 이름 같은 <em>파운데이션</em>은 미리 있으면 좋다.</p>
+</section>
+
+<section class="sec" id="dod">
+  <div class="sec-head"><h2><span class="num">10</span>완료 기준</h2>
+  <p>이 체크리스트를 모두 채워야 개발 착수 리뷰에 올린다. 마지막 항목은 일부러 하지 않는 일이다.</p></div>
+  <ul class="dod">
+    <li>모든 입력 요소가 스키마 속성 하나에 연결되거나 "파생 · UI 전용"으로 표시됨</li>
+    <li>모든 버튼이 커맨드/API 하나 또는 화면 이동 하나에 연결됨</li>
+    <li>빈 · 로딩 · 오류 · 성공 · 권한 없음 상태가 정의됨</li>
+    <li>각 규칙에 클라이언트와 서버의 검증 위치가 적힘</li>
+    <li>모바일에서 달라지는 배치가 정의됨</li>
+    <li>최장 문자열, 최대 행 수, 최대 금액으로 깨지지 않음을 확인</li>
+    <li>수용 기준이 테스트 가능한 문장으로 쓰임</li>
+    <li>미결정 사항마다 담당자가 있음</li>
+    <li class="no">색 · 폰트 · 아이콘 스타일을 정하지 않음 (스타일 가이드의 몫)</li>
+  </ul>
+</section>
+
+<footer class="end">WF-LEDGER-03 · v0.3 · 예시 데이터는 가상의 회사 장부이며, 도메인 모델은 <code>pattern-guide/consideration/account-transaction-entry-modeling.md</code>를 따른다.</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var fmt = function (n) { return n.toLocaleString("ko-KR"); };
+
+  var LEGS_OK = [
+    { code: "1010", name: "보통예금", type: "자산", dr: 1200000 },
+    { code: "4010", name: "용역매출", type: "수익", cr: 1090909 },
+    { code: "2150", name: "부가세예수금", type: "부채", cr: 109091 }
+  ];
+  var LEGS_BAD = [
+    { code: "1010", name: "보통예금", type: "자산", dr: 1200000 },
+    { code: "4010", name: "용역매출", type: "수익", cr: 1000000 },
+    { code: "2150", name: "부가세예수금", type: "부채", cr: 109091 }
+  ];
+  var BAL = { "1010": 8450000, "4010": 23600000, "2150": 2360000 };
+  var RECENT = {
+    "1010": [["10-10", "+500,000"], ["10-08", "−1,320,000"], ["10-02", "+2,200,000"]],
+    "4010": [["10-02", "+2,000,000"], ["09-28", "+1,800,000"], ["09-15", "+900,000"]]
+  };
+
+  var BASE = { date: "2026-10-13", desc: "10월 컨설팅 용역 매출 · ㈜한빛테크", memo: "세금계산서 2026-10-13 발행", legs: LEGS_OK, focus: 0 };
+  var STATES = {
+    empty:      { label: "빈 상태", date: "2026-10-13", desc: "", memo: "", legs: [{}, {}], focus: null },
+    filled:     { label: "입력 · 균형" },
+    unbalanced: { label: "불균형", legs: LEGS_BAD, focus: 1 },
+    saving:     { label: "전기 중", saving: true },
+    error:      { label: "서버 오류", date: "2025-09-30", dateErr: "2025-09 회계기간은 마감되었습니다. 2025-10-01 이후 날짜를 선택하세요." },
+    posted:     { label: "전기 완료", posted: true },
+    noperm:     { label: "권한 없음" }
+  };
+  function get(name) {
+    var s = STATES[name], o = {};
+    for (var k in BASE) o[k] = BASE[k];
+    for (var j in s) o[j] = s[j];
+    return o;
+  }
+
+  var ANNOS = [
+    { n: 1, t: "상태 칩", tags: ["데이터"], bind: "Transaction.status : Draft | Posted | Reversed",
+      li: ["새 거래는 화면에서만 '초안'. 서버 레코드는 첫 임시 저장 때 생성된다.", "Reversed는 이 화면에 나오지 않는다. 상세(WF-LEDGER-05)에서 표시."] },
+    { n: 2, t: "거래일", tags: ["데이터", "규칙"], bind: "Transaction.occurredOn : LocalDate · 필수",
+      li: ["기본값 오늘(Asia/Seoul).", "<code>BR-05</code> 마감일(<code>GET /periods/closed-until</code>) 이전 날짜는 선택기에서 막는다.", "서버가 최종 판정: <code>409 PERIOD_CLOSED</code> → 이 칸 아래 오류."] },
+    { n: 3, t: "적요", tags: ["데이터"], bind: "Transaction.description : String(1..100) · 필수",
+      li: ["거래 목록 첫 줄에 쓰인다. 목록에서는 40자 이후 말줄임(WF-LEDGER-02).", "최장 100자로 칸이 넘치지 않는지 확인."] },
+    { n: 4, t: "메모", tags: ["데이터"], bind: "Transaction.memo : String(0..500)?",
+      li: ["선택 항목. 값이 없으면 한 줄, 포커스 시 3줄로 늘어난다."] },
+    { n: 5, t: "계정 선택", tags: ["데이터", "조회"], bind: "TransactionLeg.accountId → Account{code, name, type}",
+      li: ["코드나 이름으로 검색하는 콤보박스. 1자 이상, 300ms 디바운스.", "<code>GET /accounts?active=true&amp;q=</code> · <code>BR-03</code> 비활성 계정은 결과에 없다.", "표시는 '코드 이름', 저장은 <code>accountId</code>만. 애그리거트 간 ID 참조.", "모바일: 칸 오른쪽 ⓘ를 누르면 계정 미리보기 바텀시트."] },
+    { n: 6, t: "차변 · 대변 금액", tags: ["데이터", "변환"], bind: "TransactionLeg.amount : Money  (차변 x → +x, 대변 x → −x)",
+      li: ["UI는 두 칸, 모델은 부호 있는 금액 하나. 변환은 클라이언트 매퍼.", "한 행에 한쪽만 입력. 입력하면 반대 칸은 빗금(비활성).", "KRW 정수, 0보다 큼, 최대 999,999,999,999. 입력 중 천 단위 구분."] },
+    { n: 7, t: "행 추가 · 삭제", tags: ["행동", "규칙"], bind: "Transaction.legs : TransactionLeg[2..20]",
+      li: ["<code>BR-02</code> 2행일 때 삭제 비활성, 20행이면 추가 비활성과 이유 문구.", "새 행은 맨 아래에 추가하고 계정 칸으로 포커스.", "행 순서 보존 여부는 미결정(Q3)."] },
+    { n: 8, t: "대차 합계 바", tags: ["파생", "규칙"], bind: "Σ dr, Σ cr, diff — 저장하지 않음",
+      li: ["입력할 때마다 클라이언트가 legs로 계산.", "<code>BR-01</code> 차액 ≠ 0이면 '전기하기' 비활성, 차액과 방향을 문장으로 표시.", "서버 <code>post()</code>가 같은 검증을 다시 한다(<code>422 UNBALANCED</code>)."] },
+    { n: 9, t: "계정 미리보기", tags: ["다른 애그리거트", "조회"], bind: "Account 조회 모델 · GET /accounts/{id}/summary",
+      li: ["포커스된 행의 계정 잔액과 최근 <code>AccountLedger</code> 3건.", "'전기 후 예상'은 표시용 계산값. 전기 요청에는 아무것도 보내지 않는다.", "데스크톱 전용 패널. 모바일은 주석 5의 바텀시트."] },
+    { n: 10, t: "임시 저장", tags: ["행동"], bind: "SaveDraftTransaction → POST /transactions | PUT /transactions/{id}",
+      li: ["불균형이어도 저장 가능. 거래일·적요만 검사.", "성공: 토스트, 화면 유지, URL을 <code>/transactions/{id}/edit</code>로 교체."] },
+    { n: 11, t: "전기하기", tags: ["행동", "규칙"], bind: "PostTransaction → POST /transactions/{id}/post",
+      li: ["활성 조건: 필수값 입력 + 차액 0 + 모든 행 유효.", "비활성일 때는 버튼 아래에 이유를 쓴다. 툴팁에 숨기지 않는다.", "200 → 전기 완료 · 422 → 합계 바 · 409 → 거래일 · 403 → 권한 없음.", "진행 중 재클릭 차단, <code>Idempotency-Key</code> 헤더."] },
+    { n: 12, t: "상쇄 거래 만들기", tags: ["행동", "이동"], bind: "→ WF-LEDGER-04 ?reversalOf={Transaction.id}",
+      li: ["<code>BR-04</code> 전기된 거래는 수정·삭제할 수 없다. 이 버튼이 유일한 취소 경로.", "원 거래의 분개 부호를 뒤집어 미리 채운다."] }
+  ];
+
+  var frame = document.getElementById("frame");
+  var $ = function (id) { return document.getElementById(id); };
+  var pin = function (n, right) { return '<b class="pin' + (right ? " r" : "") + '" data-n="' + n + '">' + n + "</b>"; };
+  var cur = { state: "filled", vp: "desktop" };
+
+  function renderAnnos() {
+    $("annos").innerHTML = ANNOS.map(function (a) {
+      return '<article class="anno" data-for="' + a.n + '" tabindex="0">' +
+        '<header><b class="pin" data-n="' + a.n + '">' + a.n + "</b><h3>" + a.t + "</h3>" +
+        a.tags.map(function (t) { return '<span class="tag">' + t + "</span>"; }).join("") + "</header>" +
+        '<div class="bind">' + a.bind + "</div>" +
+        "<ul>" + a.li.map(function (l) { return "<li>" + l + "</li>"; }).join("") + "</ul>" +
+        '<span class="hiddenhint">현재 상태에서는 보이지 않는 요소</span></article>';
+    }).join("");
+  }
+
+  function field(n, label, req, inner, cls, err) {
+    return '<div class="wf-field ' + (cls || "") + (err ? " has-err" : "") + '" data-anno="' + n + '">' + pin(n) +
+      "<label>" + (req ? '<span class="req">' + label + "</span>" : label) + "</label>" + inner +
+      (err ? '<span class="wf-err">' + err + "</span>" : "") + "</div>";
+  }
+  function input(val, ph, opts) {
+    opts = opts || {};
+    var cls = "wf-in" + (opts.tall ? " tall" : "") + (opts.err ? " err" : "");
+    return '<div class="' + cls + '">' + (val ? "<span>" + val + "</span>" : '<span class="ph">' + ph + "</span>") +
+      (opts.icon ? '<span class="ic">' + opts.icon + "</span>" : "") + "</div>";
+  }
+
+  function render() {
+    var s = get(cur.state);
+    var ro = !!s.posted;
+    var legs = s.legs;
+    var dr = 0, cr = 0;
+    legs.forEach(function (l) { dr += l.dr || 0; cr += l.cr || 0; });
+    var diff = dr - cr, balanced = diff === 0 && dr > 0, empty = dr === 0 && cr === 0;
+    var canPost = balanced && !s.saving;
+
+    frame.dataset.state = cur.state;
+    $("frameCaption").textContent = "WF-LEDGER-03 / " + s.label + " / " + (cur.vp === "mobile" ? "모바일 375" : "데스크톱 1000");
+    $("pageTitle").textContent = ro ? "TX-2026-001284" : "새 거래";
+    $("crumbCur").textContent = ro ? "TX-2026-001284" : "새 거래";
+    $("chipText").textContent = ro ? "전기됨" : "초안";
+
+    // 액션
+    var postBtn = ro ? "" : '<span class="wf-btn primary' + (canPost ? "" : " is-disabled") + '" data-anno="11">' + pin(11, true) + (s.saving ? "전기 중…" : "전기하기") + "</span>";
+    var draftBtn = ro ? "" : '<span class="wf-btn' + (s.saving ? " is-disabled" : "") + '" data-anno="10">' + pin(10) + "임시 저장</span>";
+    var why = '<span class="wf-why">차액이 0이어야 전기할 수 있습니다</span>';
+    $("actions").innerHTML = ro
+      ? '<span class="wf-btn ghost">복제</span><span class="wf-btn" data-anno="12">' + pin(12) + "상쇄 거래 만들기</span>"
+      : '<span class="wf-btn ghost">취소</span>' + draftBtn + postBtn + why;
+
+    // 거래 정보
+    if (ro) {
+      $("fields").innerHTML =
+        field(2, "거래일", false, '<div class="wf-ro">' + s.date + "</div>") +
+        field(3, "적요", false, '<div class="wf-ro">' + s.desc + "</div>") +
+        field(4, "메모", false, '<div class="wf-ro">' + (s.memo || "—") + "</div>", "full");
+    } else {
+      $("fields").innerHTML =
+        field(2, "거래일", true, input(s.date, "", { icon: "▦", err: !!s.dateErr }), "", s.dateErr) +
+        field(3, "적요", true, input(s.desc, "예: 10월 사무실 임차료")) +
+        field(4, "메모", false, input(s.memo, "세금계산서 번호, 참고 사항 (선택)", { tall: !!s.memo }), "full");
+    }
+
+    // 분개
+    var head = '<div class="leg-row head"><span></span><span>계정</span><span>차변</span><span>대변</span><span></span></div>';
+    var rows = legs.map(function (l, i) {
+      var p5 = i === 0 ? pin(5) : "", p6 = i === 0 ? pin(6) : "";
+      var acctTxt = l.code ? l.code + " " + l.name : "";
+      var acct = ro ? '<div class="wf-ro">' + acctTxt + "</div>"
+        : '<div class="wf-in"><span' + (acctTxt ? "" : ' class="ph"') + ">" + (acctTxt || "계정 검색") + '</span><span class="info">i</span><span class="ic">▾</span></div>';
+      function amt(v, other, label, cls) {
+        if (ro) return '<div class="cell amt ' + cls + '" data-label="' + label + '"><div class="wf-ro">' + (v ? fmt(v) : "") + "</div></div>";
+        var off = !v && other;
+        return '<div class="cell amt ' + cls + '" data-label="' + label + '"' + (i === 0 && cls === "dr" ? ' data-anno="6"' : "") + ">" +
+          (i === 0 && cls === "dr" ? p6 : "") +
+          '<div class="wf-in' + (off ? " off" : "") + '">' + (v ? fmt(v) : '<span class="ph">' + (off ? "" : "0") + "</span>") + "</div></div>";
+      }
+      var delOff = legs.length <= 2;
+      return '<div class="leg-row' + (s.focus === i && !ro ? " is-focus" : "") + '">' +
+        '<span class="no">' + (i + 1) + "</span>" +
+        '<div class="cell acct"' + (i === 0 ? ' data-anno="5"' : "") + ">" + p5 + acct + "</div>" +
+        amt(l.dr, l.cr, "차변", "dr") + amt(l.cr, l.dr, "대변", "cr") +
+        '<span class="del' + (delOff ? " is-disabled" : "") + '">×</span></div>';
+    }).join("");
+    $("legs").innerHTML = head + rows;
+    $("legCount").textContent = legs.length + " / 20행";
+
+    // 합계 바
+    var msg, bad = false;
+    if (empty) msg = "금액을 입력하세요";
+    else if (balanced) msg = ro ? "전기 확정" : "균형 · 차액 0";
+    else { bad = true; msg = (diff > 0 ? "차변이 " : "대변이 ") + fmt(Math.abs(diff)) + "원 많습니다"; }
+    $("balance").innerHTML = pin(8) +
+      '<div class="lab' + (bad ? " bad" : "") + '">합계<small>' + msg + "</small></div>" +
+      '<div class="tot">' + fmt(dr) + "<small>차변 합계</small></div>" +
+      '<div class="tot">' + fmt(cr) + "<small>대변 합계</small></div><span></span>";
+
+    // 미리보기
+    var f = s.focus != null ? legs[s.focus] : null;
+    if (!f || !f.code) {
+      $("preview").innerHTML = pin(9) + "<h5>계정 미리보기</h5>" +
+        '<div class="empty-hint">분개 행을 선택하면 계정의 현재 잔액과 전기 후 예상 잔액이 보입니다</div>';
+    } else {
+      var delta = (f.dr || 0) + (f.cr || 0);
+      var bal = BAL[f.code];
+      var lines = (RECENT[f.code] || []).map(function (r) {
+        return '<div><span style="width:34px;background:none;height:auto;color:var(--wf-muted);font-size:11px">' + r[0] + '</span><span style="flex:1"></span><span style="background:none;height:auto;font:11px var(--font-mono)">' + r[1] + "</span></div>";
+      }).join("");
+      $("preview").innerHTML = pin(9) + "<h5>계정 미리보기</h5>" +
+        '<div class="acct">' + f.code + " " + f.name + "<small>" + f.type + " · 행 " + (s.focus + 1) + "</small></div>" +
+        '<dl class="kv">' +
+        "<div><dt>" + (ro ? "전기 전 잔액" : "현재 잔액") + "</dt><dd>" + fmt(bal) + "</dd></div>" +
+        "<div><dt>이 거래</dt><dd>+" + fmt(delta) + "</dd></div>" +
+        '<div class="sum"><dt>' + (ro ? "반영된 잔액" : "전기 후 예상") + "</dt><dd>" + fmt(bal + delta) + "</dd></div></dl>" +
+        '<div class="lines"><span style="font-size:11px;color:var(--wf-muted);height:auto;background:none">최근 내역</span>' + lines + "</div>";
+    }
+
+    // 모바일 하단 바
+    $("mobilebar").innerHTML = ro
+      ? '<span class="diff">전기 완료<b>' + fmt(dr) + '</b></span><span class="wf-btn" data-anno="12">' + pin(12) + "상쇄 거래</span>"
+      : '<span class="diff">' + (bad ? "차액" : "합계") + "<b>" + (bad ? fmt(Math.abs(diff)) : fmt(dr)) + "</b></span>" +
+        '<span class="wf-btn' + (s.saving ? " is-disabled" : "") + '">저장</span>' +
+        '<span class="wf-btn primary' + (canPost ? "" : " is-disabled") + '">' + (s.saving ? "전기 중…" : "전기하기") + "</span>";
+
+    frame.classList.toggle("hide-pins", !$("pinToggle").checked);
+    dimAnnos();
+  }
+
+  function dimAnnos() {
+    ANNOS.forEach(function (a) {
+      var vis = Array.prototype.some.call(frame.querySelectorAll('[data-anno="' + a.n + '"]'), function (el) {
+        return el.offsetParent !== null && getComputedStyle(el).visibility !== "hidden";
+      });
+      var card = document.querySelector('.anno[data-for="' + a.n + '"]');
+      if (card) card.classList.toggle("is-dim", !vis);
+    });
+  }
+
+  function highlight(n, on) {
+    frame.querySelectorAll('[data-anno="' + n + '"]').forEach(function (el) { el.classList.toggle("is-hl", on); });
+    var card = document.querySelector('.anno[data-for="' + n + '"]');
+    if (card) card.classList.toggle("is-active", on);
+  }
+  function nFrom(target) {
+    var p = target.closest && target.closest(".pin, .anno");
+    if (!p) return null;
+    return p.dataset.n || p.dataset.for;
+  }
+  ["mouseover", "focusin"].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { var n = nFrom(e.target); if (n) highlight(n, true); });
+  });
+  ["mouseout", "focusout"].forEach(function (ev) {
+    document.addEventListener(ev, function (e) { var n = nFrom(e.target); if (n) highlight(n, false); });
+  });
+  frame.addEventListener("click", function (e) {
+    var p = e.target.closest(".pin");
+    if (!p) return;
+    var card = document.querySelector('.anno[data-for="' + p.dataset.n + '"]');
+    if (card) card.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  });
+
+  function bindSeg(id, key) {
+    $(id).addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      cur[key] = b.dataset[key];
+      $(id).querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      if (key === "vp") frame.dataset.vp = cur.vp;
+      render();
+      if (key === "vp") setTimeout(dimAnnos, 300);
+      try { localStorage.setItem("wf03-" + key, cur[key]); } catch (err) {}
+    });
+  }
+  bindSeg("stateSeg", "state");
+  bindSeg("vpSeg", "vp");
+  $("pinToggle").addEventListener("change", render);
+
+  renderAnnos();
+  try {
+    var ss = localStorage.getItem("wf03-state"), sv = localStorage.getItem("wf03-vp");
+    if (ss && STATES[ss]) { var bs = document.querySelector('#stateSeg [data-state="' + ss + '"]'); if (bs) bs.click(); }
+    if (sv === "mobile") { var bv = document.querySelector('#vpSeg [data-vp="mobile"]'); if (bv) bv.click(); }
+  } catch (err) {}
+  render();
+})();
+</script>
+</body>
+</html>

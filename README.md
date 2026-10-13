@@ -95,3 +95,7 @@ GoF 23개 패턴의 한국어 가이드가 `pattern-guide/` 폴더에 `<pattern>
 ## 코드 부합도 분석
 
 작성한 코드가 특정 디자인 패턴의 최소 조건을 충족하는지 검사하는 `.claude/skills/design-pattern-analyzer/` skill 이 있다. "이 코드가 Observer 패턴 맞는지 분석" 같이 요청하면 정적 분석 리포트가 `analysis/` 폴더에 생성된다. 평가 기준은 (1) 같은 이름의 `<pattern>-pattern.md` 가이드의 "최소 조건" 섹션을 우선 사용하고, (2) 없으면 skill 내장 `checklist.md` 를 fallback 으로 쓴다.
+
+## 와이어프레임 명세 가이드
+
+`wireframe-guide/` 에 디자인과 개발의 계약서 역할을 하는 와이어프레임 명세 양식과 예시가 있다. [`wireframe-spec-example.html`](wireframe-guide/wireframe-spec-example.html) 을 브라우저로 열면 복식부기 "거래 등록" 화면을 상태별·폭별로 볼 수 있고, 필요한 입력물과 작업 순서는 [`wireframe-guide/README.md`](wireframe-guide/README.md) 에 정리되어 있다.
