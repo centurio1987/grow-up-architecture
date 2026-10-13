@@ -78,6 +78,36 @@ imm4 (다음 회차)  ← check 도중 등록된 건 다음 루프로</pre>
 setImmediate 3개는 한 check 단계에서 연속 실행되고, poll 단계는 완료된 I/O 응답을 모두 처리한다.
 </div>
 
+<h2>6. 추가 질문</h2>
+<div class="card"><b>Q1. immediate가 timer보다 우선순위가 높은가?</b>
+<p><span class="bad">아니요.</span> 단계는 우선순위가 아니라 <b>순환</b>입니다. 어느 쪽이 먼저 실행되는지는 루프의 <b>현재 위치</b>에 따라 달라집니다.</p>
+<pre>// 메인 모듈: 실행 순서가 비결정적
+setTimeout(() =&gt; console.log('timeout'), 0);
+setImmediate(() =&gt; console.log('immediate'));
+// → 루프 진입 시 1ms가 지났으면 timeout 먼저, 아니면 immediate 먼저
+
+// I/O 콜백 안(poll 단계): 항상 immediate가 먼저
+require('fs').readFile(__filename, () =&gt; {
+  setTimeout(() =&gt; console.log('timeout'), 0);
+  setImmediate(() =&gt; console.log('immediate'));
+}); // → immediate, timeout (poll 다음이 바로 check라서)</pre></div>
+
+<div class="card"><b>Q2. timer 3, pending 3, immediate 3이면 한 바퀴에 9개?</b>
+<p><span class="ok">네, 루프 한 바퀴(iteration)에 9개 모두 실행됩니다.</span> timers(만료된 것 3) → pending 3 → poll → check 3 순이고, 콜백 하나가 끝날 때마다 nextTick·microtask 큐를 비웁니다.</p>
+<p>조건: 타이머는 <b>이미 만료된 것만</b> 실행되고, 해당 단계 실행 중에 새로 등록된 timer/immediate는 다음 바퀴로 넘어갑니다. pending 단계는 사용자 코드가 직접 채우는 큐가 아니라, 지연된 일부 TCP 오류 콜백 같은 내부용 큐입니다.</p></div>
+
+<div class="card"><b>Q3. poll은 아직 응답이 오지 않은 요청까지 기다렸다가 처리하나?</b>
+<p><span class="bad">아니요.</span> poll은 <b>타임아웃을 정해 두고</b> 기다립니다(<code>epoll_wait(timeout)</code>).</p>
+<ul>
+<li>타임아웃 = 가장 가까운 타이머의 만료 시점까지 남은 시간. setImmediate가 대기 중이면 0(기다리지 않음). 타이머가 없고 활성 핸들만 있으면 무한대.</li>
+<li>이벤트가 <b>하나라도</b> 준비되거나 타임아웃이 되면 깨어나서, 그 순간 준비된 이벤트 묶음을 처리하고 다음 단계로 넘어갑니다.</li>
+<li>남은 요청은 다음 바퀴의 poll에서 처리합니다.</li>
+</ul>
+<p>모든 요청을 기다리는 방식이라면, 1초 걸리는 HTTP 요청 하나 때문에 그동안 만료된 타이머나 setImmediate가 전부 막힙니다. <code>server.listen()</code>처럼 끝나지 않는 소켓이 있으면 루프가 영영 다음 단계로 넘어가지 못합니다.</p>
+<pre>setTimeout(() =&gt; console.log('timer 10ms'), 10);
+require('https').get('https://example.com', () =&gt; console.log('http 응답'));
+// → timer 10ms 먼저 (poll이 10ms 타임아웃으로 깨어나 timers로 돌아감), 그 뒤 http 응답</pre></div>
+
 <h2>참고</h2>
 <ul><li>Node.js 공식 문서 — <i>The Node.js Event Loop</i> (nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick)</li>
 <li>Node 11 이전에는 microtask가 단계 사이에서만 비워졌으나, 11부터 콜백 단위로 비워지도록 브라우저와 동작이 맞춰졌습니다.</li></ul>
