@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Node.js 이벤트 루프 검토</title>
+<style>
+:root{--bg:#fafaf8;--fg:#1d1d1b;--muted:#666;--card:#fff;--line:#e3e1dc;--ok:#1f7a4d;--bad:#b3261e;--warn:#9a6700;--code:#f2f1ed;--accent:#2f5bd3}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--fg:#ecebe7;--muted:#a3a29d;--card:#1f1f1d;--line:#34332f;--ok:#5cc28d;--bad:#ff8a80;--warn:#e3b341;--code:#2a2a27;--accent:#8aa8ff}}
+:root[data-theme="dark"]{--bg:#161615;--fg:#ecebe7;--muted:#a3a29d;--card:#1f1f1d;--line:#34332f;--ok:#5cc28d;--bad:#ff8a80;--warn:#e3b341;--code:#2a2a27;--accent:#8aa8ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+main{max-width:860px;margin:0 auto;padding:32px 16px 64px}h1{font-size:1.7rem;margin:0 0 4px}h2{margin-top:2.2em;font-size:1.25rem;border-bottom:1px solid var(--line);padding-bottom:6px}
+.sub{color:var(--muted);margin:0 0 24px}table{width:100%;border-collapse:collapse;font-size:.93rem}th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;text-align:left}th{background:var(--code)}
+.ok{color:var(--ok);font-weight:700}.bad{color:var(--bad);font-weight:700}.warn{color:var(--warn);font-weight:700}
+pre,code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.88rem}code{background:var(--code);padding:1px 5px;border-radius:4px}
+pre{background:var(--code);padding:14px;border-radius:8px;overflow-x:auto;line-height:1.5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:14px 0}
+.loop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}.ph{border:1.5px solid var(--accent);border-radius:8px;padding:6px 10px;font-size:.9rem;background:var(--card)}.ph b{display:block}.arr{color:var(--muted)}
+.tablewrap{overflow-x:auto}
+</style></head><body><main>
+<h1>Node.js 비동기 작동 원리 — 개념 검토</h1>
+<p class="sub">질문에 담긴 각 주장을 하나씩 확인하고, 틀린 부분을 바로잡습니다. (Node.js 11 이상 기준)</p>
+
+<h2>1. 한눈에 보는 판정</h2>
+<div class="tablewrap"><table>
+<tr><th>#</th><th>주장</th><th>판정</th><th>실제 동작</th></tr>
+<tr><td>1</td><td>콜스택이 비었을 때만 큐에서 꺼내 온다</td><td class="ok">맞음</td><td>JS는 run-to-completion. 실행 중인 코드가 끝나 콜스택이 비어야 다음 콜백이 들어갑니다.</td></tr>
+<tr><td>2</td><td>nextTick → Promise(microtask) → libuv(macro) 순</td><td class="ok">대체로 맞음</td><td>우선순위는 맞습니다. 단, nextTick·microtask는 <b>libuv 콜백 하나가 끝날 때마다</b> 끼어들어 실행됩니다.</td></tr>
+<tr><td>3</td><td>한 틱에 하나만 꺼내고, 콜스택이 비면 다시 꺼낸다</td><td class="bad">틀림</td><td>nextTick·microtask 큐는 <b>빌 때까지 전부</b> 비웁니다. libuv 단계(phase)도 그 단계의 큐에 쌓인 콜백을 <b>전부</b>(시스템 한도까지) 실행한 뒤 다음 단계로 넘어갑니다.</td></tr>
+<tr><td>4</td><td>Macro는 6개 큐: immediate → timer → pending → exit → system call</td><td class="bad">틀림</td><td>순서와 이름이 다릅니다: <b>timers → pending callbacks → idle/prepare → poll → check(setImmediate) → close callbacks</b>. "exit" 단계는 없습니다(<code>close</code> 콜백 단계가 있음).</td></tr>
+<tr><td>5</td><td>immediate 3개 → 하나 실행 후 끊기고, 다음 틱에 또 하나</td><td class="bad">틀림</td><td>check 단계에서 <b>3개 모두</b> 같은 루프 회차에 실행됩니다(사이사이 microtask 비우기). 단, check 실행 중에 새로 등록된 setImmediate는 다음 회차로 미뤄집니다.</td></tr>
+<tr><td>6</td><td>시스템 콜 여러 개 → 처음 도착한 응답 하나만 처리 후 다음 틱</td><td class="bad">틀림</td><td>poll 단계는 <b>그 시점까지 완료된 I/O 이벤트를 모두</b> 처리합니다. 한 개만 처리하고 넘어가지 않습니다.</td></tr>
+</table></div>
+
+<h2>2. 올바른 이벤트 루프 모델</h2>
+<div class="loop">
+<span class="ph"><b>① timers</b>setTimeout / setInterval</span><span class="arr">→</span>
+<span class="ph"><b>② pending</b>지연된 일부 시스템 오류 콜백</span><span class="arr">→</span>
+<span class="ph"><b>③ idle/prepare</b>내부용</span><span class="arr">→</span>
+<span class="ph"><b>④ poll</b>I/O 완료 콜백, 대기</span><span class="arr">→</span>
+<span class="ph"><b>⑤ check</b>setImmediate</span><span class="arr">→</span>
+<span class="ph"><b>⑥ close</b>socket.on('close')</span><span class="arr">↺</span>
+</div>
+<div class="card">
+<b>핵심 규칙</b>
+<ol>
+<li>각 단계는 자기 FIFO 큐의 콜백을 <b>모두</b> 실행한다 (혹은 libuv 한도에 도달할 때까지).</li>
+<li>libuv 콜백 <b>하나</b>가 끝날 때마다(콜스택이 빌 때마다) → <code>process.nextTick</code> 큐 전부 → Promise microtask 큐 전부를 비운다. 비우는 도중 새로 추가된 것도 계속 처리한다.</li>
+<li>즉 "하나씩"인 것은 <b>macrotask 콜백 실행 단위</b>이지, "한 틱에 하나만 꺼낸다"가 아니다.</li>
+</ol>
+<p style="margin:0">⚠ 용어 주의: <code>process.nextTick</code>의 "tick"은 이벤트 루프 한 바퀴가 아니라 "현재 작업 직후"라는 뜻입니다. 루프 한 바퀴는 보통 <i>iteration</i>이라고 부릅니다.</p>
+</div>
+
+<h2>3. 주장 5 검증 — setImmediate 3개</h2>
+<pre>setImmediate(() =&gt; { console.log('imm1'); Promise.resolve().then(() =&gt; console.log('micro1')); });
+setImmediate(() =&gt; console.log('imm2'));
+setImmediate(() =&gt; {
+  console.log('imm3');
+  setImmediate(() =&gt; console.log('imm4 (다음 회차)'));
+});</pre>
+<pre>imm1
+micro1            ← 콜백 하나 끝날 때마다 microtask 비움
+imm2              ← 같은 check 단계에서 계속 실행
+imm3
+imm4 (다음 회차)  ← check 도중 등록된 건 다음 루프로</pre>
+<p>질문의 모델대로라면 imm1 다음에 루프가 끊기고 timers·poll을 한 바퀴 돈 뒤 imm2가 나와야 하지만, 실제로는 한 check 단계 안에서 연속 실행됩니다.</p>
+
+<h2>4. 주장 6 검증 — I/O 여러 개</h2>
+<ul>
+<li>네트워크 I/O는 OS의 epoll/kqueue/IOCP로, 파일 I/O·DNS·crypto 일부는 libuv 스레드풀로 처리됩니다.</li>
+<li>poll 단계에 들어오면 libuv는 <b>준비된 이벤트 목록을 한 번에</b> 받아서 각 콜백을 차례로 실행합니다(각 콜백 뒤 microtask 비움).</li>
+<li>처리 순서는 "요청한 순서"가 아니라 "완료되어 준비된 순서"입니다. 아직 완료되지 않은 I/O만 다음 회차로 넘어갑니다.</li>
+<li>poll 큐가 비면: setImmediate가 있으면 check로 바로 넘어가고, 없으면 가장 가까운 타이머 만료 시점까지 대기(block)합니다.</li>
+</ul>
+
+<h2>5. 정정된 요약문</h2>
+<div class="card">
+콜스택이 비면 Node는 <code>process.nextTick</code> 큐를 <b>전부</b>, 이어서 Promise microtask 큐를 <b>전부</b> 비운다.
+그다음 libuv 이벤트 루프가 <b>timers → pending → idle/prepare → poll → check → close</b> 순으로 단계를 돈다.
+각 단계는 해당 큐의 콜백을 <b>모두</b> 실행하며, 콜백 하나가 끝날 때마다 nextTick·microtask 큐를 다시 전부 비운다.
+setImmediate 3개는 한 check 단계에서 연속 실행되고, poll 단계는 완료된 I/O 응답을 모두 처리한다.
+</div>
+
+<h2>참고</h2>
+<ul><li>Node.js 공식 문서 — <i>The Node.js Event Loop</i> (nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick)</li>
+<li>Node 11 이전에는 microtask가 단계 사이에서만 비워졌으나, 11부터 콜백 단위로 비워지도록 브라우저와 동작이 맞춰졌습니다.</li></ul>
+</main></body></html>
