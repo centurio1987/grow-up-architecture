@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 45,
+  "next_seq": 46,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -283,8 +283,8 @@
       "reason_hash": "7ea30e4ca38ed4f690cf6f41d05e90e4e414b9ee",
       "goal": "명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)",
       "goal_hash": "2b8f59a4e15a7ca4211ee31b10d06e8584f4e1dd",
-      "memo": "결정: 구현 코드는 Java·TypeScript·Rust 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/<슬러그>/, 명세 id system-design-guide (준비안 5절 1·2)",
-      "memo_hash": "4b8b73ee714f8c8283bca7206d612f377d288fe9",
+      "memo": "결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/",
+      "memo_hash": "14f669fc15b31a969ac092a6ac9b1622f9d45b59",
       "parent": "KAN-002-4FZX1V"
     },
     "KAN-002.2-4E05GD": {
@@ -345,6 +345,17 @@
     "KAN-002.3-8DTJ6W"
   ],
   "recent": [
+    {
+      "seq": 45,
+      "t": "2026-11-13T20:32",
+      "a": "ai",
+      "id": "KAN-002.1-7YT11M",
+      "op": "edit",
+      "w": "835640",
+      "field": "memo",
+      "before": "결정: 구현 코드는 Java·TypeScript·Rust 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/<슬러그>/, 명세 id system-design-guide (준비안 5절 1·2)",
+      "after": "결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/"
+    },
     {
       "seq": 44,
       "t": "2026-11-13T20:32",
