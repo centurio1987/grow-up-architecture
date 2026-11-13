@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 44,
+  "next_seq": 45,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -263,8 +263,8 @@
       "reason_hash": "fe581ff894e106262a3cc290dabf8779c3e0d182",
       "goal": "system-design-guide 명세가 서고 파일럿 두 편과 1차 12편이 게이트를 통과해 발행된다",
       "goal_hash": "a585b6dee35242768729f7c0ddf5e14d78011638",
-      "memo": "근거: pattern-guide/research/ 의 system-design-guide-plan-2026-11-13.md(준비안, 결정 네 가지는 5절) · system-design-cases-2026-11-13.md(후보 75건) · live-viewer-count-2026-11-13.md(파일럿 1 노트)",
-      "memo_hash": "3a21a033217903689386c97ce9dfde4b98115e4b"
+      "memo": "근거 문서 셋은 pattern-guide/research/ 의 *-2026-11-13.md(준비안·사례 목록·파일럿 1 노트)",
+      "memo_hash": "60ccb1cbbaff7dba536d4928d20d8fef34ebc019"
     },
     "KAN-002.1-7YT11M": {
       "col": "todo",
@@ -345,6 +345,17 @@
     "KAN-002.3-8DTJ6W"
   ],
   "recent": [
+    {
+      "seq": 44,
+      "t": "2026-11-13T20:32",
+      "a": "ai",
+      "id": "KAN-002-4FZX1V",
+      "op": "edit",
+      "w": "835640",
+      "field": "memo",
+      "before": "근거: pattern-guide/research/ 의 system-design-guide-plan-2026-11-13.md(준비안, 결정 네 가지는 5절) · system-design-cases-2026-11-13.md(후보 75건) · live-viewer-count-2026-11-13.md(파일럿 1 노트)",
+      "after": "근거 문서 셋은 pattern-guide/research/ 의 *-2026-11-13.md(준비안·사례 목록·파일럿 1 노트)"
+    },
     {
       "seq": 43,
       "t": "2026-11-13T20:32",
