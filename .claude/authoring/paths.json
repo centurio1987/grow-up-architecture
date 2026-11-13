@@ -7,7 +7,8 @@
     "tracks": {
       "gof-guide": "design-pattern-guide",
       "analysis-guide": "ddd-analysis-pattern-guide",
-      "reference-note": "reference"
+      "reference-note": "reference",
+      "system-design-guide": "system-design-guide"
     },
     "research": "pattern-guide/research",
     "gate_results": "pattern-guide/gate-results.jsonl",
@@ -22,7 +23,8 @@
   "templates": {
     "gof-guide-canvas": ".claude/skills/design-pattern-guide/gof-guide-canvas.md",
     "analysis-guide-canvas": ".claude/skills/design-pattern-guide/analysis-guide-canvas.md",
-    "reference-note-canvas": ".claude/skills/design-pattern-guide/reference-note-canvas.md"
+    "reference-note-canvas": ".claude/skills/design-pattern-guide/reference-note-canvas.md",
+    "system-design-guide-canvas": ".claude/skills/design-pattern-guide/system-design-guide-canvas.md"
   },
   "commands": {
     "check": "python3 scripts/check-guides.py --all {file}",
