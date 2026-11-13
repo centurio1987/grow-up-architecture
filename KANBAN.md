@@ -58,7 +58,7 @@
   - 이유: 명세가 없으면 파일럿을 쓸 기준과 게이트 채점 기준이 없고, 트랙만 먼저 넣으면 검사기가 spec 없음으로 멈춘다
   - 목표: 명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)
   - 메모: 결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/
-  - 실행 문서: KANBAN/cards/KAN-002.1-7YT11M.md (2/4 · 최근 11-13)
+  - 실행 문서: KANBAN/cards/KAN-002.1-7YT11M.md (3/4 · 최근 11-13)
   - 계획 리포트: KANBAN/reports/KAN-002.1-7YT11M.report.html (낡음)
   - 원문:
     ```text
