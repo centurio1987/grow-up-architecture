@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-09-22T06:25:06.737Z",
+  "structure": {
+    "sections": 15,
+    "artifacts": 14,
+    "sources": 20,
+    "images": [
+      {
+        "loaded": true,
+        "alt": true
+      },
+      {
+        "loaded": true,
+        "alt": true
+      },
+      {
+        "loaded": true,
+        "alt": true
+      },
+      {
+        "loaded": true,
+        "alt": true
+      }
+    ],
+    "duplicateIds": [],
+    "brokenAnchors": [],
+    "overflow": false,
+    "words": 24644
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 390
+  },
+  "decisionCombinations": 8,
+  "interactions": [
+    "filter",
+    "expand/collapse",
+    "8 decision combinations",
+    "checklist",
+    "worksheet download",
+    "print expansion"
+  ],
+  "runtimeErrors": [],
+  "externalRequests": [],
+  "sqlExecution": "Not run: PostgreSQL executable unavailable. SQL is an educational example, not a production enforcement layer."
+}
