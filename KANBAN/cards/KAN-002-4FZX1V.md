@@ -45,9 +45,15 @@ work 하나가 하위 카드 하나다. 각 하위 카드가 자기 실행 문�
 - [ ] `S3` 1차 12편 집필 — `KAN-002.3-8DTJ6W`. 완료 기준: 그 카드가 완료되고 인덱스에 이 계열이 선다
 
 ## 검증
-<!-- 무엇을 실행해 무엇이 나오면 이 카드가 끝난 것인가. -->
+```
+python3 ~/.claude/skills/manage-kanban/scripts/kanban.py tree . --card KAN-002-4FZX1V   # 하위 셋 모두 [완료]
+python3 scripts/check-guides.py --all --compile --run                                   # 새 트랙 포함 최신본 전부 0 오류
+python3 scripts/check-guides.py --gates --pointers --derived                            # 게이트 PASS · 포인터 최신 · HTML fresh
+```
+**사람 판정**: 파일럿 회고에서 명세를 고칠 범위와 1차 12편 목록의 확정. 둘 다 `KAN-002.2` 검토에서 정한다.
 
 ## 수행 내역
 <!-- KANBAN:LOG append-only — 아래로만 덧붙인다. 위를 고치지 않는다. -->
 - 2026-11-13T20:35 · s:298c14ef — `전략` 섹션 교체
 - 2026-11-13T20:35 · s:298c14ef — `실행 계획` 섹션 교체
+- 2026-11-13T20:35 · s:298c14ef — `검증` 섹션 교체
