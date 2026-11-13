@@ -1,0 +1,253 @@
+{
+  "format": "teaching-external-view/1",
+  "standardStatus": "교육용 형식이며 ANSI/SPARC 표준 직렬화 형식이 아니다. 필드의 의미와 제약이 규범적이다.",
+  "views": [
+    {
+      "id": "E00",
+      "name": "OfferChoice",
+      "audience": "BUYER",
+      "purpose": "선택 가능한 상품과 가격 조건 확인",
+      "inputs": [],
+      "rowPredicate": "catalog.offerable = true",
+      "grain": "one row per productId",
+      "fields": [
+        {
+          "name": "productId",
+          "type": "Identity",
+          "required": true,
+          "meaning": "선택 상품 식별",
+          "source": "Catalog.productId"
+        },
+        {
+          "name": "name",
+          "type": "ProductName",
+          "required": true,
+          "meaning": "이 revision에서의 상품 이름",
+          "source": "Catalog.name"
+        },
+        {
+          "name": "unitPriceKrw",
+          "type": "UnitPrice",
+          "required": true,
+          "meaning": "이 revision에서의 KRW 단가",
+          "source": "Catalog.unitPriceKrw"
+        },
+        {
+          "name": "offerRevision",
+          "type": "Revision",
+          "required": true,
+          "meaning": "상품의 이름·가격·판매가능성 변경마다 바뀌는 불투명 토큰",
+          "source": "Catalog.revision"
+        }
+      ],
+      "order": "productId ascending",
+      "freshness": "카탈로그 응답 시점; 주문 접수를 보장하지 않음",
+      "writePolicy": "read-only; 별도 PlaceOrder 명령",
+      "sources": [
+        "SC01",
+        "SC08",
+        "A07"
+      ]
+    },
+    {
+      "id": "E01",
+      "name": "BuyerOrderDetail",
+      "audience": "BUYER",
+      "purpose": "본인 주문 내용 확인 및 취소 판단",
+      "inputs": [
+        "orderId",
+        "trusted actor.id"
+      ],
+      "rowPredicate": "Order.id = orderId AND Order.buyerId = actor.id",
+      "grain": "one order with ordered lines",
+      "fields": [
+        {
+          "name": "orderId",
+          "type": "Identity",
+          "required": true,
+          "meaning": "주문 식별",
+          "source": "Order.id"
+        },
+        {
+          "name": "placedAt",
+          "type": "Instant",
+          "required": true,
+          "meaning": "가격 스냅샷을 수락하여 접수를 결정한 서버 시각; 응답 시각 아님",
+          "source": "Order.placedAt"
+        },
+        {
+          "name": "state",
+          "type": "OrderState",
+          "required": true,
+          "meaning": "현재 처리 상태",
+          "source": "Order.state"
+        },
+        {
+          "name": "version",
+          "type": "RevisionNumber",
+          "required": true,
+          "meaning": "현재 판단의 변경 토큰",
+          "source": "storage revision metadata"
+        },
+        {
+          "name": "lines",
+          "type": "OrderLineView[1..20]",
+          "required": true,
+          "meaning": "lineNo 순의 접수 항목",
+          "source": "Order.lines"
+        },
+        {
+          "name": "totalKrw",
+          "type": "Total",
+          "required": true,
+          "meaning": "접수 항목 금액 합",
+          "source": "SUM(quantity * unitPriceKrw)"
+        },
+        {
+          "name": "canCancel",
+          "type": "Boolean",
+          "required": true,
+          "meaning": "이 조회 결과에 따르면 취소 가능한가",
+          "source": "state = PLACED; ownership already filtered"
+        }
+      ],
+      "order": "lines by lineNo ascending",
+      "freshness": "one primary DB statement snapshot",
+      "writePolicy": "all fields read-only; CancelOrder is a separate command",
+      "notFound": "missing and non-owner both map to NotFound",
+      "sources": [
+        "SC02",
+        "SC03",
+        "SC07"
+      ]
+    },
+    {
+      "id": "E02",
+      "name": "SellerPendingQueue",
+      "audience": "SELLER",
+      "purpose": "오래된 접수 주문부터 확정",
+      "inputs": [
+        "limit 1..100 default 20",
+        "optional after=(placedAt,orderId)",
+        "trusted seller role"
+      ],
+      "rowPredicate": "Order.state = PLACED; single-store A01",
+      "grain": "one row per order",
+      "fields": [
+        {
+          "name": "orderId",
+          "type": "Identity",
+          "required": true,
+          "meaning": "처리 대상 주문",
+          "source": "Order.id"
+        },
+        {
+          "name": "placedAt",
+          "type": "Instant",
+          "required": true,
+          "meaning": "접수 결정 시각",
+          "source": "Order.placedAt"
+        },
+        {
+          "name": "version",
+          "type": "RevisionNumber",
+          "required": true,
+          "meaning": "확정 판단 토큰",
+          "source": "storage revision metadata"
+        },
+        {
+          "name": "lines",
+          "type": "OrderLineView[1..20]",
+          "required": true,
+          "meaning": "처리에 필요한 접수 항목",
+          "source": "Order.lines"
+        },
+        {
+          "name": "totalKrw",
+          "type": "Total",
+          "required": true,
+          "meaning": "해당 주문의 접수 금액",
+          "source": "SUM(quantity * unitPriceKrw)"
+        }
+      ],
+      "order": "(placedAt,orderId) ascending; keyset pagination",
+      "freshness": "각 페이지는 조회 시점의 결과; 여러 페이지가 한 스냅샷이라는 보장은 없음",
+      "writePolicy": "read-only; ConfirmOrder is a separate command",
+      "excludes": [
+        "buyerId",
+        "creation request key",
+        "fingerprint"
+      ],
+      "sources": [
+        "SC04",
+        "SC05",
+        "A01",
+        "L04"
+      ]
+    }
+  ],
+  "typeCatalog": {
+    "Identity": "opaque identity; UUID chosen for transport",
+    "Instant": "UTC millisecond instant",
+    "Boolean": "true or false",
+    "Quantity": "integer 1..99",
+    "UnitPrice": "integer 0..1000000 KRW",
+    "LineNo": "integer 1..20",
+    "ProductName": "1..100 Unicode code points",
+    "Revision": "ASCII token matching ^[A-Za-z0-9._-]{1,100}$",
+    "RevisionNumber": "integer 1..2 under A03",
+    "OrderState": [
+      "PLACED",
+      "CONFIRMED",
+      "CANCELLED"
+    ],
+    "LineTotal": "integer 0..99000000 KRW",
+    "Total": "integer 0..1980000000 KRW"
+  },
+  "sharedTypes": {
+    "OrderLineView": [
+      {
+        "name": "lineNo",
+        "type": "LineNo",
+        "required": true,
+        "meaning": "주문 내 항목 번호",
+        "source": "OrderLine.lineNo"
+      },
+      {
+        "name": "productId",
+        "type": "Identity",
+        "required": true,
+        "meaning": "원 상품 식별",
+        "source": "OrderLine.productId"
+      },
+      {
+        "name": "productName",
+        "type": "ProductName",
+        "required": true,
+        "meaning": "접수 당시 이름",
+        "source": "OrderLine.productName"
+      },
+      {
+        "name": "quantity",
+        "type": "Quantity",
+        "required": true,
+        "meaning": "접수 수량",
+        "source": "OrderLine.quantity"
+      },
+      {
+        "name": "unitPriceKrw",
+        "type": "UnitPrice",
+        "required": true,
+        "meaning": "접수 단가",
+        "source": "OrderLine.unitPriceKrw"
+      },
+      {
+        "name": "lineTotalKrw",
+        "type": "LineTotal",
+        "required": true,
+        "meaning": "수량×접수단가",
+        "source": "quantity * unitPriceKrw"
+      }
+    ]
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "format": "teaching-acceptance-tests/1",
+  "cases": [
+    {
+      "id": "T01",
+      "given": "valid two items + accepted offers",
+      "when": "place then buyerView",
+      "then": "2 lines, 8000 KRW, PLACED v1, canCancel",
+      "sources": [
+        "SC01",
+        "E01",
+        "R01",
+        "R06"
+      ]
+    },
+    {
+      "id": "T02",
+      "given": "order snapshot already captured",
+      "when": "mutate original offer price/name",
+      "then": "order still displays accepted name/price",
+      "sources": [
+        "SC02",
+        "R03"
+      ]
+    },
+    {
+      "id": "T03",
+      "given": "PLACED v1",
+      "when": "cancel(1)",
+      "then": "CANCELLED v2; repeated cancel or confirm conflicts",
+      "sources": [
+        "SC03",
+        "R02"
+      ]
+    },
+    {
+      "id": "T04",
+      "given": "PLACED v1",
+      "when": "confirm(1)",
+      "then": "CONFIRMED v2; cancel conflicts",
+      "sources": [
+        "SC04",
+        "R02"
+      ]
+    },
+    {
+      "id": "T05",
+      "given": "two clients read v1",
+      "when": "conditional saves compete",
+      "then": "exactly one succeeds",
+      "sources": [
+        "SC05",
+        "R11"
+      ],
+      "needs": "real PostgreSQL two-session integration test"
+    },
+    {
+      "id": "T06",
+      "given": "same buyer/key and canonical body",
+      "when": "retry after commit; price changed",
+      "then": "same order and acceptance receipt",
+      "sources": [
+        "SC06",
+        "R09"
+      ],
+      "needs": "DB application protocol integration test"
+    },
+    {
+      "id": "T07",
+      "given": "wrong buyer",
+      "when": "project/read/cancel",
+      "then": "not found and no private data",
+      "sources": [
+        "SC07",
+        "R04"
+      ]
+    },
+    {
+      "id": "T08",
+      "given": "revision differs",
+      "when": "place",
+      "then": "OFFER_CHANGED; no new persistence",
+      "sources": [
+        "SC08",
+        "R08"
+      ]
+    },
+    {
+      "id": "T09",
+      "given": "fault after first line insert",
+      "when": "transaction abort",
+      "then": "no header, lines or claim remain",
+      "sources": [
+        "SC08",
+        "R10"
+      ],
+      "needs": "real PostgreSQL fault injection"
+    },
+    {
+      "id": "T10",
+      "given": "model with missing rule owner",
+      "when": "compile",
+      "then": "no DDL success output",
+      "sources": [
+        "R01"
+      ]
+    }
+  ]
+}

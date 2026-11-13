@@ -1,0 +1,36 @@
+{
+  "schema": "conceptual-schema.json",
+  "entity": "Order",
+  "value": {
+    "id": "30000000-0000-4000-8000-000000000001",
+    "buyerId": "10000000-0000-4000-8000-000000000001",
+    "placedAt": "2026-10-15T01:00:01.000Z",
+    "state": "PLACED",
+    "lines": [
+      {
+        "lineNo": 1,
+        "productId": "20000000-0000-4000-8000-000000000001",
+        "productName": "우유식빵",
+        "quantity": 2,
+        "unitPriceKrw": 3000,
+        "offerRevision": "p1-r7"
+      },
+      {
+        "lineNo": 2,
+        "productId": "20000000-0000-4000-8000-000000000002",
+        "productName": "버터스콘",
+        "quantity": 1,
+        "unitPriceKrw": 2000,
+        "offerRevision": "p2-r3"
+      }
+    ]
+  },
+  "derived": {
+    "totalKrw": 8000
+  },
+  "excludedImplementationMetadata": [
+    "version",
+    "requestKey",
+    "fingerprint"
+  ]
+}

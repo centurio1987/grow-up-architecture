@@ -1,0 +1,25 @@
+{
+  "format": "teaching-storage-policy/1",
+  "target": "PostgreSQL 18",
+  "identity": "uuid",
+  "includeBuyerHistoryIndex": false,
+  "isolation": "READ COMMITTED",
+  "tableStrategy": "separate-lines",
+  "time": "timestamptz(3); serialize UTC ISO milliseconds",
+  "money": "integer KRW; computed total <= 1980000000",
+  "retry": "per-buyer UUID request key; SHA-256 of explicit canonical tuple; permanent while order retained",
+  "generationVersion": "2.0",
+  "ruleOwners": {
+    "R01": "factory + transaction; scalar checks do not require any child row",
+    "R02": "domain + conditional write",
+    "R03": "immutable factory snapshots + write-path restriction",
+    "R04": "authenticated app policy and owner predicates",
+    "R07-sequence": "factory; PK/range do not force consecutive numbers",
+    "R08": "catalog comparison",
+    "R09-canonicalization": "application canonical request hashing",
+    "R09-owner": "submission.buyerId equals order.buyerId via trusted application input",
+    "R10": "application transaction",
+    "R11": "conditional UPDATE",
+    "R12": "write-path restriction"
+  }
+}

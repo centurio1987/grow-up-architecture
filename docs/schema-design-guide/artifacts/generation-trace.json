@@ -1,0 +1,35 @@
+{
+  "sql": "-- Generated from a reviewed relational plan + storage policy. PostgreSQL 18.\n-- Not a migration. Application-owned rules are listed in the trace.\n\nCREATE TABLE sales_order (\n  id uuid NOT NULL,\n  buyer_id uuid NOT NULL,\n  placed_at timestamptz(3) NOT NULL,\n  state text NOT NULL CHECK (state IN ('PLACED','CONFIRMED','CANCELLED')),\n  version smallint NOT NULL CHECK (version BETWEEN 1 AND 2),\n  PRIMARY KEY (id),\n  CHECK ((state = 'PLACED' AND version = 1) OR (state IN ('CONFIRMED','CANCELLED') AND version = 2))\n);\n\nCREATE TABLE order_line (\n  order_id uuid NOT NULL,\n  line_no smallint NOT NULL CHECK (line_no BETWEEN 1 AND 20),\n  product_id uuid NOT NULL,\n  product_name varchar(100) NOT NULL CHECK (char_length(product_name) BETWEEN 1 AND 100),\n  quantity smallint NOT NULL CHECK (quantity BETWEEN 1 AND 99),\n  unit_price_krw integer NOT NULL CHECK (unit_price_krw BETWEEN 0 AND 1000000),\n  offer_revision varchar(100) NOT NULL CHECK (offer_revision ~ '^[A-Za-z0-9._-]{1,100}$'),\n  PRIMARY KEY (order_id, line_no),\n  UNIQUE (order_id, product_id),\n  FOREIGN KEY (order_id) REFERENCES sales_order (id)\n);\n\nCREATE TABLE order_submission (\n  buyer_id uuid NOT NULL,\n  request_key uuid NOT NULL,\n  request_fingerprint char(64) NOT NULL CHECK (request_fingerprint ~ '^[a-f0-9]{64}$'),\n  order_id uuid NOT NULL,\n  PRIMARY KEY (buyer_id, request_key),\n  UNIQUE (order_id),\n  FOREIGN KEY (order_id) REFERENCES sales_order (id) DEFERRABLE INITIALLY DEFERRED\n);\n\nCREATE INDEX pending_orders_idx ON sales_order (placed_at, id) WHERE state = 'PLACED';\n",
+  "trace": [
+    "C01 + P06 revision strategy -> sales_order.id (uuid)",
+    "C01 + P06 revision strategy -> sales_order.buyer_id (uuid)",
+    "C01 + P06 revision strategy -> sales_order.placed_at (timestamptz(3))",
+    "C01 + P06 revision strategy -> sales_order.state (text)",
+    "C01 + P06 revision strategy -> sales_order.version (smallint)",
+    "C02 -> order_line.order_id (uuid)",
+    "C02 -> order_line.line_no (smallint)",
+    "C02 -> order_line.product_id (uuid)",
+    "C02 -> order_line.product_name (varchar(100))",
+    "C02 -> order_line.quantity (smallint)",
+    "C02 -> order_line.unit_price_krw (integer)",
+    "C02 -> order_line.offer_revision (varchar(100))",
+    "R09 retry policy P07; not a business entity -> order_submission.buyer_id (uuid)",
+    "R09 retry policy P07; not a business entity -> order_submission.request_key (uuid)",
+    "R09 retry policy P07; not a business entity -> order_submission.request_fingerprint (char(64))",
+    "R09 retry policy P07; not a business entity -> order_submission.order_id (uuid)",
+    "E02 -> pending_orders_idx"
+  ],
+  "obligations": [
+    "R01: factory + transaction; scalar checks do not require any child row",
+    "R02: domain + conditional write",
+    "R03: immutable factory snapshots + write-path restriction",
+    "R04: authenticated app policy and owner predicates",
+    "R07-sequence: factory; PK/range do not force consecutive numbers",
+    "R08: catalog comparison",
+    "R09-canonicalization: application canonical request hashing",
+    "R09-owner: submission.buyerId equals order.buyerId via trusted application input",
+    "R10: application transaction",
+    "R11: conditional UPDATE",
+    "R12: write-path restriction"
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "format": "teaching-rule-trace/1",
+  "rules": [
+    {
+      "rule": "R01",
+      "source": [
+        "SC01",
+        "SC07"
+      ],
+      "meaning": "Order.lines size in 1..20",
+      "externalApiDomain": "U01 input size; Order.place",
+      "storage": "no min-child guarantee; atomic insert",
+      "verification": "T01,T09",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R02",
+      "source": [
+        "SC03",
+        "SC04",
+        "SC05"
+      ],
+      "meaning": "Only PLACED -> CANCELLED or CONFIRMED",
+      "externalApiDomain": "U02/U03; cancel/confirm",
+      "storage": "conditional UPDATE; static enum alone insufficient",
+      "verification": "T03,T04,T05",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R03",
+      "source": [
+        "SC02"
+      ],
+      "meaning": "OrderLine productId/name/quantity/unitPrice/offerRevision never change after acceptance",
+      "externalApiDomain": "E01 historical lines; frozen snapshot",
+      "storage": "order_line snapshot + restricted writes",
+      "verification": "T02",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R04",
+      "source": [
+        "SC07"
+      ],
+      "meaning": "Buyer may read/cancel only orders whose buyerId = actor.id; only SELLER may confirm/list",
+      "externalApiDomain": "E01 owner filter; role policy",
+      "storage": "owner predicate; SELLER enforced by service",
+      "verification": "T07",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R05",
+      "source": [
+        "SC01",
+        "SC07"
+      ],
+      "meaning": "quantity 1..99; price 0..1000000; name 1..100 Unicode code points; revision 1..100 ASCII token",
+      "externalApiDomain": "OpenAPI bounds; validation functions",
+      "storage": "scalar CHECK and NOT NULL",
+      "verification": "T01 + boundary unit tests",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R06",
+      "source": [
+        "SC02"
+      ],
+      "meaning": "totalKrw = sum(line.quantity * line.unitPriceKrw)",
+      "externalApiDomain": "totalKrw and lineTotalKrw projections",
+      "storage": "SUM over stored accepted values",
+      "verification": "T01,T02",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R07",
+      "source": [
+        "SC01",
+        "SC07"
+      ],
+      "meaning": "ProductId is unique within one order; lineNo is sequential 1..n",
+      "externalApiDomain": "U01 duplicate rejection; line factory",
+      "storage": "PK + UNIQUE; consecutive numbers via factory",
+      "verification": "duplicate + sequence tests",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R08",
+      "source": [
+        "SC08"
+      ],
+      "meaning": "All submitted expected revisions equal the accepted catalog snapshot revisions; products offerable",
+      "externalApiDomain": "U01 revision comparison; OfferChanged",
+      "storage": "catalog adapter; no local DB enforcement",
+      "verification": "T08",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R09",
+      "source": [
+        "SC06"
+      ],
+      "meaning": "Same buyer/key + same canonical request -> same acceptance receipt; different request -> conflict",
+      "externalApiDomain": "Idempotency-Key and historical receipt",
+      "storage": "submission PK + hash comparison + owner consistency",
+      "verification": "T06",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R10",
+      "source": [
+        "SC08"
+      ],
+      "meaning": "Order + all lines + submission record commit or roll back together",
+      "externalApiDomain": "success only after COMMIT",
+      "storage": "header/lines/submission one transaction",
+      "verification": "T09",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R11",
+      "source": [
+        "SC05"
+      ],
+      "meaning": "A transition based on version v succeeds only if stored state=PLACED and version=v",
+      "externalApiDomain": "expectedVersion; CONFLICT",
+      "storage": "state + version conditional writes",
+      "verification": "T05",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    },
+    {
+      "rule": "R12",
+      "source": [
+        "SC02"
+      ],
+      "meaning": "PlacedAt and acceptance snapshots remain fixed; current catalog is not historical truth",
+      "externalApiDomain": "acceptedAt/price immutable meaning",
+      "storage": "placed_at and accepted line snapshots",
+      "verification": "T02",
+      "integrationStatus": "real DB/HTTP checks not executed where required"
+    }
+  ]
+}

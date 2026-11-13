@@ -1,0 +1,203 @@
+{
+  "format": "teaching-relational-plan/1",
+  "tables": [
+    {
+      "name": "sales_order",
+      "source": "C01 + P06 revision strategy",
+      "columns": [
+        {
+          "name": "id",
+          "type": "Identity",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "buyer_id",
+          "type": "Identity",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "placed_at",
+          "type": "Instant",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "state",
+          "type": "State",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "version",
+          "type": "Version",
+          "required": true,
+          "checks": []
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "unique": [],
+      "foreignKeys": []
+    },
+    {
+      "name": "order_line",
+      "source": "C02",
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "Identity",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "line_no",
+          "type": "LineNo",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "product_id",
+          "type": "Identity",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "product_name",
+          "type": "Name",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "quantity",
+          "type": "Quantity",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "unit_price_krw",
+          "type": "Price",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "offer_revision",
+          "type": "Revision",
+          "required": true,
+          "checks": []
+        }
+      ],
+      "primaryKey": [
+        "order_id",
+        "line_no"
+      ],
+      "unique": [
+        [
+          "order_id",
+          "product_id"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "order_id"
+          ],
+          "table": "sales_order",
+          "target": [
+            "id"
+          ],
+          "deferrable": false
+        }
+      ]
+    },
+    {
+      "name": "order_submission",
+      "source": "R09 retry policy P07; not a business entity",
+      "columns": [
+        {
+          "name": "buyer_id",
+          "type": "Identity",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "request_key",
+          "type": "Identity",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "request_fingerprint",
+          "type": "Fingerprint",
+          "required": true,
+          "checks": []
+        },
+        {
+          "name": "order_id",
+          "type": "Identity",
+          "required": true,
+          "checks": []
+        }
+      ],
+      "primaryKey": [
+        "buyer_id",
+        "request_key"
+      ],
+      "unique": [
+        [
+          "order_id"
+        ]
+      ],
+      "foreignKeys": [
+        {
+          "columns": [
+            "order_id"
+          ],
+          "table": "sales_order",
+          "target": [
+            "id"
+          ],
+          "deferrable": true
+        }
+      ]
+    }
+  ],
+  "indexes": [
+    {
+      "name": "pending_orders_idx",
+      "table": "sales_order",
+      "keys": [
+        "placed_at",
+        "id"
+      ],
+      "where": "state = 'PLACED'",
+      "source": "E02"
+    },
+    {
+      "name": "buyer_orders_idx",
+      "table": "sales_order",
+      "keys": [
+        "buyer_id",
+        "placed_at",
+        "id"
+      ],
+      "optional": true,
+      "source": "future buyer history query; not needed by E01 id lookup"
+    }
+  ],
+  "unenforcedByDDL": {
+    "R01": "factory + transaction; scalar checks do not require any child row",
+    "R02": "domain + conditional write",
+    "R03": "immutable factory snapshots + write-path restriction",
+    "R04": "authenticated app policy and owner predicates",
+    "R07-sequence": "factory; PK/range do not force consecutive numbers",
+    "R08": "catalog comparison",
+    "R09-canonicalization": "application canonical request hashing",
+    "R09-owner": "submission.buyerId equals order.buyerId via trusted application input",
+    "R10": "application transaction",
+    "R11": "conditional UPDATE",
+    "R12": "write-path restriction"
+  }
+}
