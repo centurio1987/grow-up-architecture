@@ -264,7 +264,17 @@
       "goal": "system-design-guide 명세가 서고 파일럿 두 편과 1차 12편이 게이트를 통과해 발행된다",
       "goal_hash": "a585b6dee35242768729f7c0ddf5e14d78011638",
       "memo": "근거 문서 셋은 pattern-guide/research/ 의 *-2026-11-13.md(준비안·사례 목록·파일럿 1 노트)",
-      "memo_hash": "60ccb1cbbaff7dba536d4928d20d8fef34ebc019"
+      "memo_hash": "60ccb1cbbaff7dba536d4928d20d8fef34ebc019",
+      "scope": [
+        "pattern-guide/system-design-guide/**",
+        "pattern-guide/research/system-design-*",
+        "pattern-guide/research/live-viewer-count-*",
+        "pattern-guide/research/coupon-*",
+        ".claude/authoring/specs/system-design-guide/**",
+        ".claude/authoring/paths.json",
+        ".claude/authoring.lock.json",
+        ".claude/skills/design-pattern-guide/system-design-guide-canvas.md"
+      ]
     },
     "KAN-002.1-7YT11M": {
       "col": "todo",
