@@ -19,23 +19,6 @@
     ```
 
 ## 할 일
-- `KAN-002.1-7YT11M` system-design-guide 명세 등록 — 절 구성·작성법·검사 계약과 트랙 경로 — 생성:ai · 최종:ai · 갱신:2026-11-13
-  - 상위: `KAN-002-4FZX1V` (진행 중)
-  - 짧은 제목: 명세 등록
-  - 목적: 준비안 3절의 절 구성을 authoring-spec 으로 system-design-guide 명세(spec.md · spec.json · 캔버스)로 등록하고 paths.json 에 트랙을 더한다
-  - 이유: 명세가 없으면 파일럿을 쓸 기준과 게이트 채점 기준이 없고, 트랙만 먼저 넣으면 검사기가 spec 없음으로 멈춘다
-  - 목표: 명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)
-  - 메모: 결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/
-  - 실행 문서: KANBAN/cards/KAN-002.1-7YT11M.md (0/4 · 최근 11-13)
-  - 계획 리포트: KANBAN/reports/KAN-002.1-7YT11M.report.html
-  - 원문:
-    ```text
-    질문: 구현 코드는 TypeScript 한 언어 + 메모리 대역으로 실행 검증하는 방식으로 갈까요?
-    답변: 세 언어 유지
-    
-    질문: 저장 위치를 pattern-guide/system-design-guide/, 명세 id 를 system-design-guide 로 할까요?
-    답변: 그렇게 해
-    ```
 - `KAN-002.2-4E05GD` 파일럿 두 편과 회고 — RT-01 라이브 동시 시청자 수 · CT-01 선착순 쿠폰 발급 — 생성:ai · 최종:ai · 갱신:2026-11-13
   - 상위: `KAN-002-4FZX1V` (진행 중)
   - 짧은 제목: 파일럿 두 편과 회고
@@ -67,6 +50,23 @@
     * 시스템의 시나리오 설명
     * 시스템 개념도를 이해하기 위해, 개념도에 포함된 기술에 대한 상세 설명
     * 주요 구현 코드
+    ```
+- `KAN-002.1-7YT11M` system-design-guide 명세 등록 — 절 구성·작성법·검사 계약과 트랙 경로 — 생성:ai · 최종:ai · 갱신:2026-11-13
+  - 상위: `KAN-002-4FZX1V` (진행 중)
+  - 짧은 제목: 명세 등록
+  - 목적: 준비안 3절의 절 구성을 authoring-spec 으로 system-design-guide 명세(spec.md · spec.json · 캔버스)로 등록하고 paths.json 에 트랙을 더한다
+  - 이유: 명세가 없으면 파일럿을 쓸 기준과 게이트 채점 기준이 없고, 트랙만 먼저 넣으면 검사기가 spec 없음으로 멈춘다
+  - 목표: 명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)
+  - 메모: 결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/
+  - 실행 문서: KANBAN/cards/KAN-002.1-7YT11M.md (0/4 · 최근 11-13)
+  - 계획 리포트: KANBAN/reports/KAN-002.1-7YT11M.report.html (낡음)
+  - 원문:
+    ```text
+    질문: 구현 코드는 TypeScript 한 언어 + 메모리 대역으로 실행 검증하는 방식으로 갈까요?
+    답변: 세 언어 유지
+    
+    질문: 저장 위치를 pattern-guide/system-design-guide/, 명세 id 를 system-design-guide 로 할까요?
+    답변: 그렇게 해
     ```
 
 ## 검토
