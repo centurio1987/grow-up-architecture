@@ -2,7 +2,7 @@
 card: KAN-001-YXTC2C
 batch: 3
 created: 2026-09-27
-branch: KAN-001-YXTC2C
+branch: main
 status: 계획
 steps: S7
 ---
