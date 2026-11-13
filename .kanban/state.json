@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 42,
+  "next_seq": 43,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -286,6 +286,27 @@
       "memo": "결정: 구현 코드는 Java·TypeScript·Rust 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/<슬러그>/, 명세 id system-design-guide (준비안 5절 1·2)",
       "memo_hash": "4b8b73ee714f8c8283bca7206d612f377d288fe9",
       "parent": "KAN-002-4FZX1V"
+    },
+    "KAN-002.2-4E05GD": {
+      "col": "todo",
+      "title": "파일럿 두 편과 회고 — RT-01 라이브 동시 시청자 수 · CT-01 선착순 쿠폰 발급",
+      "verbatim": "질문: 남은 두 결정(파일럿 두 편, 칸반 카드로 관리)을 추천대로 정할까요?\n답변: 추천대로",
+      "생성": "ai",
+      "최종": "ai",
+      "갱신": "2026-11-13",
+      "title_hash": "7ce163c649dc7294395c0921f3545d545748523e",
+      "verbatim_hash": "df7ab06bfe288586f458bb02c9d437468479054f",
+      "short": "파일럿 두 편과 회고",
+      "short_hash": "ac974a333245b4ef3ee631f11bddce9cdf0ed076",
+      "purpose": "성격이 반대인 두 문제를 명세대로 써서 게이트를 통과시키고, 회고로 명세·언어당 250줄 상한·세 언어 출력 규약을 고친다",
+      "purpose_hash": "b68741e4eab2d2c75d986fec0c6efcdb95d127b1",
+      "reason": "명세는 산출물로 검증되기 전엔 추정이고, 근사·fan-out 형이나 정확·경합 형 한쪽에만 맞는 명세로 후보 75건을 쓰면 되돌리는 비용이 크다",
+      "reason_hash": "4cbc65659b80a65b1db24433a793a1c01b479a8c",
+      "goal": "두 편이 게이트 PASS 로 발행되고, 파일럿 2 리서치 노트와 회고를 반영한 명세 개정판이 나온다",
+      "goal_hash": "1451154f9850d25404da7346a2e891c0e50e4f68",
+      "memo": "파일럿 1 근거는 live-viewer-count-2026-11-13.md, 파일럿 2 재료는 사례 목록 C5 · C13~C16. 선정 이유는 사례 목록 3절",
+      "memo_hash": "4dbdfe2d070dea38c8c6037f930e9d02fb2cd095",
+      "parent": "KAN-002-4FZX1V"
     }
   },
   "order": [
@@ -298,9 +319,27 @@
     "KAN-001.7-4MRJ1B",
     "KAN-001-YXTC2C",
     "KAN-002-4FZX1V",
-    "KAN-002.1-7YT11M"
+    "KAN-002.1-7YT11M",
+    "KAN-002.2-4E05GD"
   ],
   "recent": [
+    {
+      "seq": 42,
+      "t": "2026-11-13T20:32",
+      "a": "ai",
+      "id": "KAN-002.2-4E05GD",
+      "op": "create",
+      "w": "835640",
+      "col": "todo",
+      "title": "파일럿 두 편과 회고 — RT-01 라이브 동시 시청자 수 · CT-01 선착순 쿠폰 발급",
+      "verbatim": "질문: 남은 두 결정(파일럿 두 편, 칸반 카드로 관리)을 추천대로 정할까요?\n답변: 추천대로",
+      "parent": "KAN-002-4FZX1V",
+      "short": "파일럿 두 편과 회고",
+      "purpose": "성격이 반대인 두 문제를 명세대로 써서 게이트를 통과시키고, 회고로 명세·언어당 250줄 상한·세 언어 출력 규약을 고친다",
+      "reason": "명세는 산출물로 검증되기 전엔 추정이고, 근사·fan-out 형이나 정확·경합 형 한쪽에만 맞는 명세로 후보 75건을 쓰면 되돌리는 비용이 크다",
+      "goal": "두 편이 게이트 PASS 로 발행되고, 파일럿 2 리서치 노트와 회고를 반영한 명세 개정판이 나온다",
+      "memo": "파일럿 1 근거는 live-viewer-count-2026-11-13.md, 파일럿 2 재료는 사례 목록 C5 · C13~C16. 선정 이유는 사례 목록 3절"
+    },
     {
       "seq": 41,
       "t": "2026-11-13T20:32",
