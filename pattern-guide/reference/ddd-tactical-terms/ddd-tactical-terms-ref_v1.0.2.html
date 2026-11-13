@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:e21fff8017669107532f7142a0cad845b2f5ce4b7a8cf42e5f4df691b9f96f84 -->
+<!-- guide-fp:6beaddae701a873b1c4870d37407b3186aadd16acdaff0f481a12f0a5d2a7d01 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -220,6 +220,43 @@ blockquote {
 
 blockquote > :last-child {
   margin-bottom: 0;
+}
+
+/* ── 머리 차례 · 접힌 풀이 (명세 1.5.0) ─────────────── */
+details.guide-toc {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+details.guide-toc > summary,
+details.answer > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+details.guide-toc ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+details.guide-toc ol ol {
+  margin-top: 0.15rem;
+}
+
+details.guide-toc li {
+  margin: 0.15rem 0;
+}
+
+details.answer {
+  margin: 0.75rem 0 1.25rem;
+}
+
+details.answer > blockquote {
+  margin-top: 0.5rem;
 }
 
 /* ── 코드 ─────────────────────────────────────────── */
@@ -452,17 +489,28 @@ tbody tr:last-child td {
 <body>
 <div class="guide">
 <main>
-<hr>
-<p>title: DDD 전술 용어
-slug: ddd-tactical-terms
-spec: reference-note
-spec_version: 1.0.0
-version: 1.0.2
-status: published
-date: 2026-11-13
-serves: [account, quantity, party, accountability, knowledge-level, transaction, posting-rule, measurement, observation, range, temporal-property]</p>
-<hr>
 <h1 id="ddd-전술-용어--상황-설정-표의-여덟-낱말을-원서-없이-읽는-법">DDD 전술 용어 — 상황 설정 표의 여덟 낱말을 원서 없이 읽는 법</h1>
+<details class="guide-toc" open>
+<summary>차례</summary>
+<ol>
+<li><a href="#이-문서가-답하는-것">이 문서가 답하는 것</a></li>
+<li><a href="#개념">개념</a>
+<ol>
+<li><a href="#bounded-context">Bounded Context</a></li>
+<li><a href="#aggregate">Aggregate</a></li>
+<li><a href="#aggregate-root">Aggregate Root</a></li>
+<li><a href="#entity">Entity</a></li>
+<li><a href="#value-object">Value Object</a></li>
+<li><a href="#id-참조">id 참조</a></li>
+<li><a href="#불변식">불변식</a></li>
+<li><a href="#repository">Repository</a></li>
+</ol>
+</li>
+<li><a href="#개념-사이의-관계">개념 사이의 관계</a></li>
+<li><a href="#가이드로-돌아가기">가이드로 돌아가기</a></li>
+<li><a href="#참고-자료">참고 자료</a></li>
+</ol>
+</details>
 <h2 id="이-문서가-답하는-것">이 문서가 답하는 것</h2>
 <p>분석 패턴 가이드는 「구현 예시」의 「상황 설정」 절에 표 하나를 싣습니다. 행 이름이 bounded context · 불변식의 위치 · root·entity·VO 배정 · 타 aggregate 참조 방식이고, Account 가이드는 총계정원장(General Ledger, 모든 계정의 거래를 모아 두는 장부)의 계정과 거래를, Quantity 가이드는 빵집 재고의 보유량을 그 표에 채워요. 표를 읽으려면 DDD(Domain-Driven Design, 도메인 주도 설계)의 전술 용어 여덟 개를 알아야 하는데, 그것은 두 가이드의 주제 밖이라 여기서 풉니다. 이 문서를 읽고 나면 그 표의 네 행이 각각 무엇을 정하는지, 그 자리가 왜 그 자리인지를 원서 없이 읽을 수 있어요.</p>
 <p>다루지 않는 것도 정해 둡니다. Account 나 Quantity 가 패턴으로 성립하는 조건, 비슷한 패턴과의 차이, 세 언어 구현 코드는 각 가이드에 있고 여기에는 없어요.</p>
@@ -566,11 +614,11 @@ Entry 의 계정은 열려 있고 통화가 같다    Account            checkPo
 </ul>
 <h2 id="가이드로-돌아가기">가이드로 돌아가기</h2>
 <ul>
-<li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.1.1.html#상황-설정">Account 가이드 「상황 설정」</a> — 표의 네 행이 이 문서의 Bounded Context · 불변식 · Aggregate Root · Entity · Value Object · id 참조를 그대로 써요. 그 가이드는 여덟 낱말의 정의를 이 문서로 넘기고 표 앞에는 읽기 모델 · 도메인 이벤트 · Factory · 도메인 서비스 넷만 펴 두었으니, 표로 가기 전에 여기를 한 번 지나오시면 됩니다. 표 아래의 시간표가 id 참조 절의 예이고, <code>GeneralLedger</code> 가 Repository 의 예입니다.</li>
-<li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.1.1.html#상황이-달라지면">Account 가이드 「상황이 달라지면」</a> — Entry 소속 네 가지 표. Entry 는 entity 로 남고 Account 가 그 Entry 들의 요약 VO(④-a)나 투영 VO 목록(④-b)을 갖는 배정이 Value Object 절의 예예요.</li>
-<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.html#상황-설정">Quantity 가이드 「상황 설정」</a> — 불변식을 값 객체 몫과 root 몫으로 가르는 행이 불변식 절 표의 보유량 줄이고, <code>IngredientId</code> 가 id 참조 절의 또 다른 예예요.</li>
-<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.html#구현">Quantity 가이드 「구현」</a> — 값을 불변으로 지키는 장치를 언어별로 견준 표의 TypeScript 행, 그 -99 g 우회가 Aggregate Root 절의 예입니다.</li>
-<li>「상황 설정」 표를 같은 자리에서 쓰는 편이 아홉 더 있습니다. Repository 까지 여덟 낱말을 쓰는 쪽은 <a href="ddd-analysis-pattern-guide/party/party-guide_v1.0.1.html#상황-설정">Party</a> · <a href="ddd-analysis-pattern-guide/accountability/accountability-guide_v1.0.1.html#상황-설정">Accountability</a> · <a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.0.1.html#상황-설정">Posting Rule</a> · <a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.1.html#상황-설정">Transaction</a> 넷이고, Repository 를 뺀 일곱만 쓰는 쪽은 <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.1.html#상황-설정">Knowledge Level</a> · <a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.1.html#상황-설정">Measurement</a> · <a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.0.1.html#상황-설정">Observation</a> · <a href="ddd-analysis-pattern-guide/range/range-guide_v1.0.1.html#상황-설정">Range</a> · <a href="ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.0.1.html#상황-설정">Temporal Property</a> 다섯이에요. 아홉 편 모두 표 앞에서 그 낱말들의 정의를 이 문서로 넘깁니다. Temporal Property 는 인사·급여를 배경으로 쓰는 유일한 편이라, 같은 여덟 낱말이 회계 밖 도메인에서 어떻게 배정되는지 견주어 볼 자리입니다.</li>
+<li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.2.0.html#상황-설정">Account 가이드 「상황 설정」</a> — 표의 네 행이 이 문서의 Bounded Context · 불변식 · Aggregate Root · Entity · Value Object · id 참조를 그대로 써요. 그 가이드는 여덟 낱말의 정의를 이 문서로 넘기고 표 앞에는 읽기 모델 · 도메인 이벤트 · Factory · 도메인 서비스 넷만 펴 두었으니, 표로 가기 전에 여기를 한 번 지나오시면 됩니다. 표 아래의 시간표가 id 참조 절의 예이고, <code>GeneralLedger</code> 가 Repository 의 예입니다.</li>
+<li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.2.0.html#상황이-달라지면">Account 가이드 「상황이 달라지면」</a> — Entry 소속 네 가지 표. Entry 는 entity 로 남고 Account 가 그 Entry 들의 요약 VO(④-a)나 투영 VO 목록(④-b)을 갖는 배정이 Value Object 절의 예예요.</li>
+<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html#상황-설정">Quantity 가이드 「상황 설정」</a> — 불변식을 값 객체 몫과 root 몫으로 가르는 행이 불변식 절 표의 보유량 줄이고, <code>IngredientId</code> 가 id 참조 절의 또 다른 예예요.</li>
+<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html#구현">Quantity 가이드 「구현」</a> — 값을 불변으로 지키는 장치를 언어별로 견준 표의 TypeScript 행, 그 -99 g 우회가 Aggregate Root 절의 예입니다.</li>
+<li>「상황 설정」 표를 같은 자리에서 쓰는 편이 아홉 더 있습니다. Repository 까지 여덟 낱말을 쓰는 쪽은 <a href="ddd-analysis-pattern-guide/party/party-guide_v1.1.0.html#상황-설정">Party</a> · <a href="ddd-analysis-pattern-guide/accountability/accountability-guide_v1.1.0.html#상황-설정">Accountability</a> · <a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.html#상황-설정">Posting Rule</a> · <a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v1.1.0.html#상황-설정">Transaction</a> 넷이고, Repository 를 뺀 일곱만 쓰는 쪽은 <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html#상황-설정">Knowledge Level</a> · <a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.1.0.html#상황-설정">Measurement</a> · <a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html#상황-설정">Observation</a> · <a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html#상황-설정">Range</a> · <a href="ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.1.0.html#상황-설정">Temporal Property</a> 다섯이에요. 아홉 편 모두 표 앞에서 그 낱말들의 정의를 이 문서로 넘깁니다. Temporal Property 는 인사·급여를 배경으로 쓰는 유일한 편이라, 같은 여덟 낱말이 회계 밖 도메인에서 어떻게 배정되는지 견주어 볼 자리입니다.</li>
 </ul>
 <h2 id="참고-자료">참고 자료</h2>
 <ul>

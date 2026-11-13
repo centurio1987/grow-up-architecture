@@ -27,8 +27,8 @@ const STEPS = [
   { from: 'skeleton', to: 'step', y: 336, text: '4. 줄 해석을 부른다' },
   { from: 'step', to: 'skeleton', y: 376, text: '5. 관측값을 돌려준다', dashed: true },
   { from: 'skeleton', to: 'skeleton', y: 416, text: '6. 범위·집계를 잰다 (불변)' },
-  { from: 'skeleton', to: 'step', y: 476, text: '7. 훅을 부른다 (기본은 빔)' },
-  { from: 'skeleton', to: 'client', y: 522, text: '8. 요약 한 줄을 남긴다', dashed: true },
+  { from: 'skeleton', to: 'client', y: 476, text: '7. 평균을 내고 요약 한 줄을 남긴다', dashed: true },
+  { from: 'skeleton', to: 'step', y: 522, text: '8. 훅을 부른다 (기본은 빔)' },
 ];
 
 export default function TemplateMethodFlow() {

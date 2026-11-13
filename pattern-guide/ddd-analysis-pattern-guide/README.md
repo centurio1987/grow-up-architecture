@@ -12,9 +12,9 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Party (당사자) | 사람과 조직을 한 이름으로 받아 공통인 것을 그 한 자리에 모음 | [party-guide_v1.0.1.md](party/party-guide_v1.0.1.md) |
-| Accountability (책임 관계) | 두 당사자를 잇는 관계를 칸이 아니라 개념으로 세워 종류·기간을 닮 | [accountability-guide_v1.0.1.md](accountability/accountability-guide_v1.0.1.md) |
-| Knowledge Level (지식 수준) | 사실을 해석하는 규칙을 사실과 다른 층에 인스턴스로 세움 | [knowledge-level-guide_v1.0.1.md](knowledge-level/knowledge-level-guide_v1.0.1.md) |
+| Party (당사자) | 사람과 조직을 한 이름으로 받아 공통인 것을 그 한 자리에 모음 | [party-guide_v1.1.0.md](party/party-guide_v1.1.0.md) |
+| Accountability (책임 관계) | 두 당사자를 잇는 관계를 칸이 아니라 개념으로 세워 종류·기간을 닮 | [accountability-guide_v1.1.0.md](accountability/accountability-guide_v1.1.0.md) |
+| Knowledge Level (지식 수준) | 사실을 해석하는 규칙을 사실과 다른 층에 인스턴스로 세움 | [knowledge-level-guide_v1.1.0.md](knowledge-level/knowledge-level-guide_v1.1.0.md) |
 
 ## 값 모델링 (Value)
 
@@ -22,9 +22,9 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-guide_v1.1.1.md](quantity/quantity-guide_v1.1.1.md) |
-| Range (범위) | 두 끝과 「그 끝을 포함하는가」를 한 값에 담아 경계 판정을 한 곳에 모음 | [range-guide_v1.0.1.md](range/range-guide_v1.0.1.md) |
-| Temporal Property (시간 속성) | 시간에 따라 바뀌는 속성을 유효 기간이 붙은 값들의 이력으로 두고, 시점을 인자로 받는 접근자로 조회 | [temporal-property-guide_v1.0.1.md](temporal-property/temporal-property-guide_v1.0.1.md) |
+| Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-guide_v1.2.0.md](quantity/quantity-guide_v1.2.0.md) |
+| Range (범위) | 두 끝과 「그 끝을 포함하는가」를 한 값에 담아 경계 판정을 한 곳에 모음 | [range-guide_v1.1.0.md](range/range-guide_v1.1.0.md) |
+| Temporal Property (시간 속성) | 시간에 따라 바뀌는 속성을 유효 기간이 붙은 값들의 이력으로 두고, 시점을 인자로 받는 접근자로 조회 | [temporal-property-guide_v1.1.0.md](temporal-property/temporal-property-guide_v1.1.0.md) |
 
 ## 관찰/측정 (Observation)
 
@@ -32,8 +32,8 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Measurement (측정) | 값 하나를 대상·항목과 묶어 기록 한 건으로 세운다 | [measurement-guide_v1.0.1.md](measurement/measurement-guide_v1.0.1.md) |
-| Observation (관찰) | 대상에 대한 사실을 값의 종류와 상관없이 한 층으로 다룬다 | [observation-guide_v1.0.1.md](observation/observation-guide_v1.0.1.md) |
+| Measurement (측정) | 값 하나를 대상·항목과 묶어 기록 한 건으로 세운다 | [measurement-guide_v1.1.0.md](measurement/measurement-guide_v1.1.0.md) |
+| Observation (관찰) | 대상에 대한 사실을 값의 종류와 상관없이 한 층으로 다룬다 | [observation-guide_v1.1.0.md](observation/observation-guide_v1.1.0.md) |
 
 ## 회계/거래 (Accounting)
 
@@ -41,9 +41,9 @@ Martin Fowler의 『Analysis Patterns: Reusable Object Models』(1997)에서 제
 
 | 패턴 | 한 줄 요약 | 가이드 |
 | --- | --- | --- |
-| Account (계정) | 잔액을 항목(Entry)의 합으로 도출 | [account-guide_v1.1.1.md](account/account-guide_v1.1.1.md) |
-| Transaction (거래) | 함께 적어야 할 기록을 한 묶음으로 만들고, 만드는 자리에서 합을 0 으로 맞춤 | [transaction-guide_v1.0.1.md](transaction/transaction-guide_v1.0.1.md) |
-| Posting Rule (전기 규칙) | 무엇에 반응해 얼마를 어느 계정에 적을지를 규칙 하나가 쥔다 | [posting-rule-guide_v1.0.1.md](posting-rule/posting-rule-guide_v1.0.1.md) |
+| Account (계정) | 잔액을 항목(Entry)의 합으로 도출 | [account-guide_v1.2.0.md](account/account-guide_v1.2.0.md) |
+| Transaction (거래) | 함께 적어야 할 기록을 한 묶음으로 만들고, 만드는 자리에서 합을 0 으로 맞춤 | [transaction-guide_v1.1.0.md](transaction/transaction-guide_v1.1.0.md) |
+| Posting Rule (전기 규칙) | 무엇에 반응해 얼마를 어느 계정에 적을지를 규칙 하나가 쥔다 | [posting-rule-guide_v1.1.0.md](posting-rule/posting-rule-guide_v1.1.0.md) |
 | 심화: 객체 모델링 | Transaction과 Account의 관계 및 Entry 소속 딜레마 해소 가이드 | [account-transaction-entry-modeling.md](../consideration/account-transaction-entry-modeling.md) |
 | 심화: Account–Entry 경계 | Entry 를 Account 안에 둘지 세 시나리오로 가른 aggregate 경계 검토 — 회계 배경 확정안과 정합 | [Account와 Entry의 관계 설계.md](<../consideration/Account와 Entry의 관계 설계.md>) |
 

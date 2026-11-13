@@ -95,8 +95,10 @@ fn balance(entries: &[Entry], account_id: &str) -> i64 {
 
 ## 스스로 점검하기
 
-Entry 를 수정할 수 있게 열어 두면 지난달 잔액을 다시 계산했을 때 무엇이 달라질까요?
+**1. 책임 옮기기.** Entry 를 수정할 수 있게 열어 두면 지난달 잔액을 다시 계산했을 때 무엇이 달라질까요?
+
+> 풀이 — 고친 Entry 가 지난달 합에 들어가 지난달 잔액이 바뀝니다.
 
 ## 참고 자료
 
-- Martin Fowler, *Analysis Patterns*, Addison-Wesley, 1996 — Account 장.
+- Martin Fowler, *Analysis Patterns*, Addison-Wesley, 1996 — Account 장(그림 6.1).

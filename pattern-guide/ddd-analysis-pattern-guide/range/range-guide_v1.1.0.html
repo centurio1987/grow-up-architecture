@@ -1,0 +1,1807 @@
+<!doctype html>
+<!-- guide-fp:936ac5d5ca331aa98e1a0a0518ceaeaa8740a1a1cb513f36d7ea42d646947d9a -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="generator" content="scripts/render-guides.py">
+<title>Range — 두 끝과 「그 끝을 포함하는가」까지 한 값에 담기</title>
+<style>
+/* pattern-guide HTML — render-guides.py 가 HTML 에 인라인한다. 외부 폰트·이미지 요청 없음. */
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --fg: #1c1e22;
+  --muted: #5a606b;
+  --border: #dcdfe4;
+  --border-strong: #b9bec7;
+  --accent: #1f4fb8;
+  --accent-soft: #e8eefb;
+  --code-bg: #f3f4f6;
+  --code-fg: #1c1e22;
+  --inline-code-bg: #eceef1;
+  --quote-fg: #454a54;
+  --quote-bar: #c5cad3;
+  --th-bg: #f1f2f4;
+  --focus: #1f4fb8;
+  --diagram-filter: none;
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR",
+    "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, "D2Coding", Consolas, "Cascadia Mono",
+    "Liberation Mono", "Noto Sans Mono CJK KR", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141619;
+    --surface: #1b1e22;
+    --fg: #e3e5e9;
+    --muted: #a1a7b1;
+    --border: #2d3138;
+    --border-strong: #464c56;
+    --accent: #8db0ff;
+    --accent-soft: #1f2a40;
+    --code-bg: #1c1f24;
+    --code-fg: #dfe2e7;
+    --inline-code-bg: #262a30;
+    --quote-fg: #b9bec7;
+    --quote-bar: #464c56;
+    --th-bg: #1f2227;
+    --focus: #8db0ff;
+    --diagram-filter: invert(0.88) hue-rotate(180deg);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141619;
+  --surface: #1b1e22;
+  --fg: #e3e5e9;
+  --muted: #a1a7b1;
+  --border: #2d3138;
+  --border-strong: #464c56;
+  --accent: #8db0ff;
+  --accent-soft: #1f2a40;
+  --code-bg: #1c1f24;
+  --code-fg: #dfe2e7;
+  --inline-code-bg: #262a30;
+  --quote-fg: #b9bec7;
+  --quote-bar: #464c56;
+  --th-bg: #1f2227;
+  --focus: #8db0ff;
+  --diagram-filter: invert(0.88) hue-rotate(180deg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.guide {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;
+}
+
+@media (min-width: 40rem) {
+  .guide {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ── 헤딩 ─────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.35;
+  font-weight: 700;
+  scroll-margin-top: 1rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.875rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 3.25rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+h5,
+h6 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* ── 본문 블록 ─────────────────────────────────────── */
+p,
+ul,
+ol,
+blockquote,
+.table-wrap,
+pre,
+.code-tabs,
+.mermaid-figure {
+  margin: 0 0 1.1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+li > ul,
+li > ol {
+  margin: 0.25rem 0 0.25rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+li > p {
+  margin: 0 0 0.6rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 3px solid var(--quote-bar);
+  color: var(--quote-fg);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── 머리 차례 · 접힌 풀이 (명세 1.5.0) ─────────────── */
+details.guide-toc {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+details.guide-toc > summary,
+details.answer > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+details.guide-toc ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+details.guide-toc ol ol {
+  margin-top: 0.15rem;
+}
+
+details.guide-toc li {
+  margin: 0.15rem 0;
+}
+
+details.answer {
+  margin: 0.75rem 0 1.25rem;
+}
+
+details.answer > blockquote {
+  margin-top: 0.5rem;
+}
+
+/* ── 코드 ─────────────────────────────────────────── */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--inline-code-bg);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 4;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+pre > code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ── 표 ───────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+th,
+td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+  min-width: 6rem;
+}
+
+th {
+  background: var(--th-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── mermaid 도식(렌더 시점 인라인 SVG) ───────────── */
+.mermaid-figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid-figure svg {
+  height: auto;
+  filter: var(--diagram-filter);
+}
+
+/* ── 세 언어 탭 ───────────────────────────────────── */
+.code-tabs__list {
+  display: none;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__list {
+  display: flex;
+}
+
+.code-tabs__tab {
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 1rem;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.9375rem/1 var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.code-tabs__tab:hover {
+  color: var(--fg);
+}
+
+.code-tabs__tab[aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.code-tabs__tab:focus-visible {
+  outline-offset: -2px;
+  border-radius: 6px 6px 0 0;
+}
+
+.code-tabs__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.code-tabs[data-enhanced] .code-tabs__label {
+  display: none;
+}
+
+.code-tabs__panel > pre {
+  margin-bottom: 1.1rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__panel > pre {
+  margin-bottom: 0;
+}
+
+.code-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── 꼬리말 ───────────────────────────────────────── */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ── 인쇄: 탭 패널 전부, 라이트 색 ───────────────── */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #ffffff !important;
+    --surface: #ffffff !important;
+    --fg: #000000 !important;
+    --muted: #444444 !important;
+    --border: #bbbbbb !important;
+    --accent: #000000 !important;
+    --code-bg: #f6f6f6 !important;
+    --code-fg: #000000 !important;
+    --inline-code-bg: #eeeeee !important;
+    --quote-fg: #222222 !important;
+    --quote-bar: #999999 !important;
+    --th-bg: #eeeeee !important;
+    --diagram-filter: none !important;
+  }
+
+  body {
+    font-size: 10.5pt;
+  }
+
+  .guide {
+    max-width: none;
+    padding: 0;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__list,
+  .code-tabs__list {
+    display: none !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__label,
+  .code-tabs__label {
+    display: block !important;
+  }
+
+  .code-tabs__panel,
+  .code-tabs__panel[hidden] {
+    display: block !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__panel > pre {
+    margin-bottom: 1.1rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow: visible;
+  }
+
+  .table-wrap,
+  .mermaid-figure {
+    overflow: visible;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="guide">
+<main>
+<h1 id="range--두-끝과-그-끝을-포함하는가까지-한-값에-담기">Range — 두 끝과 「그 끝을 포함하는가」까지 한 값에 담기</h1>
+<details class="guide-toc" open>
+<summary>차례</summary>
+<ol>
+<li><a href="#한눈에-보는-개요">한눈에 보는 개요</a></li>
+<li><a href="#패턴-자세히-들여다보기">패턴 자세히 들여다보기</a>
+<ol>
+<li><a href="#시나리오-1--2-kg-소포-하나가-요금표를-지나-4000원이-나오기까지">시나리오 1 — 2 kg 소포 하나가 요금표를 지나 4000원이 나오기까지</a></li>
+<li><a href="#시나리오-2--30-kg-까지-늘어난-요금표를-다시-정의하는-길">시나리오 2 — 30 kg 까지 늘어난 요금표를 다시 정의하는 길</a></li>
+<li><a href="#시나리오-3--경계-규칙을-값-밖에-두면-어느-단계에서-얼마가-어긋나는가">시나리오 3 — 경계 규칙을 값 밖에 두면 어느 단계에서 얼마가 어긋나는가</a></li>
+<li><a href="#개념-정리">개념 정리</a></li>
+</ol>
+</li>
+<li><a href="#사용-목적">사용 목적</a>
+<ol>
+
+<ol>
+<li><a href="#단서-1--한-쌍으로만-뜻이-있는-두-칸을-함께-넘기는-함수가-여럿입니다">단서 1 — 한 쌍으로만 뜻이 있는 두 칸을 함께 넘기는 함수가 여럿입니다</a></li>
+<li><a href="#단서-2--경계값-하나-때문에-화면마다-답이-다릅니다">단서 2 — 경계값 하나 때문에 화면마다 답이 다릅니다</a></li>
+<li><a href="#단서-3--구간들-사이의-관계를-묻는-요구가-있습니다">단서 3 — 구간들 사이의 관계를 묻는 요구가 있습니다</a></li>
+<li><a href="#단서-4--끝이-하나뿐인-구간과-양-끝이-있는-구간을-같이-다뤄야-합니다">단서 4 — 끝이 하나뿐인 구간과 양 끝이 있는 구간을 같이 다뤄야 합니다</a></li>
+<li><a href="#쓰지-말아야-할-경우">쓰지 말아야 할 경우</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><a href="#패턴의-경계">패턴의 경계</a>
+<ol>
+<li><a href="#디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</a></li>
+<li><a href="#비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</a>
+<ol>
+<li><a href="#시작끝-두-칸을-가진-개념과의-차이">시작·끝 두 칸을 가진 개념과의 차이</a></li>
+<li><a href="#비교자를-붙인-값-하나와의-차이">비교자를 붙인 값 하나와의 차이</a></li>
+<li><a href="#구간-여럿을-한-값으로-담은-것과의-차이">구간 여럿을 한 값으로 담은 것과의 차이</a></li>
+<li><a href="#quantity-와의-차이">Quantity 와의 차이</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><a href="#구현-예시">구현 예시</a>
+<ol>
+<li><a href="#상황-설정">상황 설정</a></li>
+<li><a href="#구현">구현</a></li>
+<li><a href="#상황이-달라지면">상황이 달라지면</a></li>
+<li><a href="#실제-사례">실제 사례</a></li>
+</ol>
+</li>
+<li><a href="#스스로-점검하기">스스로 점검하기</a></li>
+<li><a href="#참고-자료">참고 자료</a></li>
+</ol>
+</details>
+<h2 id="한눈에-보는-개요">한눈에 보는 개요</h2>
+<p>택배 회사의 요금 조회 코드가 무게 구간을 <code>lowerKg</code> · <code>upperKg</code> 두 칸으로 갖고 있다고 해 봅시다. 0 g 초과 2 kg 이하가 4000원, 2 kg 초과 5 kg 이하가 5500원이에요. 창구 화면은 <code>w &gt;= lower &amp;&amp; w &lt;= upper</code> 로 구간을 찾고, 정산 배치는 <code>w &gt;= lower &amp;&amp; w &lt; upper</code> 로 찾습니다. 두 줄 다 그럴듯한데 2 kg 짜리 소포가 들어오는 순간 갈려요. 창구는 첫 구간과 두 번째 구간 양쪽에 걸리는 값을 보고 먼저 만난 4000원을 내놓고, 배치는 두 번째 구간만 맞다고 보아 5500원을 냅니다. 같은 소포의 요금이 1500원 차이 나는데 어느 쪽도 예외를 던지지 않아요.</p>
+<pre tabindex="0"><code class="language-text">Before — 끝이 두 칸으로 흩어져 있다
+  band = { lowerKg: 0, upperKg: 2, fee: 4000 }
+  창구   w &gt;= lower &amp;&amp; w &lt;= upper   → 2 kg 이 band-1 · band-2 둘 다에 걸린다 → 먼저 만난 4000원
+  배치   w &gt;= lower &amp;&amp; w &lt;  upper   → 2 kg 은 band-2 하나 → 5500원
+         「2 kg 을 포함하는가」의 답이 부르는 쪽마다 다르다
+
+After — 두 끝과 포함 여부가 한 값 안에 있다
+  band.weights = Range(0 g 미포함, 2 kg 포함)
+  창구   band.weights.includes(2 kg) → true
+  배치   band.weights.includes(2 kg) → true
+         답이 한 곳에서 나오므로 갈릴 자리가 없다</code></pre>
+<p>Range 의 해법은 <strong>두 끝점과 각 끝을 포함하는지까지 한 값으로 묶고, 「이 값이 안에 드는가」를 그 값에게 묻는 것</strong>입니다. 끝을 포함하는지가 값의 일부라서, 부등호를 고르는 일이 호출부에서 사라져요. 부르는 쪽은 부등식을 쓰지 않고 물어보기만 합니다.</p>
+<pre tabindex="0"><code class="language-text">요금표 rate-1        0 g &lt; x &lt;= 2 kg     2 kg &lt; x &lt;= 5 kg     5 kg &lt; x &lt;= 20 kg
+소포 2 kg            들어옴               안 들어옴             안 들어옴
+소포 2001 g          안 들어옴            들어옴                안 들어옴
+소포 20 kg           안 들어옴            안 들어옴             들어옴</code></pre>
+<p>Range 는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고 관측값을 범주로 나누는 자리와 값 모델링 자리 양쪽에 쓰이며(근거: Fowler <em>Analysis Patterns</em> 4장 「Observations for Corporate Finance」 §4.3 Range · §4.4 Phenomenon with Range), 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity</a> · <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level</a> 이에요.</p>
+<p>이 글의 예제는 택배 요금표예요. 배송 상품 하나의 <strong>요금표</strong>(<code>RateTable</code>)가 자기 구간 목록과 표가 다루는 무게 전체인 <strong>적용 구간</strong>을 갖고, 구간 하나(<code>RateBand</code>)는 Range 값 하나와 요금을 가집니다. 배송 상품은 번호(<code>ProductId</code>)로만 가리켜요. 구간 하나의 규칙(하한이 상한보다 크지 않음, 경계에서의 포함 판정)은 Range 값이 스스로 지키고, 구간들 사이의 규칙(겹치지 않음, 빈틈 없이 덮음)은 요금표가 지킵니다. 소포 하나의 요금은 물을 때마다 표에서 찾아 돌려줄 뿐 따로 적어 두지 않아요. 구간을 누가 갖고 겹침 규칙을 어디서 지킬지 다른 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.</p>
+<pre tabindex="0"><code class="language-text">이 글이 고른 경계
+  요금표 ────── 구간 목록과 적용 구간을 가짐 (겹치지 않음 · 빈틈 없이 덮음을 지킴)
+  구간 ──────── Range 값 하나와 요금을 가짐 (요금표 안에만 있음)
+  Range 값 ──── 두 끝과 각 끝의 포함 여부를 가짐 (하한 ≤ 상한 · 포함 판정을 스스로 지킴)
+  배송 상품 ──── 번호(ProductId)로만 가리킴
+  소포 요금 ──── 물을 때마다 표에서 찾음 (적어 두지 않음)</code></pre>
+<p>이 글은 시나리오 셋을 따라갑니다. 소포 하나가 요금표를 지나 요금이 나오는 길, 구간이 늘어날 때 무엇이 바뀌고 무엇은 그대로인가, 경계 규칙을 값 밖에 두면 어느 단계에서 얼마가 어긋나는가. 끝까지 읽으면 어떤 모델을 Range 라고 불러도 되는지 필수 조건 넷으로 판정할 수 있고, 그 구간을 누가 소유하고 겹침·빈틈 같은 집합 규칙은 어디에 두어야 하는지도 세 언어 코드에서 짚을 수 있게 됩니다.</p>
+<h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
+<h3 id="시나리오-1--2-kg-소포-하나가-요금표를-지나-4000원이-나오기까지">시나리오 1 — 2 kg 소포 하나가 요금표를 지나 4000원이 나오기까지</h3>
+<p>택배 회사의 기본 배송 상품 <code>standard-parcel</code> 에 요금표 <code>rate-1</code> 이 붙어 있습니다. 이 표는 0 g 초과 20 kg 이하의 소포를 세 구간으로 나눠 4000원 · 5500원 · 8000원을 매겨요. 창구에 2 kg 소포가 들어오고, 나와야 하는 답은 4000원 하나입니다. 이 장면에는 다섯이 등장해요. 무게 하나를 나타내는 Quantity, 두 끝과 각 끝의 포함 여부를 가진 <strong>Range</strong>, 무게 구간 하나와 그 구간의 요금을 묶은 RateBand, 구간들을 모아 둔 RateTable, 그리고 끝점이 갖춰야 할 성질만 가리키는 이름 <strong>Magnitude</strong> 입니다. 이름은 여기서 한 구절씩만 소개하고 정식 정의는 개념 정리에서 해요.</p>
+<ol>
+<li><strong>창구가 무게를 값으로 만들어 <code>Quantity</code> 2 kg 을 넘깁니다.</strong> 수치 2 만 넘기면 받는 쪽이 kg 인지 g 인지 짐작해야 하고, 뒤 단계의 크기 비교도 그 짐작을 전제로 하게 돼요. 이 예제의 Quantity 는 만들 때 g 로 정규화하므로 2 kg 과 2000 g 은 같은 값입니다.</li>
+<li><strong>요금표는 구간 하나를 Range 값 하나로 가집니다.</strong> <code>RateBand</code> 는 <code>lowerKg</code> · <code>upperKg</code> 두 칸을 갖는 대신 <code>weights</code> 라는 Range 하나를 가리켜요. 두 칸으로 두면 그 둘이 한 구간을 이룬다는 사실이 코드에 나타나지 않고, 하한이 상한보다 큰 짝을 막을 주인도 없습니다. 개요에서 서로 달랐던 부등식이 바로 두 칸 모델에서 나온 것이에요.</li>
+<li><strong>요금표가 먼저 적용 구간에 드는지 묻습니다.</strong> <code>span.includes(2 kg)</code> 이 참이라야 이 표가 답할 수 있는 무게예요. 이 단계가 앞에 있어야 20001 g 처럼 표 밖의 무게에 대해 「어느 구간에도 안 든다」가 아니라 「이 표가 다루는 무게가 아니다」라고 답할 수 있습니다. 두 답은 고쳐야 할 곳이 다르니까요.</li>
+<li><strong>구간마다 <code>includes</code> 를 물어 하나를 고릅니다.</strong> 2 kg 은 첫 구간의 상한과 <strong>같은 값</strong>이에요. 첫 구간이 상한을 포함하고 두 번째 구간이 하한을 포함하지 않으므로 답은 첫 구간 하나입니다. 이 판정을 부르는 쪽이 부등식으로 하지 않고 Range 에게 묻는 이유가 여기 있어요. 경계에서 갈리는 답을 한 곳에서만 정하려는 것입니다.</li>
+<li><strong>고른 구간의 요금을 돌려줍니다.</strong> 4000원이에요. 구간을 고르는 일과 요금을 읽는 일을 한 단계로 합치지 않은 것은 「어느 구간이었는가」가 창구 화면과 정산 대조 양쪽에서 필요한 정보이기 때문입니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">단계   부르는 쪽 → 받는 쪽              넘기는 것              돌아오는 것
+ 1     창구 → (new)                    2 · kg                Quantity(2 kg)
+ 2     RateTable → RateBand            —                     weights: Range 하나
+ 3     RateTable → span(Range)         includes(2 kg)        true
+ 4     RateTable → weights(Range)      includes(2 kg)        band-1 만 true
+ 5     RateTable → 창구                 —                     band-1 · 4000원</code></pre>
+<p>4단계에서 왜 답이 하나로 떨어지는지는 경계 한 점만 따져 보면 알 수 있습니다. 2 kg 은 첫 구간의 상한이자 두 번째 구간의 하한이라 두 구간이 같은 값을 놓고 만나는 유일한 자리예요.</p>
+<pre tabindex="0"><code class="language-text">                          2 kg 이라는 한 점
+band-1  0 g &lt; x &lt;= 2 kg   상한과 같다 · 상한을 포함한다      → includes(2 kg) = true
+band-2  2 kg &lt; x &lt;= 5 kg  하한과 같다 · 하한을 포함하지 않는다 → includes(2 kg) = false
+
+포함 표시가 둘 다 「포함」이면 두 구간이 2 kg 을 함께 가진다  → 답이 둘
+포함 표시가 둘 다 「미포함」이면 2 kg 이 어디에도 없다        → 답이 없음
+정확히 한쪽만 포함해야 답이 하나다</code></pre>
+<p>그래서 이 예제는 세 구간을 모두 「하한 미포함 · 상한 포함」으로 맞췄습니다. 표시가 둘 다 포함이면 2 kg 이 두 구간에 들어 요금이 4000원과 5500원 둘로 나오고, 둘 다 미포함이면 2 kg 이 어느 구간에도 없어 요금이 나오지 않아요. 한쪽만 포함일 때만 경계 한 점이 정확히 한 구간에 속합니다. 이 규칙을 구간마다 따로 적지 않고 값 안에 둔 것이 Range 가 하는 일이에요.</p>
+<p>이 시나리오가 보여 준 것은 판정의 자리입니다. 「이 무게가 이 구간에 드는가」를 값이 답하니(3·4단계), 부르는 쪽은 부등호를 고르지 않아요. 그리고 그 답이 경계에서 갈리지 않는 이유는 포함 여부가 구간마다 값으로 붙어 있기 때문입니다. 여기서 나온 개념 다섯이 「개념 정리」로 모여요.</p>
+<h3 id="시나리오-2--30-kg-까지-늘어난-요금표를-다시-정의하는-길">시나리오 2 — 30 kg 까지 늘어난 요금표를 다시 정의하는 길</h3>
+<p>같은 요금표에 요구가 하나 들어옵니다. 20 kg 초과 30 kg 이하의 대형 소포를 11000원에 받겠다는 것이에요. 지금 표는 0 g 초과 20 kg 이하만 다루므로 25 kg 소포는 3단계에서 거부되고 있습니다. 시나리오 1 의 다섯 단계 가운데 무엇이 바뀌고 무엇은 그대로인지를 봅니다.</p>
+<ol>
+<li><strong>새 구간 <code>20 kg &lt; x &lt;= 30 kg</code> 을 Range 로 만듭니다.</strong> 만드는 방법이 기존 세 구간과 같아요. 끝점 타입도 같고 포함 표시도 같습니다. Range 는 끝점에 크기 비교만 요구하니, 끝점이 2 kg 이든 30 kg 이든 만드는 자리가 달라질 이유가 없어요.</li>
+<li><strong>적용 구간 자체도 Range 라서 새로 만듭니다.</strong> <code>0 g &lt; x &lt;= 30 kg</code> 이에요. 표가 다루는 무게 전체도 결국 구간 하나라, 구간을 담는 자료구조를 따로 만들지 않고 같은 값을 씁니다. 3단계의 표 밖 판정이 이 값 하나로 끝나요.</li>
+<li><strong>요금표가 구간 목록 전체를 다시 검사합니다.</strong> 새 구간만 보지 않는 이유는 겹침과 빈틈이 <strong>구간 하나로는 판정할 수 없는 성질</strong>이기 때문이에요. <code>20 kg &lt; x &lt;= 30 kg</code> 을 혼자 놓고 보면 아무 문제가 없지만, 기존 셋과 함께 놓아야 20 kg 자리에서 맞닿는지 겹치는지가 정해집니다.</li>
+<li><strong>검사를 통과한 뒤에 목록을 교체합니다.</strong> 순서를 바꿔 교체부터 하면, 겹침이 발견돼 거부하더라도 어긋난 목록이 이미 들어가 있어요. 그 사이에 들어온 조회는 틀린 요금을 받습니다.</li>
+<li><strong>바뀌지 않는 것이 더 많습니다.</strong> Range 코드는 한 줄도 바뀌지 않아요. <code>includes</code> 도 <code>overlaps</code> 도 구간이 몇 개인지 모르고, 끝점이 kg 로 적혔는지 g 로 적혔는지도 모릅니다. 바뀐 것은 요금표가 가진 값 둘, 곧 적용 구간과 구간 목록뿐이에요.</li>
+</ol>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>들어온 요구</th><th>바뀌는 자리</th><th>그대로인 자리</th><th>결과</th></tr>
+</thead>
+<tbody>
+<tr><td>대형 구간을 더한다</td><td>RateTable 의 구간 목록 · 적용 구간</td><td>Range · Quantity · RateBand 의 코드</td><td>적용 구간 0 g &lt; x &lt;= 30 kg</td></tr>
+<tr><td>25 kg 소포를 조회한다</td><td>없음 — 3단계가 이미 통과</td><td>시나리오 1 의 3~5단계 그대로</td><td>band-4 · 11000원</td></tr>
+<tr><td>20001 g 소포를 조회한다(늘리기 전)</td><td>없음</td><td>3단계에서 거부</td><td>적용 구간을 벗어남</td></tr>
+</tbody>
+</table>
+</div>
+<p>여기서 헷갈리기 쉬운 포인트는 「구간이 늘어나면 표를 가진 쪽이 커진다」고 보는 것입니다. 늘어나는 것은 목록의 길이이지 책임이 아니에요. 요금표가 맡는 일은 구간이 셋일 때나 넷일 때나 똑같이 둘입니다. 서로 겹치지 않는가, 적용 구간을 빈틈 없이 덮는가. 구간 하나가 자기 안에서 맡는 일도 그대로 둘이고요. 하한이 상한보다 크지 않은가, 어떤 값이 안에 드는가.</p>
+<pre tabindex="0"><code class="language-text">             구간이 셋일 때              구간이 넷일 때
+RateTable    겹치지 않는가               겹치지 않는가
+             빈틈 없이 덮는가            빈틈 없이 덮는가
+Range        하한 &lt;= 상한인가            하한 &lt;= 상한인가
+             이 값이 안에 드는가          이 값이 안에 드는가
+
+늘어난 것은 목록의 길이뿐이고, 맡는 일은 양쪽 다 둘씩이다</code></pre>
+<p>잠깐, 확인 하나만 해 볼까요? 20 kg 초과를 <strong>상한 없이</strong> 전부 11000원으로 받겠다면 무엇이 달라질까요? 끝이 하나뿐인 구간이 필요해집니다. 그것도 Range 로 표현할 수 있는데, 없는 끝을 <code>null</code> 로 두는 길과 「모든 값보다 크다」는 특별한 값을 두는 길이 있어요. 어느 쪽이든 만드는 메서드 뒤에 감추면 부르는 쪽은 달라지지 않습니다. 이 예제는 상한 30 kg 을 두는 쪽을 골랐고, 열린 끝은 [선택] 6 으로 남겨 두었어요.</p>
+<p>이 시나리오가 보여 준 것은 변화가 미치는 범위입니다. 구간이 늘어도 값(Range)은 그대로이고 바뀌는 것은 그 값을 모아 둔 쪽뿐이에요(1·5단계). 그리고 겹침과 덮음은 구간 하나가 지키는 규칙이 아니라 <strong>목록을 가진 쪽이 지키는 규칙</strong>이라는 것도 여기서 구분됩니다(3단계). 이 구분이 뒤의 「상황 설정」 표의 <code>불변식의 위치</code> 칸에서 Range 몫과 요금표 몫이 나뉘어 적히는 이유예요.</p>
+<h3 id="시나리오-3--경계-규칙을-값-밖에-두면-어느-단계에서-얼마가-어긋나는가">시나리오 3 — 경계 규칙을 값 밖에 두면 어느 단계에서 얼마가 어긋나는가</h3>
+<p>같은 요금표를 다른 코드베이스가 <code>lowerKg</code> · <code>upperKg</code> 두 칸으로 갖고 있습니다. 구간도 요금도 시나리오 1 과 똑같고, 창구에 들어오는 소포도 2 kg 으로 같아요. 다른 것은 「끝을 포함하는가」가 값 안이 아니라 조회 코드의 부등식에 있다는 것뿐입니다. 아래 수치는 실행에서 왔어요. 세 언어로 직접 실행해 얻은 값입니다.</p>
+<ol>
+<li><strong>구간을 두 칸으로 만드는 자리에 주인이 없습니다.</strong> <code>{ lowerKg: 5, upperKg: 2 }</code> 같은 짝을 막을 곳이 없어요. Range 로 만들면 그 자리에서 <code>하한이 상한보다 큽니다: 5 kg .. 2 kg</code> 으로 거부돼요. 두 칸 모델에서는 이 짝이 조용히 만들어져 <code>includes</code> 에 해당하는 검사가 언제나 거짓을 내는 구간으로 남아요.</li>
+<li><strong>조회 코드가 부등식을 직접 씁니다.</strong> 시나리오 1 의 4단계에 해당하는 자리가 없어요. 물어볼 상대가 없으니 부르는 쪽마다 부등호를 고르게 되고, 고르는 기준은 그 자리를 쓴 사람의 기억입니다.</li>
+<li><strong>화면마다 부등호가 다릅니다.</strong> 창구는 상한을 <code>w &lt;= upper</code> 로, 정산 배치는 <code>w &lt; upper</code> 로 읽었어요. 2 kg 은 첫 구간의 상한이자 두 번째 구간의 하한이라 정확히 이 차이가 나타나는 값입니다. 같은 소포가 한쪽에서 4000원, 다른 쪽에서 5500원이 돼요. 이 차이는 포함 표시를 뒤집은 요금표로도 값으로 확인됩니다. 하한 포함 · 상한 미포함으로 뒤집은 표에 같은 2 kg 소포를 넣으면 <code>band-2 · 5500원</code> 이 나와요.</li>
+<li><strong>구간 사이에 틈이 생겨도 아무도 모릅니다.</strong> 두 번째 구간의 하한을 3 kg 으로 잘못 적으면 2 kg 초과 3 kg 이하가 어느 구간에도 들지 않아요. 두 칸 모델에서는 조회가 그냥 「요금 없음」을 내고, Range 와 요금표의 검사를 두면 표를 정의하는 자리에서 <code>구간 사이에 틈이 있습니다: 0 g &lt; x &lt;= 2 kg 다음 구간이 3 kg 부터입니다</code> 로 막힙니다.</li>
+<li><strong>되돌리는 길은 포함 표시를 값 안에 넣는 것입니다.</strong> 표시가 값의 일부가 되는 순간 부등호를 고를 자리가 사라져요. 어긋남이 생기는 단계(2단계)와 나타나는 단계(3단계)가 달랐던 것이, 아예 어긋날 자리가 없는 모양으로 바뀝니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">같은 소포 2 kg · 같은 요금표
+
+끝이 두 칸일 때                              끝이 한 값일 때
+  2단계  물어볼 상대가 없다                    4단계  weights.includes(2 kg)
+  3단계  창구 4000원 / 배치 5500원            답이 한 곳에서 나온다 → 4000원
+  4단계  틈이 생겨도 조회가 「요금 없음」만 낸다   표를 정의하는 자리에서 거부된다
+
+포함 표시를 뒤집은 표(하한 포함 · 상한 미포함)에 같은 2 kg 을 넣으면
+  band-2 · 5500원    — 규칙이 값 안에 있으면 바뀐 규칙도 값 하나로 나타난다</code></pre>
+<p>이 시나리오가 보여 준 것은 어긋남이 생기는 자리와 나타나는 자리가 다르다는 점입니다. 끝이 두 칸이면 어긋남은 조회 코드가 부등호를 고르는 2단계에서 생기고 3단계에 가서야 1500원 차이로 나타나요. 그리고 그때 확인되는 것은 「부등호가 달랐다」가 아니라 「요금이 이상하다」입니다. 포함 표시를 값에 넣으면 갈릴 자리 자체가 없어지고(5단계), 표시를 일부러 바꾸면 그 변화가 값 하나에 나타나요. 위 그림 마지막 줄의 5500원이 그 증거입니다.</p>
+<h3 id="개념-정리">개념 정리</h3>
+<p>시나리오에 나온 개념을 정식으로 정의합니다. 앞의 셋은 이 패턴이 모델링하는 것이고, 뒤의 둘은 그 구간을 쓰는 쪽이에요.</p>
+<ul>
+<li><strong>Range</strong> — 하한(<code>lower</code>)과 상한(<code>upper</code>), 그리고 각 끝을 포함하는지(<code>isLowerInclusive</code> · <code>isUpperInclusive</code>)를 한 값으로 묶은 구간입니다. 어떤 값이 안에 드는지 판정할 책임(<code>includes</code>)을 지고, 구간끼리 겹치는지(<code>overlaps</code>) 맞닿는지(<code>abuts</code>)도 답할 수 있어요. 끝점 타입으로 Magnitude 를 둘 가리키고, 그 구간을 쓰는 개념이 Range 하나를 가리킵니다(근거: Fowler <em>Analysis Patterns</em> 4장 §4.3 — Figure 4.20 의 Range 가 <code>upper : Magnitude</code> · <code>lower : Magnitude</code> · <code>isUpperInclusive : boolean</code> · <code>isLowerInclusive : boolean</code> 네 속성과 <code>includes()</code> · <code>overlaps()</code> · <code>abuts()</code> 세 연산을 가집니다).</li>
+<li><strong>Magnitude</strong> — 끝점이 갖춰야 할 성질만 가리키는 이름입니다. 크기 비교가 되는 값이면 무엇이든 여기에 해당해요. 날짜도 되고 정수도 되고 무게도 됩니다. 이 이름이 따로 있는 이유는 Range 가 끝점에 요구하는 것이 딱 그것뿐이기 때문이에요. 더하거나 뺄 수 있을 필요도, 단위를 가질 필요도 없습니다. Range 는 두 끝과 물어본 값을 견주기만 하니까요(근거: Fowler <em>Analysis Patterns</em> 4장 §4.3 — Figure 4.20 이 두 끝점의 타입을 Magnitude 로 적습니다. <a href="https://martinfowler.com/eaaDev/Range.html">Range, eaaDev 초안</a>의 "How it Works" 는 <code>&lt;</code> · <code>&gt;</code> · <code>=</code> · <code>&lt;=</code> · <code>&gt;=</code> 에 해당하는 비교 연산을 가진 타입이면 무엇이든 Range 와 함께 쓸 수 있다고 적습니다).</li>
+<li><strong>Quantity</strong> — 수치와 단위를 한 값으로 묶은 것이고, Magnitude 의 한 종류입니다. 끝점에 단위가 붙어야 하는 도메인에서 이 자리에 와요. 이 예제의 무게 구간이 그렇습니다. Quantity 자체의 정의와 단위 환산 규칙은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity 가이드</a>와 <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>에 있어요.</li>
+<li><strong>RateBand</strong> — 무게 구간 하나와 그 구간의 요금을 묶은 것입니다. Range 하나를 가리키고 요금 값 하나를 가져요. 구간을 쓰는 쪽의 자리이고, 원전이 든 예로는 나이대가 같은 자리에 놓입니다.</li>
+<li><strong>RateTable</strong> — 한 배송 상품의 요금 구간들을 모아 둔 것입니다. 구간 여럿을 담고, 표가 다루는 무게 전체를 Range 하나(<code>span</code>)로 가져요. 구간들이 서로 겹치지 않고 적용 구간을 빈틈 없이 덮는다는 규칙을 지키는 자리이고, 소포 하나의 무게로 구간을 찾아 주는 일도 맡습니다.</li>
+</ul>
+<p><figure class="diagram-figure"><img src="data:image/png;base64,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r1atWh3kh0qVKqSenKhatfJTj9590233xXtUhUn0s0/2Sc8i/K1Wrcozj/Xufv0d774/sFbNGs8+cU9uj8YN69dLqpk9e07iOj8zZ85JarB525zOSV2MVK9eLcirSZkNN87V2yQ87Fx2Zc/EWRfjrrz8osZFKTMqCkaM+iupJt9X3is04bnVD99+7rU33g8vOZzMYeut2p547BEnHHdYgZ7dzJut1831kSQ8c3NCtnOjt27dol5hrS0GALCJEYwWuNKlS997Z899Dz4xdVP40fzKyzuGn+mDTVep0qUXpIwjC9blxY8+dPtmLZsnVh6w754D3ut7WbeeiV1+wq/HLz5zf9EZIJZbJUqUOOSgfYJ8steeuy79b75ZscK/U5VN+Xtazpehz16YZaeO/82JN97+8KprMw+Cjz3qkJNPODIoeKtXr772hjtTvyGHr6XbenWvXr3q9BmzU/vc3f/QU82aNExdMiUPRo0ac3n3Xn/+OTZ100knHNlu1x2CjWr4iOTfzGYtC29midPP7ZJpepUHYcz9yP23pdaHR92bbuiWntb05tvv22G7rR5/+I7s4/hy5crdc8f1O22/zV577pKaoGX/pgu1apX82/vi6+8S09Uvvhmc1KB1zlZ2io4Jk5LXM2zTqnnO7rp2poLX+r13bc87M9160P57nXf2KQEJFi1anNoRslUWr8nzzzl17tz5QS5VqFA+PG8RFJYw3+xwyrHhZfqMWYMG/zhy1OgZM+fMmDFz1uw5ixcvrVGjep06NWtUr16nds1tt9p89913rl2r6M7kHv6F6tLpvPDvUa7u1fXSCwp6ehwAgE1VFIPRMKoLCldas8a977iuW/d/Bybvs3e7MzucsEeljhncAAAQAElEQVS7nUoWzHDpoiMMNN9/67nzL74qMaU67uhDb7yua6VKFVPbN2pY/5UXHn7wkWcefPS5YF0niGcfv7e+fhD/L/vh7XVq5ecEtfPm5+7L8MxZc3redPfAT7/OdOshB+97xy3XlCpVKih4N99231vv9k+tv793r9giS72u7zp23ITUIbddr74pfLHtukveg8uVK1c+88JrWQ3hD9/4Pa+9PNioFi5clNqBvU2bXHdPLgpmzZqTzdazzzhxv332qFunVvny5YL1CQ/Fp56c+bLU651T4rijD0n6F3/i6ZeOPOzAZk0bheVfhv3+3gef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Tp3a88ZbBvw39GzVquWV3S4/+KADSpQoEd4cOvTXo445IbHBd9//0GbzbcPCNd27xQfmL1265O7e97319ntz5syJ1dSqVWvPPdpdf901devWqV+/3mGHHRLfw1+jx8SD0YYN6iduivn+ux9uu+vuX4YOS6wMn9Q1V3XddrttgywsX77i1tvu7vfGW2HUG6ybVvWyLp0uuvC8IGdiv41vBg2O3T2Unp4WPrbLu3QqW7ZsAAAAABQHhtID/9pl553i5cmTpsQKo0ePOfTwYwekdAUN6y+48JL7H3g4dnPhooWpO1y8zorl/xtfP2H8hMOOOO7Jp56Np6KhsPzOu+8fePARYbQa5Eb//gNPOLlDUioaGjz4uyOOPuG7777P6o597n/wuedfjMeaYeHW2+68tkfPIAe++OLLffc/NPxtxO8eCtPkhx569KRTTs/b/AMAAABA4ROMAv/64cch8XLt2rVihXPP75iYYya55977//prdJAz1153YxinZrop/BHnnHdRRkZGkDNTp0694KJO2TToeMllK1asyHRTfHmoRC/2fXm9T2T+/PnhbhMj0UQ//TT0xl63BgAAAEBxIBiF6JowfsK3g7+LXT759PMrr7o2Po4+1KZ161jhheeeatq0SVjYc4/dn3n68U8Gfnj9ddck7icMBMPrzdu2ferJR0899aR4fatWLcOa8LL/fu3Dm198+dU3g76Nb737rtv++H3oC88/Vb9B/VhNmI32e+OtIGcaNmwY3jdWPuvM0994/eX33n4jcVLUcG8TJkzM9L7hT7zxhuteeO7Jo486IrH+uef7Btl67ImnE4fPh3sYOeKXu+78Nwz94MOPRo36KwAAAACKPHOMQnR98eXX4SWrrUcddXiskJbW7L13+oWhYadLLoqta9SmzWaDBn0bv+/osWs7gdapU/ugA/fPyFj68suvxepr16oV1sR3+PEnn8XLhx12yMknrZ2QdJ/2e3c49eTe99wXq3/n3fdP73BqkDPhfT98/61ffh0Wn8C07eat+/Z9Jd5g7LjxYTibesee119z+GGHrt3DPu0XLFz4+edfxuqH/PxzkK333/8wXj7v3LPCu4eFU04+8e233/vu+x9i9f0HDAx/PwEAAABQtAlGgUzc0/uO+FD6YN36SFd07bJs2bLJkyfPmzd/9erVjRo3im9dtHBxTvY5dsy4eLls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1a9fL7Hl/vvte+IJx5UqVSosh+HgmaefGhbCbDS2dfd2u33x2YDbbulVvXr18GazZk3PPuv0sPDHyFFJP7Fdu92OO+7ocD9hy3PPPbN+g/qLFy+ePHlKkHsnn3TCJwM+CAPEk048Psirr74adP0NN4WXa3v03Kv9AXf1vjes7NL5kiBfn9f06TPCxLNN29a77LJTrOawQw8Jw+UwdV22bFms5r33Pwz/OXpce/V+++4Tq9l++22vvOLycD+vr4trAQAAgE2POUZh42jarGmlSpW++PLrXjffuteee6SnpTVu3Kh06dJlypRJahnWJ9485JCD773vwbHj/p2komXLFuH1ihUr5s6dt2rVynp11+aqixYuStpP3Tq1E28euP9+L7z40pzZc1q1ahnk3oavWTR69JjY7AExxxxz5FXdLm/cuHG8Jl+eV5UqlcPr+fP/WbVqVSxcDvPQ2MD88Lcdu8sfI0eu20+dUaP+iu+nRo21gexff61/SgQAAACgOBKMwsZRsmTJl/s+d+HFnZ966rnwEqvcp/1enS7puPPOO2Zzx7S0tYsdTfl7arzm1df6PfLoE+PHTwhyo2q1qsFGdcbpp11/3dUTJkw+4KDDwoz4lpt6Vq36n4eUL88r3POee+z+zaBvn3ji6RNPPG758uXPPvdiWH/4YYfGctLQuLHjg3VL1afubcqUvwMAAABgUyQYhY1m++23/WHwV3/8MfLPP0ePGz9+2LDhX3z5dXjp/+E7W265RVb3is2eWb16tdjNMPK78qpra9WqdfHFF26xeZsaNWpMmji5+7XXB0Ve2XJlypev0KbNZhecf84TTz7z4EOP9rj26vjWfHxe9/S+/ZzzOt52x93hJVbTpm3rm3r9u6tq1db+Mh995P5GDRol3bdS5YoBAAAAsCkSjMLGVLJkyTADjcegL7/82tXXXPf5F18lBqNLly5NvMtXX38TXjf9/yHnjz/+dLAu+4vPjzmh0YSgWOncqeNLL7/22ONPnXjCcfFx/fn4vEb9+deCBQuOOebItGbNKlas2HqzlnvttWe8u2ioRYu1i9xVqFBhu+23iVeuXr168eLFVapUCQAAAIBNkcWXYOP4/vsfDzj48KFDf02snDBpUni9atWqxMpPP/ti/vz5sXK4qV+/tcuy77H7brGacuXKhtdr1qyJt//m28FBARszZmzHi7uc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" alt="구간 규칙은 범위가 지키고, 끝점에는 크기 비교만 요구한다" /><figcaption>구간 규칙은 범위가 지키고, 끝점에는 크기 비교만 요구한다</figcaption></figure></p>
+<p>그림에는 개념과 연관·다중도만 있고 전술 분류 표기는 없습니다. RateTable 에서 RateBand 로 가는 채운 마름모는 구간이 표에 속한다는 뜻이고, <code>1</code> 과 <code>*</code> 는 표 하나가 구간 여럿을 가진다는 뜻이에요. RateTable 에서 Range 로 가는 선은 표 자신이 가진 적용 구간이고, 칸 안의 <code>span : Range</code> 가 그 선의 끝입니다. RateBand 와 Range 를 잇는 가로 선에는 다중도를 적지 않았는데, 두 칸 사이 통로가 좁아 라벨이 칸에 덮이기 때문이에요. 말로 적으면 구간 여럿이 각각 Range 하나를 가리킵니다. Range 에서 Magnitude 로 가는 선이 둘인 것은 <code>upper</code> 와 <code>lower</code> 가 따로 있다는 뜻이고, 칸 안의 두 줄이 그 끝이에요. Quantity 에서 Magnitude 로 가는 빈 삼각형은 「~의 한 종류」를 뜻합니다. 개념의 포함 관계를 옮긴 것이지 코드에서 상속으로 구현하라는 뜻은 아니에요.</p>
+<h2 id="사용-목적">사용 목적</h2>
+<p>코드나 요구에서 아래 모습이 보이면 Range 를 쓸 때입니다. 넷을 차례로 봅시다.</p>
+<h4 id="단서-1--한-쌍으로만-뜻이-있는-두-칸을-함께-넘기는-함수가-여럿입니다">단서 1 — 한 쌍으로만 뜻이 있는 두 칸을 함께 넘기는 함수가 여럿입니다</h4>
+<p>한 쌍으로만 뜻이 있는 두 칸이 늘 함께 쓰입니다. <code>startDate</code> · <code>endDate</code>, <code>minWeight</code> · <code>maxWeight</code> 처럼요. 두 칸을 받는 함수가 셋을 넘어가면 그 둘은 이미 한 값입니다. 시나리오 1 의 2단계가 그 둘을 한 값으로 묶은 자리예요.</p>
+<h4 id="단서-2--경계값-하나-때문에-화면마다-답이-다릅니다">단서 2 — 경계값 하나 때문에 화면마다 답이 다릅니다</h4>
+<p>개요의 2 kg 이 그렇고, 시나리오 3 의 3단계가 그 1500원 차이를 따라갑니다. 버그 리포트가 「경계에서만 틀린다」로 올라오면 포함 여부를 정하는 자리가 흩어져 있다는 신호예요.</p>
+<h4 id="단서-3--구간들-사이의-관계를-묻는-요구가-있습니다">단서 3 — 구간들 사이의 관계를 묻는 요구가 있습니다</h4>
+<p>「예약이 겹치면 안 된다」, 「유효 기간이 1년을 빈틈 없이 나눠야 한다」, 「정상 범위 밖이면 경고한다」 같은 것들이요. 겹침과 맞닿음은 구간을 값으로 두어야 물어볼 수 있는 질문입니다. 시나리오 2 의 3단계가 그 질문을 쓰는 자리예요.</p>
+<h4 id="단서-4--끝이-하나뿐인-구간과-양-끝이-있는-구간을-같이-다뤄야-합니다">단서 4 — 끝이 하나뿐인 구간과 양 끝이 있는 구간을 같이 다뤄야 합니다</h4>
+<p>「20 kg 초과 전부」와 「2 kg 초과 5 kg 이하」가 한 목록에 섞이는 경우요. 두 칸 모델에서는 없는 끝을 <code>null</code> 이나 아주 큰 수로 때우게 되는데, 그 둘은 비교 코드에서 서로 다른 결과를 냅니다.</p>
+<h4 id="쓰지-말아야-할-경우">쓰지 말아야 할 경우</h4>
+<p>반대로 아래 둘은 Range 로 만들면 잃는 것이 큽니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>이런 경우</th><th>Range 로 만들면 잃는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>임계값이 하나이고 비교하는 자리도 한 곳이다(「재고가 10 미만이면 알림」)</td><td>값 하나와 부등호 하나로 끝나던 자리에 타입이 하나 늘고, 하한을 무엇으로 둘지 같은 답 없는 질문이 생깁니다. 비교 자리가 여러 곳으로 퍼지거나 상한이 생기면 그때가 Range 를 쓸 때예요</td></tr>
+<tr><td>끝점 타입에 순서가 없다(색상 코드, 우편번호)</td><td>크기 비교가 없으면 <code>includes</code> 가 무엇을 답해야 하는지 정의되지 않습니다. 두 끝을 담을 수는 있지만 그 값이 구간 노릇을 못 해요. 순서가 없는 값의 묶음은 구간이 아니라 집합입니다</td></tr>
+</tbody>
+</table>
+</div>
+<p>두 줄을 가르는 질문은 하나예요. <strong>「이 값이 안에 드는가」를 묻는 자리가 하나뿐인가.</strong> 하나뿐이고 그 답이 바뀔 일도 없다면 부등식 한 줄이 맞습니다. 비슷한 단서에서 다른 패턴을 고르게 되는 경우도 있어요. 묻는 것이 두 끝 사이가 아니라 값 하나의 크기라면 Quantity 를, 구간으로 값을 분류하는 규칙 자체를 데이터로 두어야 한다면 Knowledge Level 을 봅니다. Quantity 와의 차이는 다음 절에서 가릅니다.</p>
+<h2 id="패턴의-경계">패턴의 경계</h2>
+<h3 id="디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</h3>
+<p>아래 조건은 클래스 모양이 아니라 <strong>어떤 개념이 무엇을 책임지는가</strong>로 판정합니다. 메서드인지 그 타입에 붙은 함수인지, 필드가 넷인지 둘인지는 판정에 상관없어요. 조건마다 그것을 보여 준 시나리오의 단계를 가리킵니다.</p>
+<ol>
+<li>[필수] 구간은 그것을 쓰는 개념과 따로 있는 값 — 두 끝을 담은 값이 하나 있고, 구간을 쓰는 개념은 끝점 둘을 자기 칸으로 풀어 두지 않고 그 값 하나를 가리킵니다. 시나리오 1 의 2단계 (근거: Fowler <em>Analysis Patterns</em> 4장 §4.3 — Figure 4.19 에서 Age Band 가 두 연관으로 끝점을 따로 가지던 모양을 Figure 4.20 이 Range 클래스 하나로 바꾸고 Age Band <code>*</code> — <code>1</code> Range 로 잇습니다. <a href="https://martinfowler.com/eaaDev/Range.html">Range, eaaDev 초안</a>의 도입부는 범위를 값 쌍으로 다루는 대신 범위 전체를 객체 하나로 나타내는 것이 이 패턴이라고 적습니다)
+<ul>
+<li>경계 사례: 위 근거 괄호가 받쳐 주는 것은 <strong>구간이 따로 있는 값이라</strong>는 것까지입니다. 그 값을 불변으로 둘지, 같음을 어떻게 판정할지는 여기서 정해지지 않아요. 그 둘은 [선택] 8 에 있습니다.</li>
+<li>빠지면: 예약 한 건이나 요금 구간 한 줄이 <code>start</code> · <code>end</code> 두 칸을 갖고 구간 연산까지 떠안습니다. 겹침을 물으려면 예약 객체를 통째로 넘겨야 하고, 같은 구간 규칙을 쓰는 요금표는 그 코드를 다시 씁니다. 시나리오 3 의 1단계가 그 모양이에요.</li>
+</ul>
+</li>
+<li>[필수] 끝점은 크기 비교가 되는 값 — 두 끝점이 같은 타입이고, 그 타입에 크기 비교가 있습니다. 시나리오 1 의 1단계 (근거: Fowler <em>Analysis Patterns</em> 4장 §4.3 — Figure 4.20 이 <code>upper</code> 와 <code>lower</code> 의 타입을 Magnitude 로 적습니다. <a href="https://martinfowler.com/eaaDev/Range.html">Range, eaaDev 초안</a>의 "How it Works" 는 <code>&lt;</code> · <code>&gt;</code> · <code>=</code> · <code>&lt;=</code> · <code>&gt;=</code> 에 해당하는 관계가 끝점 타입에 있어야 하고, 값들을 줄 세울 기본 정렬 기준이 필요하다고 적습니다)
+<ul>
+<li>경계 사례: 위 근거 괄호가 받쳐 주는 것은 <strong>끝점에 크기 비교가 있어야 한다</strong>는 것까지입니다. 끝점이 Quantity 여야 한다거나 단위를 가져야 한다는 요구는 여기 없어요. 원전이 단위를 요구한 자리는 Range 가 아니라 그것을 쓰는 쪽이고, 그 이야기는 [선택] 10 에 있습니다.</li>
+<li>빠지면: 우편번호 두 개를 끝점으로 둔 값이 생깁니다. <code>includes</code> 가 사전순을 뜻하는지 숫자 크기를 뜻하는지 정할 근거가 값 안에 없어서, 판정이 구현한 사람의 선택으로 남아요.</li>
+</ul>
+</li>
+<li>[필수] 포함 판정은 구간이 맡음 — 「이 값이 안에 드는가」에 구간 쪽이 답하고, 부르는 쪽은 부등식을 다시 쓰지 않습니다. 시나리오 1 의 4단계 (근거: <a href="https://martinfowler.com/eaaDev/Range.html">Range, eaaDev 초안</a> — "How it Works" 가 범위 객체는 값이 그 안에 드는지 시험하는 연산을 함께 제공한다고 적고, 같은 글의 Date Range 예제가 Range 를 쓰는 어느 자리에서든 반드시 둘 연산은 <code>includes</code> 라고 적습니다. Fowler <em>Analysis Patterns</em> 4장 §4.3 Figure 4.20 의 Range 연산 목록 맨 앞이 <code>includes()</code> 입니다)
+<ul>
+<li>경계 사례: 위 근거 괄호가 받쳐 주는 것은 <strong>판정이 구간 쪽에 있다</strong>는 것까지입니다. 그것이 메서드여야 한다는 요구는 없어요. 구간 타입에 붙은 함수든 모듈 안의 함수든, 부르는 쪽마다 부등식을 다시 쓰지 않으면 이 조건을 갖춘 것입니다.</li>
+<li>빠지면: <code>w &gt; 2000 &amp;&amp; w &lt;= 5000</code> 이 화면 코드와 배치 코드에 따로 적히게 됩니다. 시나리오 3 의 2·3단계가 그 둘이 달라지는 과정이고, 달라진 결과가 같은 소포에 대한 4000원과 5500원이에요.</li>
+</ul>
+</li>
+<li>[필수] 각 끝의 포함 여부는 구간 쪽에 있고 경계 판정이 그것을 따름 — 끝점과 같은 값이 안에 드는지를 구간이 가진 표시가 정하고, 같은 구간을 놓고 부르는 쪽마다 답이 갈리지 않습니다. 시나리오 3 의 3단계 (근거: Fowler <em>Analysis Patterns</em> 4장 §4.3 — Figure 4.20 의 Range 가 <code>isUpperInclusive</code> 와 <code>isLowerInclusive</code> 를 두 끝점과 나란히 자기 속성으로 두고, 그 속성을 가진 클래스가 <code>includes()</code> 를 함께 듭니다)
+<ul>
+<li>경계 사례: 위 근거 괄호가 받쳐 주는 것은 <strong>포함 여부가 구간에 속한 규칙이고 그 구간이 포함 판정을 가진다</strong>는 것까지입니다. 그 판정이 표시를 읽어 경계의 답을 가른다는 데까지는, 둘을 한 상자에 나란히 둔 그림에서 이 가이드가 읽어 낸 것입니다. 그것을 boolean 두 개로 담아야 한다는 뜻은 아니에요. 반열림으로 고정된 타입과 양 끝 포함으로 고정된 타입을 따로 두는 길도 규칙이 구간 쪽에 있는 것이고, 실제 사례의 Rust 표준 라이브러리가 그 모양입니다.</li>
+<li>빠지면: 같은 2 kg 이 4000원도 5500원도 됩니다(시나리오 3 의 3단계). 조건을 갖춘 모델에서는 같은 소포의 답이 포함 표시로만 바뀌어, 표시를 뒤집은 표에 넣으면 <code>band-2 · 5500원</code> 하나가 나와요.</li>
+</ul>
+</li>
+<li>[선택] 구간끼리의 관계를 물음 — 겹치는가(<code>overlaps</code>), 맞닿는가(<code>abuts</code>), 하나가 다른 하나를 품는가, 둘 사이에 틈이 얼마인가를 구간이 답합니다. 시나리오 2 의 3단계 (근거: Fowler <em>Analysis Patterns</em> 4장 §4.3 — Figure 4.20 의 연산 목록에 <code>overlaps()</code> 와 <code>abuts()</code> 가 있고, <a href="https://martinfowler.com/eaaDev/Range.html">Range, eaaDev 초안</a>의 "How it Works" 는 구간끼리 비교하는 연산을 "또한 넣을 수 있는 것" 으로 적습니다)</li>
+<li>[선택] 한쪽 끝이 없는 구간 — 「20 kg 초과 전부」처럼 위가 열린 구간을 값으로 둡니다. 시나리오 2 의 확인 질문 (근거: <a href="https://martinfowler.com/eaaDev/Range.html">Range, eaaDev 초안</a>의 "How it Works" — 없는 끝을 <code>null</code> 로 두어 무제한으로 보는 길과 양 극단을 특별한 값으로 두는 길을 나란히 들고, 어느 쪽이든 만드는 메서드 뒤에 감추라고 적습니다)</li>
+<li>[선택] 하한이 상한보다 큰 짝을 어떻게 볼지 정함 — 만들지 못하게 막든 빈 구간으로 받아들이든, 한쪽을 골라 값에 정해 둡니다. 시나리오 3 의 1단계 (근거: <a href="https://martinfowler.com/eaaDev/Range.html">Range, eaaDev 초안</a>의 Date Range 예제 — <code>isEmpty</code> 를 시작이 끝보다 뒤인지로 두어, 뒤집힌 짝을 오류가 아니라 빈 구간으로 다룹니다)
+<ul>
+<li>경계 사례: 이 예제는 막는 쪽을 골랐고, 시나리오 3 의 1단계가 그 거부예요.</li>
+</ul>
+</li>
+<li>[선택] 값으로 같음을 판정하고 불변 — 두 구간이 같은 구간인지 참조가 아니라 값으로 가르고, 한 곳의 계산이 같은 값을 쓰던 다른 곳을 바꾸지 않습니다. 시나리오 2 의 4단계(목록을 통째로 갈아 끼움) (근거: <a href="https://martinfowler.com/bliki/ValueObject.html">Value Object, Fowler</a> — 값 객체에는 aliasing 을 막을 장치가 필요하고 불변이 먼저 권하는 방법이라고 적습니다)</li>
+<li>[선택] 시작과 길이로 적기 — 두 끝 대신 시작과 길이, 또는 끝과 길이로 같은 구간을 나타냅니다. 시나리오 1 의 2단계(두 끝 쪽을 고른 자리) (근거: <a href="https://martinfowler.com/eaaDev/Range.html">Range, eaaDev 초안</a>의 "How it Works" — 시작과 길이로 두는 것도, 끝과 길이로 두는 것도 그만큼 쓸모 있다고 적습니다)</li>
+<li>[선택] 끝점을 Quantity 로 두어 단위까지 맞춤 — 끝점에 단위가 붙어 2 kg 과 2000 g 이 같은 자리에 놓입니다. 시나리오 1 의 1단계 (근거: Fowler <em>Analysis Patterns</em> 4장 §4.3 — Figure 4.20 은 이 제약을 Range 가 아니라 그것을 쓰는 Age Band 쪽에 붙여, 그 구간의 끝점이 시간 단위를 가진 quantity 여야 한다고 적습니다)</li>
+</ol>
+<blockquote>
+<p>구간은 값 하나다. 두 끝과 「그 끝을 포함하는가」가 그 값 안에 있어 경계 판정이 그 표시를 따르고, 끝점에는 크기 비교만 요구하며, 안에 드는지는 그 값에게 묻는다.</p>
+</blockquote>
+<p>기억법은 갖춰야 할 것을 줄인 것이지 갖추면 충분하다는 뜻이 아닙니다. 필수 넷을 모두 갖추고도 구간이 아닌 값을 만들 수 있어요. 바로 다음 절의 세 번째 비교 대상이 그 가운데 하나예요.</p>
+<h3 id="비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</h3>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>비교 대상</th><th>구분 기준</th><th>Range 를 고르면 얻는 것</th><th>포기하는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>시작·끝 두 칸을 가진 개념</td><td>구간 규칙이 그 개념에 붙어 있는가, 별도의 값에 있는가</td><td>같은 구간 규칙을 예약·요율·유효 기간이 함께 쓴다</td><td>타입이 하나 늘고, 구간을 쓰는 쪽이 값을 한 번 더 거쳐 읽는다</td></tr>
+<tr><td>비교자를 붙인 값 하나</td><td>끝이 둘인가 하나인가</td><td>두 끝 사이를 묻는 질문에 값이 답한다</td><td>「10 초과」한 조각만 필요한 자리에 두 끝짜리 값을 만들게 된다</td></tr>
+<tr><td>구간 여럿을 한 값으로 담은 것</td><td>「안」이 두 끝 사이인가, 여러 구간의 합인가</td><td>겹침·맞닿음이 두 구간 사이의 질문으로 단순해진다</td><td>「이 구간을 뺀 나머지」를 한 값으로 나타내지 못한다</td></tr>
+<tr><td>Quantity</td><td>값 하나인가 두 끝 사이인가</td><td>어떤 값이 그 안에 드는지를 물을 수 있다</td><td>더하고 빼고 환산하는 일은 못 한다 — 끝점이 그것을 한다</td></tr>
+</tbody>
+</table>
+</div>
+<h4 id="시작끝-두-칸을-가진-개념과의-차이">시작·끝 두 칸을 가진 개념과의 차이</h4>
+<p>구분 기준은 구간 규칙이 어디에 있는가입니다. 아래 코드는 구간을 값으로 두지 않고 예약이 직접 가집니다.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-java">record Reservation(String guest, String room, LocalDate start, LocalDate end) {
+    boolean includes(LocalDate d) { return !d.isBefore(start) &amp;&amp; !d.isAfter(end); }
+    boolean overlaps(Reservation o) { return !start.isAfter(o.end) &amp;&amp; !o.start.isAfter(end); }
+}</code></pre>
+<p>겹침을 물으려면 상대 예약을 통째로 넘겨야 해서, 손님 이름과 방 번호가 구간 비교의 인자로 따라 들어갑니다. 그리고 양 끝 포함이라는 규칙이 <code>includes</code> 안에만 있어요. 요금표가 같은 규칙을 쓰려면 그 두 메서드를 다시 씁니다. 시나리오 1 의 2단계가 이 자리를 갈라 둔 지점이고, 시나리오 3 의 1단계가 그렇게 두었을 때 하한이 상한보다 큰 짝을 막을 곳이 없다는 것을 보입니다. Range 를 고르면 예약·요율·유효 기간이 같은 구간 값을 함께 쓰는 대신, 구간을 쓰는 쪽이 값을 한 번 더 거쳐 읽게 돼요.</p>
+<h4 id="비교자를-붙인-값-하나와의-차이">비교자를 붙인 값 하나와의 차이</h4>
+<p>구분 기준은 끝이 둘인가 하나인가입니다. 측정 결과가 「10 mg 초과」로만 보고되는 경우가 있어요. 위가 열린 Range 로 볼 수도 있어 보이지만 둘은 다릅니다. 열린 구간은 양 끝을 다 아는데 한쪽이 무제한이라는 뜻이고, 비교자를 붙인 값은 애초에 끝이 하나예요. 의료 데이터 교환 표준인 HL7(Health Level Seven, 의료 정보 표준 단체) FHIR(Fast Healthcare Interoperability Resources)은 이 자리를 갈라 두고, 범위를 벗어난 측정값에는 Range 대신 비교자를 붙인 Quantity 를 쓰라고 적습니다(<a href="https://hl7.org/fhir/R5/datatypes.html">FHIR R5 Data Types</a>). 이유는 뜻이 다르기 때문이에요. 「10 초과」는 실제 값이 얼마인지 모른다는 말이고, 열린 구간은 그 구간에 드는 값의 집합을 가리킵니다.</p>
+<pre tabindex="0"><code class="language-text">열린 구간         Range(lower 10 mg 미포함, upper 없음)
+                  끝이 둘이고 위쪽이 무제한 — includes(12 mg) 에 답한다
+
+비교자 붙인 값    Quantity(10 mg) 에 비교자 "&gt;" 를 붙인 것
+                  끝이 하나 — 실제 값을 모른다는 표시이고 물어볼 「안」이 없다</code></pre>
+<h4 id="구간-여럿을-한-값으로-담은-것과의-차이">구간 여럿을 한 값으로 담은 것과의 차이</h4>
+<p>이 대상이 특히 헷갈리는 이유는 <strong>필수 조건 넷을 전부 만족하기 때문</strong>입니다. 아래 값은 두 끝을 한 값으로 담고, 끝점은 크기 비교가 되고, 판정을 자기가 맡고, 포함 여부도 자기 안에 있어 경계의 답이 그 표시를 따라요.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-typescript">class Outside {
+  constructor(
+    readonly lower: number,
+    readonly upper: number,
+    readonly lowerInclusive: boolean,
+    readonly upperInclusive: boolean,
+  ) {}
+
+  // 두 끝 「사이」가 아니라 두 끝 「바깥」을 안이라고 답한다
+  includes(v: number): boolean {
+    return (this.lowerInclusive ? v &lt;= this.lower : v &lt; this.lower)
+      || (this.upperInclusive ? v &gt;= this.upper : v &gt; this.upper);
+  }
+}</code></pre>
+<p>필수 넷은 「안이 두 끝 사이다」를 말하지 않습니다. 그래서 이 값은 조건만으로는 걸러지지 않아요. 차이가 나는 자리는 구간끼리의 연산입니다. <code>Outside(2, 5)</code> 는 두 구간의 합이라 다른 <code>Outside</code> 와 겹치는지 물으면 답이 구간 하나의 답으로 나오지 않고, 맞닿음은 아예 정의되지 않아요. PostgreSQL 이 구간 타입마다 「여러 구간의 합」을 담는 multirange 타입을 따로 둔 것이 같은 이유입니다(<a href="https://www.postgresql.org/docs/current/rangetypes.html">PostgreSQL: Range Types</a>). 두 끝 사이를 한 값으로 두면 겹침과 맞닿음이 두 구간 사이의 질문으로 단순해지고, 대신 「이 구간을 뺀 나머지」는 값 하나로 나타내지 못합니다.</p>
+<h4 id="quantity-와의-차이">Quantity 와의 차이</h4>
+<p>구분 기준은 값 하나인가 두 끝 사이인가입니다. 둘은 대안이 아니라 층이 달라요. Quantity 는 Range 의 끝점 자리에 올 수 있는 값 가운데 하나이고, 그 관계가 개념 정리의 그림에서 Quantity 가 Magnitude 아래 놓인 이유입니다.</p>
+<pre tabindex="0"><code class="language-text">Quantity   2 kg                          얼마인가
+Range      0 g &lt; x &lt;= 2 kg               어디부터 어디까지인가
+             │        └─ Quantity(상한)
+             └─ Quantity(하한)</code></pre>
+<p>2 kg 에게 「3 kg 이 너 안에 드니?」라고 물을 수는 없어요. 그 질문은 구간에게만 뜻이 있습니다. 반대로 구간에게 「5 kg 을 더해 줘」라고 물을 수도 없고요. 그 일은 끝점이 합니다. Range 를 고르면 어떤 값이 안에 드는지 물을 수 있게 되는 대신, 더하고 빼고 환산하는 일은 끝점 타입이 맡아요.</p>
+<h2 id="구현-예시">구현 예시</h2>
+<h3 id="상황-설정">상황 설정</h3>
+<p>시나리오 1·2·3 의 요금표 장면을 세 언어로 똑같이 구현합니다. 택배 회사 한 곳의 요금 산정 코드이고, 배송 상품 하나마다 요금표가 하나 있으며 그 표가 무게 구간별 기본 요금을 정해요. 소포 하나의 무게가 들어오면 표가 구간을 찾아 요금을 돌려줍니다.</p>
+<p>고정인 것도 정해 둡니다. 단위는 g 와 kg 둘이고 무게는 g 단위 정수로 기록해요. 구간의 포함 규칙은 하한 미포함 · 상한 포함으로 맞추되, 그 규칙은 구간마다 값으로 붙어 있어 표가 다르면 다르게 정할 수 있습니다. 하한이 상한보다 큰 구간은 만들지 못하게 막습니다. 표를 다시 정의할 때는 구간 목록 전체를 한 번에 넘기고, 검사를 통과한 뒤에만 교체해요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>예제 타입</th><th>대응하는 개념</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Range</code> · <code>Quantity</code></td><td>같은 이름의 개념 그대로. <code>Range</code> 는 끝점 타입을 매개변수로 받는다</td></tr>
+<tr><td><code>Magnitude</code></td><td>타입으로 두지 않고 각 언어의 비교 제약으로 둔다 — Java <code>Comparable</code> · TypeScript <code>Ordered</code> · Rust <code>Ord</code></td></tr>
+<tr><td><code>RateBand</code> · <code>RateTable</code></td><td>같은 이름의 개념 그대로. 개요가 구간 · 요금표라고 부른 것이고, <code>RateTable</code> 의 <code>span</code> 이 적용 구간이다</td></tr>
+<tr><td><code>Fee</code> · <code>Unit</code></td><td>패턴 밖의 값. 요금 금액과 무게 단위</td></tr>
+<tr><td><code>RateTableId</code> · <code>BandId</code> · <code>ProductId</code></td><td>패턴 밖의 식별자</td></tr>
+</tbody>
+</table>
+</div>
+<p>아래 표에서 쓰는 DDD(Domain-Driven Design, 도메인 주도 설계) 전술 용어(Bounded Context · Aggregate · Aggregate Root · Entity · Value Object(VO) · id 참조 · 불변식)는 이 가이드의 주제 밖 사전 지식이라 <a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a>가 한 자리에 모아 두었어요. 표를 읽기 전에 그 문서를 한 번 읽고 오시면 네 행이 각각 무엇을 정하는지 바로 읽힙니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>항목</th><th>이 가이드의 설정</th></tr>
+</thead>
+<tbody>
+<tr><td>bounded context</td><td>택배 요금 산정 — 배송 상품마다 무게 구간별 기본 요금을 정하고 소포 하나의 요금을 찾는다</td></tr>
+<tr><td>불변식의 위치</td><td>구간 하나의 규칙은 Range 가 지킨다 — ① 하한이 상한보다 클 수 없고 ② 어떤 값이 안에 드는지는 그 구간이 가진 두 포함 표시로만 정해진다. 구간들 사이의 규칙은 RateTable root 가 지킨다 — ③ 구간끼리 겹치지 않고 ④ 구간이 적용 구간을 빈틈 없이 덮으며 ⑤ 구간 목록은 ③·④ 를 통과한 뒤에만 교체된다</td></tr>
+<tr><td>root·entity·VO 배정</td><td>RateTable aggregate 하나. RateTable 이 root(entity, <code>RateTableId</code> 로 식별)이고 RateBand 는 그 안의 entity(<code>BandId</code> 로 식별)다. Range · Quantity · Fee · Unit 과 세 id 는 VO</td></tr>
+<tr><td>타 aggregate 참조 방식</td><td>RateTable 이 배송 상품 카탈로그 aggregate(이 예제 밖)의 상품을 <code>ProductId</code> 로 가리킨다. Range 는 식별자 없이 값으로 오가므로 두 구간이 같은 인스턴스를 나눠 써도 복사한 것과 결과가 같다</td></tr>
+</tbody>
+</table>
+</div>
+<p>코드에서 그 경계가 나타나는 자리는 <code>RateTable</code> 의 <code>redefine</code> 하나입니다. 구간 목록을 바꾸는 메서드가 그것뿐이라 예제 코드의 목록은 늘 겹침·덮음 검사를 지나서 바뀌어요. 다만 Rust 판은 모듈을 나누지 않아서, 같은 파일의 <code>main</code> 이 필드에 바로 쓰는 것까지 컴파일러가 막지는 않습니다(직접 컴파일해 확인). 표가 「어디에 두었는가」를 말했다면, 다음 표는 「다른 곳에 두면 무엇이 어긋나는가」를 불변식 다섯과 id 참조 하나에 대해 적은 것입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>규칙(불변식) 또는 참조</th><th>다른 곳에 두거나 바꾸면</th><th>어느 동작에서 무엇이 어긋나는가</th></tr>
+</thead>
+<tbody>
+<tr><td>① 하한이 상한보다 클 수 없다</td><td>구간을 만드는 호출자가 넘기기 전에 확인한다</td><td>한 곳만 빠뜨리면 <code>5 kg .. 2 kg</code> 짜리 구간이 목록에 들어갑니다. 하한 초과이면서 상한 이하인 무게는 없으므로 <code>includes</code> 가 어떤 무게에도 참을 내지 않고, 그 구간은 조회에서 끝내 안 골라져요. 실행 11행이 값을 만드는 자리에서 막은 결과입니다</td></tr>
+<tr><td>② 포함 여부는 구간이 가진 두 표시로 정해진다</td><td>조회 코드가 부등호를 직접 고른다</td><td>창구가 상한을 포함으로, 배치가 상한을 미포함으로 읽으면 같은 2 kg 소포가 4000원과 5500원으로 갈립니다. 시나리오 3 의 3단계가 그 과정이고, 실행 마지막 줄이 포함 표시를 뒤집었을 때 같은 소포가 <code>band-2 · 5500원</code> 을 받는 것을 보여 줍니다</td></tr>
+<tr><td>③ 구간끼리 겹치지 않는다</td><td>구간 하나가 스스로 확인한다 — 이때 ④ 도 함께 사라진다. 둘 다 목록을 봐야 답할 수 있는 규칙이라 구간 하나에는 판정할 정보가 없다</td><td><code>4 kg &lt; x &lt;= 9 kg</code> 을 더해도 그 구간 안에서는 어긋난 것이 없고, 조회가 먼저 만난 구간을 내놓아 9 kg 소포가 band-3 의 8000원이 아니라 band-9 의 7000원을 받습니다(두 검사를 뺀 사본을 Java 21 로 실행해 확인). 실행 12행이 표 쪽에서 막은 결과예요</td></tr>
+<tr><td>④ 구간이 적용 구간을 빈틈 없이 덮는다</td><td>조회가 못 찾았을 때 기본 요금을 쓴다</td><td>2 kg 초과 3 kg 이하가 비어 있어도 조회는 기본 요금을 내고 지나갑니다. 표가 잘못 정의됐다는 사실이 요금 오류로만 나타나요. 실행 13행이 정의 자리에서 막은 결과입니다</td></tr>
+<tr><td>⑤ 구간 목록은 검사를 통과한 뒤에만 교체된다</td><td>목록을 먼저 넣고 검사한다</td><td>겹치는 목록이 들어간 뒤 예외가 나면 목록은 이미 어긋난 상태로 남습니다. 그 사이에 들어온 조회가 틀린 요금을 받고, 되돌리는 코드를 따로 두어야 해요</td></tr>
+<tr><td>RateTable 이 상품을 <code>ProductId</code> 로 가리킨다</td><td>상품 객체를 <code>RateTable</code> 필드로 가진다</td><td>요금 조회 한 번이 <code>table.product</code> 를 거쳐 상품의 판매 상태나 이름을 고칠 수 있게 됩니다. 같은 상품을 쓰는 다른 요금표와 주문 쪽까지 그 변경을 함께 보게 돼요</td></tr>
+</tbody>
+</table>
+</div>
+<p>뒤의 세 언어 구현은 이 설정을 그대로 옮긴 것이고, 실행하면 셋이 아래 열네 줄을 글자까지 같게 냅니다. 가이드 폴더의 <code>code/expected-output.txt</code> 와 같은 내용이고, 이 글의 실행 수치는 전부 여기서 와요.</p>
+<pre tabindex="0"><code class="language-text">요금표 rate-1 · 상품 standard-parcel · 적용 0 g &lt; x &lt;= 20 kg
+구간 band-1 · 0 g &lt; x &lt;= 2 kg · 4000원
+구간 band-2 · 2 kg &lt; x &lt;= 5 kg · 5500원
+구간 band-3 · 5 kg &lt; x &lt;= 20 kg · 8000원
+2 kg 소포 → band-1 · 4000원
+2001 g 소포 → band-2 · 5500원
+20 kg 소포 → band-3 · 8000원
+거부 — 적용 구간을 벗어납니다: 20001 g
+대형 구간을 더해 적용 0 g &lt; x &lt;= 30 kg 으로 다시 정의
+25 kg 소포 → band-4 · 11000원
+거부 — 하한이 상한보다 큽니다: 5 kg .. 2 kg
+거부 — 구간이 겹칩니다: band-2(2 kg &lt; x &lt;= 5 kg) 와 band-9(4 kg &lt; x &lt;= 9 kg)
+거부 — 구간 사이에 틈이 있습니다: 0 g &lt; x &lt;= 2 kg 다음 구간이 3 kg 부터입니다
+경계 포함을 뒤집은 표에서 2 kg 소포 → band-2 · 5500원</code></pre>
+<h3 id="구현">구현</h3>
+<div class="code-tabs" id="range-guide-v1-1-0-tabs1">
+<div class="code-tabs__list" role="tablist" aria-label="구현 예시 언어">
+<button type="button" class="code-tabs__tab" role="tab" id="range-guide-v1-1-0-tabs1-tab-java" aria-controls="range-guide-v1-1-0-tabs1-panel-java" aria-selected="true" tabindex="0" data-lang="java">Java</button>
+<button type="button" class="code-tabs__tab" role="tab" id="range-guide-v1-1-0-tabs1-tab-typescript" aria-controls="range-guide-v1-1-0-tabs1-panel-typescript" aria-selected="false" tabindex="-1" data-lang="typescript">TypeScript</button>
+<button type="button" class="code-tabs__tab" role="tab" id="range-guide-v1-1-0-tabs1-tab-rust" aria-controls="range-guide-v1-1-0-tabs1-panel-rust" aria-selected="false" tabindex="-1" data-lang="rust">Rust</button>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="range-guide-v1-1-0-tabs1-panel-java" aria-labelledby="range-guide-v1-1-0-tabs1-tab-java">
+<p class="code-tabs__label" aria-hidden="true">Java</p>
+<pre tabindex="0"><code class="language-java">import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+enum Unit {
+    G(1, "g"), KG(1000, "kg");
+
+    final long grams;
+    final String symbol;
+
+    Unit(long grams, String symbol) { this.grams = grams; this.symbol = symbol; }
+}
+
+// 무게 하나. g 로 정규화해 담으므로 2 kg 과 2000 g 은 같은 값이고 크기 비교가 필드 하나로 끝난다.
+record Quantity(long grams) implements Comparable&lt;Quantity&gt; {
+    static Quantity of(long amount, Unit unit) { return new Quantity(amount * unit.grams); }
+
+    @Override
+    public int compareTo(Quantity other) { return Long.compare(grams, other.grams); }
+
+    @Override
+    public String toString() {
+        return grams != 0 &amp;&amp; grams % Unit.KG.grams == 0
+                ? (grams / Unit.KG.grams) + " " + Unit.KG.symbol
+                : grams + " " + Unit.G.symbol;
+    }
+}
+
+// 두 끝과 각 끝을 포함하는지를 한 값으로 든 구간. 끝점 타입은 크기 비교가 되면 무엇이든 된다.
+record Range&lt;T extends Comparable&lt;T&gt;&gt;(T lower, T upper, boolean lowerInclusive, boolean upperInclusive) {
+    Range {
+        if (lower.compareTo(upper) &gt; 0) {
+            throw new IllegalArgumentException("하한이 상한보다 큽니다: " + lower + " .. " + upper);
+        }
+    }
+
+    boolean includes(T value) {
+        int lo = lower.compareTo(value);
+        int hi = value.compareTo(upper);
+        return (lo &lt; 0 || (lo == 0 &amp;&amp; lowerInclusive)) &amp;&amp; (hi &lt; 0 || (hi == 0 &amp;&amp; upperInclusive));
+    }
+
+    boolean overlaps(Range&lt;T&gt; other) { return reaches(other) &amp;&amp; other.reaches(this); }
+
+    // 맞닿음 — 한쪽 상한과 다른 쪽 하한이 같은 값이고, 그 자리를 정확히 한쪽만 포함한다.
+    boolean abuts(Range&lt;T&gt; other) {
+        return (upper.compareTo(other.lower) == 0 &amp;&amp; upperInclusive != other.lowerInclusive)
+                || (other.upper.compareTo(lower) == 0 &amp;&amp; other.upperInclusive != lowerInclusive);
+    }
+
+    // 이 구간의 아래 끝이 상대의 위 끝까지 닿는가. 같은 값이면 양쪽이 그 자리를 포함해야 닿는다.
+    private boolean reaches(Range&lt;T&gt; other) {
+        int c = lower.compareTo(other.upper);
+        return c &lt; 0 || (c == 0 &amp;&amp; lowerInclusive &amp;&amp; other.upperInclusive);
+    }
+
+    boolean sameEdgeAsLower(T value, boolean inclusive) {
+        return lower.compareTo(value) == 0 &amp;&amp; lowerInclusive == inclusive;
+    }
+
+    boolean sameEdgeAsUpper(T value, boolean inclusive) {
+        return upper.compareTo(value) == 0 &amp;&amp; upperInclusive == inclusive;
+    }
+
+    @Override
+    public String toString() {
+        return lower + (lowerInclusive ? " &lt;= x " : " &lt; x ") + (upperInclusive ? "&lt;= " : "&lt; ") + upper;
+    }
+}
+
+record Fee(long won) {
+    @Override
+    public String toString() { return won + "원"; }
+}
+
+record BandId(String value) {}
+
+record RateTableId(String value) {}
+
+record ProductId(String value) {}
+
+// 요금 구간 — 무게 구간 하나와 그 구간의 요금. 표 안에서 BandId 로 지목된다.
+record RateBand(BandId id, Range&lt;Quantity&gt; weights, Fee fee) {
+    @Override
+    public String toString() { return "구간 " + id.value() + " · " + weights + " · " + fee; }
+}
+
+final class RateTable {
+    private final RateTableId id;
+    private final ProductId productId;   // 배송 상품 aggregate 는 id 로만 가리킨다
+    private Range&lt;Quantity&gt; span;
+    private List&lt;RateBand&gt; bands;
+
+    RateTable(RateTableId id, ProductId productId, Range&lt;Quantity&gt; span, List&lt;RateBand&gt; bands) {
+        this.id = id;
+        this.productId = productId;
+        redefine(span, bands);
+    }
+
+    // 구간 목록을 바꾸는 유일한 길. 비중첩과 전 구간 덮음을 여기서 검사하고, 통과한 뒤에 교체한다.
+    void redefine(Range&lt;Quantity&gt; span, List&lt;RateBand&gt; bands) {
+        List&lt;RateBand&gt; sorted = new ArrayList&lt;&gt;(bands);
+        sorted.sort(Comparator.comparing((RateBand b) -&gt; b.weights().lower()));
+        if (sorted.isEmpty()) {
+            throw new IllegalArgumentException("구간이 하나도 없습니다: " + span);
+        }
+        for (int i = 0; i &lt; sorted.size(); i++) {
+            for (int j = i + 1; j &lt; sorted.size(); j++) {
+                RateBand a = sorted.get(i);
+                RateBand b = sorted.get(j);
+                if (a.weights().overlaps(b.weights())) {
+                    throw new IllegalArgumentException("구간이 겹칩니다: " + a.id().value() + "(" + a.weights()
+                            + ") 와 " + b.id().value() + "(" + b.weights() + ")");
+                }
+            }
+        }
+        RateBand first = sorted.get(0);
+        RateBand last = sorted.get(sorted.size() - 1);
+        if (!first.weights().sameEdgeAsLower(span.lower(), span.lowerInclusive())
+                || !last.weights().sameEdgeAsUpper(span.upper(), span.upperInclusive())) {
+            throw new IllegalArgumentException("구간이 적용 구간의 양 끝을 덮지 않습니다: " + span);
+        }
+        for (int i = 1; i &lt; sorted.size(); i++) {
+            Range&lt;Quantity&gt; prev = sorted.get(i - 1).weights();
+            Range&lt;Quantity&gt; next = sorted.get(i).weights();
+            if (!prev.abuts(next)) {
+                throw new IllegalArgumentException("구간 사이에 틈이 있습니다: " + prev
+                        + " 다음 구간이 " + next.lower() + " 부터입니다");
+            }
+        }
+        this.span = span;
+        this.bands = List.copyOf(sorted);
+    }
+
+    RateBand bandFor(Quantity weight) {
+        if (!span.includes(weight)) {
+            throw new IllegalArgumentException("적용 구간을 벗어납니다: " + weight);
+        }
+        return bands.stream().filter(b -&gt; b.weights().includes(weight)).findFirst()
+                .orElseThrow(() -&gt; new IllegalStateException("어느 구간에도 들지 않습니다: " + weight));
+    }
+
+    RateTableId id() { return id; }
+
+    ProductId productId() { return productId; }
+
+    Range&lt;Quantity&gt; span() { return span; }
+
+    List&lt;RateBand&gt; bands() { return bands; }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Quantity zero = Quantity.of(0, Unit.G);
+        Quantity kg2 = Quantity.of(2, Unit.KG);
+        Quantity kg5 = Quantity.of(5, Unit.KG);
+        Quantity kg20 = Quantity.of(20, Unit.KG);
+        Range&lt;Quantity&gt; span = new Range&lt;&gt;(zero, kg20, false, true);
+        List&lt;RateBand&gt; bands = List.of(upTo("band-1", zero, kg2, 4000),
+                upTo("band-2", kg2, kg5, 5500), upTo("band-3", kg5, kg20, 8000));
+        RateTable table = new RateTable(new RateTableId("rate-1"), new ProductId("standard-parcel"), span, bands);
+        System.out.println("요금표 " + table.id().value() + " · 상품 " + table.productId().value()
+                + " · 적용 " + table.span());
+        table.bands().forEach(System.out::println);
+
+        quote(table, kg2);
+        quote(table, Quantity.of(2001, Unit.G));
+        quote(table, kg20);
+        quote(table, Quantity.of(20001, Unit.G));
+
+        Quantity kg30 = Quantity.of(30, Unit.KG);
+        Range&lt;Quantity&gt; wider = new Range&lt;&gt;(zero, kg30, false, true);
+        List&lt;RateBand&gt; withBig = new ArrayList&lt;&gt;(bands);
+        withBig.add(upTo("band-4", kg20, kg30, 11000));
+        table.redefine(wider, withBig);
+        System.out.println("대형 구간을 더해 적용 " + table.span() + " 으로 다시 정의");
+        quote(table, Quantity.of(25, Unit.KG));
+
+        attempt(() -&gt; new Range&lt;&gt;(kg5, kg2, false, true));
+        List&lt;RateBand&gt; overlapping = new ArrayList&lt;&gt;(bands);
+        overlapping.add(upTo("band-9", Quantity.of(4, Unit.KG), Quantity.of(9, Unit.KG), 7000));
+        attempt(() -&gt; table.redefine(span, overlapping));
+        attempt(() -&gt; table.redefine(span, List.of(upTo("band-1", zero, kg2, 4000),
+                upTo("band-5", Quantity.of(3, Unit.KG), kg5, 5500), upTo("band-3", kg5, kg20, 8000))));
+
+        RateTable flipped = new RateTable(new RateTableId("rate-2"), new ProductId("standard-parcel"),
+                new Range&lt;&gt;(zero, kg20, true, false),
+                List.of(from("band-1", zero, kg2, 4000), from("band-2", kg2, kg5, 5500),
+                        from("band-3", kg5, kg20, 8000)));
+        System.out.print("경계 포함을 뒤집은 표에서 ");
+        quote(flipped, kg2);
+    }
+
+    // 하한 미포함 · 상한 포함
+    static RateBand upTo(String id, Quantity lower, Quantity upper, long won) {
+        return new RateBand(new BandId(id), new Range&lt;&gt;(lower, upper, false, true), new Fee(won));
+    }
+
+    // 하한 포함 · 상한 미포함
+    static RateBand from(String id, Quantity lower, Quantity upper, long won) {
+        return new RateBand(new BandId(id), new Range&lt;&gt;(lower, upper, true, false), new Fee(won));
+    }
+
+    static void quote(RateTable table, Quantity weight) {
+        try {
+            RateBand band = table.bandFor(weight);
+            System.out.println(weight + " 소포 → " + band.id().value() + " · " + band.fee());
+        } catch (RuntimeException e) {
+            System.out.println("거부 — " + e.getMessage());
+        }
+    }
+
+    static void attempt(Runnable action) {
+        try {
+            action.run();
+        } catch (RuntimeException e) {
+            System.out.println("거부 — " + e.getMessage());
+        }
+    }
+}</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="range-guide-v1-1-0-tabs1-panel-typescript" aria-labelledby="range-guide-v1-1-0-tabs1-tab-typescript">
+<p class="code-tabs__label" aria-hidden="true">TypeScript</p>
+<pre tabindex="0"><code class="language-typescript">// 크기 비교가 되는 값. Range 의 끝점 타입은 이것만 요구한다.
+interface Ordered&lt;T&gt; {
+  compareTo(other: T): number;
+  toString(): string;
+}
+
+const Unit = { G: { grams: 1, symbol: "g" }, KG: { grams: 1000, symbol: "kg" } } as const;
+type Unit = (typeof Unit)[keyof typeof Unit];
+
+// 무게 하나. g 로 정규화해 담으므로 2 kg 과 2000 g 은 같은 값이고 크기 비교가 필드 하나로 끝난다.
+class Quantity implements Ordered&lt;Quantity&gt; {
+  private constructor(readonly grams: number) {}
+
+  static of(amount: number, unit: Unit): Quantity {
+    return new Quantity(amount * unit.grams);
+  }
+
+  compareTo(other: Quantity): number {
+    return this.grams - other.grams;
+  }
+
+  toString(): string {
+    return this.grams !== 0 &amp;&amp; this.grams % Unit.KG.grams === 0
+      ? `${this.grams / Unit.KG.grams} ${Unit.KG.symbol}`
+      : `${this.grams} ${Unit.G.symbol}`;
+  }
+}
+
+// 두 끝과 각 끝을 포함하는지를 한 값으로 든 구간. 끝점 타입은 크기 비교가 되면 무엇이든 된다.
+class Range&lt;T extends Ordered&lt;T&gt;&gt; {
+  constructor(
+    readonly lower: T,
+    readonly upper: T,
+    readonly lowerInclusive: boolean,
+    readonly upperInclusive: boolean,
+  ) {
+    if (lower.compareTo(upper) &gt; 0) {
+      throw new Error(`하한이 상한보다 큽니다: ${lower} .. ${upper}`);
+    }
+  }
+
+  includes(value: T): boolean {
+    const lo = this.lower.compareTo(value);
+    const hi = value.compareTo(this.upper);
+    return (lo &lt; 0 || (lo === 0 &amp;&amp; this.lowerInclusive)) &amp;&amp; (hi &lt; 0 || (hi === 0 &amp;&amp; this.upperInclusive));
+  }
+
+  overlaps(other: Range&lt;T&gt;): boolean {
+    return this.reaches(other) &amp;&amp; other.reaches(this);
+  }
+
+  // 맞닿음 — 한쪽 상한과 다른 쪽 하한이 같은 값이고, 그 자리를 정확히 한쪽만 포함한다.
+  abuts(other: Range&lt;T&gt;): boolean {
+    return (
+      (this.upper.compareTo(other.lower) === 0 &amp;&amp; this.upperInclusive !== other.lowerInclusive) ||
+      (other.upper.compareTo(this.lower) === 0 &amp;&amp; other.upperInclusive !== this.lowerInclusive)
+    );
+  }
+
+  // 이 구간의 아래 끝이 상대의 위 끝까지 닿는가. 같은 값이면 양쪽이 그 자리를 포함해야 닿는다.
+  private reaches(other: Range&lt;T&gt;): boolean {
+    const c = this.lower.compareTo(other.upper);
+    return c &lt; 0 || (c === 0 &amp;&amp; this.lowerInclusive &amp;&amp; other.upperInclusive);
+  }
+
+  sameEdgeAsLower(value: T, inclusive: boolean): boolean {
+    return this.lower.compareTo(value) === 0 &amp;&amp; this.lowerInclusive === inclusive;
+  }
+
+  sameEdgeAsUpper(value: T, inclusive: boolean): boolean {
+    return this.upper.compareTo(value) === 0 &amp;&amp; this.upperInclusive === inclusive;
+  }
+
+  toString(): string {
+    const lo = this.lowerInclusive ? " &lt;= x " : " &lt; x ";
+    const hi = this.upperInclusive ? "&lt;= " : "&lt; ";
+    return `${this.lower}${lo}${hi}${this.upper}`;
+  }
+}
+
+class Fee {
+  constructor(readonly won: number) {}
+
+  toString(): string {
+    return `${this.won}원`;
+  }
+}
+
+class BandId {
+  constructor(readonly value: string) {}
+}
+
+class RateTableId {
+  constructor(readonly value: string) {}
+}
+
+class ProductId {
+  constructor(readonly value: string) {}
+}
+
+// 요금 구간 — 무게 구간 하나와 그 구간의 요금. 표 안에서 BandId 로 지목된다.
+class RateBand {
+  constructor(
+    readonly id: BandId,
+    readonly weights: Range&lt;Quantity&gt;,
+    readonly fee: Fee,
+  ) {}
+
+  toString(): string {
+    return `구간 ${this.id.value} · ${this.weights} · ${this.fee}`;
+  }
+}
+
+class RateTable {
+  private currentSpan!: Range&lt;Quantity&gt;;
+  private currentBands!: readonly RateBand[];
+
+  constructor(
+    readonly id: RateTableId,
+    readonly productId: ProductId, // 배송 상품 aggregate 는 id 로만 가리킨다
+    span: Range&lt;Quantity&gt;,
+    bands: readonly RateBand[],
+  ) {
+    this.redefine(span, bands);
+  }
+
+  // 구간 목록을 바꾸는 유일한 길. 비중첩과 전 구간 덮음을 여기서 검사하고, 통과한 뒤에 교체한다.
+  redefine(span: Range&lt;Quantity&gt;, bands: readonly RateBand[]): void {
+    const sorted = [...bands].sort((a, b) =&gt; a.weights.lower.compareTo(b.weights.lower));
+    const first = sorted[0];
+    const last = sorted[sorted.length - 1];
+    if (first === undefined || last === undefined) {
+      throw new Error(`구간이 하나도 없습니다: ${span}`);
+    }
+    for (let i = 0; i &lt; sorted.length; i++) {
+      for (let j = i + 1; j &lt; sorted.length; j++) {
+        const a = sorted[i]!;
+        const b = sorted[j]!;
+        if (a.weights.overlaps(b.weights)) {
+          throw new Error(`구간이 겹칩니다: ${a.id.value}(${a.weights}) 와 ${b.id.value}(${b.weights})`);
+        }
+      }
+    }
+    if (
+      !first.weights.sameEdgeAsLower(span.lower, span.lowerInclusive) ||
+      !last.weights.sameEdgeAsUpper(span.upper, span.upperInclusive)
+    ) {
+      throw new Error(`구간이 적용 구간의 양 끝을 덮지 않습니다: ${span}`);
+    }
+    for (let i = 1; i &lt; sorted.length; i++) {
+      const prev = sorted[i - 1]!.weights;
+      const next = sorted[i]!.weights;
+      if (!prev.abuts(next)) {
+        throw new Error(`구간 사이에 틈이 있습니다: ${prev} 다음 구간이 ${next.lower} 부터입니다`);
+      }
+    }
+    this.currentSpan = span;
+    this.currentBands = Object.freeze(sorted);
+  }
+
+  bandFor(weight: Quantity): RateBand {
+    if (!this.currentSpan.includes(weight)) {
+      throw new Error(`적용 구간을 벗어납니다: ${weight}`);
+    }
+    const found = this.currentBands.find((b) =&gt; b.weights.includes(weight));
+    if (found === undefined) {
+      throw new Error(`어느 구간에도 들지 않습니다: ${weight}`);
+    }
+    return found;
+  }
+
+  get span(): Range&lt;Quantity&gt; {
+    return this.currentSpan;
+  }
+
+  get bands(): readonly RateBand[] {
+    return this.currentBands;
+  }
+}
+
+// 하한 미포함 · 상한 포함
+function upTo(id: string, lower: Quantity, upper: Quantity, won: number): RateBand {
+  return new RateBand(new BandId(id), new Range(lower, upper, false, true), new Fee(won));
+}
+
+// 하한 포함 · 상한 미포함
+function from(id: string, lower: Quantity, upper: Quantity, won: number): RateBand {
+  return new RateBand(new BandId(id), new Range(lower, upper, true, false), new Fee(won));
+}
+
+function quote(table: RateTable, weight: Quantity): void {
+  try {
+    const band = table.bandFor(weight);
+    console.log(`${weight} 소포 → ${band.id.value} · ${band.fee}`);
+  } catch (e) {
+    console.log(`거부 — ${(e as Error).message}`);
+  }
+}
+
+function attempt(action: () =&gt; void): void {
+  try {
+    action();
+  } catch (e) {
+    console.log(`거부 — ${(e as Error).message}`);
+  }
+}
+
+const zero = Quantity.of(0, Unit.G);
+const kg2 = Quantity.of(2, Unit.KG);
+const kg5 = Quantity.of(5, Unit.KG);
+const kg20 = Quantity.of(20, Unit.KG);
+const span = new Range(zero, kg20, false, true);
+const bands = [upTo("band-1", zero, kg2, 4000), upTo("band-2", kg2, kg5, 5500), upTo("band-3", kg5, kg20, 8000)];
+const table = new RateTable(new RateTableId("rate-1"), new ProductId("standard-parcel"), span, bands);
+console.log(`요금표 ${table.id.value} · 상품 ${table.productId.value} · 적용 ${table.span}`);
+for (const band of table.bands) console.log(`${band}`);
+
+quote(table, kg2);
+quote(table, Quantity.of(2001, Unit.G));
+quote(table, kg20);
+quote(table, Quantity.of(20001, Unit.G));
+
+const kg30 = Quantity.of(30, Unit.KG);
+table.redefine(new Range(zero, kg30, false, true), [...bands, upTo("band-4", kg20, kg30, 11000)]);
+console.log(`대형 구간을 더해 적용 ${table.span} 으로 다시 정의`);
+quote(table, Quantity.of(25, Unit.KG));
+
+attempt(() =&gt; new Range(kg5, kg2, false, true));
+attempt(() =&gt;
+  table.redefine(span, [...bands, upTo("band-9", Quantity.of(4, Unit.KG), Quantity.of(9, Unit.KG), 7000)]),
+);
+attempt(() =&gt;
+  table.redefine(span, [
+    upTo("band-1", zero, kg2, 4000),
+    upTo("band-5", Quantity.of(3, Unit.KG), kg5, 5500),
+    upTo("band-3", kg5, kg20, 8000),
+  ]),
+);
+
+const flipped = new RateTable(new RateTableId("rate-2"), new ProductId("standard-parcel"),
+  new Range(zero, kg20, true, false),
+  [from("band-1", zero, kg2, 4000), from("band-2", kg2, kg5, 5500), from("band-3", kg5, kg20, 8000)]);
+process.stdout.write("경계 포함을 뒤집은 표에서 ");
+quote(flipped, kg2);</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="range-guide-v1-1-0-tabs1-panel-rust" aria-labelledby="range-guide-v1-1-0-tabs1-tab-rust">
+<p class="code-tabs__label" aria-hidden="true">Rust</p>
+<pre tabindex="0"><code class="language-rust">use std::fmt;
+
+#[derive(Clone, Copy)]
+struct Unit { grams: i64, symbol: &amp;'static str }
+
+const G: Unit = Unit { grams: 1, symbol: "g" };
+const KG: Unit = Unit { grams: 1000, symbol: "kg" };
+
+// 무게 하나. g 로 정규화해 담으므로 2 kg 과 2000 g 은 같은 값이고 크기 비교가 필드 하나로 끝난다.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+struct Quantity { grams: i64 }
+
+impl Quantity {
+    fn of(amount: i64, unit: Unit) -&gt; Self { Self { grams: amount * unit.grams } }
+}
+
+impl fmt::Display for Quantity {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        if self.grams != 0 &amp;&amp; self.grams % KG.grams == 0 {
+            write!(f, "{} {}", self.grams / KG.grams, KG.symbol)
+        } else {
+            write!(f, "{} {}", self.grams, G.symbol)
+        }
+    }
+}
+
+// 두 끝과 각 끝을 포함하는지를 한 값으로 든 구간. 끝점 타입은 크기 비교가 되면 무엇이든 된다.
+#[derive(Clone)]
+struct Range&lt;T: Ord&gt; { lower: T, upper: T, lower_inclusive: bool, upper_inclusive: bool }
+
+impl&lt;T: Ord + fmt::Display&gt; Range&lt;T&gt; {
+    fn new(lower: T, upper: T, lower_inclusive: bool, upper_inclusive: bool) -&gt; Result&lt;Self, String&gt; {
+        if lower &gt; upper {
+            return Err(format!("하한이 상한보다 큽니다: {} .. {}", lower, upper));
+        }
+        Ok(Self { lower, upper, lower_inclusive, upper_inclusive })
+    }
+
+    fn includes(&amp;self, value: &amp;T) -&gt; bool {
+        (self.lower &lt; *value || (self.lower == *value &amp;&amp; self.lower_inclusive))
+            &amp;&amp; (*value &lt; self.upper || (*value == self.upper &amp;&amp; self.upper_inclusive))
+    }
+
+    fn overlaps(&amp;self, other: &amp;Self) -&gt; bool { self.reaches(other) &amp;&amp; other.reaches(self) }
+
+    // 맞닿음 — 한쪽 상한과 다른 쪽 하한이 같은 값이고, 그 자리를 정확히 한쪽만 포함한다.
+    fn abuts(&amp;self, other: &amp;Self) -&gt; bool {
+        (self.upper == other.lower &amp;&amp; self.upper_inclusive != other.lower_inclusive)
+            || (other.upper == self.lower &amp;&amp; other.upper_inclusive != self.lower_inclusive)
+    }
+
+    // 이 구간의 아래 끝이 상대의 위 끝까지 닿는가. 같은 값이면 양쪽이 그 자리를 포함해야 닿는다.
+    fn reaches(&amp;self, other: &amp;Self) -&gt; bool {
+        self.lower &lt; other.upper
+            || (self.lower == other.upper &amp;&amp; self.lower_inclusive &amp;&amp; other.upper_inclusive)
+    }
+
+    fn same_edge_as_lower(&amp;self, v: &amp;T, inc: bool) -&gt; bool { self.lower == *v &amp;&amp; self.lower_inclusive == inc }
+
+    fn same_edge_as_upper(&amp;self, v: &amp;T, inc: bool) -&gt; bool { self.upper == *v &amp;&amp; self.upper_inclusive == inc }
+}
+
+impl&lt;T: Ord + fmt::Display&gt; fmt::Display for Range&lt;T&gt; {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        let lo = if self.lower_inclusive { " &lt;= x " } else { " &lt; x " };
+        let hi = if self.upper_inclusive { "&lt;= " } else { "&lt; " };
+        write!(f, "{}{}{}{}", self.lower, lo, hi, self.upper)
+    }
+}
+
+struct Fee { won: i64 }
+
+impl fmt::Display for Fee {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result { write!(f, "{}원", self.won) }
+}
+
+struct BandId(String);
+
+struct RateTableId(String);
+
+struct ProductId(String);
+
+// 요금 구간 — 무게 구간 하나와 그 구간의 요금. 표 안에서 BandId 로 지목된다.
+struct RateBand { id: BandId, weights: Range&lt;Quantity&gt;, fee: Fee }
+
+impl fmt::Display for RateBand {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, "구간 {} · {} · {}", self.id.0, self.weights, self.fee)
+    }
+}
+
+struct RateTable {
+    id: RateTableId,
+    product_id: ProductId, // 배송 상품 aggregate 는 id 로만 가리킨다
+    span: Range&lt;Quantity&gt;,
+    bands: Vec&lt;RateBand&gt;,
+}
+
+impl RateTable {
+    fn new(id: RateTableId, product_id: ProductId, span: Range&lt;Quantity&gt;, bands: Vec&lt;RateBand&gt;)
+        -&gt; Result&lt;Self, String&gt; {
+        let mut table = Self { id, product_id, span: span.clone(), bands: Vec::new() };
+        table.redefine(span, bands)?;
+        Ok(table)
+    }
+
+    // 구간 목록을 바꾸는 유일한 길. 비중첩과 전 구간 덮음을 여기서 검사하고, 통과한 뒤에 교체한다.
+    fn redefine(&amp;mut self, span: Range&lt;Quantity&gt;, bands: Vec&lt;RateBand&gt;) -&gt; Result&lt;(), String&gt; {
+        let mut sorted = bands;
+        sorted.sort_by(|a, b| a.weights.lower.cmp(&amp;b.weights.lower));
+        if sorted.is_empty() {
+            return Err(format!("구간이 하나도 없습니다: {}", span));
+        }
+        for i in 0..sorted.len() {
+            for j in i + 1..sorted.len() {
+                let (a, b) = (&amp;sorted[i], &amp;sorted[j]);
+                if a.weights.overlaps(&amp;b.weights) {
+                    return Err(format!("구간이 겹칩니다: {}({}) 와 {}({})",
+                        a.id.0, a.weights, b.id.0, b.weights));
+                }
+            }
+        }
+        let (first, last) = (&amp;sorted[0].weights, &amp;sorted[sorted.len() - 1].weights);
+        if !first.same_edge_as_lower(&amp;span.lower, span.lower_inclusive)
+            || !last.same_edge_as_upper(&amp;span.upper, span.upper_inclusive)
+        {
+            return Err(format!("구간이 적용 구간의 양 끝을 덮지 않습니다: {}", span));
+        }
+        for i in 1..sorted.len() {
+            let (prev, next) = (&amp;sorted[i - 1].weights, &amp;sorted[i].weights);
+            if !prev.abuts(next) {
+                return Err(format!("구간 사이에 틈이 있습니다: {} 다음 구간이 {} 부터입니다",
+                    prev, next.lower));
+            }
+        }
+        self.span = span;
+        self.bands = sorted;
+        Ok(())
+    }
+
+    fn band_for(&amp;self, weight: &amp;Quantity) -&gt; Result&lt;&amp;RateBand, String&gt; {
+        if !self.span.includes(weight) {
+            return Err(format!("적용 구간을 벗어납니다: {}", weight));
+        }
+        self.bands.iter().find(|b| b.weights.includes(weight))
+            .ok_or_else(|| format!("어느 구간에도 들지 않습니다: {}", weight))
+    }
+}
+
+// 하한 미포함 · 상한 포함
+fn up_to(id: &amp;str, lower: Quantity, upper: Quantity, won: i64) -&gt; Result&lt;RateBand, String&gt; {
+    let weights = Range::new(lower, upper, false, true)?;
+    Ok(RateBand { id: BandId(id.to_string()), weights, fee: Fee { won } })
+}
+
+// 하한 포함 · 상한 미포함
+fn from_lower(id: &amp;str, lower: Quantity, upper: Quantity, won: i64) -&gt; Result&lt;RateBand, String&gt; {
+    let weights = Range::new(lower, upper, true, false)?;
+    Ok(RateBand { id: BandId(id.to_string()), weights, fee: Fee { won } })
+}
+
+fn quote(table: &amp;RateTable, weight: Quantity) {
+    match table.band_for(&amp;weight) {
+        Ok(band) =&gt; println!("{} 소포 → {} · {}", weight, band.id.0, band.fee),
+        Err(e) =&gt; println!("거부 — {}", e),
+    }
+}
+
+fn report(result: Result&lt;(), String&gt;) {
+    if let Err(e) = result {
+        println!("거부 — {}", e);
+    }
+}
+
+fn base_bands(zero: Quantity, kg2: Quantity, kg5: Quantity, kg20: Quantity) -&gt; Result&lt;Vec&lt;RateBand&gt;, String&gt; {
+    Ok(vec![up_to("band-1", zero, kg2, 4000)?, up_to("band-2", kg2, kg5, 5500)?,
+        up_to("band-3", kg5, kg20, 8000)?])
+}
+
+fn main() -&gt; Result&lt;(), String&gt; {
+    let (zero, kg2) = (Quantity::of(0, G), Quantity::of(2, KG));
+    let (kg5, kg20) = (Quantity::of(5, KG), Quantity::of(20, KG));
+    let span = Range::new(zero, kg20, false, true)?;
+    let mut table = RateTable::new(RateTableId("rate-1".to_string()),
+        ProductId("standard-parcel".to_string()), span.clone(), base_bands(zero, kg2, kg5, kg20)?)?;
+    println!("요금표 {} · 상품 {} · 적용 {}", table.id.0, table.product_id.0, table.span);
+    for band in &amp;table.bands {
+        println!("{}", band);
+    }
+
+    quote(&amp;table, kg2);
+    quote(&amp;table, Quantity::of(2001, G));
+    quote(&amp;table, kg20);
+    quote(&amp;table, Quantity::of(20001, G));
+
+    let kg30 = Quantity::of(30, KG);
+    let mut wider = base_bands(zero, kg2, kg5, kg20)?;
+    wider.push(up_to("band-4", kg20, kg30, 11000)?);
+    table.redefine(Range::new(zero, kg30, false, true)?, wider)?;
+    println!("대형 구간을 더해 적용 {} 으로 다시 정의", table.span);
+    quote(&amp;table, Quantity::of(25, KG));
+
+    report(Range::new(kg5, kg2, false, true).map(|_| ()));
+    let mut overlapping = base_bands(zero, kg2, kg5, kg20)?;
+    overlapping.push(up_to("band-9", Quantity::of(4, KG), Quantity::of(9, KG), 7000)?);
+    report(table.redefine(span.clone(), overlapping));
+    let gapped = vec![up_to("band-1", zero, kg2, 4000)?,
+        up_to("band-5", Quantity::of(3, KG), kg5, 5500)?, up_to("band-3", kg5, kg20, 8000)?];
+    report(table.redefine(span, gapped));
+
+    let flipped = RateTable::new(RateTableId("rate-2".to_string()),
+        ProductId("standard-parcel".to_string()), Range::new(zero, kg20, true, false)?,
+        vec![from_lower("band-1", zero, kg2, 4000)?, from_lower("band-2", kg2, kg5, 5500)?,
+            from_lower("band-3", kg5, kg20, 8000)?])?;
+    print!("경계 포함을 뒤집은 표에서 ");
+    quote(&amp;flipped, kg2);
+    Ok(())
+}</code></pre>
+</div>
+</div>
+<p>시나리오의 단계가 코드의 어디에 있는지부터 짚습니다. 줄 번호는 위 펜스 기준이에요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>시나리오 · 단계</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td>1 의 1단계 — 무게를 값으로</td><td>16행 <code>Quantity.of</code></td><td>14행 <code>Quantity.of</code></td><td>14행 <code>Quantity::of</code></td></tr>
+<tr><td>1 의 3단계 — 적용 구간 판정</td><td>136행 <code>span.includes</code></td><td>162행 <code>currentSpan.includes</code></td><td>142행 <code>self.span.includes</code></td></tr>
+<tr><td>1 의 4단계 — 구간 고르기</td><td>139행 <code>b.weights().includes</code></td><td>165행 <code>b.weights.includes</code></td><td>145행 <code>b.weights.includes</code></td></tr>
+<tr><td>2 의 3단계 — 겹침·덮음 재검사</td><td>107~130행</td><td>135~156행</td><td>114~135행</td></tr>
+<tr><td>2 의 4단계 — 통과 뒤 교체</td><td>131~132행</td><td>157~158행</td><td>136~137행</td></tr>
+<tr><td>3 의 1단계 — 뒤집힌 짝 거부</td><td>31~35행 <code>Range</code> 압축 생성자</td><td>37~39행 <code>Range</code> 생성자</td><td>33~35행 <code>Range::new</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>여기서 가장 중요한 줄은 이겁니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>언어</th><th>포함 판정의 본체</th></tr>
+</thead>
+<tbody>
+<tr><td>Java</td><td>38~40행 <code>return (lo &lt; 0 || (lo == 0 &amp;&amp; lowerInclusive)) &amp;&amp; (hi &lt; 0 || (hi == 0 &amp;&amp; upperInclusive));</code></td></tr>
+<tr><td>TypeScript</td><td>43~45행 <code>return (lo &lt; 0 || (lo === 0 &amp;&amp; this.lowerInclusive)) &amp;&amp; (hi &lt; 0 || (hi === 0 &amp;&amp; this.upperInclusive));</code></td></tr>
+<tr><td>Rust</td><td>40~41행 <code>(self.lower &lt; *value || (self.lower == *value &amp;&amp; self.lower_inclusive)) &amp;&amp; (*value &lt; self.upper || (*value == self.upper &amp;&amp; self.upper_inclusive))</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>이 줄이 최소 조건 3 과 4 를 한자리에서 지킵니다. 물어본 값이 끝점과 <strong>같을 때</strong>만 포함 표시를 봐요. Java 와 TypeScript 는 비교 결과를 <code>lo</code> · <code>hi</code> 에 담아 0 인지 보고 Rust 는 <code>==</code> 로 바로 견주는데, 판정은 같습니다. 크거나 작을 때는 표시가 무엇이든 답이 정해지니까요. 이 줄이 없고 부르는 쪽이 부등식을 쓰면 시나리오 3 의 3단계가 되고, 표시를 무시하고 늘 <code>&lt;=</code> 로 쓰면 2 kg 이 두 구간에 들어 요금이 둘로 나옵니다.</p>
+<p>구간 사이의 규칙은 다른 자리에 있어요. 상황 설정 표의 <code>불변식의 위치</code> 칸이 Range 몫과 root 몫을 가른 그대로입니다. 불변식 ① 을 값을 만드는 자리에 둔 것은 두 끝이 같은 타입이라 하한과 상한을 맞바꿔 넘기는 실수를 어느 언어의 타입도 막지 못하기 때문이에요. 실행 11행의 거부가 그 자리에서 막은 결과입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>불변식</th><th>지키는 자리</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td>① 하한 ≤ 상한</td><td>Range 생성</td><td>31~35행</td><td>37~39행</td><td>33~35행</td></tr>
+<tr><td>② 포함 표시로만 판정</td><td>Range</td><td>37~41행</td><td>42~46행</td><td>39~42행</td></tr>
+<tr><td>③ 겹치지 않는다</td><td>RateTable</td><td>107~116행</td><td>135~143행</td><td>114~122행</td></tr>
+<tr><td>④ 빈틈 없이 덮는다</td><td>RateTable</td><td>117~130행</td><td>144~156행</td><td>123~135행</td></tr>
+<tr><td>⑤ 통과 뒤 교체</td><td>RateTable</td><td>131~132행</td><td>157~158행</td><td>136~137행</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>타 aggregate 참조 방식</code> 칸도 코드에 그대로 나타납니다. 세 언어 모두 <code>RateTable</code> 이 가진 상품 쪽 필드는 <code>ProductId</code> 하나뿐이고(Java 90행 · TypeScript 120행 · Rust 94행), 상품 타입은 세 코드 어디에도 없어요. <code>root·entity·VO 배정</code> 칸은 식별자로 확인됩니다. <code>RateTableId</code> 와 <code>BandId</code> 를 가진 타입은 둘뿐이고 <code>Range</code> 에는 식별자가 없어요.</p>
+<p>언어 차이는 셋만 짚습니다. 끝점 제약(최소 조건 2)은 Java <code>Range&lt;T extends Comparable&lt;T&gt;&gt;</code> · Rust <code>Range&lt;T: Ord&gt;</code> 가 표준 제약을 그대로 쓰고, TypeScript 는 표준 제약이 없어 <code>Ordered&lt;T&gt;</code> 인터페이스를 이 코드가 직접 선언했어요. 셋 다 비교 연산이 붙지 않은 끝점을 컴파일에서 막는데(세 언어에서 컴파일해 확인), Rust 의 <code>Ord</code> 는 NaN(Not a Number, 숫자가 아님을 나타내는 값) 때문에 전순서가 성립하지 않는 <code>f64</code> 까지 막습니다. <code>PartialOrd</code> 만 요구하는 표준 <code>std::ops::Range</code> 가 <code>f64</code> 를 받는 것과 다른 점이에요. 그리고 Java 의 <code>record</code> 는 값 비교를 자동으로 만들어 줘서, 구간(<code>RateBand</code>)을 entity 로 둔 이 예제에서는 구간끼리 비교할 일이 생기면 <code>BandId</code> 로 판정하도록 덮어써야 합니다. 지금은 비교하는 자리가 없어 그대로 두었고, TypeScript 와 Rust 는 비교가 자동으로 붙지 않아 이 차이가 없어요.</p>
+<h3 id="상황이-달라지면">상황이 달라지면</h3>
+<p>구간 목록의 겹침·덮음 규칙을 누가 지킬지는 구간이 얼마나 많고 얼마나 자주 생기는지에 따라 달라집니다. 이 가이드가 고른 경계를 첫 행에 두고 나란히 비교해 봅시다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>상황</th><th>경계</th><th>이유</th></tr>
+</thead>
+<tbody>
+<tr><td>구간이 적고 함께 편집되며, 겹침과 덮음을 한 트랜잭션 안에서 보장해야 한다(이 가이드)</td><td>RateTable 이 root 이고 RateBand 와 그 Range 가 그 안에 있다. 구간 목록은 root 의 <code>redefine</code> 으로만 바뀐다</td><td>시나리오 2 의 3단계가 목록 전체를 한 자리에서 볼 수 있다. 대신 구간이 수만 개가 되면 표 하나를 통째로 읽어야 한 건을 고칠 수 있다</td></tr>
+<tr><td>구간을 가진 항목이 아주 많고 동시에 생긴다(예약 한 건마다 기간 하나)</td><td>항목 하나가 자기 aggregate 이고 Range 를 VO 로 갖는다. 겹침 금지는 저장소 제약이나 등록 서비스가 지킨다</td><td>aggregate 가 작아 동시 생성이 서로 막지 않는다. 대신 겹침 금지가 도메인 코드가 아니라 저장소에 가 있어, PostgreSQL 의 배제 제약 같은 장치를 읽어야 규칙이 보인다</td></tr>
+<tr><td>구간 목록이 시점마다 다르고 지난 요금을 다시 설명해야 한다</td><td>요금표 판(version)이 root 이고 적용 기간 Range 를 자기 값으로 갖는다. 구간 목록은 판마다 통째로 들어간다</td><td>「그때 그 요금이 왜 나왔는가」를 그 시점의 판으로 답할 수 있다. 대신 조회마다 시점으로 판을 먼저 찾아야 하고, 판들의 적용 기간이 겹치지 않는다는 규칙이 한 층 더 생긴다</td></tr>
+<tr><td>구간이 사람이 정한 것이 아니라 계산 결과다(오늘 들어온 소포들의 최소·최대 무게)</td><td>어디에도 저장하지 않고 조회할 때마다 만든다. Range 는 값이므로 aggregate 에 속할 필요가 없다</td><td>저장하면 원본이 바뀔 때마다 다시 계산해 맞춰야 하는 파생 값이 하나 늘어난다. 대신 조회가 잦으면 매번 전체를 순회하는 비용이 든다</td></tr>
+</tbody>
+</table>
+</div>
+<p>어느 행이든 Range 자신은 VO 로 남습니다. 달라지는 것은 그 구간을 누가 가지는가이고, 그에 따라 <strong>겹침·덮음 규칙을 지킬 자리</strong>가 root 안에서 저장소로, 또는 아예 없는 쪽으로 옮겨 가요.</p>
+<h3 id="실제-사례">실제 사례</h3>
+<p>구간을 값으로 두는 모델은 데이터베이스와 표준, 라이브러리에서 이름을 바꿔 가며 나타납니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>사례</th><th>사례 쪽 이름</th><th>이 글의 개념</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://www.postgresql.org/docs/current/rangetypes.html">PostgreSQL Range Types</a></td><td><code>int4range</code> · <code>daterange</code> 등 구간 타입과 <code>[</code> <code>]</code> · <code>(</code> <code>)</code> 경계 표기</td><td>Range 와 두 포함 표시. 이산 타입이 저장할 때 <code>[)</code> 로 정규화하는 것은 같은 구간의 표기가 달라지지 않게 값을 하나로 모으는 장치다</td></tr>
+<tr><td>〃</td><td><code>EXCLUDE USING GIST (during WITH &amp;&amp;)</code> 배제 제약</td><td>「상황이 달라지면」 2행의 저장소 제약. <code>&amp;&amp;</code> 가 겹침 판정이다</td></tr>
+<tr><td>〃</td><td>multirange 타입</td><td>비교 절의 「구간 여럿을 한 값으로 담은 것」</td></tr>
+<tr><td><a href="https://hl7.org/fhir/R5/datatypes.html">HL7 FHIR R5</a> <code>Range</code></td><td><code>low</code> · <code>high</code>(SimpleQuantity)와 둘 다 포함이라는 규정, 규칙 <code>rng-2</code></td><td>끝점을 Quantity 로 둔 Range([선택] 10)와 포함 규칙의 고정, 불변식 ①. 다만 연산 없이 두 끝과 포함 규칙만 싣는 교환 포맷이라 포함 판정은 받는 쪽이 합니다 — 최소 조건 3 은 이 표현 자체가 아니라 그것을 읽어 들인 모델이 채웁니다</td></tr>
+<tr><td>〃 <code>Period</code></td><td><code>start</code> · <code>end</code>(양 끝 포함)와 규칙 <code>per-1</code></td><td>시간 전용 구간. 끝점 타입만 다른 같은 모양이고, 판정 연산이 없는 것도 <code>Range</code> 와 같다</td></tr>
+<tr><td><a href="https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/collect/Range.html">Guava Range</a></td><td>각 끝이 bounded / unbounded, bounded 면 open / closed</td><td>열린 끝([선택] 6)과 두 포함 표시를 한 타입에 담은 예</td></tr>
+<tr><td><a href="https://www.threeten.org/threeten-extra/apidocs/org.threeten.extra/org/threeten/extra/Interval.html">ThreeTen-Extra Interval</a></td><td>불변 시간 구간, start 포함 · end 제외</td><td>포함 규칙을 타입 이름과 문서로 고정한 예</td></tr>
+<tr><td><a href="https://doc.rust-lang.org/std/ops/struct.Range.html">Rust std::ops::Range</a></td><td><code>start..end</code> 와 <code>start..=end</code> 두 타입, <code>contains</code></td><td>최소 조건 4 를 boolean 이 아니라 타입으로 고정한 예. <code>contains</code> 가 <code>includes</code> 다</td></tr>
+</tbody>
+</table>
+</div>
+<p>여기서 헷갈리기 쉬운 포인트는 포함 표시가 반드시 값 안의 boolean 이어야 한다고 보는 것입니다. Rust 표준 라이브러리는 표시를 두지 않고 반열림 <code>start..end</code> 와 양 끝 포함 <code>start..=end</code> 를 <strong>서로 다른 타입</strong>으로 둬요. 표시가 사라진 것이 아니라 값의 타입이 표시를 대신하는 것이고, 최소 조건 4 가 묻는 「구간 쪽에 정해져 있고 판정이 그것을 따르는가」는 그대로 참입니다. 반대로 PostgreSQL 은 같은 타입 안에서 <code>[2,5)</code> 처럼 값마다 표기를 가지고, 이산 타입은 저장할 때 <code>[)</code> 로 정규화해요. 둘 다 부르는 쪽이 부등호를 고르지 않는다는 점에서는 같습니다.</p>
+<h2 id="스스로-점검하기">스스로 점검하기</h2>
+<p><strong>1. 경계 판정.</strong> 아래 <code>Window</code> 는 Range 일까요? 최소 조건의 <code>[필수]</code> 넷을 하나씩 적용해 판정해 보세요.</p>
+<pre tabindex="0"><code class="language-typescript">class Window {
+  constructor(
+    readonly start: Date,
+    readonly end: Date,
+  ) {}
+
+  static overlaps(a: Window, b: Window): boolean {
+    return a.start.getTime() &lt;= b.end.getTime() &amp;&amp; b.start.getTime() &lt;= a.end.getTime();
+  }
+}</code></pre>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — 아직 Range 가 아닙니다. 판정을 가르는 것은 최소 조건 3번과 4번이에요. 조건 1 은 충족합니다. 두 끝이 <code>Window</code> 라는 값 하나에 들어 있고, 이 값을 쓰는 쪽은 끝을 따로 갖지 않아요. 조건 2 도 충족합니다. <code>Date</code> 는 시각으로 크기 비교가 되니까요. 조건 3 에서 갈립니다. 이 값은 구간끼리 겹치는지만 답하고 <strong>어떤 시각이 안에 드는지는 답하지 않아요.</strong> 「이 값이 안에 드는가」를 묻는 코드는 밖에서 부등식을 다시 써야 합니다. 조건 4 도 충족하지 못해요. <code>overlaps</code> 가 양 끝 포함으로 계산하는데 그 규칙이 값이 아니라 그 한 메서드 안에만 있어서, 다른 자리가 반열림으로 계산하면 같은 <code>Window</code> 두 개가 한쪽에서는 겹치고 한쪽에서는 안 겹칩니다. <code>includes</code> 를 값에 두고 포함 표시를 값의 일부로 올리면 넷을 갖춥니다.</p>
+</blockquote>
+</details>
+<p><strong>2. 비교 판별.</strong> 아래 세 값 가운데 어느 쪽이 Range 이고 어느 쪽이 아닐까요? 비교 절의 구분 기준으로 골라 보세요.</p>
+<pre tabindex="0"><code class="language-java">record A(int lower, int upper, boolean lowerInclusive, boolean upperInclusive) {
+    boolean includes(int v) {
+        return (lowerInclusive ? v &gt;= lower : v &gt; lower) &amp;&amp; (upperInclusive ? v &lt;= upper : v &lt; upper);
+    }
+}
+
+record B(int lower, int upper, boolean lowerInclusive, boolean upperInclusive) {
+    boolean includes(int v) {
+        return (lowerInclusive ? v &lt;= lower : v &lt; lower) || (upperInclusive ? v &gt;= upper : v &gt; upper);
+    }
+}
+
+record C(int threshold, boolean inclusive) {
+    boolean includes(int v) { return inclusive ? v &gt;= threshold : v &gt; threshold; }
+}</code></pre>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — <code>A</code> 만 Range 입니다. 셋 다 판정을 자기가 맡고 포함 표시도 자기 안에 있어서, 조건 3 과 4 만으로는 구분되지 않아요. <code>B</code> 는 필수 넷을 전부 만족하지만 「안」이 두 끝 <strong>바깥</strong>이라 비교 절 「구간 여럿을 한 값으로 담은 것과의 차이」의 대상, 곧 구간 둘의 합입니다. <code>B</code> 두 개가 겹치는지 물으면 답이 구간 하나로 나오지 않고 맞닿음은 정의되지 않아요. <code>C</code> 는 끝이 하나뿐이라 최소 조건 1번을 채우지 못합니다. 「비교자를 붙인 값 하나와의 차이」의 그 값이고, 위가 열린 Range 와는 다릅니다 — 열린 구간은 양 끝을 다 알되 한쪽이 무제한인 것이고 <code>C</code> 는 애초에 반대쪽 끝이라는 개념이 없어요.</p>
+</blockquote>
+</details>
+<p><strong>3. 책임과 순서.</strong> <code>RateTable.redefine</code> 에서 검사와 교체의 순서를 바꿔, 목록을 먼저 넣고 겹침을 검사하도록 고쳤다고 합시다. 예시 코드의 실행 12행에서 <code>band-9</code> 를 더하는 요청이 거부되는 것은 그대로입니다. 그런데 그 뒤에 25 kg 소포를 조회하면 무엇이 돌아올까요?</p>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — 요금이 돌아오지 않고 <code>거부 — 적용 구간을 벗어납니다: 25 kg</code> 이 나옵니다(순서를 바꾼 사본으로 실행해 확인). 12행의 요청은 적용 구간을 20 kg 짜리 <code>span</code> 으로 함께 넘기니까요. 교체를 먼저 하면 예외가 나기 전에 적용 구간이 30 kg 에서 20 kg 으로 이미 줄어 있고, 예외는 끝난 대입을 되돌리지 않아요. 그래서 9행에서 30 kg 으로 넓혔던 표가 조용히 20 kg 짜리로 돌아가 25 kg 소포가 거부됩니다. 구간 목록도 <code>band-9</code> 가 섞인 채로 남고요. 시나리오 2 의 4단계가 검사 뒤에 교체하라고 한 이유가 이것이고, 상황 설정 표의 불변식 ⑤ 가 가리키는 자리도 같습니다.</p>
+</blockquote>
+</details>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li>Martin Fowler, <em>Analysis Patterns: Reusable Object Models</em>, Addison-Wesley, 1997 — Chapter 4 「Observations for Corporate Finance」 §4.3 Range · §4.4 Phenomenon with Range. 이 글의 원전으로, 최소 조건 1 · 2 · 3 · 4 · 5 · 10 의 근거 괄호가 여기를 가리킵니다.</li>
+<li><a href="https://www.pearson.de/media/muster/toc/toc_9780134271439.pdf">Analysis Patterns 목차 (Pearson PDF)</a> — 4장의 장 제목과 §4.3 · §4.4 의 절 번호·제목 확인.</li>
+<li><a href="https://martinfowler.com/apsupp/apchap4.pdf">UML Diagrams for Chapter 4 (apchap4.pdf)</a> — Figure 4.19(끝점을 두 연관으로 가진 Age Band), Figure 4.20(Range 의 네 속성과 세 연산, Age Band 의 끝점 단위 제약), Figure 4.22(구간으로 관측값을 분류할 때의 비중첩·전체 덮음 제약). 최소 조건의 근거 괄호가 가리키는 그림들입니다.</li>
+<li><a href="https://martinfowler.com/eaaDev/Range.html">Range (Fowler, eaaDev 초안)</a> — 범위를 값 쌍 대신 객체 하나로 나타낸다는 서술, 비교 연산을 가진 타입이면 끝점이 된다는 서술, <code>includes</code> 가 반드시 둘 연산이라는 서술, 열린 끝의 두 갈래, 실수 구간에서 하한을 6.0000000000001 로 두는 대신 포함 표시를 쓰라는 서술, 시작과 길이 표현, Date Range 예제의 빈 구간 판정. 최소 조건 1 · 2 · 3 · 5 · 6 · 7 · 9 의 근거.</li>
+<li><a href="https://martinfowler.com/bliki/ValueObject.html">Value Object (Fowler bliki)</a> — 값 객체의 aliasing 문제와 그 대책으로 불변을 먼저 권한다는 서술. 최소 조건 8 의 근거.</li>
+<li><a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a> — 개념 정리가 가리키는 Range · Quantity · Measurement · Observation 의 층 관계.</li>
+<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity 가이드</a> — 개요가 함께 쓰는 패턴으로 잇고 개념 정리가 가리키는 Quantity 의 정의와 단위 환산 규칙.</li>
+<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a> — 개요가 함께 쓰는 패턴으로 잇고, 사용 목적이 구간으로 값을 분류하는 규칙을 데이터로 둘 때 고르라고 가리키는 패턴.</li>
+<li><a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a> — 상황 설정 표의 네 행이 쓰는 Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식.</li>
+<li><a href="https://www.postgresql.org/docs/current/rangetypes.html">PostgreSQL: Range Types</a> — 구간 타입과 경계 표기, 이산 타입의 <code>[)</code> 정규형, 배제 제약, multirange. 「실제 사례」 표의 앞 세 행과 비교 절의 세 번째 대상.</li>
+<li><a href="https://hl7.org/fhir/R5/datatypes.html">HL7 FHIR R5 Data Types</a> — <code>Range</code> 의 <code>low</code> · <code>high</code> 와 양 끝 포함 규정 및 규칙 <code>rng-2</code>, <code>Period</code> 와 규칙 <code>per-1</code>, 범위 밖 측정값에는 비교자를 붙인 Quantity 를 쓰라는 권고. 비교 절의 두 번째 대상과 「실제 사례」 표.</li>
+<li><a href="https://guava.dev/releases/snapshot-jre/api/docs/com/google/common/collect/Range.html">Guava Range</a> — 각 끝의 bounded / unbounded 와 open / closed. 「실제 사례」 표.</li>
+<li><a href="https://www.threeten.org/threeten-extra/apidocs/org.threeten.extra/org/threeten/extra/Interval.html">ThreeTen-Extra Interval</a> — 불변 시간 구간, start 포함 · end 제외. 「실제 사례」 표.</li>
+<li><a href="https://doc.rust-lang.org/std/ops/struct.Range.html">Rust std::ops::Range</a> — 반열림 <code>start..end</code> 와 양 끝 포함 <code>start..=end</code> 를 다른 타입으로 두는 것과 <code>contains</code>. 「실제 사례」 표와 최소 조건 4 의 보충.</li>
+</ul>
+</main>
+<footer class="guide-footer">
+<p>원본은 <code>pattern-guide/ddd-analysis-pattern-guide/range/range-guide_v1.1.0.md</code>입니다. 이 HTML 은 원본 md 에서 생성한 파생물이라, 고칠 곳이 있으면 md 를 고친 뒤 다시 렌더합니다.</p>
+</footer>
+</div>
+<script>
+/* pattern-guide HTML — 세 언어 코드 탭. render-guides.py 가 HTML 에 인라인한다.
+ * JS 가 없으면 모든 패널이 보인다(마크업 기본값). 초기화하면서 선택 안 된 패널에 hidden 을 건다.
+ * 키보드: ←/→ 이웃 탭, Home/End 처음/끝 탭(WAI-ARIA APG Tabs, 자동 활성화).
+ */
+(function () {
+  "use strict";
+
+  var STORE_KEY = "pattern-guide:code-lang";
+  var widgets = [];
+
+  function readPref() {
+    try {
+      return window.localStorage.getItem(STORE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writePref(lang) {
+    try {
+      window.localStorage.setItem(STORE_KEY, lang);
+    } catch (e) {
+      /* 저장소를 못 쓰면 이번 페이지 안에서만 유지한다 */
+    }
+  }
+
+  function select(widget, tab, moveFocus) {
+    widget.tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+    if (moveFocus) tab.focus();
+  }
+
+  function tabForLang(widget, lang) {
+    for (var i = 0; i < widget.tabs.length; i++) {
+      if (widget.tabs[i].getAttribute("data-lang") === lang) return widget.tabs[i];
+    }
+    return null;
+  }
+
+  function activate(widget, tab, moveFocus) {
+    select(widget, tab, moveFocus);
+    var lang = tab.getAttribute("data-lang");
+    if (!lang) return;
+    writePref(lang);
+    widgets.forEach(function (other) {
+      if (other === widget) return;
+      var match = tabForLang(other, lang);
+      if (match) select(other, match, false);
+    });
+  }
+
+  function init(root) {
+    var list = root.querySelector(".code-tabs__list");
+    if (!list) return;
+    var tabs = Array.prototype.slice.call(list.querySelectorAll(".code-tabs__tab"));
+    if (!tabs.length) return;
+    var widget = { root: root, tabs: tabs };
+    widgets.push(widget);
+
+    list.addEventListener("click", function (event) {
+      var tab = event.target.closest(".code-tabs__tab");
+      if (tab && tabs.indexOf(tab) !== -1) activate(widget, tab, false);
+    });
+
+    list.addEventListener("keydown", function (event) {
+      var current = event.target.closest(".code-tabs__tab");
+      var index = tabs.indexOf(current);
+      if (index === -1) return;
+      var next = null;
+      switch (event.key) {
+        case "ArrowRight":
+          next = tabs[(index + 1) % tabs.length];
+          break;
+        case "ArrowLeft":
+          next = tabs[(index - 1 + tabs.length) % tabs.length];
+          break;
+        case "Home":
+          next = tabs[0];
+          break;
+        case "End":
+          next = tabs[tabs.length - 1];
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      activate(widget, next, true);
+    });
+
+    var initial = tabForLang(widget, readPref());
+    if (!initial) {
+      initial = tabs.filter(function (t) {
+        return t.getAttribute("aria-selected") === "true";
+      })[0] || tabs[0];
+    }
+    select(widget, initial, false);
+    root.setAttribute("data-enhanced", "");
+  }
+
+  function boot() {
+    Array.prototype.forEach.call(document.querySelectorAll(".code-tabs"), init);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>

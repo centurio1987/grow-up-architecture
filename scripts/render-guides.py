@@ -562,6 +562,8 @@ def group_impl_tabs(blocks: list[dict]) -> list[dict]:
 
 def parse_document(text: str) -> list[dict]:
     text = text.lstrip("\ufeff").replace("\r\n", "\n").replace("\r", "\n")
+    # \uba38\ub9ac\ub9d0(frontmatter)\uc740 \ub3c5\uc790\uc6a9 \ubcf8\ubb38\uc774 \uc544\ub2c8\ub2e4. \uc608\uc804\uc5d0\ub294 `pattern: \u2026 status: \u2026` \uac00 hr \ubc11 \ubb38\ub2e8\uc73c\ub85c \uadf8\ub300\ub85c \ubcf4\uc600\ub2e4(2026-11-13 \ubc1c\uacac).
+    text = re.sub(r"\A---\n.*?\n---\n", "", text, count=1, flags=re.S)
     lines = [_expand_leading_tabs(line) for line in text.split("\n")]
     return group_impl_tabs(parse_blocks(lines))
 
@@ -782,6 +784,7 @@ class DocumentRenderer:
         self.used_ids: set[str] = set()
         self.tab_count = 0
         self.title: str | None = None
+        self.toc: list[tuple[int, str, str]] = []  # (레벨, id, 인라인 HTML) — h2~h4, 머리 차례용
 
     # 도식 이미지 — 로컬 파일을 data URI 로 박는다(외부·파일 요청 0). 없으면 렌더 실패.
     def image_tag(self, dest: str, alt: str, title: str | None) -> str:
@@ -841,13 +844,20 @@ class DocumentRenderer:
             if b["level"] == 1 and self.title is None:
                 self.title = text
             hid = self.unique_id(github_slug(text))
+            if 2 <= b["level"] <= 4:
+                self.toc.append((b["level"], hid, inner))
             return f'<h{b["level"]} id="{_attr(hid)}">{inner}</h{b["level"]}>\n'
         if t == "para":
             return f"<p>{self.inline.render(b['text'])}</p>\n"
         if t == "hr":
             return "<hr>\n"
         if t == "quote":
-            return f"<blockquote>\n{self.blocks(b['children'])}</blockquote>\n"
+            inner = self.blocks(b["children"])
+            # 명세 1.5.0 PG36 — 점검 문제의 `> 풀이 —` 블록은 접어 둔다. 먼저 풀어 볼 기회를 남기려는 것이다(JS 없이 <details>).
+            first = b["children"][0] if b["children"] else None
+            if first and first["t"] == "para" and re.match(r"^\s*풀이\s*—", first["text"]):
+                return f'<details class="answer">\n<summary>풀이 보기</summary>\n<blockquote>\n{inner}</blockquote>\n</details>\n'
+            return f"<blockquote>\n{inner}</blockquote>\n"
         if t == "code":
             if b["lang"] == "mermaid":
                 raise RenderError(
@@ -939,6 +949,31 @@ class DocumentRenderer:
         return "".join(out)
 
 
+def toc_html(entries: list[tuple[int, str, str]]) -> str:
+    """h2~h4 를 레벨대로 들여 쓴 차례. JS 없이 접고 펴도록 <details open> 으로 감싼다. 헤딩이 둘 미만이면 비운다."""
+    if len(entries) < 2:
+        return ""
+    top = min(lv for lv, _, _ in entries)
+    out = ['<details class="guide-toc" open>\n<summary>차례</summary>\n<ol>\n']
+    depth = top
+    first = True
+    for lv, hid, inner in entries:
+        lv = max(lv, top)
+        if first:
+            first = False
+        elif lv > depth:
+            out.append("\n<ol>\n" * (lv - depth))
+        else:
+            out.append("</li>\n")
+            out.append("</ol>\n</li>\n" * (depth - lv))
+        depth = lv
+        out.append(f'<li><a href="#{_attr(hid)}">{inner}</a>')
+    out.append("</li>\n")
+    out.append("</ol>\n</li>\n" * (depth - top))
+    out.append("</ol>\n</details>\n")
+    return "".join(out)
+
+
 def _load_asset(path: Path, closing_tag: str) -> str:
     text = path.read_text(encoding="utf-8")
     if closing_tag in text.lower():
@@ -958,6 +993,10 @@ def render_html(md_path: Path, blocks: list[dict], out_html: Path, out_root: Pat
     doc = DocumentRenderer(md_path, out_html, svgs)
     doc.out_root = out_root
     body = doc.blocks(blocks)
+    # 머리 차례 — 700~1,300행 문서라 절을 바로 찾아갈 길이 필요하다(2026-11-13 구성 검토 1-2). h1 바로 뒤에 둔다.
+    toc = toc_html(doc.toc)
+    if toc:
+        body = re.sub(r"(</h1>\n)", lambda m: m.group(1) + toc, body, count=1) if "</h1>\n" in body else toc + body
     title = doc.title or _abs(md_path).stem
     css = _load_asset(ASSET_CSS, "</style")
     js = _load_asset(ASSET_JS, "</script")

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:e3932842523c3e76ec0fdc783be2c60470bb8a68591c3876ad43596150578410 -->
+<!-- guide-fp:98e18a2b010ca959656efcf08669b8194ce7829cf76de51112768264f7338d29 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -220,6 +220,43 @@ blockquote {
 
 blockquote > :last-child {
   margin-bottom: 0;
+}
+
+/* ── 머리 차례 · 접힌 풀이 (명세 1.5.0) ─────────────── */
+details.guide-toc {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+details.guide-toc > summary,
+details.answer > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+details.guide-toc ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+details.guide-toc ol ol {
+  margin-top: 0.15rem;
+}
+
+details.guide-toc li {
+  margin: 0.15rem 0;
+}
+
+details.answer {
+  margin: 0.75rem 0 1.25rem;
+}
+
+details.answer > blockquote {
+  margin-top: 0.5rem;
 }
 
 /* ── 코드 ─────────────────────────────────────────── */
@@ -452,17 +489,29 @@ tbody tr:last-child td {
 <body>
 <div class="guide">
 <main>
-<hr>
-<p>title: 수량·측정·관측 모델
-slug: observation-model
-spec: reference-note
-spec_version: 1.0.0
-version: 1.0.2
-status: published
-date: 2026-11-13
-serves: [quantity, measurement, observation, range]</p>
-<hr>
 <h1 id="수량측정관측-모델--값-위에-기록이-기록-위에-사실이-앉는-세-층">수량·측정·관측 모델 — 값 위에 기록이, 기록 위에 사실이 앉는 세 층</h1>
+<details class="guide-toc" open>
+<summary>차례</summary>
+<ol>
+<li><a href="#이-문서가-답하는-것">이 문서가 답하는 것</a></li>
+<li><a href="#개념">개념</a>
+<ol>
+<li><a href="#quantity">Quantity</a></li>
+<li><a href="#unit">Unit</a></li>
+<li><a href="#conversion-ratio">Conversion Ratio</a></li>
+<li><a href="#compound-unit">Compound Unit</a></li>
+<li><a href="#money">Money</a></li>
+<li><a href="#measurement">Measurement</a></li>
+<li><a href="#observation">Observation</a></li>
+<li><a href="#range">Range</a></li>
+<li><a href="#rejected-observation">Rejected Observation</a></li>
+</ol>
+</li>
+<li><a href="#개념-사이의-관계">개념 사이의 관계</a></li>
+<li><a href="#가이드로-돌아가기">가이드로 돌아가기</a></li>
+<li><a href="#참고-자료">참고 자료</a></li>
+</ol>
+</details>
 <h2 id="이-문서가-답하는-것">이 문서가 답하는 것</h2>
 <p>Quantity 가이드의 「개념 정리」 절은 Unit · Conversion Ratio · Compound Unit · Money 를 한 문단씩만 소개합니다. 「비슷한 패턴·안티패턴과의 차이」 절은 Measurement 를 누구를 · 무엇을 · 얼마 세 조각으로 쪼갠 도식 하나로만 그리고, 잰 시각과 적은 시각을 따로 두는 문제와 잘못 잰 값을 지우지 않고 거부 표시로 남기는 방식은 이름만 부른 채 이 문서로 넘겨요. 그 이름들이 무엇이고 서로 어떻게 놓이는지를 원서 없이 읽히게 푸는 것이 이 문서예요. 원서는 안 펴도 됩니다. 다 읽으면 0.3 kg 같은 값 하나가 단위 · 환산 · 기록 · 사실의 어느 층에 놓이는지 그림 한 장으로 짚을 수 있게 됩니다. Range 는 끝점에 Quantity 를 둘 수 있어서 이 그림에 같이 넣었고, Range · Measurement · Observation 가이드가 나오면 그 가이드들도 같은 자리를 여기로 보냅니다.</p>
 <p>여기서 다루지 않는 것도 정해 둘게요. 어떤 코드가 패턴을 갖춘 것인지 가르는 최소 조건, 비슷한 패턴과의 비교표, 세 언어 구현과 aggregate 경계는 각 가이드에 있습니다.</p>
@@ -558,11 +607,11 @@ includes(15 m)  → true     상한과 같고 포함</code></pre>
 <p>잠깐, 확인 하나만 해 볼까요? 62.5 kg 이라는 값은 그림의 어느 칸일까요? Quantity 칸이에요. "김OO 의 몸무게 62.5 kg" 이 되는 순간 Measurement 칸으로 올라가고, 그 기록이 나중에 오타로 판정되면 Rejected Observation 이 됩니다. 값 자체(62.5 kg)는 그대로예요.</p>
 <h2 id="가이드로-돌아가기">가이드로 돌아가기</h2>
 <ul>
-<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.html#개념-정리">Quantity 가이드 「개념 정리」</a> — Quantity · Unit · Conversion Ratio · Compound Unit · Money 의 정의와 그 절의 도식이 이 문서의 앞 다섯 개념을 씁니다.</li>
-<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.html#비슷한-패턴안티패턴과의-차이">Quantity 가이드 「비슷한 패턴·안티패턴과의 차이」</a> — Measurement 와의 차이가 이 문서의 「Measurement」를, 그 문단이 잰 시각 · 적은 시각과 거부 표시를 넘기는 자리가 「Observation」 · 「Rejected Observation」을, Money 와의 차이가 「Money」를 씁니다.</li>
-<li><a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.1.html#개념-정리">Measurement 가이드 「개념 정리」</a> — Observation 항목이 잰 시각 · 적은 시각이 왜 그 층에 붙는지를 이 문서의 「Observation」으로, Rejected Observation 항목이 값을 지우지 않는 이유를 「Rejected Observation」으로 넘깁니다. 「한눈에 보는 개요」는 이웃 개념들이 놓이는 자리를 「개념 사이의 관계」에서 받아요.</li>
-<li><a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.0.1.html#개념-정리">Observation 가이드 「개념 정리」</a> — 거부한 관측을 지우지 않는 이유를 이 문서의 「Rejected Observation」으로 보냅니다. 「한눈에 보는 개요」는 Quantity · Measurement · Observation 의 층 관계를 「개념 사이의 관계」에서 받아요.</li>
-<li><a href="ddd-analysis-pattern-guide/range/range-guide_v1.0.1.html#개념-정리">Range 가이드 「개념 정리」</a> — Quantity 항목이 끝점에 오는 값의 정의와 단위 환산을 이 문서의 「Quantity」 · 「Unit」 · 「Conversion Ratio」로 넘깁니다. 「한눈에 보는 개요」는 Range 가 Quantity 위에 놓이는 자리를 「Range」와 「개념 사이의 관계」에서 받아요.</li>
+<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html#개념-정리">Quantity 가이드 「개념 정리」</a> — Quantity · Unit · Conversion Ratio · Compound Unit · Money 의 정의와 그 절의 도식이 이 문서의 앞 다섯 개념을 씁니다.</li>
+<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html#비슷한-패턴안티패턴과의-차이">Quantity 가이드 「비슷한 패턴·안티패턴과의 차이」</a> — Measurement 와의 차이가 이 문서의 「Measurement」를, 그 문단이 잰 시각 · 적은 시각과 거부 표시를 넘기는 자리가 「Observation」 · 「Rejected Observation」을, Money 와의 차이가 「Money」를 씁니다.</li>
+<li><a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.1.0.html#개념-정리">Measurement 가이드 「개념 정리」</a> — Observation 항목이 잰 시각 · 적은 시각이 왜 그 층에 붙는지를 이 문서의 「Observation」으로, Rejected Observation 항목이 값을 지우지 않는 이유를 「Rejected Observation」으로 넘깁니다. 「한눈에 보는 개요」는 이웃 개념들이 놓이는 자리를 「개념 사이의 관계」에서 받아요.</li>
+<li><a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html#개념-정리">Observation 가이드 「개념 정리」</a> — 거부한 관측을 지우지 않는 이유를 이 문서의 「Rejected Observation」으로 보냅니다. 「한눈에 보는 개요」는 Quantity · Measurement · Observation 의 층 관계를 「개념 사이의 관계」에서 받아요.</li>
+<li><a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html#개념-정리">Range 가이드 「개념 정리」</a> — Quantity 항목이 끝점에 오는 값의 정의와 단위 환산을 이 문서의 「Quantity」 · 「Unit」 · 「Conversion Ratio」로 넘깁니다. 「한눈에 보는 개요」는 Range 가 Quantity 위에 놓이는 자리를 「Range」와 「개념 사이의 관계」에서 받아요.</li>
 </ul>
 <h2 id="참고-자료">참고 자료</h2>
 <ul>

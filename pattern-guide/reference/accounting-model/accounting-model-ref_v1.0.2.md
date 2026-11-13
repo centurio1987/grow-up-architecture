@@ -13,7 +13,7 @@ serves: [account, transaction, posting-rule, knowledge-level]
 
 ## 이 문서가 답하는 것
 
-[Account 가이드](../../ddd-analysis-pattern-guide/account/account-guide_v1.1.1.md)는 「개념 정리」에서 Account · Entry · Transaction · Money · AccountType 을 세우고, 「시나리오 1」과 「시나리오 2」에서 전기와 역분개로 4월 거래를 따라가요. 차변과 대변의 부호 규약 같은 회계 기초는 그 글이 이미 아는 것으로 두고 이 문서로 넘깁니다 — 「한눈에 보는 개요」가 여기를 링크하고, 시나리오 1 의 확인 문답도 수익 잔액이 음수인 이유를 여기로 보내요. 여기서는 그 전제를 원서 없이 세웁니다. 왜 모든 사건이 둘 이상의 계정에 적히는지, 부호를 왜 그렇게 정하면 합이 늘 0 인지, 틀린 기록을 왜 고치지 않고 되돌리는지, 규칙과 사실을 왜 다른 층에 두는지를 가이드와 같은 4월 거래 값으로 답합니다.
+[Account 가이드](../../ddd-analysis-pattern-guide/account/account-guide_v1.2.0.md)는 「개념 정리」에서 Account · Entry · Transaction · Money · AccountType 을 세우고, 「시나리오 1」과 「시나리오 2」에서 전기와 역분개로 4월 거래를 따라가요. 차변과 대변의 부호 규약 같은 회계 기초는 그 글이 이미 아는 것으로 두고 이 문서로 넘깁니다 — 「한눈에 보는 개요」가 여기를 링크하고, 시나리오 1 의 확인 문답도 수익 잔액이 음수인 이유를 여기로 보내요. 여기서는 그 전제를 원서 없이 세웁니다. 왜 모든 사건이 둘 이상의 계정에 적히는지, 부호를 왜 그렇게 정하면 합이 늘 0 인지, 틀린 기록을 왜 고치지 않고 되돌리는지, 규칙과 사실을 왜 다른 층에 두는지를 가이드와 같은 4월 거래 값으로 답합니다.
 
 다루지 않는 것도 정해 둘게요. Account 패턴이 성립하는 조건과 코드는 가이드에 있고, Entry 를 누가 소유하는가 같은 aggregate 경계는 [회계 배경 확정안](../../research/accounting-context.md)이 정합니다. 여기서는 개념만 풉니다.
 
@@ -197,13 +197,13 @@ Posting Rule — Transaction   0..1 — *            규칙이 거래를 만든�
 
 ## 가이드로 돌아가기
 
-- [Account 가이드](../../ddd-analysis-pattern-guide/account/account-guide_v1.1.1.md) 「개념 정리」 — Account · Entry · Transaction · Money · AccountType 의 정의와 관계 도식, 계정 종류가 매일 생기는 사실이 아니라 사실을 해석하는 규칙 쪽이라는 서술(이 문서의 「Account」 「Entry」 「Transaction」 「Money」 「AccountType」 「지식 층위와 운영 층위」).
+- [Account 가이드](../../ddd-analysis-pattern-guide/account/account-guide_v1.2.0.md) 「개념 정리」 — Account · Entry · Transaction · Money · AccountType 의 정의와 관계 도식, 계정 종류가 매일 생기는 사실이 아니라 사실을 해석하는 규칙 쪽이라는 서술(이 문서의 「Account」 「Entry」 「Transaction」 「Money」 「AccountType」 「지식 층위와 운영 층위」).
 - 같은 가이드 「시나리오 1」 — 합이 0 인 거래를 원장에 전기해 확정하는 4단계와 Entry 를 더해 4/5 잔액을 내는 5단계(「원장과 전기」). 매출 잔액이 음수로 나오는 이유를 묻는 확인 문답은 이 문서의 「복식부기의 기초」로 넘어옵니다.
 - 같은 가이드 「시나리오 2」 — T2 를 한 글자도 고치지 않고 T3 · T4 를 더해 되돌리는 정정(「역분개」).
 - 같은 가이드 「비슷한 패턴·안티패턴과의 차이」 — Transaction 이 Account 의 대체가 아니라 짝인 이유(「Transaction」).
-- [Transaction 가이드](../../ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.1.md) 「개념 정리」 — Posting Rule 항목이 규칙과 사실을 다른 층에 두는 이유를 이 문서로 넘깁니다(「지식 층위와 운영 층위」 「Posting Rule」). 「한눈에 보는 개요」와 시나리오 셋이 값을 쓰기 전에 기대는 부호 규약 · 전기 · 역분개도 여기에 있어요(「복식부기의 기초」 「원장과 전기」 「역분개」).
-- [Posting Rule 가이드](../../ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.0.1.md) 「한눈에 보는 개요」와 시나리오 셋 — 규칙이 만든 거래가 원장에 들어가는 값들이 부호 규약과 전기, 그리고 규칙이 사실 위 다른 층에 앉는다는 것을 이미 아는 것으로 두고 이 문서로 넘깁니다(「복식부기의 기초」 「원장과 전기」 「지식 층위와 운영 층위」 「Posting Rule」).
-- [Knowledge Level 가이드](../../ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.1.md) 「비슷한 패턴·안티패턴과의 차이」 — Posting Rule 문단이 기대는 사전 지식이 계정 종류와 전기 규칙을 지식 층위에 두는 회계 쪽 배치입니다(「AccountType」 「지식 층위와 운영 층위」 「Posting Rule」).
+- [Transaction 가이드](../../ddd-analysis-pattern-guide/transaction/transaction-guide_v1.1.0.md) 「개념 정리」 — Posting Rule 항목이 규칙과 사실을 다른 층에 두는 이유를 이 문서로 넘깁니다(「지식 층위와 운영 층위」 「Posting Rule」). 「한눈에 보는 개요」와 시나리오 셋이 값을 쓰기 전에 기대는 부호 규약 · 전기 · 역분개도 여기에 있어요(「복식부기의 기초」 「원장과 전기」 「역분개」).
+- [Posting Rule 가이드](../../ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.md) 「한눈에 보는 개요」와 시나리오 셋 — 규칙이 만든 거래가 원장에 들어가는 값들이 부호 규약과 전기, 그리고 규칙이 사실 위 다른 층에 앉는다는 것을 이미 아는 것으로 두고 이 문서로 넘깁니다(「복식부기의 기초」 「원장과 전기」 「지식 층위와 운영 층위」 「Posting Rule」).
+- [Knowledge Level 가이드](../../ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.md) 「비슷한 패턴·안티패턴과의 차이」 — Posting Rule 문단이 기대는 사전 지식이 계정 종류와 전기 규칙을 지식 층위에 두는 회계 쪽 배치입니다(「AccountType」 「지식 층위와 운영 층위」 「Posting Rule」).
 
 ## 참고 자료
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:bc7f06e56a78adc6e87850fcc7fb3de696aa3b8102d1ede8768f1c2260e53a6b -->
+<!-- guide-fp:fd07e18756e9706e6108f196ca76e968f201f4f9cf39cdd8ca163a3343d44cbd -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -220,6 +220,43 @@ blockquote {
 
 blockquote > :last-child {
   margin-bottom: 0;
+}
+
+/* ── 머리 차례 · 접힌 풀이 (명세 1.5.0) ─────────────── */
+details.guide-toc {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+details.guide-toc > summary,
+details.answer > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+details.guide-toc ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+details.guide-toc ol ol {
+  margin-top: 0.15rem;
+}
+
+details.guide-toc li {
+  margin: 0.15rem 0;
+}
+
+details.answer {
+  margin: 0.75rem 0 1.25rem;
+}
+
+details.answer > blockquote {
+  margin-top: 0.5rem;
 }
 
 /* ── 코드 ─────────────────────────────────────────── */
@@ -452,19 +489,32 @@ tbody tr:last-child td {
 <body>
 <div class="guide">
 <main>
-<hr>
-<p>title: 복식부기와 회계 모델
-slug: accounting-model
-spec: reference-note
-spec_version: 1.0.0
-version: 1.0.2
-status: published
-date: 2026-11-13
-serves: [account, transaction, posting-rule, knowledge-level]</p>
-<hr>
 <h1 id="복식부기와-회계-모델--한-사건은-둘-이상의-계정에-합이-0-이-되게-적히고-잔액은-그-기록을-더한-값입니다">복식부기와 회계 모델 — 한 사건은 둘 이상의 계정에 합이 0 이 되게 적히고, 잔액은 그 기록을 더한 값입니다</h1>
+<details class="guide-toc" open>
+<summary>차례</summary>
+<ol>
+<li><a href="#이-문서가-답하는-것">이 문서가 답하는 것</a></li>
+<li><a href="#개념">개념</a>
+<ol>
+<li><a href="#복식부기의-기초">복식부기의 기초</a></li>
+<li><a href="#money">Money</a></li>
+<li><a href="#account">Account</a></li>
+<li><a href="#entry">Entry</a></li>
+<li><a href="#transaction">Transaction</a></li>
+<li><a href="#원장ledger과-전기posting">원장(ledger)과 전기(posting)</a></li>
+<li><a href="#역분개reversal">역분개(reversal)</a></li>
+<li><a href="#accounttype">AccountType</a></li>
+<li><a href="#지식-층위knowledge-level와-운영-층위operational-level">지식 층위(knowledge level)와 운영 층위(operational level)</a></li>
+<li><a href="#posting-rule">Posting Rule</a></li>
+</ol>
+</li>
+<li><a href="#개념-사이의-관계">개념 사이의 관계</a></li>
+<li><a href="#가이드로-돌아가기">가이드로 돌아가기</a></li>
+<li><a href="#참고-자료">참고 자료</a></li>
+</ol>
+</details>
 <h2 id="이-문서가-답하는-것">이 문서가 답하는 것</h2>
-<p><a href="ddd-analysis-pattern-guide/account/account-guide_v1.1.1.html">Account 가이드</a>는 「개념 정리」에서 Account · Entry · Transaction · Money · AccountType 을 세우고, 「시나리오 1」과 「시나리오 2」에서 전기와 역분개로 4월 거래를 따라가요. 차변과 대변의 부호 규약 같은 회계 기초는 그 글이 이미 아는 것으로 두고 이 문서로 넘깁니다 — 「한눈에 보는 개요」가 여기를 링크하고, 시나리오 1 의 확인 문답도 수익 잔액이 음수인 이유를 여기로 보내요. 여기서는 그 전제를 원서 없이 세웁니다. 왜 모든 사건이 둘 이상의 계정에 적히는지, 부호를 왜 그렇게 정하면 합이 늘 0 인지, 틀린 기록을 왜 고치지 않고 되돌리는지, 규칙과 사실을 왜 다른 층에 두는지를 가이드와 같은 4월 거래 값으로 답합니다.</p>
+<p><a href="ddd-analysis-pattern-guide/account/account-guide_v1.2.0.html">Account 가이드</a>는 「개념 정리」에서 Account · Entry · Transaction · Money · AccountType 을 세우고, 「시나리오 1」과 「시나리오 2」에서 전기와 역분개로 4월 거래를 따라가요. 차변과 대변의 부호 규약 같은 회계 기초는 그 글이 이미 아는 것으로 두고 이 문서로 넘깁니다 — 「한눈에 보는 개요」가 여기를 링크하고, 시나리오 1 의 확인 문답도 수익 잔액이 음수인 이유를 여기로 보내요. 여기서는 그 전제를 원서 없이 세웁니다. 왜 모든 사건이 둘 이상의 계정에 적히는지, 부호를 왜 그렇게 정하면 합이 늘 0 인지, 틀린 기록을 왜 고치지 않고 되돌리는지, 규칙과 사실을 왜 다른 층에 두는지를 가이드와 같은 4월 거래 값으로 답합니다.</p>
 <p>다루지 않는 것도 정해 둘게요. Account 패턴이 성립하는 조건과 코드는 가이드에 있고, Entry 를 누가 소유하는가 같은 aggregate 경계는 <a href="../../research/accounting-context.md">회계 배경 확정안</a>이 정합니다. 여기서는 개념만 풉니다.</p>
 <h2 id="개념">개념</h2>
 <h3 id="복식부기의-기초">복식부기의 기초</h3>
@@ -575,13 +625,13 @@ Posting Rule — AccountType   * — 1 (trigger) · * — 1 (output)   규칙이
 Posting Rule — Transaction   0..1 — *            규칙이 거래를 만든다 · 사람이 적은 거래는 creator 없음</code></pre>
 <h2 id="가이드로-돌아가기">가이드로 돌아가기</h2>
 <ul>
-<li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.1.1.html">Account 가이드</a> 「개념 정리」 — Account · Entry · Transaction · Money · AccountType 의 정의와 관계 도식, 계정 종류가 매일 생기는 사실이 아니라 사실을 해석하는 규칙 쪽이라는 서술(이 문서의 「Account」 「Entry」 「Transaction」 「Money」 「AccountType」 「지식 층위와 운영 층위」).</li>
+<li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.2.0.html">Account 가이드</a> 「개념 정리」 — Account · Entry · Transaction · Money · AccountType 의 정의와 관계 도식, 계정 종류가 매일 생기는 사실이 아니라 사실을 해석하는 규칙 쪽이라는 서술(이 문서의 「Account」 「Entry」 「Transaction」 「Money」 「AccountType」 「지식 층위와 운영 층위」).</li>
 <li>같은 가이드 「시나리오 1」 — 합이 0 인 거래를 원장에 전기해 확정하는 4단계와 Entry 를 더해 4/5 잔액을 내는 5단계(「원장과 전기」). 매출 잔액이 음수로 나오는 이유를 묻는 확인 문답은 이 문서의 「복식부기의 기초」로 넘어옵니다.</li>
 <li>같은 가이드 「시나리오 2」 — T2 를 한 글자도 고치지 않고 T3 · T4 를 더해 되돌리는 정정(「역분개」).</li>
 <li>같은 가이드 「비슷한 패턴·안티패턴과의 차이」 — Transaction 이 Account 의 대체가 아니라 짝인 이유(「Transaction」).</li>
-<li><a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.1.html">Transaction 가이드</a> 「개념 정리」 — Posting Rule 항목이 규칙과 사실을 다른 층에 두는 이유를 이 문서로 넘깁니다(「지식 층위와 운영 층위」 「Posting Rule」). 「한눈에 보는 개요」와 시나리오 셋이 값을 쓰기 전에 기대는 부호 규약 · 전기 · 역분개도 여기에 있어요(「복식부기의 기초」 「원장과 전기」 「역분개」).</li>
-<li><a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.0.1.html">Posting Rule 가이드</a> 「한눈에 보는 개요」와 시나리오 셋 — 규칙이 만든 거래가 원장에 들어가는 값들이 부호 규약과 전기, 그리고 규칙이 사실 위 다른 층에 앉는다는 것을 이미 아는 것으로 두고 이 문서로 넘깁니다(「복식부기의 기초」 「원장과 전기」 「지식 층위와 운영 층위」 「Posting Rule」).</li>
-<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.1.html">Knowledge Level 가이드</a> 「비슷한 패턴·안티패턴과의 차이」 — Posting Rule 문단이 기대는 사전 지식이 계정 종류와 전기 규칙을 지식 층위에 두는 회계 쪽 배치입니다(「AccountType」 「지식 층위와 운영 층위」 「Posting Rule」).</li>
+<li><a href="ddd-analysis-pattern-guide/transaction/transaction-guide_v1.1.0.html">Transaction 가이드</a> 「개념 정리」 — Posting Rule 항목이 규칙과 사실을 다른 층에 두는 이유를 이 문서로 넘깁니다(「지식 층위와 운영 층위」 「Posting Rule」). 「한눈에 보는 개요」와 시나리오 셋이 값을 쓰기 전에 기대는 부호 규약 · 전기 · 역분개도 여기에 있어요(「복식부기의 기초」 「원장과 전기」 「역분개」).</li>
+<li><a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.html">Posting Rule 가이드</a> 「한눈에 보는 개요」와 시나리오 셋 — 규칙이 만든 거래가 원장에 들어가는 값들이 부호 규약과 전기, 그리고 규칙이 사실 위 다른 층에 앉는다는 것을 이미 아는 것으로 두고 이 문서로 넘깁니다(「복식부기의 기초」 「원장과 전기」 「지식 층위와 운영 층위」 「Posting Rule」).</li>
+<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a> 「비슷한 패턴·안티패턴과의 차이」 — Posting Rule 문단이 기대는 사전 지식이 계정 종류와 전기 규칙을 지식 층위에 두는 회계 쪽 배치입니다(「AccountType」 「지식 층위와 운영 층위」 「Posting Rule」).</li>
 </ul>
 <h2 id="참고-자료">참고 자료</h2>
 <ul>

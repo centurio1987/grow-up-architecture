@@ -410,7 +410,7 @@
   - refactoring.guru Rust: 사용자 정의 반복자도 별도 인터페이스를 만들지 말고 표준 `Iterator` trait을 구현하는 것이 권장 방식
 
 ### 실제 사용처
-- `java.util.Iterator` / `java.lang.Iterable` (Java SE 21) — `Iterator`=Iterator, `Iterable`=Aggregate, `ArrayList` 등=ConcreteAggregate, 각 컬렉션의 내부 반복자 클래스=ConcreteIterator. 패턴명 명시: [RG] Java Iterator 페이지(모든 `java.util.Iterator` 구현, `Scanner`, `Enumeration`) — https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Iterator.html
+- `java.util.Iterator` / `java.lang.Iterable` (Java SE 21) — `Iterator`=Iterator, `Iterable`=Aggregate, `ArrayList` 등=ConcreteAggregate, 각 컬렉션의 내부 반복자 클래스=ConcreteIterator. 공식 문서(Java `Iterable`·`Iterator`, MDN, Rust `std::iter`)는 셋 다 디자인 패턴 이름을 쓰지 않음(2026-11-13 Iterator v1.1.0 게이트 확인). 패턴명 명시: [RG] Java Iterator 페이지(모든 `java.util.Iterator` 구현, `Scanner`, `Enumeration`) — https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Iterator.html
 - JS 반복 프로토콜 `Symbol.iterator` / `Iterator` (MDN) — iterable=Aggregate, iterator=Iterator, `Array`·`Map` 등 내장 iterable=ConcreteAggregate. 패턴명 명시 출처 없음 — https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
 - Rust `std::iter::Iterator` / `IntoIterator` (std 1.98.1) — `Iterator`=Iterator, `IntoIterator`=Aggregate, `Vec`의 `IntoIter` 등=ConcreteIterator. [RG] Rust Iterator 페이지가 표준 trait 사용을 이 패턴의 관용 구현으로 소개 — https://doc.rust-lang.org/std/iter/trait.Iterator.html
 
@@ -1158,7 +1158,7 @@
 - Spring Framework `AbstractApplicationContext` (Spring Framework 7.0.9) — 클래스 Javadoc: "Template Method 디자인 패턴을 사용하며, 구체 서브클래스가 추상 메서드를 구현해야 함". `refreshBeanFactory()`="서브클래스가 실제 설정 로드를 위해 구현해야 함"(primitive), `onRefresh()`·`onClose()`="컨텍스트별 작업을 추가하려고 재정의할 수 있는 template method"(Javadoc 용어, 원전 기준으로는 hook). AbstractApplicationContext=AbstractClass, `GenericApplicationContext` 등 서브클래스=ConcreteClass. 패턴명 명시: Javadoc 자체 — https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/support/AbstractApplicationContext.html
 - `java.io.InputStream` (Java SE 21) — AbstractClass, 추상 `read()`=primitive, `read(byte[], int, int)`=template method(구현 요구사항: `read()`를 반복 호출). 패턴명 명시: [RG] Java TM 페이지("`InputStream`·`OutputStream`·`Reader`·`Writer`의 모든 비추상 메서드") — https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html
 - `java.util.AbstractList` (Java SE 21) — `get(int)`·`size()`=primitive, 나머지 리스트 연산=골격. 패턴명 명시: [RG] Java TM 페이지 — https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/AbstractList.html
-- `jakarta.servlet.http.HttpServlet` (Jakarta Servlet 6.0) — protected `service()`가 HTTP 메서드별 `doGet`·`doPost` 등으로 디스패치하는 골격, 서브클래스는 doXXX 중 최소 하나 재정의, `service` 재정의 이유는 거의 없음(Javadoc). 패턴명 명시: [RG] Java TM 페이지(doXXX 기본 405 응답) — https://jakarta.ee/specifications/servlet/6.0/apidocs/jakarta.servlet/jakarta/servlet/http/httpservlet
+- `jakarta.servlet.http.HttpServlet` (Jakarta Servlet 6.0) — protected `service()`가 HTTP 메서드별 `doGet`·`doPost` 등으로 디스패치하는 골격, 서브클래스는 메서드를 적어도 하나 재정의하고 그것은 대개 doXXX 가운데 하나(같은 목록에 `init`·`destroy`·`getServletInfo` 도 있음), `service` 재정의 이유는 거의 없음(Javadoc). 패턴명 명시: [RG] Java TM 페이지(doXXX 기본 405 응답) — https://jakarta.ee/specifications/servlet/6.0/apidocs/jakarta.servlet/jakarta/servlet/http/HttpServlet.html (2026-11-13 정정 — 옛 주소는 404, 「doXXX 중 최소 하나」는 Javadoc 보다 좁았음. Template Method v1.1.0 게이트)
 - `java.util.concurrent.ThreadPoolExecutor` hook 메서드 (Java SE 21) — Javadoc "Hook methods" 절: 각 작업 전후 호출되는 protected `beforeExecute`·`afterExecute`, 종료 시 `terminated`. 패턴명 명시 출처 없음(원전 hook 용어와 일치) — https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html
 - Rust `std::io::Read` (std 1.98.1) — trait=AbstractClass 역할, `read`=primitive, `read_to_end`·`read_exact` 등 제공 메서드=골격. 패턴명 명시 출처 없음 — https://doc.rust-lang.org/std/io/trait.Read.html
 
@@ -1185,7 +1185,7 @@
 - [Java SE 21 — InputStream](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/InputStream.html) — read(b, off, len)이 read()를 반복 호출, 더 효율적 구현 권장 · 조회 2026-09-17
 - [Java SE 21 — AbstractList](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/AbstractList.html) — get·size만 구현하면 수정 불가 리스트 · 조회 2026-09-17
 - [Java SE 21 — ThreadPoolExecutor](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html) — Hook methods 절 · 조회 2026-09-17
-- [Jakarta Servlet 6.0 — HttpServlet](https://jakarta.ee/specifications/servlet/6.0/apidocs/jakarta.servlet/jakarta/servlet/http/httpservlet) — service가 doXXX로 디스패치, 최소 하나 재정의 · 조회 2026-09-17
+- [Jakarta Servlet 6.0 — HttpServlet](https://jakarta.ee/specifications/servlet/6.0/apidocs/jakarta.servlet/jakarta/servlet/http/HttpServlet.html) — service가 doXXX로 디스패치, 메서드를 적어도 하나(대개 doXXX) 재정의 · 조회 2026-09-17 · 주소·서술 정정 2026-11-13
 - [JLS SE 21 — Chapter 8 (§8.4.3.3)](https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html) — final 메서드 재정의·숨김 금지 · 조회 2026-09-17
 - [JLS SE 21 — Chapter 9 (§9.4)](https://docs.oracle.com/javase/specs/jls/se21/html/jls-9.html) — 인터페이스 메서드 수정자 목록(final 없음) · 조회 2026-09-17
 - [TypeScript Handbook — Classes](https://www.typescriptlang.org/docs/handbook/2/classes.html) — abstract 클래스·멤버, protected · 조회 2026-09-17

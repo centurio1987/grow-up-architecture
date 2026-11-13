@@ -4,7 +4,7 @@ slug: abstract-factory
 spec: gof-guide
 spec_version: 1.4.0
 version: 1.0.1
-status: published
+status: legacy
 date: 2026-11-11
 ---
 
