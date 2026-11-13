@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 41,
+  "next_seq": 42,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -265,6 +265,27 @@
       "goal_hash": "a585b6dee35242768729f7c0ddf5e14d78011638",
       "memo": "근거: pattern-guide/research/ 의 system-design-guide-plan-2026-11-13.md(준비안, 결정 네 가지는 5절) · system-design-cases-2026-11-13.md(후보 75건) · live-viewer-count-2026-11-13.md(파일럿 1 노트)",
       "memo_hash": "3a21a033217903689386c97ce9dfde4b98115e4b"
+    },
+    "KAN-002.1-7YT11M": {
+      "col": "todo",
+      "title": "system-design-guide 명세 등록 — 절 구성·작성법·검사 계약과 트랙 경로",
+      "verbatim": "질문: 구현 코드는 TypeScript 한 언어 + 메모리 대역으로 실행 검증하는 방식으로 갈까요?\n답변: 세 언어 유지\n\n질문: 저장 위치를 pattern-guide/system-design-guide/, 명세 id 를 system-design-guide 로 할까요?\n답변: 그렇게 해",
+      "생성": "ai",
+      "최종": "ai",
+      "갱신": "2026-11-13",
+      "title_hash": "28396f6a942a5800b3b11215514ad055c41283c9",
+      "verbatim_hash": "05ae944e133998d35895cb014529bcae448e0083",
+      "short": "명세 등록",
+      "short_hash": "28e6818a936ea0d012aa639cb0aad587b813bed6",
+      "purpose": "준비안 3절의 절 구성을 authoring-spec 으로 system-design-guide 명세(spec.md · spec.json · 캔버스)로 등록하고 paths.json 에 트랙을 더한다",
+      "purpose_hash": "9f496c3439f2f3ba6b95f38173178b22ef584599",
+      "reason": "명세가 없으면 파일럿을 쓸 기준과 게이트 채점 기준이 없고, 트랙만 먼저 넣으면 검사기가 spec 없음으로 멈춘다",
+      "reason_hash": "7ea30e4ca38ed4f690cf6f41d05e90e4e414b9ee",
+      "goal": "명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)",
+      "goal_hash": "2b8f59a4e15a7ca4211ee31b10d06e8584f4e1dd",
+      "memo": "결정: 구현 코드는 Java·TypeScript·Rust 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/<슬러그>/, 명세 id system-design-guide (준비안 5절 1·2)",
+      "memo_hash": "4b8b73ee714f8c8283bca7206d612f377d288fe9",
+      "parent": "KAN-002-4FZX1V"
     }
   },
   "order": [
@@ -276,9 +297,27 @@
     "KAN-001.6-HB5NH9",
     "KAN-001.7-4MRJ1B",
     "KAN-001-YXTC2C",
-    "KAN-002-4FZX1V"
+    "KAN-002-4FZX1V",
+    "KAN-002.1-7YT11M"
   ],
   "recent": [
+    {
+      "seq": 41,
+      "t": "2026-11-13T20:32",
+      "a": "ai",
+      "id": "KAN-002.1-7YT11M",
+      "op": "create",
+      "w": "835640",
+      "col": "todo",
+      "title": "system-design-guide 명세 등록 — 절 구성·작성법·검사 계약과 트랙 경로",
+      "verbatim": "질문: 구현 코드는 TypeScript 한 언어 + 메모리 대역으로 실행 검증하는 방식으로 갈까요?\n답변: 세 언어 유지\n\n질문: 저장 위치를 pattern-guide/system-design-guide/, 명세 id 를 system-design-guide 로 할까요?\n답변: 그렇게 해",
+      "parent": "KAN-002-4FZX1V",
+      "short": "명세 등록",
+      "purpose": "준비안 3절의 절 구성을 authoring-spec 으로 system-design-guide 명세(spec.md · spec.json · 캔버스)로 등록하고 paths.json 에 트랙을 더한다",
+      "reason": "명세가 없으면 파일럿을 쓸 기준과 게이트 채점 기준이 없고, 트랙만 먼저 넣으면 검사기가 spec 없음으로 멈춘다",
+      "goal": "명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)",
+      "memo": "결정: 구현 코드는 Java·TypeScript·Rust 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/<슬러그>/, 명세 id system-design-guide (준비안 5절 1·2)"
+    },
     {
       "seq": 40,
       "t": "2026-11-13T20:31",
