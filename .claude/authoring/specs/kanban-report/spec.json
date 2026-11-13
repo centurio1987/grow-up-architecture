@@ -3,47 +3,165 @@
   "schema_version": 1,
   "id": "kanban-report",
   "label": "칸반 계획 리포트",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "source": {
     "origin": "authored",
     "refs": [
       "manage-kanban SKILL.md §4.7 착수 전 계획 — 전략 → WBS → 배치",
       "manage-kanban scripts/kanban.py report-data — 이 글의 유일한 사실 입력",
-      "manage-kanban scripts/report.py — 렌더러(차트·표는 렌더러가 그린다)"
+      "manage-kanban scripts/report.py — 렌더러(차트·표는 렌더러가 그린다)",
+      "manage-kanban SKILL.md §5.6 「판단 항목에 무엇을 올리는가」 — 서술 레이어 규율(KR7·KR8)",
+      "KAN-015 계획서 개선 — 개요 네 칸(What·Why·How·What-if)과 절 묶음(KR6)"
     ],
     "note": "문체 축은 여기 선언하지 않는다 — register·rhythm·device·lexicon 은 L1(voice) 소유이고, evidence·grammar·comprehension 은 L0 불가침이다. 이 명세는 structure 와 scope-principle 만 갖는다."
   },
   "voice": {
     "default": "ppangtolab-teacher",
-    "allowed": ["ppangtolab-teacher", "ppangtolab-researcher", "yundeok"]
+    "allowed": [
+      "ppangtolab-teacher",
+      "ppangtolab-researcher",
+      "yundeok"
+    ]
   },
   "sections": [
-    { "id": "summary",   "label": "이 카드가 무엇을 끝내려는가", "required": true,  "order": 10, "heading_fixed": false },
-    { "id": "strategy",  "label": "왜 이 접근인가",             "required": true,  "order": 20, "heading_fixed": false },
-    { "id": "wbs",       "label": "무엇을 어떤 순서로",          "required": true,  "order": 30, "heading_fixed": false },
-    { "id": "batches",   "label": "두 가지 수행안",             "required": true,  "order": 40, "heading_fixed": false },
-    { "id": "risk",      "label": "막힐 만한 지점",             "required": true,  "order": 50, "heading_fixed": false },
-    { "id": "done",      "label": "무엇이 되면 끝인가",          "required": true,  "order": 60, "heading_fixed": false }
+    {
+      "id": "summary",
+      "label": "이 카드가 무엇을 끝내려는가",
+      "required": true,
+      "order": 10,
+      "heading_fixed": false,
+      "group": "what"
+    },
+    {
+      "id": "done",
+      "label": "무엇이 되면 끝인가",
+      "required": true,
+      "order": 15,
+      "heading_fixed": false,
+      "group": "what"
+    },
+    {
+      "id": "strategy",
+      "label": "왜 이 접근인가",
+      "required": true,
+      "order": 20,
+      "heading_fixed": false,
+      "group": "why"
+    },
+    {
+      "id": "wbs",
+      "label": "무엇을 어떤 순서로",
+      "required": true,
+      "order": 30,
+      "heading_fixed": false,
+      "group": "how"
+    },
+    {
+      "id": "batches",
+      "label": "두 가지 수행안",
+      "required": true,
+      "order": 40,
+      "heading_fixed": false,
+      "group": "how"
+    },
+    {
+      "id": "risk",
+      "label": "막힐 만한 지점",
+      "required": true,
+      "order": 50,
+      "heading_fixed": false,
+      "group": "whatif"
+    }
   ],
   "principles": [
-    { "code": "KR1", "level": "MUST", "axis": "comprehension",
-      "text": "독자는 이 카드를 처음 보는 사람이다. 카드 id·work id·배치 번호를 처음 쓸 때 그 자리에서 한 번 푼다" },
-    { "code": "KR2", "level": "MUST", "axis": "scope-principle",
-      "text": "report-data JSON 에 없는 사실을 쓰지 않는다. 소요 시간·인원·비용을 추정해 적지 않는다 — 그 값은 어디에도 측정된 적이 없다" },
-    { "code": "KR3", "level": "MUST", "axis": "structure",
-      "text": "두 수행안(단일 에이전트 · 오케스트레이션)을 같은 분량·같은 항목으로 나란히 쓴다. 한쪽을 추천하되 다른 쪽을 축약해 결론을 유도하지 않는다" },
-    { "code": "KR4", "level": "MUST", "axis": "structure",
-      "text": "차트와 표는 렌더러가 그린다. 본문에서 표를 다시 그리지 말고 그 표가 무엇을 말하는지만 쓴다" },
-    { "code": "KR5", "level": "SHOULD", "axis": "scope-principle",
-      "text": "루트 독립성이 깨졌으면 그것을 첫 절에서 말한다. 계획서 뒤쪽에 묻으면 유저가 착수한 뒤에 발견한다" }
+    {
+      "code": "KR1",
+      "level": "MUST",
+      "axis": "comprehension",
+      "text": "독자는 이 카드를 처음 보는 사람이다. 카드 id·work id·배치 번호를 처음 쓸 때 그 자리에서 한 번 푼다"
+    },
+    {
+      "code": "KR2",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "report-data JSON 에 없는 사실을 쓰지 않는다. 소요 시간·인원·비용을 추정해 적지 않는다 — 그 값은 어디에도 측정된 적이 없다"
+    },
+    {
+      "code": "KR3",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "두 수행안(단일 에이전트 · 오케스트레이션)을 같은 분량·같은 항목으로 나란히 쓴다. 한쪽을 추천하되 다른 쪽을 축약해 결론을 유도하지 않는다"
+    },
+    {
+      "code": "KR4",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "그림과 표는 렌더러가 그린다(첫 화면의 개요 네 칸 · WBS · 배치 2안 비교 · 루트 독립성 맵). 본문에서 표를 다시 그리지 말고 그 그림이 무엇을 말하는지만 쓴다"
+    },
+    {
+      "code": "KR5",
+      "level": "SHOULD",
+      "axis": "scope-principle",
+      "text": "루트 독립성이 깨졌으면 그것을 첫 절에서 말한다. 계획서 뒤쪽에 묻으면 유저가 착수한 뒤에 발견한다"
+    },
+    {
+      "code": "KR6",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "절 여섯을 네 칸 머리 아래에 놓는다 — 무엇이 달라지는가(summary·done) · 왜 이 길인가(strategy) · 어떤 순서로(wbs·batches) · 그러면 어떻게 되는가(risk). 첫 화면의 개요 그림이 같은 네 칸을 카드 데이터(report-data 의 overview)로 이미 그리므로, 본문은 그 칸을 풀어 쓴다. 개요 그림의 문장을 되풀이하지 않는다"
+    },
+    {
+      "code": "KR7",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "서술 레이어의 하한 — 도구 내부를 모르는 사람이 읽고 판단할 수 있게 쓴다. 함수·플래그·파일 이름은 근거를 대는 자리(`파일:줄`)에만 쓰고, 판단의 뼈대는 유저가 겪는 증상과 대가로 세운다"
+    },
+    {
+      "code": "KR8",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "서술 레이어의 상한 — 지시 원문(report-data 의 verbatim)보다 낮은 레이어로 내려가지 않는다. 유저가 제품 관점으로 지시했으면 계획도 그 관점에서 선다. 내부 구조를 고르는 일은 계획서에서 유저에게 묻지 않는다"
+    }
   ],
   "conditional_rule": "`막힐 만한 지점` 절은 리스크가 없으면 \"확인된 리스크 없음\"과 그 근거 한 줄로 대신할 수 있다. 나머지 다섯 절은 뺄 수 없다.",
   "template": {
     "kind": "md",
     "slot_style": "bracket-inline",
-    "outputs": [{ "format": "md", "dir": "draft" }]
+    "outputs": [
+      {
+        "format": "md",
+        "dir": "draft"
+      }
+    ]
   },
-  "placeholders": { "profile": "std-v1" },
-  "gate": { "rubric": "default", "max_rounds": 3,
-            "external_review": { "enabled": false, "failure_policy": "soft-fail", "redact": "none" } }
+  "placeholders": {
+    "profile": "std-v1"
+  },
+  "gate": {
+    "rubric": "default",
+    "max_rounds": 3,
+    "external_review": {
+      "enabled": false,
+      "failure_policy": "soft-fail",
+      "redact": "none"
+    }
+  },
+  "groups": [
+    {
+      "id": "what",
+      "label": "무엇이 달라지는가"
+    },
+    {
+      "id": "why",
+      "label": "왜 이 길인가"
+    },
+    {
+      "id": "how",
+      "label": "어떤 순서로"
+    },
+    {
+      "id": "whatif",
+      "label": "그러면 어떻게 되는가"
+    }
+  ]
 }
