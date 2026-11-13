@@ -1,0 +1,461 @@
+{
+  "$schema": "authoring-kit/spec@1",
+  "schema_version": 1,
+  "id": "system-design-guide",
+  "label": "가이드 — 시스템 설계 사례(문제 하나 = 한 편)",
+  "version": "1.0.0",
+  "source": {
+    "origin": "authored",
+    "refs": [
+      "pattern-guide/research/system-design-guide-plan-2026-11-13.md — 준비안 3절(절 구성 표 · 절별 규칙 · 계승과 제외) · 5절(정한 것 넷)",
+      ".claude/authoring/specs/gof-guide/spec.md 1.4.0 — 공통 블록(도식 · 버저닝 · 리서치 노트 · 원서 다루기 · 시나리오 · 구현 펜스 · 조건부 절 · 채점 규약). 옮긴 원칙은 spec.md 원칙 목록의 ← PGn",
+      "pattern-guide/research/system-design-cases-2026-11-13.md — 가이드 후보 75건, 파일럿 RT-01 · CT-01",
+      "KANBAN/cards/KAN-002.1-7YT11M.md — 명세 등록 카드(전략 · 검사기 계약)"
+    ]
+  },
+  "voice": {
+    "default": "ppangtolab-teacher",
+    "allowed": [
+      "ppangtolab-teacher"
+    ]
+  },
+  "sections": [
+    {
+      "id": "title",
+      "label": "제목 + 한 줄 해답",
+      "required": true,
+      "order": 5,
+      "heading": "# {문제} — {한 줄 해답}",
+      "heading_fixed": false
+    },
+    {
+      "id": "requirements",
+      "label": "문제와 요구사항",
+      "required": true,
+      "order": 10,
+      "heading": "## 문제와 요구사항",
+      "heading_fixed": true
+    },
+    {
+      "id": "estimation",
+      "label": "규모 추정",
+      "required": true,
+      "order": 20,
+      "heading": "## 규모 추정",
+      "heading_fixed": true
+    },
+    {
+      "id": "diagram",
+      "label": "시스템 개념도",
+      "required": true,
+      "order": 30,
+      "heading": "## 시스템 개념도",
+      "heading_fixed": true
+    },
+    {
+      "id": "detail",
+      "label": "시나리오로 따라가기",
+      "required": true,
+      "order": 40,
+      "heading": "## 시나리오로 따라가기",
+      "heading_fixed": true,
+      "container": true
+    },
+    {
+      "id": "detail.scenario",
+      "label": "시나리오",
+      "required": true,
+      "order": 41,
+      "heading": "### 시나리오 {n} — {제목}",
+      "heading_fixed": false,
+      "parent": "detail",
+      "repeat": true,
+      "_note": "셋, 번호 1부터 연속. 종류 고정 — ① 기본 흐름 ② 부하가 몰릴 때 ③ 장애가 날 때(SD9). 절마다 들여쓰기 없는 번호 목록 3단계 이상(검사기 check_scenarios)"
+    },
+    {
+      "id": "tech",
+      "label": "기술 상세 설명",
+      "required": true,
+      "order": 50,
+      "heading": "## 기술 상세 설명",
+      "heading_fixed": true,
+      "container": true
+    },
+    {
+      "id": "tech.item",
+      "label": "구성 요소",
+      "required": true,
+      "order": 51,
+      "heading": "### 구성 요소 — {이름}",
+      "heading_fixed": false,
+      "parent": "tech",
+      "repeat": true,
+      "_note": "개념도 상자마다 하나, {이름} 은 상자 이름과 글자까지 같다(SD8). 네 칸 — 무엇인가 · 맡는 일 · 왜 이 기술인가 · 설정값과 한계(SD14)"
+    },
+    {
+      "id": "alternatives",
+      "label": "대안 비교",
+      "required": true,
+      "order": 60,
+      "heading": "## 대안 비교",
+      "heading_fixed": true,
+      "container": true
+    },
+    {
+      "id": "alternatives.candidates",
+      "label": "후보 구조 비교",
+      "required": true,
+      "order": 61,
+      "heading": "### 후보 구조 비교",
+      "heading_fixed": true,
+      "parent": "alternatives"
+    },
+    {
+      "id": "alternatives.decision",
+      "label": "결정",
+      "required": true,
+      "order": 62,
+      "heading": "### 결정",
+      "heading_fixed": true,
+      "parent": "alternatives"
+    },
+    {
+      "id": "alternatives.switch",
+      "label": "전환점",
+      "required": true,
+      "order": 63,
+      "heading": "### 전환점",
+      "heading_fixed": true,
+      "parent": "alternatives"
+    },
+    {
+      "id": "example",
+      "label": "구현 코드",
+      "required": true,
+      "order": 70,
+      "heading": "## 구현 코드",
+      "heading_fixed": true,
+      "container": true
+    },
+    {
+      "id": "example.context",
+      "label": "상황 설정",
+      "required": true,
+      "order": 71,
+      "heading": "### 상황 설정",
+      "heading_fixed": true,
+      "parent": "example"
+    },
+    {
+      "id": "example.impl",
+      "label": "구현",
+      "required": true,
+      "order": 72,
+      "heading": "### 구현",
+      "heading_fixed": true,
+      "parent": "example",
+      "_note": "헤딩 문구 「구현」은 검사기 계약 — 세 언어 펜스 검사가 이 헤딩으로 절을 찾는다(check-guides.py:133 · :1289, 커밋 e2384dd 기준)"
+    },
+    {
+      "id": "fit",
+      "label": "요구 충족 확인",
+      "required": true,
+      "order": 80,
+      "heading": "## 요구 충족 확인",
+      "heading_fixed": true,
+      "_note": "gof-guide 의 boundary.minimum 자리. 요구사항 표의 비기능 행 전부 ↔ 시나리오 단계 ↔ 실행 출력 줄(또는 실행 밖 표시)(SD31)"
+    },
+    {
+      "id": "example.realworld",
+      "label": "실제 사례",
+      "required": false,
+      "order": 85,
+      "heading": "## 실제 사례",
+      "heading_fixed": true,
+      "condition": "출처 링크로 확인한 기업 사례(엔지니어링 글 · 발표 · 논문 · 공식 문서)가 하나 이상 있을 때"
+    },
+    {
+      "id": "selfcheck",
+      "label": "스스로 점검하기",
+      "required": true,
+      "order": 90,
+      "heading": "## 스스로 점검하기",
+      "heading_fixed": true
+    },
+    {
+      "id": "refs",
+      "label": "참고 자료",
+      "required": true,
+      "order": 95,
+      "heading": "## 참고 자료",
+      "heading_fixed": true
+    }
+  ],
+  "principles": [
+    {
+      "code": "SD1",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "절 헤딩 고정 — `heading_fixed: true` 인 절은 `sections[]` 의 헤딩 문구·레벨·순서를 그대로 쓴다. 특히 `### 구현` 은 검사기가 세 언어 펜스를 찾는 계약 문자열이고, `## 시나리오로 따라가기` · `### 시나리오 n — 제목` 은 시나리오 검사가 읽는 자리라 한 글자라도 다르면 미흡"
+    },
+    {
+      "code": "SD2",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "제목 부제 — `# {문제} — {한 줄 해답}` 의 부제가 이 가이드가 고른 구조의 비결을 한 구절로 예고한다. 분류명·'시스템 설계'·'가이드' 같은 낱말로 채웠으면 미흡"
+    },
+    {
+      "code": "SD3",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "요구 수치화 — `requirements` 의 비기능 요구 표가 행마다 수치와 근거(출처 링크 · 계산 · 이 가이드의 가정 중 하나)를 갖고, 정확도 요구(정확해야 하는가 · 허용 오차 몇 %)를 한 행 둔다. '빠르게'·'지연 없이'·'대규모'·'안정적으로' 같은 말이 수치 없이 남아 있으면 미흡"
+    },
+    {
+      "code": "SD4",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "범위 밖 명시 — `requirements` 에 이 가이드가 일부러 다루지 않는 것이 1개 이상 적혀 있다"
+    },
+    {
+      "code": "SD5",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "규모 추정의 계산식 — `estimation` 의 결과 수치마다 입력 · 연산 · 결과가 보이는 계산식이 있고, 입력 수치가 요구사항 표의 행이나 출처에서 온다. 식 없이 결과만 있는 수치가 하나라도 있으면 미흡"
+    },
+    {
+      "code": "SD6",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "추정이 구조를 바꾼다 — `estimation` 이 계산 결과로 어떤 구조가 강제되거나 배제되는지 한 문단 이상 적는다. 숫자만 늘어놓고 설계와 잇지 않았으면 미흡"
+    },
+    {
+      "code": "SD7",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "개념도 — `diagram` 에 시스템 전체를 보이는 viz 도식 이미지가 1개 있고(C4 Container 수준 — 상자 하나 = 실행 단위 하나), 화살표마다 통신 방식과 빈도가 적혀 있다. ```text 도식으로 대신했거나 배포 세부(클러스터 대수 · 장애 조치)로 채웠으면 미흡"
+    },
+    {
+      "code": "SD8",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "개념도 ↔ 기술 항목 1:1 — 개념도의 상자 이름과 `tech.item`(`### 구성 요소 — {이름}`)의 이름이 글자까지 1:1 로 대응한다. 설명 없는 상자나 그림에 없는 구성 요소가 있으면 미흡"
+    },
+    {
+      "code": "SD9",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "시나리오 셋 — `### 시나리오 n — 제목` 이 셋이고 번호가 1부터 연속이며, 종류가 차례로 ① 기본 흐름 ② 부하가 몰릴 때(규모 추정의 수치를 넘기는 상황) ③ 장애가 날 때(구성 요소 하나를 멈추거나 메시지를 잃게 함)다. 시나리오마다 상황 한 문단(구체 값) · 들여쓰기 없는 번호 단계 3개 이상 · '이 시나리오가 보여 준 것' 한 문단이 있다. 개수 · 번호 · 단계 수는 검사기가, 종류와 모양은 채점이 판정한다"
+    },
+    {
+      "code": "SD10",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "단계마다 이유 — 시나리오의 모든 단계에 '왜 그 상자가 그 일을 맡는가' 또는 '순서를 바꾸면 무엇이 어긋나는가'가 붙어 있다. 이유 없는 단계가 하나라도 있으면 미흡"
+    },
+    {
+      "code": "SD11",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "시나리오 경로 그림 — 시나리오마다 경로 그림(C4 Dynamic · Sequence viz 도식 또는 ```text 도식)이 1개 있고, 그 안의 상자 이름이 개념도와 같다"
+    },
+    {
+      "code": "SD12",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "이름 소개 — 시나리오가 처음 쓰는 구성 요소 · 기술 이름이 그 자리에서 한 구절로 소개되고, 정식 설명이 `tech.item` 에 있다. 소개 없이 쓰인 이름이 있으면 미흡"
+    },
+    {
+      "code": "SD13",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "한 도메인 — 시나리오가 고른 도메인 · 등장 요소 · 값을 `example.context` 와 `example.impl` 이 그대로 이어받는다. 시나리오와 구현의 도메인이 다르거나 등장 요소가 끊기면 미흡"
+    },
+    {
+      "code": "SD14",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "기술 항목 네 칸 — `tech.item` 마다 ① 무엇인가(정의와 예) ② 이 시스템에서 맡는 일(시나리오의 어느 단계에서 무엇을 받고 내보내는가) ③ 왜 이 기술인가(같은 자리에 올 수 있는 다른 기술 하나 이상과 견준 이유) ④ 설정값과 한계(고른 값과 이유, 그 기술이 보장하지 않는 것)가 이 순서로 있다. '널리 쓰인다'만으로 ③을 채웠으면 미흡"
+    },
+    {
+      "code": "SD15",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "제품 동작의 출처 — 본문이 특정 제품 · 프로토콜의 동작이나 보장(전달 보장 · 원자성 · 복제 방식 · 오차율 · 기본값)을 단정한 자리마다 공식 문서 · 표준 문서 출처가 달려 있다"
+    },
+    {
+      "code": "SD16",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "후보 구조 — `alternatives.candidates` 가 이 가이드가 고른 구조를 포함해 후보 구조 2개 이상을 같은 기준(지연 · 처리량 · 정확도 · 비용 · 운영 부담 · 장애 범위 가운데 이 문제에 걸리는 것)으로 견준다"
+    },
+    {
+      "code": "SD17",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "얻는 것과 포기하는 것 — 후보마다 그 구조를 고르면 무엇을 얻고 무엇을 포기하는지 적는다"
+    },
+    {
+      "code": "SD18",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "결정 기록 — `alternatives.decision` 이 맥락(어떤 요구 수치에서 고르는가, 요구사항 표의 행을 가리킴) · 결정(후보 하나) · 결과(얻는 것 · 포기하는 것 · 새로 생기는 일) 세 칸으로 닫힌다"
+    },
+    {
+      "code": "SD19",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "전환점 — `alternatives.switch` 가 고른 구조가 최적이 아니게 되는 조건을 수치나 요구 변화로 1개 이상 적고, 그때 옮겨 갈 후보를 함께 적는다. '규모가 커지면'처럼 수치 없는 조건만 있으면 미흡"
+    },
+    {
+      "code": "SD20",
+      "level": "SHOULD",
+      "axis": "scope-principle",
+      "text": "가장 헷갈리는 한 쌍 — 후보 가운데 가장 헷갈리는 한 쌍을 표로 끝내지 않고 산문과 수치로 푼다"
+    },
+    {
+      "code": "SD21",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "상황 설정 선행 — `example.context` 가 구현 펜스보다 앞에서 시나리오의 도메인과 값을 코드 크기로 고정하고, 실제 구성 요소 ↔ 코드 타입 대역 매핑(흉내 내는 것 · 흉내 내지 않는 것)과 가상 시계의 사건 목록, 재현하는 시나리오 번호를 적는다"
+    },
+    {
+      "code": "SD22",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "구현 펜스 개수·순서 — `### 구현` 안의 코드 펜스가 정확히 3개이고 정보 문자열이 순서대로 `java`, `typescript`, `rust` 이며, 세 펜스 사이에 산문 · 헤딩이 없다"
+    },
+    {
+      "code": "SD23",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "구현 펜스 자기완결 — 세 펜스가 각각 비어 있지 않고 생략 표기(`...`) 없이 단독 파일로 컴파일된다(Java 21 · TypeScript strict · Rust 2021 edition). `commands.compile` 이 0으로 끝나야 충족"
+    },
+    {
+      "code": "SD24",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "표준 라이브러리만 — 세 펜스가 각 언어의 표준 라이브러리 밖 의존(외부 crate · npm 패키지 · Maven 좌표)을 쓰지 않는다. 외부 시스템은 메모리 대역으로 둔다"
+    },
+    {
+      "code": "SD25",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "같은 상황 세 언어 — 세 펜스가 `example.context` 의 같은 시나리오를 같은 타입 이름으로 구현하고, 각자 진입점(Java `main` · TypeScript 최상위 호출 · Rust `fn main`)을 갖는다"
+    },
+    {
+      "code": "SD26",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "세 언어 출력 동일 — `commands.run` 으로 세 언어의 출력이 글자 단위로 같다. 이를 위해 맵 순회 순서에 기대지 않고(출력 전 키로 정렬), 표준 난수 생성기 대신 같은 식의 의사난수 생성기를 직접 구현하며, 스레드와 실제 시계 대신 단일 스레드 가상 시계를 쓰고, 실수를 그대로 찍지 않는다(정수 또는 자릿수 고정 문자열)"
+    },
+    {
+      "code": "SD27",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "코드 정본 — 예시 코드가 가이드 폴더의 `code/` 에 실행 파일로 있고(공개 클래스 이름의 .java · main.ts · main.rs · expected-output.txt), 본문 펜스가 그 파일과 글자 단위로 같으며, 본문이 싣는 실행 출력이 expected-output.txt 와 같다. 실행 출력 펜스는 `### 구현` 밖에 있다"
+    },
+    {
+      "code": "SD28",
+      "level": "SHOULD",
+      "axis": "structure",
+      "text": "구현 분량 — 세 펜스가 각각 250줄 이하다. 넘으면 재현하는 시나리오를 줄인다(이 상한은 파일럿 두 편에서 다시 잰다)"
+    },
+    {
+      "code": "SD29",
+      "level": "SHOULD",
+      "axis": "structure",
+      "text": "해설은 한 번, 줄 포인팅 — 구현 해설이 세 펜스 뒤에 한 번 있고, 시나리오 단계 ↔ 코드 줄 대응('시나리오 1 의 3단계는 Java n행 · TypeScript n행 · Rust n행')으로 쓰이며, 언어 차이는 그 뒤에 짧게 붙는다"
+    },
+    {
+      "code": "SD30",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "배포 조각 표식 — 실제 배포에 쓰는 조각(명령 · 설정 · 응답 헤더)이 `### 구현` 밖(주로 `tech.item`)에 있고 펜스 정보 문자열에 `no-compile` 이 붙어 실행 검증 대상이 아님을 표시한다"
+    },
+    {
+      "code": "SD31",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "요구 충족 확인 — `fit` 의 표가 요구사항 표의 비기능 행을 전부 담고, 행마다 충족을 보이는 자리(시나리오 n 의 k단계 · 규모 추정의 식)와 확인한 것(expected-output.txt 의 줄, 또는 '실행 밖 — ' 뒤에 계산 · 출처)을 적는다. 빠진 요구 행이 있거나 실행 밖을 실행한 것처럼 적었으면 미흡"
+    },
+    {
+      "code": "SD32",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "실제 사례는 확인된 것만 — `example.realworld` 의 사례마다 확인 가능한 출처 링크가 있고, 사례의 무엇이 이 가이드 구조의 어느 상자 · 단계에 해당하는지 매핑하며, 2차 자료로만 확인한 사례는 2차라고 밝힌다. 확인된 사례가 없으면 절이 헤딩째 없다"
+    },
+    {
+      "code": "SD33",
+      "level": "MUST",
+      "axis": "scope-principle",
+      "text": "근거 없는 수치 금지 — 난이도 별점 · 활용도 등급처럼 측정 · 출처 근거가 없는 평가 수치가 본문에 없다"
+    },
+    {
+      "code": "SD34",
+      "level": "MUST",
+      "axis": "structure",
+      "text": "조건부 절 처리 — 조건부 절이 해당 없으면 헤딩째 지워져 있고, 본문에 '해당 없음' · '이 절은 생략' 같은 집필 메타가 없다. 생략 사유는 게이트 보고에만 있다"
+    },
+    {
+      "code": "SD35",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "리서치 노트 밖 사실의 출처 — 리서치 노트(`dirs.research`)에 없는 사실을 본문에 새로 썼으면 그 자리에 출처가 달려 있고 `refs` 에도 올라 있다"
+    },
+    {
+      "code": "SD36",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "참고 자료 — `refs` 가 1차 자료(기업 엔지니어링 글 · 논문 · 공식 문서)를 앞에, 2차 자료를 뒤에 두고, 본문에서 출처로 단 링크를 전부 담으며, 항목마다 무엇을 뒷받침하는지 한 구절과 게시일(확인 못 했으면 '게시일 확인 안 함')을 단다"
+    },
+    {
+      "code": "SD37",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "자립성 — 본문은 출처 없이 읽힌다. 출처의 위치 지시자(`그림 n` · `§n.n` · `n장 「…」` · '그 글의 X 절')는 `(근거: …)` 괄호와 `## 참고 자료` 안에서만 쓴다. 검사기(self-contained)가 판정한다"
+    },
+    {
+      "code": "SD38",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "권위 인용은 설명이 아니다 — '어느 회사가 그렇게 한다/골랐다'는 근거 표시일 뿐이다. 그 선택이 이 문제에서 왜 맞는지의 설명(수치 · 반례 · 절차)이 본문에 따로 있어야 하고, 회사 이름만으로 끝난 주장이 있으면 미흡"
+    },
+    {
+      "code": "SD39",
+      "level": "SHOULD",
+      "axis": "scope-principle",
+      "text": "점검 문제 — `selfcheck` 에 문제 2~3개가 있고 종류(수치 바꾸기 · 구성 요소 멈추기 · 순서 바꾸기)를 둘 이상 섞으며, 문제마다 풀이가 있다"
+    },
+    {
+      "code": "SD40",
+      "level": "MUST",
+      "axis": "evidence",
+      "text": "수치의 출신 — 본문의 수치마다 출처에서 온 값 · 계산한 값 · 가정한 값 가운데 무엇인지 구분되어 있고, 출처에서 온 수치는 원문과 대조한 것이다. 출신을 알 수 없는 수치가 있으면 미흡"
+    }
+  ],
+  "conditional_rule": "조건부 절은 해당 사항이 없으면 문서에서 헤딩째 지운다. 문서 안에 '해당 없음' 메모를 남기지 않는다 — 독자용 문서에 집필 메타를 싣지 않는다. 생략 사유는 품질 게이트 보고에만 기록한다.",
+  "template": {
+    "kind": "md",
+    "template_ref": "system-design-guide-canvas",
+    "slot_style": "std-v1",
+    "slots_map": "template.slots.json",
+    "outputs": [
+      {
+        "format": "md",
+        "dir": "system-design"
+      }
+    ]
+  },
+  "placeholders": {
+    "profile": "std-v1",
+    "legacy_accept": []
+  },
+  "gate": {
+    "rubric": "default",
+    "max_rounds": 3,
+    "external_review": {
+      "enabled": false,
+      "_note": "외부 모델 비평은 이 파이프라인에서 쓰지 않는다(2026-09-20 유저 결정). 사실 주장 검증은 품질 게이트 채점이 실행 · 원문 대조 · 재계산으로 진다. 공통 루브릭의 H축(이해 게이트)도 판정하지 않는다(커밋 131b95c 의 유저 결정)."
+    }
+  }
+}

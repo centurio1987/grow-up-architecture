@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "template": ".claude/skills/design-pattern-guide/system-design-guide-canvas.md",
+  "format": "md",
+  "slot_style": "std-v1",
+  "slots": [
+    {
+      "id": "alternatives.candidates.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "alternatives.decision.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "alternatives.switch.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "detail.scenarios.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "diagram.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "estimation.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "example.context.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "example.impl.notes",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "example.realworld.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "fit.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "refs.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "requirements.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "selfcheck.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "tech.items.body",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "title.answer",
+      "kind": "fill",
+      "value": null
+    },
+    {
+      "id": "title.problem",
+      "kind": "fill",
+      "value": null
+    }
+  ],
+  "legacy_detected": {},
+  "_note": "value 가 null 이면 미해결이다. 템플릿 파일은 프로젝트에 그대로 두고 paths.json 이 경로만 참조한다."
+}
