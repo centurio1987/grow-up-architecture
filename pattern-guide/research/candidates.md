@@ -1,5 +1,7 @@
 # 추가 패턴 후보 보고서
 
+> 후속 조사(2026-11-06): 현행 37편을 기준으로 분산 시스템·메시징·영속성까지 확장한 [56개 후보 조사](pattern-expansion-research-2026-11-06.md)와 [집필 전략](pattern-expansion-strategy-2026-11-06.md)을 추가했습니다. 아래 2026-09-17 판단은 당시 범위의 이력이며, 후속 문서의 권고가 곧 채택·발행 완료를 뜻하지는 않습니다.
+
 - 조사일: 2026-09-17 (본문의 모든 웹 출처 조회일도 같은 날짜입니다)
 - 현재 구성: 33편 — GoF 23편(`PATTERNS.md`) + Fowler 분석 패턴 10편(`pattern-guide/ddd-analysis-pattern-guide/README.md`의 기반 추상 3 · 값 모델링 2 · 관찰/측정 2 · 회계/거래 3)
 - 조사 범위: 세 갈래입니다. ① GoF 밖에서 널리 쓰이는 설계 패턴 ② Fowler 『Analysis Patterns』 목차 중 현재 10편 밖의 절 + martinfowler.com eaaDev 초안 + PoEAA(『Patterns of Enterprise Application Architecture』) Base Patterns ③ DDD(Domain-Driven Design) 전술 용어 기준선 1편 신설 여부
