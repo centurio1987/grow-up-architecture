@@ -27,7 +27,7 @@ const STEPS = [
   { from: 'director', to: 'builder', y: 340, text: '3. 부분을 차례로 알린다 (여러 번)' },
   { from: 'builder', to: 'builder', y: 384, text: '4. 자기 표현에 부분을 쌓는다' },
   { from: 'director', to: 'builder', y: 440, text: '5. 절차의 끝을 알린다' },
-  { from: 'builder', to: 'product', y: 484, text: '6. 여기서 비로소 제품이 선다' },
+  { from: 'builder', to: 'product', y: 484, text: '6. 여기서 비로소 제품이 완성된다' },
   { from: 'client', to: 'builder', y: 528, text: '7. 제품을 꺼낸다' },
   { from: 'builder', to: 'client', y: 572, text: '8. 완성된 제품', dashed: true },
 ];

@@ -22,7 +22,7 @@ const BOXES = [
   },
   {
     x: GUTTER, y: 480, w: 260, role: 'person' as const, tag: 'CLIENT',
-    name: 'Client', note: '동료를 세우고 조작한다',
+    name: 'Client', note: '동료를 만들고 조작한다',
   },
   {
     x: 400, y: 230, w: 300, role: 'container' as const, tag: 'COLLEAGUE',

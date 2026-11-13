@@ -50,7 +50,7 @@ const SPEC: DomainModelSpec = {
 export default function KnowledgeLevelModel() {
   return (
     <Canvas width={W} height={640}>
-      <DiagramHeader eyebrow="Knowledge level" title="사실은 아래층에, 종류와 규칙은 위층에 산다" />
+      <DiagramHeader eyebrow="Knowledge level" title="사실은 아래층에, 종류와 규칙은 위층에 있다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER + PAD, y: 104 + PAD + 8 }} groupPad={PAD} />
       <Callout
         x={GUTTER}
@@ -59,7 +59,7 @@ export default function KnowledgeLevelModel() {
         label="세 규칙"
         lines={[
           '참조는 아래에서 위로만 간다 — 점검 종류는 자기로 기록된 점검이 몇 건인지 모른다',
-          '점검의 판정은 InspectionType 의 정상 범위가 정한다. 점검은 그 범위를 값으로 베껴 들고 태어난다',
+          '점검의 판정은 InspectionType 의 정상 범위가 정한다. 점검은 만들어질 때 그 범위를 값으로 복사해 가진다',
           'InspectionType 하나는 EquipmentType 을 하나 이상 허용 목록으로 가리키고,',
           'Inspection 은 대상 설비의 EquipmentType 이 그 목록에 있을 때만 만들어진다',
         ]}

@@ -1,0 +1,44 @@
+[
+ {
+  "doc": "pattern-guide/reference/accounting-model/accounting-model-ref_v1.0.2.md",
+  "line": 24,
+  "old": "돈이 새는 곳을 찾고 막는 것이라고",
+  "new": "돈이 빠져나가는 곳을 찾고 막는 것이라고"
+ },
+ {
+  "doc": "pattern-guide/reference/accounting-model/accounting-model-ref_v1.0.2.md",
+  "line": 214,
+  "old": "새는 곳 찾기",
+  "new": "빠져나가는 곳 찾기"
+ },
+ {
+  "doc": "pattern-guide/reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.md",
+  "line": 67,
+  "old": "밖에서 닿는 유일한 입구로",
+  "new": "밖에서 접근하는 유일한 입구로"
+ },
+ {
+  "doc": "pattern-guide/reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.md",
+  "line": 78,
+  "old": "필드에 닿을 수 있었습니다",
+  "new": "필드에 접근할 수 있었습니다"
+ },
+ {
+  "doc": "pattern-guide/reference/gof-vocabulary/gof-vocabulary-ref_v1.0.2.md",
+  "line": 139,
+  "old": "Command 객체를 들고 있다가",
+  "new": "Command 객체를 가지고 있다가"
+ },
+ {
+  "doc": "pattern-guide/reference/gof-vocabulary/gof-vocabulary-ref_v1.0.2.md",
+  "line": 153,
+  "old": "원칙 하나 위에 위임이 서고,",
+  "new": "원칙 하나를 바탕으로 위임이 성립하고,"
+ },
+ {
+  "doc": "pattern-guide/reference/observation-model/observation-model-ref_v1.0.2.md",
+  "line": 114,
+  "old": "되짚을 수 없습니다",
+  "new": "다시 확인할 수 없습니다"
+ }
+]

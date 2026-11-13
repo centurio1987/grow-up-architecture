@@ -36,7 +36,7 @@ const SPEC: DomainModelSpec = {
 export default function PartyModel() {
   return (
     <Canvas width={W} height={700}>
-      <DiagramHeader eyebrow="Party model" title="공통으로 붙는 것은 Party 한 자리에 선다" />
+      <DiagramHeader eyebrow="Party model" title="공통으로 붙는 것은 Party 한 자리에 놓인다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
       <Callout
         x={GUTTER}
@@ -44,8 +44,8 @@ export default function PartyModel() {
         width={W - GUTTER * 2}
         label="두 규칙"
         lines={[
-          '사람과 조직 단위에 똑같이 붙는 것은 갈래마다가 아니라 Party 에 한 번 선다',
-          '행위 주체를 가리켜야 하는 개념은 Person·Organization 이 아니라 Party 를 끝점으로 잡는다',
+          '사람과 조직 단위에 똑같이 붙는 것은 갈래마다가 아니라 Party 에 한 번 놓인다',
+          '행위 주체를 가리켜야 하는 개념은 Person·Organization 이 아니라 Party 를 끝점으로 삼는다',
         ]}
       />
     </Canvas>

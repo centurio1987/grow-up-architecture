@@ -4,7 +4,7 @@ slug: observation-model
 spec: reference-note
 spec_version: 1.0.0
 version: 1.0.1
-status: published
+status: legacy
 date: 2026-09-21
 serves: [quantity, measurement, observation, range]
 ---
@@ -171,11 +171,11 @@ Rejected Observation 은 틀렸다고 판정된 관측입니다. 지우지 않�
 
 ## 가이드로 돌아가기
 
-- [Quantity 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.md#개념-정리) — Quantity · Unit · Conversion Ratio · Compound Unit · Money 의 정의와 그 절의 도식이 이 문서의 앞 다섯 개념을 씁니다.
-- [Quantity 가이드 「비슷한 패턴·안티패턴과의 차이」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.md#비슷한-패턴안티패턴과의-차이) — Measurement 와의 차이가 이 문서의 「Measurement」를, 그 문단이 잰 시각 · 적은 시각과 거부 표시를 넘기는 자리가 「Observation」 · 「Rejected Observation」을, Money 와의 차이가 「Money」를 씁니다.
-- [Measurement 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.0.md#개념-정리) — Observation 항목이 잰 시각 · 적은 시각이 왜 그 층에 붙는지를 이 문서의 「Observation」으로, Rejected Observation 항목이 값을 지우지 않는 이유를 「Rejected Observation」으로 넘깁니다. 「한눈에 보는 개요」는 이웃 개념들이 놓이는 자리를 「개념 사이의 관계」에서 받아요.
-- [Observation 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/observation/observation-guide_v1.0.0.md#개념-정리) — 거부한 관측을 지우지 않는 이유를 이 문서의 「Rejected Observation」으로 보냅니다. 「한눈에 보는 개요」는 Quantity · Measurement · Observation 의 층 관계를 「개념 사이의 관계」에서 받아요.
-- [Range 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/range/range-guide_v1.0.0.md#개념-정리) — Quantity 항목이 끝점에 오는 값의 정의와 단위 환산을 이 문서의 「Quantity」 · 「Unit」 · 「Conversion Ratio」로 넘깁니다. 「한눈에 보는 개요」는 Range 가 Quantity 위에 놓이는 자리를 「Range」와 「개념 사이의 관계」에서 받아요.
+- [Quantity 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.md#개념-정리) — Quantity · Unit · Conversion Ratio · Compound Unit · Money 의 정의와 그 절의 도식이 이 문서의 앞 다섯 개념을 씁니다.
+- [Quantity 가이드 「비슷한 패턴·안티패턴과의 차이」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.md#비슷한-패턴안티패턴과의-차이) — Measurement 와의 차이가 이 문서의 「Measurement」를, 그 문단이 잰 시각 · 적은 시각과 거부 표시를 넘기는 자리가 「Observation」 · 「Rejected Observation」을, Money 와의 차이가 「Money」를 씁니다.
+- [Measurement 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.1.md#개념-정리) — Observation 항목이 잰 시각 · 적은 시각이 왜 그 층에 붙는지를 이 문서의 「Observation」으로, Rejected Observation 항목이 값을 지우지 않는 이유를 「Rejected Observation」으로 넘깁니다. 「한눈에 보는 개요」는 이웃 개념들이 놓이는 자리를 「개념 사이의 관계」에서 받아요.
+- [Observation 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/observation/observation-guide_v1.0.1.md#개념-정리) — 거부한 관측을 지우지 않는 이유를 이 문서의 「Rejected Observation」으로 보냅니다. 「한눈에 보는 개요」는 Quantity · Measurement · Observation 의 층 관계를 「개념 사이의 관계」에서 받아요.
+- [Range 가이드 「개념 정리」](../../ddd-analysis-pattern-guide/range/range-guide_v1.0.1.md#개념-정리) — Quantity 항목이 끝점에 오는 값의 정의와 단위 환산을 이 문서의 「Quantity」 · 「Unit」 · 「Conversion Ratio」로 넘깁니다. 「한눈에 보는 개요」는 Range 가 Quantity 위에 놓이는 자리를 「Range」와 「개념 사이의 관계」에서 받아요.
 
 
 ## 참고 자료

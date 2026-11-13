@@ -31,7 +31,7 @@ const SPEC: DomainModelSpec = {
 export default function AbstractFactoryStructure() {
   return (
     <Canvas width={W} height={590}>
-      <DiagramHeader eyebrow="Abstract Factory structure" title="Client 에 닿는 것은 추상 둘, 구체를 만드는 것은 팩토리 하나" />
+      <DiagramHeader eyebrow="Abstract Factory structure" title="Client 가 참조하는 것은 추상 둘, 구체를 만드는 것은 팩토리 하나" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>
   );

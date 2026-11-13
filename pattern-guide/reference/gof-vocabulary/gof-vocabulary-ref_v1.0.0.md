@@ -4,7 +4,7 @@ slug: gof-vocabulary
 spec: reference-note
 spec_version: 1.0.0
 version: 1.0.0
-status: published
+status: legacy
 date: 2026-09-21
 serves: [strategy]
 ---

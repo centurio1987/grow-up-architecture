@@ -43,7 +43,7 @@ export default function PostingRuleModel() {
         width={W - GUTTER * 2}
         label="세 규칙"
         lines={[
-          'PostingRule 은 대상 계정을 Account 의 식별자로 쥔다 — 사건은 그 계정을 모른다',
+          'PostingRule 은 대상 계정을 Account 의 식별자로 가진다 — 사건은 그 계정을 모른다',
           '사건 종류와 발생 시점이 주어지면 적용할 PostingRule 이 하나로 정해진다',
           '한 규칙이 낸 다리들의 금액 합 = 0 이어야 Transaction 이 만들어지고,',
           '같은 원천 식별자와 같은 규칙으로는 두 번 만들어지지 않는다',

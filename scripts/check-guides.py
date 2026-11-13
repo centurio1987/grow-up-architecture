@@ -10,7 +10,7 @@
         (참고 문서 — 가이드가 링크로 잇는 개념 설명. 머리말 serves 에 이 문서를 링크하는 가이드 slug 를 적는다)
 
 모드 (여러 개 동시 지정 가능 · 실패가 하나라도 있으면 종료코드 1 · --json 이면 기계 판독 출력)
-    --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · 펜스·도식 · 상대 링크 · 자립성(PG30·PG31) ·
+    --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · voice 금지 어휘(표·text 도식 포함) · 펜스·도식 · 상대 링크 · 자립성(PG30·PG31) ·
                              (spec 에 그 절이 있을 때) 최소 조건 [필수]/[선택] · 시나리오 구성(PG32) · 조건·비교의 시나리오 참조(PG33) ·
                              (analysis) 상황 설정 표 · (참고 문서) serves
     --compile [files]        `### 구현` 절 펜스 3개(java → typescript → rust) 컴파일. 도구가 없으면 실패.
@@ -597,6 +597,70 @@ def check_style(ctx: Ctx, path: Path) -> tuple[bool, str]:
     return grade in ("A", "B"), msg
 
 
+TEXT_FENCE_LANGS = {"", "text", "txt", "plain"}
+
+
+def voice_style_path() -> Path:
+    home = os.environ.get("AUTHORING_KIT_HOME")
+    base = Path(home).expanduser() if home else Path.home() / ".claude/authoring"
+    return base / "voices" / VOICE / "style.json"
+
+
+def load_lexicon(path: Path | None = None) -> tuple[list[tuple[str, str, "re.Pattern[str]", str]], str]:
+    """voice `style.json` 의 `lexicon.add` 가운데 켜진 금지(-3) 항목. (항목들, 오류 메시지) — 오류가 있으면 항목은 빈 목록."""
+    p = path or voice_style_path()
+    if not p.exists():
+        return [], f"voice 어휘 규약이 없습니다: {p}"
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        return [], f"voice 어휘 규약을 읽을 수 없습니다: {p} ({e})"
+    out = []
+    for e in data.get("lexicon", {}).get("add", []):
+        if not e.get("enabled", True) or e.get("weight", 0) > -3:
+            continue
+        rx = e.get("regex") or "|".join(re.escape(f) for f in e.get("forms", []))
+        if not rx:
+            continue
+        try:
+            out.append((e["id"], e.get("label", e["id"]), re.compile(rx), " / ".join(e.get("alternatives", []))))
+        except re.error as err:
+            return [], f"어휘 규약 {e.get('id')} 의 정규식이 틀렸습니다: {err}"
+    return out, ""
+
+
+def check_lexicon(md: Md, lexicon: list) -> list[str]:
+    """voice 어휘 규약(금지 -3)을 문서 전체에 건다 — 산문·목록·표 칸·헤딩·```text 도식·그림 alt.
+
+    2026-11-13 에 넣었다. 그 전까지 이 규약은 authoring-kit 0.4.2 의 `scan_lexicon.py` 로만 세어졌고,
+    이 프로젝트가 고정한 0.3.0 에는 그 스캐너가 없어 `--all` 이 보지 않았다. 그 사이 가이드 37편에
+    581건이 쌓였다(2026-11-11 교정 3,399곳). `scan_lexicon` 은 표 칸과 도식을 세지 않으므로 여기서는
+    프로그래밍 언어 코드 펜스 · `코드` · 링크 대상 · 머리말 · HTML 주석만 빼고 전부 본다.
+    """
+    allowed: set[int] = set()
+    for f in md.fences:
+        if f["lang"] in TEXT_FENCE_LANGS:
+            end = f["end"] if f["end"] is not None else len(md.lines)
+            allowed.update(range(f["start"] + 1, end))
+    front_end = -1
+    if md.lines and md.lines[0].strip() == "---":
+        for i in range(1, len(md.lines)):
+            if md.lines[i].strip() == "---":
+                front_end = i
+                break
+    errs = []
+    for i, line in enumerate(md.lines):
+        if i <= front_end or (md.masked[i] and i not in allowed):
+            continue
+        s = INLINE_CODE.sub(lambda m: " " * len(m.group(0)), line)
+        s = re.sub(r"\]\([^)]*\)", lambda m: " " * len(m.group(0)), s)
+        for eid, label, rx, alt in lexicon:
+            for m in rx.finditer(s):
+                ctx_ = line[max(0, m.start() - 15):m.end() + 10].strip()
+                errs.append(f"L{i + 1} [{eid}] {label} — 「{ctx_}」" + (f" → {alt}" if alt else ""))
+    return errs
+
+
 PROSE_RUN_MAX = 2
 
 
@@ -1013,6 +1077,7 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         plan.append((p, sid, ctx.spec(sid)))
     rep.info(M, "files", len(files))
     rep.info(M, "plugin", str(ctx.plugin))
+    lexicon, lex_err = load_lexicon()
     for p, sid, spec in plan:
         f = ctx.rel(p)
         if not p.exists():
@@ -1043,6 +1108,14 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         rep.add(M, "placeholder", ok, msg, f)
         ok, msg = check_style(ctx, p)
         rep.add(M, "style", ok, msg, f)
+        if lex_err:
+            rep.add(M, "lexicon", False, lex_err, f)
+        else:
+            errs = check_lexicon(md, lexicon)
+            for e in errs:
+                rep.add(M, "lexicon", False, e, f)
+            if not errs:
+                rep.add(M, "lexicon", True, f"voice 금지 어휘 {len(lexicon)}항목 · 적발 0", f)
         ok, msg = check_prose_run(ctx, p, sid)
         rep.add(M, "prose-run", ok, msg, f)
         errs = check_fences(md)
@@ -1688,6 +1761,13 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
     ref_spec = ["--spec-file", str(fx / "spec-reference.json")]
     cases += [
         ("all", "good-gof 통과", ["--all", *gof_spec, str(fx / "good-gof.md")], 0, None),
+        ("all", "lexicon 실패(산문 둘 · 표 칸 · text 도식 — `코드` 와 코드 펜스 안은 세지 않음)",
+         ["--all", *gof_spec, str(fx / "lexicon-gof.md")], 1,
+         both(need({"lexicon"}, "all"),
+              contains("all", "[v.metaphor.hansu]", "[v.metaphor.grip]", "[v.metaphor.face]", "[v.metaphor.break]"),
+              lambda d, o: (_failed_msgs(d, "all").count("[v.metaphor.break]") == 1
+                            and "[v.metaphor.hold]" not in _failed_msgs(d, "all"),
+                            "`깨진다`(백틱)·java 펜스 주석의 「들고 있다」는 세지 않아야 함"))),
         ("all", "bad-gof 실패(헤딩·최소 조건·링크·mermaid)", ["--all", *gof_spec, str(fx / "bad-gof.md")], 1,
          lambda d, o: (lambda a, b: (a[0] and b[0], a[1] + " · " + b[1]))(
              need({"heading", "min-conditions", "links", "mermaid"}, "all")(d, o),

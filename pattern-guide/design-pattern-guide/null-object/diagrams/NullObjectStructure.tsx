@@ -49,7 +49,7 @@ export default function NullObjectStructure() {
     <Canvas width={W} height={420}>
       <DiagramHeader
         eyebrow="Null Object structure"
-        title="협력자 자리는 비지 않는다 — 부재를 NullObject 가 진다"
+        title="협력자 자리는 비지 않는다 — 부재를 NullObject 가 맡는다"
       />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>

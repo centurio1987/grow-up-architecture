@@ -44,7 +44,7 @@ const SPEC: DomainModelSpec = {
 export default function MeasurementModel() {
   return (
     <Canvas width={W} height={548}>
-      <DiagramHeader eyebrow="Measurement model" title="기록 한 건이 대상 · 항목 · 값 세 자리를 따로 잡는다" />
+      <DiagramHeader eyebrow="Measurement model" title="기록 한 건이 대상 · 항목 · 값 세 자리를 따로 가진다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>
   );

@@ -24,7 +24,7 @@
 
 ### 개념 정리
 
-- **Context**: 전략을 필드로 들고 있다가 계산이 필요할 때 위임하는 쪽이에요. 두 시나리오의 `Checkout` 입니다.
+- **Context**: 전략을 필드로 가지고 있다가 계산이 필요할 때 위임하는 쪽이에요. 두 시나리오의 `Checkout` 입니다.
 - **Strategy**: 계산 방법이 지켜야 할 약속이에요. 예시의 `DiscountPolicy` 인터페이스가 맡아요.
 - **ConcreteStrategy**: 약속을 실제로 구현한 계산 방법이고, 시나리오 1 의 `FixedDiscount` 와 시나리오 2 의 `RateDiscount` 가 있어요.
 

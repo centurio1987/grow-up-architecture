@@ -47,7 +47,7 @@ const SPEC: DomainModelSpec = {
 export default function RangeModel() {
   return (
     <Canvas width={W} height={560}>
-      <DiagramHeader eyebrow="Range model" title="구간 규칙은 범위가 지고, 끝점에는 크기 비교만 요구한다" />
+      <DiagramHeader eyebrow="Range model" title="구간 규칙은 범위가 지키고, 끝점에는 크기 비교만 요구한다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>
   );
