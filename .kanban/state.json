@@ -273,7 +273,9 @@
         ".claude/authoring/specs/system-design-guide/**",
         ".claude/authoring/paths.json",
         ".claude/authoring.lock.json",
-        ".claude/skills/design-pattern-guide/system-design-guide-canvas.md"
+        ".claude/skills/design-pattern-guide/system-design-guide-canvas.md",
+        ".claude/skills/design-pattern-guide/SKILL.md",
+        "pattern-guide/gate-results.jsonl"
       ]
     },
     "KAN-002.1-7YT11M": {
@@ -316,7 +318,18 @@
       "goal_hash": "1451154f9850d25404da7346a2e891c0e50e4f68",
       "memo": "파일럿 1 근거는 live-viewer-count-2026-11-13.md, 파일럿 2 재료는 사례 목록 C5 · C13~C16. 선정 이유는 사례 목록 3절",
       "memo_hash": "4dbdfe2d070dea38c8c6037f930e9d02fb2cd095",
-      "parent": "KAN-002-4FZX1V"
+      "parent": "KAN-002-4FZX1V",
+      "scope": [
+        "pattern-guide/system-design-guide/**",
+        "pattern-guide/research/coupon-*",
+        "pattern-guide/research/system-design-*",
+        "pattern-guide/research/live-viewer-count-*",
+        "pattern-guide/gate-results.jsonl",
+        ".claude/authoring/specs/system-design-guide/**",
+        ".claude/authoring.lock.json",
+        ".claude/skills/design-pattern-guide/SKILL.md",
+        ".claude/skills/design-pattern-guide/system-design-guide-canvas.md"
+      ]
     },
     "KAN-002.3-8DTJ6W": {
       "col": "backlog",

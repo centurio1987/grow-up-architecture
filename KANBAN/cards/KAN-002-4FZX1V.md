@@ -2,7 +2,7 @@
 card: KAN-002-4FZX1V
 title: 시스템 설계 사례 가이드 — 문제 하나마다 그 문제를 가장 잘 푸는 아키텍처 가이드 한 편
 created: 2026-11-13
-scope: pattern-guide/system-design-guide/**, pattern-guide/research/system-design-*, pattern-guide/research/live-viewer-count-*, pattern-guide/research/coupon-*, .claude/authoring/specs/system-design-guide/**, .claude/authoring/paths.json, .claude/authoring.lock.json, .claude/skills/design-pattern-guide/system-design-guide-canvas.md
+scope: pattern-guide/system-design-guide/**, pattern-guide/research/system-design-*, pattern-guide/research/live-viewer-count-*, pattern-guide/research/coupon-*, .claude/authoring/specs/system-design-guide/**, .claude/authoring/paths.json, .claude/authoring.lock.json, .claude/skills/design-pattern-guide/system-design-guide-canvas.md, .claude/skills/design-pattern-guide/SKILL.md, pattern-guide/gate-results.jsonl
 ---
 
 # KAN-002-4FZX1V — 시스템 설계 사례 가이드 — 문제 하나마다 그 문제를 가장 잘 푸는 아키텍처 가이드 한 편
