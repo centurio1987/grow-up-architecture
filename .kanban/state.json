@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 49,
+  "next_seq": 50,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -277,7 +277,7 @@
       ]
     },
     "KAN-002.1-7YT11M": {
-      "col": "review",
+      "col": "done",
       "title": "system-design-guide 명세 등록 — 절 구성·작성법·검사 계약과 트랙 경로",
       "verbatim": "질문: 구현 코드는 TypeScript 한 언어 + 메모리 대역으로 실행 검증하는 방식으로 갈까요?\n답변: 세 언어 유지\n\n질문: 저장 위치를 pattern-guide/system-design-guide/, 명세 id 를 system-design-guide 로 할까요?\n답변: 그렇게 해",
       "생성": "ai",
@@ -343,6 +343,7 @@
   "order": [
     "KAN-002.3-8DTJ6W",
     "KAN-002.2-4E05GD",
+    "KAN-002-4FZX1V",
     "KAN-001.1-P5N9NF",
     "KAN-001.2-4NWK0T",
     "KAN-001.3-Q6FYKP",
@@ -351,10 +352,19 @@
     "KAN-001.6-HB5NH9",
     "KAN-001.7-4MRJ1B",
     "KAN-001-YXTC2C",
-    "KAN-002-4FZX1V",
     "KAN-002.1-7YT11M"
   ],
   "recent": [
+    {
+      "seq": 49,
+      "t": "2026-11-14T20:29",
+      "a": "ai",
+      "id": "KAN-002.1-7YT11M",
+      "op": "move",
+      "w": "7BM1CZ",
+      "from": "review",
+      "to": "done"
+    },
     {
       "seq": 48,
       "t": "2026-11-14T03:42",

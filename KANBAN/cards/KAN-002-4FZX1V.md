@@ -40,7 +40,7 @@ scope: pattern-guide/system-design-guide/**, pattern-guide/research/system-desig
 ## 실행 계획
 work 하나가 하위 카드 하나다. 각 하위 카드가 자기 실행 문서와 배치를 갖는다.
 
-- [ ] `S1` 명세 등록 — `KAN-002.1-7YT11M`. 완료 기준: 그 카드가 완료되고 `check-guides` 가 새 트랙을 명세대로 검사한다
+- [x] `S1` 명세 등록 — `KAN-002.1-7YT11M`. 완료 기준: 그 카드가 완료되고 `check-guides` 가 새 트랙을 명세대로 검사한다
 - [ ] `S2` 파일럿 두 편과 회고 — `KAN-002.2-4E05GD`. 완료 기준: 그 카드가 완료되고 회고를 반영한 명세 개정판이 나온다
 - [ ] `S3` 1차 12편 집필 — `KAN-002.3-8DTJ6W`. 완료 기준: 그 카드가 완료되고 인덱스에 이 계열이 선다
 
@@ -57,3 +57,4 @@ python3 scripts/check-guides.py --gates --pointers --derived                    
 - 2026-11-13T20:35 · s:298c14ef — `전략` 섹션 교체
 - 2026-11-13T20:35 · s:298c14ef — `실행 계획` 섹션 교체
 - 2026-11-13T20:35 · s:298c14ef — `검증` 섹션 교체
+- 2026-11-14T20:30 · s:298c14ef · S1 done — KAN-002.1 완료 — 명세 system-design-guide 1.0.0 등록, 시험 초안이 check-guides --all·--compile·--run 통과, 문서 전체 승인(2026-11-14)

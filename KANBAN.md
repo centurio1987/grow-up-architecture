@@ -39,7 +39,7 @@
   - 이유: 지금 37편은 해법(패턴) 단위라, 요구 수치가 주어졌을 때 어떤 구조를 왜 고르는지 보여 주는 글이 저장소에 없다
   - 목표: system-design-guide 명세가 서고 파일럿 두 편과 1차 12편이 게이트를 통과해 발행된다
   - 메모: 근거 문서 셋은 pattern-guide/research/ 의 *-2026-11-13.md(준비안·사례 목록·파일럿 1 노트)
-  - 실행 문서: KANBAN/cards/KAN-002-4FZX1V.md (0/3 · 최근 11-13)
+  - 실행 문서: KANBAN/cards/KAN-002-4FZX1V.md (1/3 · 최근 11-14)
   - 원문:
     ```text
     문제가 주어졌을 때, 그 문제를 최적으로 해결할 수 있는 시스템 아키텍처를 설계하는 가이드를 작성하려고 한다. 최대한 많은 사례를 조사하고, 스스로 생각도 해서 일단 목록화 하고, 가이드 작성 준비를 해줘.
@@ -53,24 +53,6 @@
     ```
 
 ## 검토
-- `KAN-002.1-7YT11M` system-design-guide 명세 등록 — 절 구성·작성법·검사 계약과 트랙 경로 — 생성:ai · 최종:ai · 갱신:2026-11-14
-  - 상위: `KAN-002-4FZX1V` (진행 중)
-  - 짧은 제목: 명세 등록
-  - 목적: 준비안 3절의 절 구성을 authoring-spec 으로 system-design-guide 명세(spec.md · spec.json · 캔버스)로 등록하고 paths.json 에 트랙을 더한다
-  - 이유: 명세가 없으면 파일럿을 쓸 기준과 게이트 채점 기준이 없고, 트랙만 먼저 넣으면 검사기가 spec 없음으로 멈춘다
-  - 목표: 명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)
-  - 메모: 결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/
-  - 실행 문서: KANBAN/cards/KAN-002.1-7YT11M.md (4/4 · 최근 11-14)
-  - 계획 리포트: KANBAN/reports/KAN-002.1-7YT11M.report.html (낡음)
-  - 검토 문서: KANBAN/reviews/KAN-002.1-7YT11M.review.md (승인 1/1 · 추가 의견 총 1 · 검토 대기)
-  - 원문:
-    ```text
-    질문: 구현 코드는 TypeScript 한 언어 + 메모리 대역으로 실행 검증하는 방식으로 갈까요?
-    답변: 세 언어 유지
-    
-    질문: 저장 위치를 pattern-guide/system-design-guide/, 명세 id 를 system-design-guide 로 할까요?
-    답변: 그렇게 해
-    ```
 
 ## 완료
 - `KAN-001.1-P5N9NF` 리서치와 후보 조사 — 생성:ai · 최종:ai · 갱신:2026-09-27
@@ -144,4 +126,22 @@
   - 원문:
     ```text
     전체 가이드 재집필을 수행해라.
+    ```
+- `KAN-002.1-7YT11M` system-design-guide 명세 등록 — 절 구성·작성법·검사 계약과 트랙 경로 — 생성:ai · 최종:ai · 갱신:2026-11-14
+  - 상위: `KAN-002-4FZX1V` (진행 중)
+  - 짧은 제목: 명세 등록
+  - 목적: 준비안 3절의 절 구성을 authoring-spec 으로 system-design-guide 명세(spec.md · spec.json · 캔버스)로 등록하고 paths.json 에 트랙을 더한다
+  - 이유: 명세가 없으면 파일럿을 쓸 기준과 게이트 채점 기준이 없고, 트랙만 먼저 넣으면 검사기가 spec 없음으로 멈춘다
+  - 목표: 명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)
+  - 메모: 결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/
+  - 실행 문서: KANBAN/cards/KAN-002.1-7YT11M.md (4/4 · 최근 11-14)
+  - 계획 리포트: KANBAN/reports/KAN-002.1-7YT11M.report.html (낡음)
+  - 검토 문서: KANBAN/reviews/KAN-002.1-7YT11M.review.md (승인 1/1 · 추가 의견 총 2 · 승인)
+  - 원문:
+    ```text
+    질문: 구현 코드는 TypeScript 한 언어 + 메모리 대역으로 실행 검증하는 방식으로 갈까요?
+    답변: 세 언어 유지
+    
+    질문: 저장 위치를 pattern-guide/system-design-guide/, 명세 id 를 system-design-guide 로 할까요?
+    답변: 그렇게 해
     ```
