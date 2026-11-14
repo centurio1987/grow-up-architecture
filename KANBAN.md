@@ -62,7 +62,7 @@
   - 메모: 결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/
   - 실행 문서: KANBAN/cards/KAN-002.1-7YT11M.md (4/4 · 최근 11-14)
   - 계획 리포트: KANBAN/reports/KAN-002.1-7YT11M.report.html (낡음)
-  - 검토 문서: KANBAN/reviews/KAN-002.1-7YT11M.review.md (승인 0/1 · 검토 대기)
+  - 검토 문서: KANBAN/reviews/KAN-002.1-7YT11M.review.md (승인 1/1 · 추가 의견 총 1 · 검토 대기)
   - 원문:
     ```text
     질문: 구현 코드는 TypeScript 한 언어 + 메모리 대역으로 실행 검증하는 방식으로 갈까요?
