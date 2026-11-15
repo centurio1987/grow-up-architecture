@@ -56,7 +56,7 @@ export default function TemporalPropertyModel() {
     <Canvas width={W} height={545}>
       <DiagramHeader
         eyebrow="Temporal Property model"
-        title="시점 판정은 속성이 지고, 값마다 유효 구간과 기록 시각이 붙는다"
+        title="시점 판정은 속성이 맡고, 값마다 유효 구간과 기록 시각이 붙는다"
       />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>

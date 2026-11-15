@@ -31,7 +31,7 @@ const SPEC: DomainModelSpec = {
 export default function DecoratorStructure() {
   return (
     <Canvas width={W} height={560}>
-      <DiagramHeader eyebrow="Decorator structure" title="Decorator 는 Component 를 구현하면서 Component 를 든다" />
+      <DiagramHeader eyebrow="Decorator structure" title="Decorator 는 Component 를 구현하면서 Component 를 가진다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>
   );

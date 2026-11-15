@@ -37,7 +37,7 @@ export default function FacadeFlow() {
   const ink = f.node.process.tagColor;
   return (
     <Canvas width={W} height={572}>
-      <DiagramHeader eyebrow="Facade collaboration" title="한 번의 요청이 안에서 여럿으로 갈라진다" />
+      <DiagramHeader eyebrow="Facade collaboration" title="한 번의 요청이 안에서 여럿으로 나뉜다" />
       {LANES.map((l) => (
         <Lifeline key={l.id} x={l.x} y={TOP} height={LIFE_H} headWidth={HEAD_W} label={l.label} />
       ))}

@@ -1,0 +1,91 @@
+{
+  "submission": {
+    "headers": {
+      "Idempotency-Key": "40000000-0000-4000-8000-000000000001"
+    },
+    "body": {
+      "items": [
+        {
+          "productId": "20000000-0000-4000-8000-000000000001",
+          "quantity": 2,
+          "expectedOfferRevision": "p1-r7"
+        },
+        {
+          "productId": "20000000-0000-4000-8000-000000000002",
+          "quantity": 1,
+          "expectedOfferRevision": "p2-r3"
+        }
+      ]
+    }
+  },
+  "receipt": {
+    "orderId": "30000000-0000-4000-8000-000000000001",
+    "acceptedAt": "2026-10-15T01:00:01.000Z",
+    "acceptedTotalKrw": 8000
+  },
+  "buyerDetail": {
+    "orderId": "30000000-0000-4000-8000-000000000001",
+    "placedAt": "2026-10-15T01:00:01.000Z",
+    "state": "PLACED",
+    "version": 1,
+    "lines": [
+      {
+        "lineNo": 1,
+        "productId": "20000000-0000-4000-8000-000000000001",
+        "productName": "우유식빵",
+        "quantity": 2,
+        "unitPriceKrw": 3000,
+        "lineTotalKrw": 6000
+      },
+      {
+        "lineNo": 2,
+        "productId": "20000000-0000-4000-8000-000000000002",
+        "productName": "버터스콘",
+        "quantity": 1,
+        "unitPriceKrw": 2000,
+        "lineTotalKrw": 2000
+      }
+    ],
+    "totalKrw": 8000,
+    "canCancel": true
+  },
+  "sellerQueue": {
+    "items": [
+      {
+        "orderId": "30000000-0000-4000-8000-000000000001",
+        "placedAt": "2026-10-15T01:00:01.000Z",
+        "version": 1,
+        "lines": [
+          {
+            "lineNo": 1,
+            "productId": "20000000-0000-4000-8000-000000000001",
+            "productName": "우유식빵",
+            "quantity": 2,
+            "unitPriceKrw": 3000,
+            "lineTotalKrw": 6000
+          },
+          {
+            "lineNo": 2,
+            "productId": "20000000-0000-4000-8000-000000000002",
+            "productName": "버터스콘",
+            "quantity": 1,
+            "unitPriceKrw": 2000,
+            "lineTotalKrw": 2000
+          }
+        ],
+        "totalKrw": 8000
+      }
+    ],
+    "nextCursor": null
+  },
+  "cancelled": {
+    "orderId": "30000000-0000-4000-8000-000000000001",
+    "state": "CANCELLED",
+    "version": 2
+  },
+  "conflict": {
+    "code": "CONFLICT",
+    "message": "주문 상태가 변경되었습니다. 다시 조회하세요.",
+    "traceId": "trace-sc05"
+  }
+}

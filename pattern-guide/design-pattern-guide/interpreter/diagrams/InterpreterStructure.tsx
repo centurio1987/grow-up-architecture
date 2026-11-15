@@ -52,7 +52,7 @@ export default function InterpreterStructure() {
     <Canvas width={W} height={352}>
       <DiagramHeader
         eyebrow="Interpreter structure"
-        title="계층 하나가 자기를 다시 담는다 — 비단말이 든 하위도 같은 타입이다"
+        title="계층 하나가 자기를 다시 담는다 — 비단말이 가진 하위도 같은 타입이다"
       />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>

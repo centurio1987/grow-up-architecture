@@ -59,7 +59,7 @@ export default function SpecificationStructure() {
     <Canvas width={W} height={520}>
       <DiagramHeader
         eyebrow="Specification structure"
-        title="판정은 후보 바깥에 서고, 조합 명세는 같은 타입을 다시 든다"
+        title="판정은 후보 바깥에 있고, 조합 명세는 같은 타입을 다시 가진다"
       />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>

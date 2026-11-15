@@ -1,0 +1,61 @@
+{
+  "edition": "2.0",
+  "logicTests": [
+    "SC01 exact E01 and receipt fixtures",
+    "SC02 catalog mutation leaves accepted snapshot unchanged",
+    "R03 snapshot cannot be mutated",
+    "SC03 cancellation and terminal transition rejection",
+    "SC04 confirmation and late cancellation rejection",
+    "R11 stale version rejected in memory",
+    "SC07 wrong owner has no buyer view",
+    "SC08 changed revision or unavailable product",
+    "R01 empty and too many items rejected",
+    "R05 invalid quantities rejected",
+    "R05 invalid prices rejected",
+    "R07 duplicate products normalized and rejected",
+    "R05 code point length accepts 100 and rejects 101",
+    "A05 exact upper bound total",
+    "rehydration preserves terminal state without catalog",
+    "rehydration rejects gaps and corrupt state/version",
+    "canonical request ignores object key order, preserves line order",
+    "SC06 receipt remains historical after confirmation",
+    "SC05 CAS principle demonstration (memory only, not DB)",
+    "DDL has composite keys, deferred FK, accepted ranges and index",
+    "DDL deterministic and checked-in output matches",
+    "identity storage alternative and optional index",
+    "generation rejects unknown storage, type and missing rule owner",
+    "generation rejects non-unique FK target",
+    "scenario and assumption references exist",
+    "OpenAPI six operations, internal refs and source ids",
+    "sample DTOs conform to their selected schema constraints",
+    "Python fixture fingerprint equals JavaScript canonical SHA-256"
+  ],
+  "browserChecks": [
+    "25 chapters, anchors, duplicate IDs, desktop overflow",
+    "generation policy changes, missing rule and unsupported strategy block output",
+    "domain state, invalid transition, reset and non-owner demo",
+    "full text search and reset",
+    "expand/collapse all artifacts and exercises",
+    "DDL, worksheet and full artifact downloads",
+    "checklist",
+    "390px and 768px layout",
+    "printing reveals all chapters and artifacts even when search active"
+  ],
+  "structure": {
+    "chapters": 25,
+    "artifacts": 19,
+    "duplicates": [],
+    "broken": [],
+    "width": 1440,
+    "scrollWidth": 1440,
+    "textCharacters": 59518
+  },
+  "runtimeErrors": [],
+  "externalRequests": [],
+  "limitations": [
+    "PostgreSQL DDL/locking/rollback/idempotency integration NOT executed",
+    "HTTP server and authentication integration NOT implemented",
+    "OpenAPI reference and example constraints checked; no full OAS conformance validator",
+    "CAS experiment is in memory only"
+  ]
+}

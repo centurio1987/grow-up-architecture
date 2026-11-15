@@ -1,0 +1,1312 @@
+<!doctype html>
+<!-- guide-fp:7c2141d05ae9155495615ddde6b7d10dd9f4420e475ed31f8e1e0fccf0356142 -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="generator" content="scripts/render-guides.py">
+<title>Null Object — 없음을 객체 하나로 만들어, 부르는 쪽에서 검사를 걷어내기</title>
+<style>
+/* pattern-guide HTML — render-guides.py 가 HTML 에 인라인한다. 외부 폰트·이미지 요청 없음. */
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --fg: #1c1e22;
+  --muted: #5a606b;
+  --border: #dcdfe4;
+  --border-strong: #b9bec7;
+  --accent: #1f4fb8;
+  --accent-soft: #e8eefb;
+  --code-bg: #f3f4f6;
+  --code-fg: #1c1e22;
+  --inline-code-bg: #eceef1;
+  --quote-fg: #454a54;
+  --quote-bar: #c5cad3;
+  --th-bg: #f1f2f4;
+  --focus: #1f4fb8;
+  --diagram-filter: none;
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR",
+    "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, "D2Coding", Consolas, "Cascadia Mono",
+    "Liberation Mono", "Noto Sans Mono CJK KR", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141619;
+    --surface: #1b1e22;
+    --fg: #e3e5e9;
+    --muted: #a1a7b1;
+    --border: #2d3138;
+    --border-strong: #464c56;
+    --accent: #8db0ff;
+    --accent-soft: #1f2a40;
+    --code-bg: #1c1f24;
+    --code-fg: #dfe2e7;
+    --inline-code-bg: #262a30;
+    --quote-fg: #b9bec7;
+    --quote-bar: #464c56;
+    --th-bg: #1f2227;
+    --focus: #8db0ff;
+    --diagram-filter: invert(0.88) hue-rotate(180deg);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141619;
+  --surface: #1b1e22;
+  --fg: #e3e5e9;
+  --muted: #a1a7b1;
+  --border: #2d3138;
+  --border-strong: #464c56;
+  --accent: #8db0ff;
+  --accent-soft: #1f2a40;
+  --code-bg: #1c1f24;
+  --code-fg: #dfe2e7;
+  --inline-code-bg: #262a30;
+  --quote-fg: #b9bec7;
+  --quote-bar: #464c56;
+  --th-bg: #1f2227;
+  --focus: #8db0ff;
+  --diagram-filter: invert(0.88) hue-rotate(180deg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.guide {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;
+}
+
+@media (min-width: 40rem) {
+  .guide {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ── 헤딩 ─────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.35;
+  font-weight: 700;
+  scroll-margin-top: 1rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.875rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 3.25rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+h5,
+h6 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* ── 본문 블록 ─────────────────────────────────────── */
+p,
+ul,
+ol,
+blockquote,
+.table-wrap,
+pre,
+.code-tabs,
+.mermaid-figure {
+  margin: 0 0 1.1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+li > ul,
+li > ol {
+  margin: 0.25rem 0 0.25rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+li > p {
+  margin: 0 0 0.6rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 3px solid var(--quote-bar);
+  color: var(--quote-fg);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── 코드 ─────────────────────────────────────────── */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--inline-code-bg);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 4;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+pre > code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ── 표 ───────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+th,
+td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+  min-width: 6rem;
+}
+
+th {
+  background: var(--th-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── mermaid 도식(렌더 시점 인라인 SVG) ───────────── */
+.mermaid-figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid-figure svg {
+  height: auto;
+  filter: var(--diagram-filter);
+}
+
+/* ── 세 언어 탭 ───────────────────────────────────── */
+.code-tabs__list {
+  display: none;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__list {
+  display: flex;
+}
+
+.code-tabs__tab {
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 1rem;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.9375rem/1 var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.code-tabs__tab:hover {
+  color: var(--fg);
+}
+
+.code-tabs__tab[aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.code-tabs__tab:focus-visible {
+  outline-offset: -2px;
+  border-radius: 6px 6px 0 0;
+}
+
+.code-tabs__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.code-tabs[data-enhanced] .code-tabs__label {
+  display: none;
+}
+
+.code-tabs__panel > pre {
+  margin-bottom: 1.1rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__panel > pre {
+  margin-bottom: 0;
+}
+
+.code-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── 꼬리말 ───────────────────────────────────────── */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ── 인쇄: 탭 패널 전부, 라이트 색 ───────────────── */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #ffffff !important;
+    --surface: #ffffff !important;
+    --fg: #000000 !important;
+    --muted: #444444 !important;
+    --border: #bbbbbb !important;
+    --accent: #000000 !important;
+    --code-bg: #f6f6f6 !important;
+    --code-fg: #000000 !important;
+    --inline-code-bg: #eeeeee !important;
+    --quote-fg: #222222 !important;
+    --quote-bar: #999999 !important;
+    --th-bg: #eeeeee !important;
+    --diagram-filter: none !important;
+  }
+
+  body {
+    font-size: 10.5pt;
+  }
+
+  .guide {
+    max-width: none;
+    padding: 0;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__list,
+  .code-tabs__list {
+    display: none !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__label,
+  .code-tabs__label {
+    display: block !important;
+  }
+
+  .code-tabs__panel,
+  .code-tabs__panel[hidden] {
+    display: block !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__panel > pre {
+    margin-bottom: 1.1rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow: visible;
+  }
+
+  .table-wrap,
+  .mermaid-figure {
+    overflow: visible;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="guide">
+<main>
+<hr>
+<p>pattern: Null Object
+slug: null-object
+spec: gof-guide
+spec_version: 1.4.0
+version: 1.0.1
+status: published
+date: 2026-11-11</p>
+<hr>
+<h1 id="null-object--없음을-객체-하나로-만들어-부르는-쪽에서-검사를-걷어내기">Null Object — 없음을 객체 하나로 만들어, 부르는 쪽에서 검사를 걷어내기</h1>
+<h2 id="한눈에-보는-개요">한눈에 보는 개요</h2>
+<p>동네 도서관의 대출 창구 코드를 떠올려 봅시다. 회원이 책을 빌리면 창구는 대출을 기록하고 반납 기한 알림을 보냅니다. 그런데 알림을 꺼 둔 회원이 있어요. 그래서 회원 객체의 알림 채널 자리가 비어 있을 수 있고, 창구 코드는 <code>if (member.notifier() != null) member.notifier().send(loan);</code> 이 됩니다. 알림을 쓰는 자리가 늘 때마다 이 검사가 따라 늘고, 한 자리에서 빠뜨리면 그 줄에서 프로그램이 예외로 중단돼요.</p>
+<p>Null Object 의 해법은 <strong>「알림을 보내지 않는다」를 객체 하나로 만드는 것</strong>입니다. 그 객체는 진짜 채널과 똑같은 연산을 갖고, 부르면 아무 일도 하지 않아요. 알림을 끈 회원은 빈 참조 대신 그 객체를 가지고, 창구는 자기 코드에서 검사를 지웁니다.</p>
+<pre tabindex="0"><code class="language-text">Before : 협력자 자리가 비어 있을 수 있다 — 검사가 부르는 자리마다 따라 붙는다
+
+  회원 M-01 ── notifier ──▶ EmailNotifier      창구  if (n != null) n.send(loan);
+  회원 M-02 ── notifier ──▶ (빈 참조)                 ↑ 한 자리에서 빠뜨리면 그 줄에서 예외가 난다
+  회원 M-03 ── notifier ──▶ SmsNotifier
+
+After : 「보내지 않는다」가 객체 하나로 만들어진다 — 자리가 비지 않으니 검사가 없다
+
+  회원 M-01 ── notifier ──▶ EmailNotifier      창구  n.send(loan);
+  회원 M-02 ─┐                                        ↑ 갈래 없이 한 줄
+  회원 M-04 ─┴ notifier ──▶ SilentNotifier     (인스턴스 하나를 나눠 쓴다)
+  회원 M-03 ── notifier ──▶ SmsNotifier</code></pre>
+<p>이 패턴의 이름은 Bobby Woolf 가 붙였고, 원전은 객체 수준의 구조 패턴으로 적습니다(<a href="http://www.cs.uni.edu/~wallingf/patterns/elementary/papers/null-object.pdf">The Null Object Pattern</a>). GoF(Gang of Four, 1994년에 나온 <em>Design Patterns</em> 의 저자 네 명을 함께 부르는 이름) 23편에는 없어서 생성·구조·행위 어느 칸에도 들어가지 않아요. 자주 함께 쓰는 패턴은 <a href="design-pattern-guide/strategy/strategy-guide_v1.1.1.html">Strategy</a> · <a href="design-pattern-guide/state/state-guide_v1.0.1.html">State</a> · <a href="design-pattern-guide/singleton/singleton-guide_v1.0.1.html">Singleton</a> 셋입니다. 이 글은 도서관 대출 창구의 시나리오 셋을 따라갑니다. 대출 한 건이 알림까지 끝나는 길, 채널과 회원이 늘 때 무엇이 안 바뀌는가, 규칙을 어기면 어느 단계에서 무엇이 어긋나는가. 끝까지 읽으면 어떤 코드를 Null Object 라고 불러도 되는지 필수 조건 넷으로 판정할 수 있고, <strong>부재를 타입으로 막아 주는 Rust 에서도 이 패턴이 쓸모 있는 자리가 어디인지</strong>, 그리고 <strong>중립 동작이 삼켜도 되는 것과 삼키면 안 되는 것을 무엇으로 구분하는지</strong>까지 말할 수 있게 됩니다.</p>
+<h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
+<h3 id="시나리오-1--대출-한-건이-접수돼-알림까지-끝나는-길">시나리오 1 — 대출 한 건이 접수돼 알림까지 끝나는 길</h3>
+<p>도서관 운영 100일째입니다. 회원 M-01 은 메일 알림을 켜 두었고, M-02 는 알림을 꺼 두었어요. 대출 기간은 14일이라 반납 기한은 114일차입니다. 창구에 M-01 의 『Cosmos』와 M-02 의 『The Selfish Gene』이 차례로 들어옵니다. 나와야 하는 것은 대출마다 한 줄, 그리고 알림을 켠 회원에게만 붙는 알림 한 줄이에요.</p>
+<ol>
+<li><strong>조립 코드가 채널 객체 셋을 만듭니다.</strong> 메일 채널·문자 채널·조용한 채널입니다. 여기서 <strong>조용한 채널</strong>은 알림 연산을 아무 일도 하지 않게 구현한 객체이고, <strong>채널 공통 타입</strong>은 셋이 함께 구현하는 선언이에요. 왜 조립 코드가 맡는가 — 어느 회원이 알림을 받는지는 업무가 정하는 일이라 창구가 결정할 일이 아닙니다. 창구가 정하면 회원 설정이 바뀔 때마다 창구를 열게 돼요.</li>
+<li><strong>회원 객체가 자기 채널을 공통 타입 자리로 받아 둡니다.</strong> M-01 은 메일 채널을, M-02 는 조용한 채널을 받습니다. 이 자리는 비지 않아요 — 알림을 끈 회원도 객체 하나를 가집니다. 왜 비우지 않는가 — 비워 두면 그 자리를 쓰는 코드마다 "비었는가"를 물어야 하고, 묻는 자리를 하나라도 빠뜨리면 시나리오 3 의 1단계가 보여 주는 일이 납니다.</li>
+<li><strong>창구가 M-01 의 대출을 기록하고 채널에 요청을 넘깁니다.</strong> 대출 번호 L-1001 과 반납 기한 114일차를 찍은 뒤 알림 연산을 부릅니다. 창구는 그 채널이 무엇인지 확인하지 않아요. 왜 확인하지 않는가 — 창구가 아는 것은 "대출이 생겼다" 까지이고, 그것을 어떻게 알릴지는 채널이 압니다. 창구가 확인하기 시작하면 채널 종류가 늘 때마다 창구를 고치게 돼요.</li>
+<li><strong>메일 채널이 실제 동작을 합니다.</strong> 출력 2번 줄 <code>mail -&gt; M-01 ...</code> 이 그 자리이고, 채널이 자기 발송 건수를 하나 올립니다. 왜 채널이 세는가 — 무엇을 몇 건 보냈는지는 보낸 쪽만 알 수 있고, 창구가 세면 보내지 않은 것까지 세게 됩니다.</li>
+<li><strong>창구가 M-02 의 대출을 같은 코드로 처리합니다.</strong> 출력 3번 줄에 대출만 찍히고 알림 줄이 없습니다. 창구 코드는 3단계와 글자 하나 다르지 않아요. 왜 같은 코드가 다른 결과를 내는가 — 다름이 창구의 분기가 아니라 <strong>회원이 가진 객체</strong>에 담겨 있기 때문입니다.</li>
+<li><strong>조용한 채널이 요청을 받아 아무 일도 하지 않습니다.</strong> 메일도 문자도 나가지 않고, 예외도 나지 않고, 발송 건수도 오르지 않아요. 왜 요청을 받기는 하는가 — 받지 않으면 창구가 "보낼 수 있는 상대인가"를 물어야 하고, 그 물음이 곧 2단계에서 지운 검사입니다.</li>
+<li><strong>마감 보고가 채널마다 보낸 건수를 묻습니다.</strong> 메일 1건, 문자 0건, 조용한 채널 0건입니다. 조용한 채널이 돌려준 0 은 <strong>널 결과</strong>예요 — 자리를 메우려고 고른 값이 아니라, 한 건도 보내지 않았으니 참인 값입니다. 왜 이 구분이 중요한가 — 중립값이 참값이 아닌 자리에 같은 모양을 쓰면 시나리오 3 의 3단계가 됩니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">창구 LoanDesk      회원 M-01        메일 채널           회원 M-02        조용한 채널
+   │ borrow(M-01)     │                │                   │                │
+   ├─ loan L-1001 기록 (출력 1번 줄)    │                   │                │
+   ├─ notifier ──────▶│                │                   │                │
+   ├─ send(loan) ─────┼───────────────▶│ 메일 발송 (출력 2번 줄) · 건수 +1    │
+   │                  │                │                   │                │
+   │ borrow(M-02)     │                │                   │                │
+   ├─ loan L-1002 기록 (출력 3번 줄)    │                   │                │
+   ├─ notifier ───────┼────────────────┼──────────────────▶│                │
+   ├─ send(loan) ─────┼────────────────┼───────────────────┼───────────────▶│ 아무 일도 하지 않음
+   │                                                                          (출력에 줄이 없다)
+   └─ 창구 코드는 두 번 다 같은 한 줄이다</code></pre>
+<p>이 시나리오가 드러낸 것은 넷입니다. 쓰는 쪽이 협력자를 공통 타입으로만 다룬다는 것, 그 자리에 부재를 나타내는 값이 들어가지 않는다는 것, 실제 동작을 하는 구현과 아무 일도 하지 않는 구현이 나란히 그 타입을 구현한다는 것, 그리고 값을 돌려주는 연산에서는 아무 일도 하지 않음이 <strong>널 결과</strong>로 나타난다는 것. 이 이름들의 정식 정의는 아래 「개념 정리」에 모았습니다.</p>
+<h3 id="시나리오-2--알림-수단이-늘고-알림을-끈-회원이-늘-때">시나리오 2 — 알림 수단이 늘고, 알림을 끈 회원이 늘 때</h3>
+<p>도서관이 문자 알림을 새로 엽니다. M-03 이 문자 알림을 골랐고, 새로 가입한 M-04 는 알림을 껐어요. 두 사람이 『Guns, Germs, and Steel』과 『Sapiens』를 차례로 빌립니다. 나와야 하는 것은 대출 두 줄과 문자 알림 한 줄, 그리고 채널 셋의 마감 보고 세 줄입니다.</p>
+<ol>
+<li><strong>조립 코드가 문자 채널 객체를 하나 더 만들어 M-03 에게 줍니다.</strong> 이때 메일 채널도, 조용한 채널도, 창구도, 회원 타입도 한 줄이 안 바뀝니다. 왜 안 바뀌는가 — 채널은 자기가 어떻게 보내는지만 알고 다른 채널이 몇 개 있는지 모릅니다. 서로를 모르니 하나 더 놓는 일이 기존 것에 영향을 주지 않아요.</li>
+<li><strong>M-04 에게는 새 객체를 만들지 않고 이미 있는 조용한 채널을 그대로 줍니다.</strong> M-02 와 M-04 가 인스턴스 하나를 나눠 씁니다. 왜 나눠 쓸 수 있는가 — 그 객체는 요청을 받아도 자기 필드에 남기는 것이 없어서, 누가 언제 불러도 같은 답을 냅니다. 남기기 시작하면 시나리오 3 의 2단계가 됩니다.</li>
+<li><strong>창구가 두 대출을 시나리오 1 과 같은 코드로 처리합니다.</strong> 출력 4·5·6번 줄이 그 자리예요. M-03 에게는 문자 줄이 붙고 M-04 에게는 아무 줄도 붙지 않습니다. 왜 창구를 안 고쳐도 되는가 — 창구가 부르는 연산의 모양이 채널이 늘어도 그대로이기 때문입니다.</li>
+<li><strong>마감 보고가 채널 셋에 각각 묻습니다.</strong> 메일 1건, 문자 1건, 조용한 채널 0건이 출력의 마지막 세 줄입니다. 왜 조용한 채널에도 묻는가 — 묻지 않으려면 "이 채널은 물어볼 필요가 없다"를 아는 코드가 있어야 하고, 그 코드가 바로 지운 검사입니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">문자 알림을 열기 전                       문자 알림을 연 뒤
+
+  채널 클래스  Email · Silent              채널 클래스  Email · Sms · Silent   ← 새 클래스 하나
+  회원         M-01 M-02                   회원         M-01 M-02 M-03 M-04
+  창구 코드    borrow 한 벌                창구 코드    borrow 한 벌           ← 그대로
+  고친 파일    —                           고친 파일    조립 코드 한 곳
+
+  M-02 ─┐
+  M-04 ─┴─▶ SilentNotifier  ← 인스턴스 하나. 상태가 없어서 나눠 써도 답이 달라지지 않는다</code></pre>
+<p>이 시나리오가 드러낸 것은 둘입니다. 하나는 실제 동작 구현이 늘어도 아무 일도 하지 않는 구현과 쓰는 쪽이 그대로라는 것이고, 다른 하나는 아무 일도 하지 않는 구현이 상태를 갖지 않아 인스턴스 하나를 여러 자리가 나눠 쓸 수 있다는 것입니다. 앞의 것이 최소 조건 1·2번이 되고, 뒤의 것이 4번과 <code>[선택]</code> 5번이 됩니다.</p>
+<h3 id="시나리오-3--규칙을-어기면-어느-단계에서-무엇이-어긋나는가">시나리오 3 — 규칙을 어기면 어느 단계에서 무엇이 어긋나는가</h3>
+<p>아래 셋은 구현 절의 코드를 한 군데씩 바꿔 실제로 컴파일하고 실행해 본 것입니다. 도구는 <code>javac 21.0.11</code> · <code>tsc 5.9.3</code>(Node v22.22.3) · <code>rustc 1.95.0</code> 이고, 바꾼 자리 말고는 구현 절 코드와 같습니다. 재현하려면 구현 절 코드를 그대로 저장한 뒤 아래에 적은 자리만 고치면 돼요.</p>
+<ol>
+<li><strong>조용한 채널을 지우고 그 자리를 비웠습니다.</strong> 회원의 채널 자리가 빌 수 있게 타입을 열고 그 자리에 부재 값을 넣었어요. 세 언어가 <strong>막아 준 시점이 서로 달랐습니다.</strong> Java 는 그대로 컴파일됐고 두 번째 대출에서 <code>NullPointerException</code> 으로 중단됐습니다 — 메시지가 <code>Cannot invoke "…BorrowNotifier.send(…)" because the return value of "…Member.notifier()" is null</code> 이었어요. TypeScript 는 <code>strict</code> 에서 컴파일이 멈췄고 오류가 1건, <code>error TS18047: 'member.notifier' is possibly 'null'</code> 이었습니다. Rust 는 <code>error[E0599]: no method named 'send' found for enum 'Option&lt;T&gt;'</code> 1건으로 멈췄고요(셋 다 직접 컴파일·실행해 확인). 왜 이 자리에서 실패하는가 — 협력자 자리가 빌 수 있게 열리는 순간, 그 자리를 쓰는 모든 코드가 "비었는가"에 답할 의무를 지기 때문입니다.</li>
+<li><strong>조용한 채널이 실제 채널로 바뀌게 했습니다.</strong> 그 클래스에 상태 하나를 두고, 두 번째 요청부터는 진짜로 메일을 보내게 고쳤어요. 컴파일도 실행도 통과했지만 출력이 달라졌습니다 — 같은 인스턴스를 나눠 쓴 M-02 는 알림을 못 받고 M-04 는 <code>mail -&gt; M-04 : "Sapiens" due day 114</code> 를 받았어요(직접 실행해 확인). 마감 보고도 <code>silent sent 1</code> 로 바뀝니다. 왜 이렇게 되는가 — 시나리오 2 의 2단계가 기댄 성질이 사라져서입니다. 상태를 갖는 순간 그 객체는 "아무 일도 하지 않는 자리" 가 아니라 "지금은 안 하는 중인 자리" 가 됩니다.</li>
+<li><strong>삼키면 안 되는 자리에 아무 일도 하지 않는 구현을 끼웠습니다.</strong> 창구에 대출 한도 검사를 하나 더하고, 늘 통과를 돌려주는 구현을 끼웠어요. 한도를 2권으로 둔 판은 세 번째 대출에서 <code>denied M-03 "Guns, Germs, and Steel" (open 2)</code> 를 찍었는데, 늘 통과를 돌려주는 판은 그 줄 없이 <code>loan L-1003</code> 을 찍고 알림까지 보냈습니다(직접 실행해 확인). 왜 이것이 다른 둘과 종류가 다른가 — 1·2번은 코드가 조건을 어긴 것이고, 이것은 <strong>조건을 다 지키면서 틀린 자리에 놓인 것</strong>입니다. 한도 검사의 중립값 "통과" 는 부재 상태의 참값이 아니라 "모름" 이에요.</li>
+</ol>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>바꾼 자리</th><th>어긋난 자리</th><th>나타나는 때</th></tr>
+</thead>
+<tbody>
+<tr><td>협력자 자리를 비울 수 있게 열었다</td><td>쓰는 자리마다 부재 검사가 되돌아온다</td><td>Java 는 실행(NPE) · TypeScript 와 Rust 는 컴파일</td></tr>
+<tr><td>아무 일도 하지 않는 구현이 상태를 갖는다</td><td>같은 인스턴스를 나눠 쓴 둘의 동작이 달라진다</td><td>실행 (출력이 어긋난다)</td></tr>
+<tr><td>답이 업무 판단을 가르는 자리에 중립값을 두었다</td><td>한도 초과 대출이 거절 없이 성립한다</td><td>실행 (오류가 정상 실행처럼 보인다)</td></tr>
+</tbody>
+</table>
+</div>
+<p>1번의 세 언어 차이는 이 편에서 가장 중요한 자리라 한 번 더 살펴봅시다. Rust 에는 널 참조가 없고 <code>Option</code> 이 부재를 타입으로 강제하니, "널 검사를 없앤다"는 이 패턴의 동기가 Rust 에서는 이미 해결된 것처럼 보이죠. 그래서 같은 프로그램을 <code>Option&lt;Rc&lt;dyn BorrowNotifier&gt;&gt;</code> 로 다시 써서 실행해 봤습니다. 출력은 같게 나왔지만 <strong>부재를 처리하는 코드가 두 자리에 생겼어요</strong> — 창구의 호출 자리가 <code>if let Some(n) = &amp;member.notifier { n.send(&amp;loan); }</code> 가 됐고, 마감 보고 자리가 <code>silent.map_or(0, |n| n.sent_count())</code> 가 됐습니다. 자리 수는 회원 수가 아니라 <strong>협력자를 쓰는 코드 자리 수</strong>를 따라 늘어납니다.</p>
+<p>그다음이 진짜 문제입니다. 마감 보고의 <code>0</code> 을 <code>99</code> 로 바꿔 보았더니 <strong>그대로 컴파일되고 <code>silent sent 99</code> 를 찍었어요</strong>(직접 컴파일·실행해 확인). 컴파일러는 부재 갈래를 쓰게 만들지만 그 갈래에 <strong>무엇을 적을지</strong>는 묻지 않습니다. 부재일 때의 답이 0 인지 99 인지는 업무가 정하는 일이고, <code>Option</code> 은 그 답을 담아 둘 자리를 주지 않아요.</p>
+<pre tabindex="0"><code class="language-text">                  Option&lt;Rc&lt;dyn T&gt;&gt;                       Rc&lt;dyn T&gt; + 널 객체
+
+  안전성          컴파일러가 부재 갈래를 강제한다          자리가 비지 않아 부재 갈래가 없다
+  부재일 때의 답   호출 자리마다 그때그때 적는다            구현 하나에 이름 붙여 한 번 적는다
+  자리 수         협력자를 쓰는 코드 자리 수만큼            협력자를 만드는 자리 하나
+  틀린 답         `map_or(99, …)` 도 컴파일된다            `sent_count()` 를 고치면 전부 따라간다</code></pre>
+<p>여기서 헷갈리기 쉬운 포인트는 "Rust 에서는 이 패턴이 필요 없다"고 결론 내리는 것입니다. 실측이 말하는 것은 그게 아니에요. <strong>Rust 에서 사라지는 것은 이 패턴의 안전 효과이고, 남는 것은 설계 효과입니다.</strong> Java 는 검사를 빠뜨린 채 컴파일돼 실행 중에 중단됐지만 Rust 는 애초에 컴파일이 안 되니, "검사를 빠뜨릴 수 있다"는 위험은 Rust 에 없습니다. 그 대신 <code>Option</code> 은 부재일 때 무엇이 옳은지를 정해 주지 않아서, 그 답이 호출 자리마다 흩어지고 자리마다 달라질 수 있어요. 널 객체는 그 답에 <strong>이름과 자리</strong>를 줍니다.</p>
+<p>이 시나리오가 드러낸 것은 셋입니다. 협력자 자리를 비울 수 있게 열면 부재 검사가 그 자리를 쓰는 코드마다 되돌아온다는 것, 아무 일도 하지 않는 구현이 상태를 갖는 순간 그 인스턴스를 나눠 쓴 자리들의 동작이 달라진다는 것, 그리고 조건을 다 지킨 코드도 답이 업무 판단을 가르는 자리에 놓이면 오류를 정상 실행처럼 보이게 한다는 것. 앞의 둘이 최소 조건 3번과 4번이 되고, 마지막 것은 조건이 아니라 비교 절의 기준이 됩니다.</p>
+<h3 id="개념-정리">개념 정리</h3>
+<p>시나리오에 나온 이름 넷을 역할 이름으로 정의합니다. 예시 코드의 타입 이름(<code>BorrowNotifier</code>·<code>SilentNotifier</code>)은 정의 대상이 아니라 「상황 설정」에서 이 역할들에 매핑하는 쪽이에요.</p>
+<ul>
+<li><strong>Client</strong> — 협력자를 요구하는 쪽입니다. 협력자를 AbstractObject 타입 자리로 가지고, 요청이 오면 그 협력자에게 넘깁니다. 어떤 구현을 가지고 있는지 알지 못하고 알 필요도 없어요 — 구체 타입을 확인하는 코드를 두는 순간 이 패턴이 지우려던 분기가 되돌아옵니다. 이 예시에서는 Client 자리가 두 타입으로 나뉘어 있습니다. 회원 객체가 채널을 필드로 가지고, 창구가 그 채널에 요청을 보내요.</li>
+<li><strong>AbstractObject</strong> — Client 가 쓸 협력자의 연산을 선언하는 공통 타입입니다. RealObject 와 NullObject 가 이 타입을 구현하고, Client 는 이 타입으로만 협력자를 다룹니다. 모든 구현에 공통인 기본 동작을 여기서 구현해 둘 수도 있어요(최소 조건 <code>[선택]</code> 8번). 이 타입이 선언 하나로 정의돼 있어야 두 구현이 서로 갈아 끼워집니다 — 그 까닭은 <a href="reference/gof-vocabulary/gof-vocabulary-ref_v1.0.2.html">참고 문서 「GoF 공통 어휘」의 「인터페이스에 프로그래밍한다」</a>에 있습니다.</li>
+<li><strong>RealObject</strong> — Client 가 기대하는 실제 동작을 하는 구현입니다. 메일 채널과 문자 채널이 이 자리예요. 자기가 하는 일만 알고, 아무 일도 하지 않는 구현이 있는지는 모릅니다.</li>
+<li><strong>NullObject</strong> — AbstractObject 와 똑같은 연산을 갖되 그 연산을 중립 동작으로 채운 구현입니다. 실제 객체 자리에 그대로 갈아 끼워지는 것이 이 역할의 전부예요. 무엇을 "아무 일도 하지 않음" 으로 볼지는 Client 가 무엇을 기대하느냐에 달려 있어서, 값을 돌려주는 연산은 <strong>널 결과</strong>를 돌려주는 것으로 채웁니다 — 널 결과는 자리를 메우려고 고른 값이 아니라 협력자가 없는 상태에서 참인 값이에요. 발송 건수 0 이 그것입니다. 아무 일도 하지 않는 방법이 둘 이상이면 이 역할을 맡는 타입이 둘 이상 필요할 수도 있어요.</li>
+</ul>
+<p><figure class="diagram-figure"><img src="data:image/png;base64,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Np/N+ZeN1oW5IRNZvnx5hQoVSpculSdPntTjvP76mxGwqW7pfluLFs1KlCgR/XvuvPu+1M127c4+8fjjSpYs8eNPE27pdltyGGnooD777IuQbGZzqNA4/FhSvXq1/PnT/59s+/YXZD/VRvjg2o+vXFVj5+ob7FfDD0iTJk0uWKBghYrld9hhh9RdCxYseOc9o9cBAACyIxjdxu23X/0yZUonyg0bHli2TJkL21+a2Ax/UYdUMbl39uzZN9186wcfjkkO5KxevVrLli06dexQsGDB1GN+8vGnt91195djv06tDAe/9qrOe++z9wYvKSSMt99xT3Lz0EMaPd3vicRSSyFz7PNE74svuXzEyFcTe++6576zzz4j09TyozEf33Pv/cmJCOvXr/dAz3uqVKmcbBBijr59+yfKF7e/4LJLL07uyvmXDT78aEyP2+767rvvkzU1a+7SudOlR7c8KpTHjv3quBNapbb/+JNPa9VZex+uvabLWWeeEQEbEv4lPtSr9403XJtNm8cefzK5btIprU7sdstfy6mNGfPxue3++vlkl112HjHspWjj/fDDuJEjRyU3r76yc4f/H2ZeqVKlA/Zv0LjpkXPnzE3UhJ7nhUEDMj1Ov6efeapv/2SK2urkE3vcelPyZ5sQVh540GHJxl+N/bhw4SLJzZC33nr7Hald6x577N7u3LNPOun4dGdZs2bN0/0H9HmyX+ovTIc1PuTKLp323HOPUG592pnhtqR+pFXr04sVKxYK43/4KgIAAGAdj9LHy5577p66GfLBROGdd95tcvhRr73+Zurj7eFv+169erc+re3PP/+SrBw16vVWp56RLhWN1mUTxxzf6uOPP4k2ZPas2aln6dL5stQF6PPkydPlio6p7TOd72/mzFnntWufTEWDUG525DE//vhTsmbxn38u/n+pj7rn/MtG69LV09qclZqKBhMmTGx/ccfEFKiL/lyU8fISJ125wvP1kFOPP/HUxImTsmmwYvmK5L/oZcuXJ+tXr1mTrP/jjz+iTfLd9z8kyyFAPO+8s1L3hprOl1+a3Aw/fqSlpWU8yNuj37mxa7fULmvwi0NOPLnN0qV/TQmycuWqxSlSP/vAgw+f1Oq0dF1r6Hku73zltdd3Db8nJSv//PPPs885v+tN3dPNdvrOu++3an1GIr1duiyTSUgynhQAACDmBKPx8u23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zQqJQIgD+j/1RO06tdasWfNQr9733Ht/t+539H7kgWhdKBByh/B39WOPPhT+rA0Nwp/unTpftVEn3eBZnhs0OOQO117d5YILzsuTJ8/nn//voosvS3y2f78+83+d36jxEQ0a1H/yid7RutnrwvukiZPC+241d013rsRIrsmTp2QaPey55x6lSpXafvviNWpUz/RSv/32u1atzwgXc/99dx/UMIQPDcqULt3v6WdCMjJwQL9slqFfunTJZ5//L4Qy4dvlzZv3+RdezOrJ1qyUL19+1MhXkk/mTpgwqWOnLiFrOLNtm2SbEiXSz1sactvb7rg7fKlXhgwK/3EHvzjk2ONbhZuWGotUr1YtHCeCrZveKfve6bffFoRUtPUpJ5991hmJSDQpxIsPPXjf5R07hKR4+IhXb7rx2tS91atXO+mk46PNoHcCAAD4rxCMZufI5kc8+siDyc2n+vYP73fc1i0R+YVE78ILzg2hwIiRr3adc02FChWeW7dGx2mntUosLRIanHzSCR98+NGQIUNzftINnmXG9JnR2jFQByQetDzggAZffPZholy8ePFVq1ZF657ETB1qNPeXX6K1I7zKpTtXhXU1WYWSu+yy81djP4my8Mknn7VqfXoo3HvPHYkcIV++fN27dS1TpvTd9/S88OJL3x39erj4TD/76qtvhPTktdffPLxZyxHDXnr/3bXjqubMmdPggEOinAmRSmrYkXjYtnz5conFWzIVEtsbu3YLwdAzT6/NGsJlV6600333P3TkUccN6P9U/fr1Ivjv0Dtl0zslTv3T+K/TzSSQaueda9x91209br05MW49afny5fPm/bp8+bLly9fON7pkydK5P8+dMWPWzJmzTjj+2Jx0FHonAACA/wrBaHYOP7xJ6ua4cT+G9x2232H8+J+SlSFleO/9DyZNnhJCgQk/TQw1x7Rsmfqp8uXLRxtjg2fZa8/dQwxx1XXXn3/eOQ3q71u5SuWMU9Gls+C3BdG6R0TT1RcpUiS8/7ZgQbTxatSoHv5cv+jC89OtvHzZpRdXqVK57l57JlLRihUrNDuiaepNSEtL6/NUv1C45JKLHn740e497ri9R7cox3r2fPCxJ57KdNf9D/R6ok/fdJWlSu340QejR416PeQOpUqVSg5lDeFFp06XVdypYpcrr+3b7xnRA/8teqdsXNKh008TJ+S8feND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" alt="Null Object 구조 — 협력자 자리는 비지 않고, 부재를 NullObject 인스턴스가 맡는다" /><figcaption>Null Object 구조 — 협력자 자리는 비지 않고, 부재를 NullObject 인스턴스가 맡는다</figcaption></figure></p>
+<p>그림에서 눈여겨볼 선은 둘입니다. Client 에서 AbstractObject 로 가는 선의 카디널리티가 <code>1</code> 이에요 — <code>0..1</code> 이 아닙니다. 이 하나가 이 패턴의 전부라고 해도 좋습니다. 협력자가 "있거나 없거나" 가 아니라 "늘 하나 있다" 이고, 없는 경우는 아래쪽 NullObject 가 맡아요. 그리고 RealObject 와 NullObject 에서 AbstractObject 로 가는 선은 <strong>모양이 같은 구현 선 둘</strong>입니다. 둘 사이에는 아무 선도 없어요. 서로를 모르기 때문이고, 그래서 시나리오 2 의 1단계에서 실제 채널을 하나 더 놓는 일이 조용한 채널에 영향을 주지 않습니다.</p>
+<h2 id="사용-목적">사용 목적</h2>
+<p>어떤 단서가 보일 때 이 패턴을 꺼내는지부터 봅시다. 셋 다 코드나 요구사항에서 눈으로 확인되는 것들이에요.</p>
+<ol>
+<li><strong>같은 참조에 대한 부재 검사가 여러 자리에 복제돼 있습니다.</strong> <code>if (x != null)</code> 이나 <code>x?.f()</code> 가 같은 필드를 두고 세 곳에 적혀 있고, 그 협력자를 쓰는 자리가 늘 때마다 검사가 하나씩 따라 붙는 상태예요. 시나리오 3 의 1단계가 이 상태에서 검사를 하나 빠뜨렸을 때 무엇이 나오는지 보여 줍니다.</li>
+<li><strong>그 협력자를 갖지 않는 대상이 업무에 실제로 있습니다.</strong> 알림을 끈 회원, 이력이 없는 신규 계정, 로그를 남기지 않는 배치 작업처럼 "그것이 없는 것이 정상인 경우" 가 도메인에 있는 상태입니다. 없는 것이 오류가 아니라 하나의 정상 상태라는 점이 중요해요 — 이 구분이 아래 「쓰면 손해인 자리」의 첫 항목의 기준이 됩니다.</li>
+<li><strong>부재일 때 할 일이 「건너뛴다」보다 큽니다.</strong> 협력자가 없을 때 돌려줄 값이 정해져 있거나(발송 건수 0), 건너뛰는 대신 기록을 남겨야 하거나, 그 처리가 여러 자리에서 똑같아야 하는 경우입니다. 시나리오 1 의 7단계가 그 값이 어디에 있는지 보여 줘요.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">단서를 만났을 때 물어볼 것
+
+  이 협력자가 없는 것이 정상인 대상이 있는가?  ──아니오──▶ 없으면 오류다. 널 객체를 두지 않는다
+          │ 예
+  없을 때 할 일이 모든 호출 자리에서 같은가?    ──아니오──▶ 자리마다 다르면 호출 자리에서 정한다
+          │ 예
+  그 처리의 결과가 업무 판단을 가르는가?
+          │ 아니오                              │ 예
+     Null Object                            답이 없다는 사실을 그대로 올린다</code></pre>
+<p>반대로 이 패턴을 쓰면 손해인 자리도 분명합니다.</p>
+<ul>
+<li><strong>부재가 「없음」이 아니라 「모름」일 때</strong> 는 쓰지 않습니다. 잃는 것은 오류를 알아챌 기회예요. 한도 검사기를 아직 못 붙였다는 사실은 "한도가 없다" 가 아니라 "한도를 모른다" 인데, 늘 통과를 돌려주는 객체를 끼우면 그 모름이 통과로 바뀝니다. 시나리오 3 의 3단계가 그 결과이고, 한도 초과 대출이 거절 줄 하나 없이 성립했어요.</li>
+<li><strong>협력자를 쓰는 자리가 하나뿐이고 앞으로도 늘지 않을 때</strong> 도 쓰지 않습니다. 잃는 것은 읽기 쉬움입니다. <code>if (n != null)</code> 한 줄이면 끝날 일에 구현 클래스 하나와 그것을 꽂는 조립 코드가 붙으면, 읽는 사람이 파일 둘을 오가고도 "여기서 무슨 일이 일어나는가" 에 답하지 못해요. 시나리오 2 처럼 쓰는 자리나 대상이 늘 때 쓸모가 생깁니다.</li>
+</ul>
+<p>이 패턴은 구조가 Strategy · State 와 겹칩니다. 겹치는 정도가 닮았다는 수준이 아니라 <strong>같은 코드가 둘 다인 수준</strong>이어서, 그 이야기는 아래 비교 절에서 따로 풉니다.</p>
+<h2 id="패턴의-경계">패턴의 경계</h2>
+<h3 id="디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</h3>
+<p>어떤 코드를 Null Object 라고 불러도 되는지 가르는 기준입니다. <code>[필수]</code> 가 하나라도 빠지면 Null Object 가 아니고, <code>[선택]</code> 은 갖추면 좋거나 상황에 따라 고르는 구조예요. 조건은 언어와 상관없이 코드에서 확인할 수 있는 모양(타입 선언 · 참조 보유 · 호출 방향 · 반환값)으로 적었고, 조건마다 그것을 보여 준 시나리오의 단계를 가리킵니다. <strong>여기서 "협력자 자리" 는 1번이 정합니다</strong> — Client 가 협력자를 담는 필드·인자·반환 자리가 그것이고, 다른 조건들은 그 자리를 가리켜요.</p>
+<ol>
+<li>[필수] 협력자가 공통 타입으로 선언되고, 쓰는 쪽이 그 타입으로만 다룹니다 — 협력자를 담는 자리의 타입이 둘 이상의 구현이 함께 구현하는 공통 타입이고, 그 자리를 쓰는 코드에 구체 타입 검사나 다운캐스트(상위 타입으로 받은 값을 하위 타입으로 바꾸는 변환)가 없습니다. 시나리오 1 의 2단계가 그 보유이고 3단계가 그 호출이에요 (근거: Woolf 「The Null Object Pattern」(『Pattern Languages of Program Design 3』, 줄여서 PLoPD3) Intent 절 — 같은 인터페이스를 나눠 갖는 대역을 다른 객체 자리에 놓는 것이 이 패턴이다 · Participants 절 NullObject — AbstractObject 와 똑같은 인터페이스를 제공해 실제 객체 자리에 널 객체를 갈아 끼울 수 있게 한다). 위 근거 괄호가 뒷받침하는 것은 <strong>두 구현이 같은 인터페이스를 나눠 갖고 서로 갈아 끼워진다는 것까지</strong>입니다. 그 공통 타입이 인터페이스인지 추상 클래스인지 trait(Rust 에서 타입이 구현할 연산을 선언하는 문법)인지는 여기서 오지 않아요.
+<ul>
+<li>빠지면: 협력자 자리가 구체 타입이면 아무 일도 하지 않는 구현을 그 자리에 넣을 수 없어서, 쓰는 쪽은 부재를 다른 방법으로 표현하게 됩니다. 구현 절 코드의 회원 필드 타입을 <code>EmailNotifier</code> 로 바꾸면 Java 가 <code>incompatible types</code> 3건으로 멈춥니다 — 조용한 채널을 가진 회원 둘과 문자 채널을 가진 회원 하나가 그 자리에 들어가지 못해요(직접 컴파일해 확인).</li>
+</ul>
+</li>
+<li>[필수] 그 공통 타입의 구현 가운데 연산 전부를 중립 동작으로 채운 것이 하나 이상 있습니다 — 그 구현의 <strong>모든</strong> 연산이 ① 자기 바깥의 상태를 바꾸지 않고 ② 다른 협력자를 부르지 않으며 ③ 값을 돌려주는 연산이면 받은 인자와 상관없이 늘 같은 중립값을 돌려줍니다. 시나리오 1 의 6단계가 값을 돌려주지 않는 쪽이고 7단계가 널 결과를 돌려주는 쪽이에요 (근거: Woolf 「The Null Object Pattern」(PLoPD3) Intent 절 — 같은 인터페이스를 나눠 갖되 아무 일도 하지 않는 대역을 둔다 · Participants 절 NullObject — 자기 인터페이스를 아무 일도 하지 않게 구현하고, 어떤 요청은 널 결과를 주는 것으로 채워질 수 있다). 위 근거 괄호가 뒷받침하는 것은 <strong>그 구현의 연산이 아무 일도 하지 않거나 널 결과를 돌려준다는 것까지</strong>입니다.
+<ul>
+<li>빠지면: 발행된 <a href="design-pattern-guide/strategy/strategy-guide_v1.1.1.html">Strategy 편</a>의 구현 절 코드가 그 자리입니다. 요금제 셋이 공통 타입을 나눠 갖고 바깥에서 설치되지만 셋 다 금액을 계산해요. 그중 <code>FreeOverThreshold</code> 가 0 을 돌려주는 분기를 갖지만 주문 금액에 따라 3,000 도 돌려주므로 "늘 같은 중립값" 이 아닙니다.</li>
+</ul>
+</li>
+<li>[필수] 협력자 자리가 비어 있을 수 있게 열려 있지 않습니다 — 그 자리에 부재를 나타내는 값(<code>null</code> · <code>undefined</code> · 미설정 · <code>Option</code> 의 빈 값)을 넣는 코드가 없고, 그 자리를 쓰는 코드에 부재 검사 분기가 없습니다. 시나리오 1 의 2단계가 그 자리예요 (근거: Woolf 「The Null Object Pattern」(PLoPD3) Applicability 절 — 실제 동작을 하는 협력자와 아무 일도 하지 않는 협력자의 차이를 클라이언트가 무시할 수 있기를 바랄 때 이 패턴을 쓰고, 그래야 클라이언트가 <code>nil</code> 이나 다른 특별한 값을 따로 확인하지 않는다). 위 근거 괄호가 뒷받침하는 것은 <strong>클라이언트가 부재를 나타내는 특별한 값을 확인하지 않게 된다는 것까지</strong>입니다.
+<ul>
+<li>빠지면: 시나리오 3 의 1단계가 그 자리입니다. 자리를 비울 수 있게 열었더니 Java 는 그대로 컴파일돼 실행 중 <code>NullPointerException</code> 으로 중단됐고, TypeScript 는 <code>TS18047</code> 1건, Rust 는 <code>E0599</code> 1건으로 컴파일에서 멈췄어요(직접 컴파일·실행해 확인).</li>
+</ul>
+</li>
+<li>[필수] 협력자 자리에 실제 동작 구현 대신 놓이는 구현이 실행 중에 실제 동작으로 바뀌지 않습니다 — 그 구현의 연산 안에 동작을 가르는 분기가 없고, 그 구현이 자기 필드나 필드가 가리키는 객체의 값을 바꾸는 코드가 없습니다. 시나리오 2 의 2단계가 이 성질에 기대어 인스턴스 하나를 나눠 쓴 자리예요 (근거: Woolf 「The Null Object Pattern」(PLoPD3) Implementation 절 Transformation to Real Object — 아무 일도 하지 않다가 실제 동작을 시작하기로 정할 수 있는 객체라면 그것은 널 객체가 아니라고, 성립 요건으로 적는다 · Consequences 절 — 널 객체는 늘 아무 일도 하지 않는 객체로 있고 실제 객체로 바뀌지 않는다). 위 근거 괄호가 뒷받침하는 것은 <strong>그 객체가 실제 동작으로 옮겨 가지 않는다는 것까지</strong>입니다. 만들 때 정한 뒤 바뀌지 않는 필드를 두어도 되는지는 여기서 오지 않아요 — 두어도 되는 값과 안 되는 값을 구분하는 어휘가 <a href="reference/gof-vocabulary/gof-vocabulary-ref_v1.0.2.html">참고 문서 「GoF 공통 어휘」의 「내재 상태와 외재 상태」</a>에 있습니다.
+<ul>
+<li>빠지면: 시나리오 3 의 2단계가 그 자리입니다. 조용한 채널에 상태를 하나 두었더니 같은 인스턴스를 나눠 쓴 M-02 는 알림을 못 받고 M-04 는 받았어요(직접 실행해 확인).</li>
+</ul>
+</li>
+<li>[선택] 중립 동작 구현의 인스턴스 하나를 여러 자리가 나눠 씁니다 — 대상마다 새로 만들지 않고 이미 만든 인스턴스를 넘깁니다. 시나리오 2 의 2단계가 그 모양이에요 (근거: Woolf 「The Null Object Pattern」(PLoPD3) Implementation 절 Null Object as Singleton — 널 객체는 대개 상태가 없어 인스턴스 여럿이 똑같으므로 하나를 되풀이해 쓰면 된다고, 구현 선택지로 든다). 대상마다 새 인스턴스를 만들어도 1~4번은 그대로 만족합니다.</li>
+<li>[선택] 아무 일도 하지 않는 방법이 여럿이면 중립 동작 구현도 여럿 둡니다 — 같은 공통 타입에 대해 중립 동작 구현이 둘 이상 있고, 쓰는 쪽이 자기에게 맞는 것을 받습니다 (근거: Woolf 「The Null Object Pattern」(PLoPD3) Participants 절 NullObject — 아무 일도 하지 않는 방법이 둘 이상이면 널 객체 클래스가 둘 이상 필요할 수도 있다고, 허용으로 적는다). 시나리오 1 의 1단계가 만든 중립 동작 구현이 조용한 채널 하나뿐이라, 이 예제에는 그 모양이 없습니다.</li>
+<li>[선택] 중립 동작을 별도 타입 대신 실제 구현의 특수 인스턴스로 둡니다 — 새 클래스를 만들지 않고, 실제 구현의 필드를 중립값으로 채운 인스턴스 하나가 그 몫을 합니다 (근거: Woolf 「The Null Object Pattern」(PLoPD3) Implementation 절 Special null instance of Real Object — 타입이 셋으로 늘어나는 것을 피하는 방법으로 든다. 구현 선택지라 필수로 올리지 않았습니다). 시나리오 1 의 1단계는 반대쪽을 골라 조용한 채널을 별도 타입으로 두었어요.</li>
+<li>[선택] 공통 타입이 모든 구현에 공통인 기본 동작을 구현합니다 — 구현마다 되풀이될 코드를 공통 타입에 두고, 중립 동작 구현은 달라지는 것만 덮어씁니다 (근거: Woolf 「The Null Object Pattern」(PLoPD3) Participants 절 AbstractObject — 모든 클래스에 공통인 인터페이스의 기본 동작을 적절한 만큼 구현한다고 적는다. "적절한 만큼" 인 자리라 필수로 올리지 않았습니다).</li>
+</ol>
+<p>판정 순서를 정리해 둡시다. 1번은 <strong>협력자 자리의 타입 선언과 그 자리를 쓰는 줄만</strong> 보면 판정되고, 2번은 그 타입을 구현한 것들의 연산 본문을, 3번은 그 자리에 무엇이 들어가는지를, 4번은 그 자리에 실제 동작 구현 대신 놓인 구현의 필드와 분기를 봅니다. 보는 품이 적은 1번부터 적용하면 대부분 거기서 끝나요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>코드</th><th>1번</th><th>2번</th><th>3번</th><th>4번</th><th>판정</th></tr>
+</thead>
+<tbody>
+<tr><td>구현 절 정본</td><td>만족</td><td>만족</td><td>만족</td><td>만족</td><td>Null Object</td></tr>
+<tr><td>자리를 비울 수 있게 연 판 (시나리오 3 의 1단계)</td><td>만족</td><td><strong>빠짐</strong></td><td><strong>빠짐</strong></td><td>—</td><td>아님 — 검사가 되돌아온다</td></tr>
+<tr><td>조용한 채널이 상태를 갖는 판 (시나리오 3 의 2단계)</td><td>만족</td><td><strong>빠짐</strong></td><td>만족</td><td><strong>빠짐</strong></td><td>아님 — 실제 객체로 옮겨 간다</td></tr>
+<tr><td>회원 필드가 <code>EmailNotifier</code> 인 판 (조건 1 의 반례)</td><td><strong>빠짐</strong></td><td>만족</td><td>만족</td><td>—</td><td>아님 — 갈아 끼울 자리가 없다</td></tr>
+<tr><td>발행된 Strategy 편의 구현 절 코드</td><td>만족</td><td><strong>빠짐</strong></td><td>만족</td><td>—</td><td>아님 — 중립 동작 구현이 없다</td></tr>
+<tr><td>늘 통과를 돌려주는 한도 검사기 (시나리오 3 의 3단계)</td><td>만족</td><td>만족</td><td>만족</td><td>만족</td><td><strong>조건으로는 Null Object</strong> — 아래 비교 절을 본다</td></tr>
+<tr><td>발행된 State 편의 구현 절 코드</td><td>만족</td><td><strong>빠짐</strong></td><td>만족</td><td>—</td><td>아님 — 상태마다 주문에 기록을 남긴다</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>—</code> 칸은 그 조건을 적용할 대상이 그 코드에 없다는 뜻이에요. 4번의 <code>—</code> 는 실제 동작 구현 대신 놓인 구현이 그 코드에 아예 없어서 "그것이 바뀌는가" 를 물을 대상 자체가 없는 자리입니다. 여기서 4번을 2번이 가리킨 구현으로 적지 않은 데는 까닭이 있어요 — 그렇게 적으면 2번이 빠진 코드에서 4번이 잴 것 없이 참이 되어 버리고, 아래 다섯째 줄처럼 <strong>두 조건을 함께 잃은 코드</strong>를 4번이 통과시키게 됩니다.</p>
+<p>마지막에서 두 번째 줄이 이 편에서 가장 중요한 자리입니다. <strong>필수 조건 넷을 전부 만족하면서도 그 자리에 두면 안 되는 코드가 있고, 그것은 이 조건들의 결함이 아닙니다.</strong> 조건은 "이 코드가 널 객체의 모양인가" 에 답하지, "그 자리에 널 객체를 두어도 되는가" 에는 답하지 않아요. 뒤의 물음은 다음 절이 맡습니다.</p>
+<blockquote>
+<p>협력자 자리는 비지 않는다. 없음은 참조가 맡는 것이 아니라 객체가 맡는다.</p>
+</blockquote>
+<h3 id="비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</h3>
+<p>Null Object 와 겹치는 대상 다섯을 비교합니다. 앞의 둘은 <strong>구조가 닮은 정도가 아니라 같은 코드가 둘 다인 관계</strong>라서 먼저 그 사실을 분명히 하고 시작할게요. 그다음은 방향이 반대인 이웃이고, 그 뒤는 이 패턴을 포함하는 더 넓은 패턴이며, 마지막 하나는 이 패턴으로 오해받는 코드입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>비교 대상</th><th>구분 기준 (코드에서 보는 것)</th><th>Null Object 라고 부르면 얻는 것</th><th>포기하는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>Strategy</td><td>갈아 끼우는 구현 가운데 <strong>연산 전부가 중립 동작인 것</strong>이 있는가</td><td>협력자 자리가 비지 않게 되고, 부재일 때의 답이 이름 붙은 한 곳에 모임</td><td>계산을 갈아 끼우는 넓은 쓰임. 값을 계산하는 구현은 이 이름으로 부르지 않음</td></tr>
+<tr><td>State</td><td>그 구현의 연산이 <strong>하나도 빠짐없이</strong> 중립 동작인가, 일부만 그런가</td><td>이 객체는 끝까지 이 객체다. 나눠 써도 답이 달라지지 않음(최소 조건 4번)</td><td>아무것도 하지 않는 상태에서 다른 상태로 넘어가는 길. 전이가 필요하면 별도 상태 모델을 둬야 함</td></tr>
+<tr><td>Proxy</td><td>가진 참조가 <strong>실제 객체를 감싸는가</strong>, 실제 객체를 <strong>대신하는가</strong></td><td>협력자가 없다는 사실이 구조에 그대로 나타남. 뒤에 숨은 실제 객체가 없음</td><td>나중에 실제 객체로 옮겨 가는 길. 접근을 가로채 제어하는 쓰임</td></tr>
+<tr><td>Special Case (PoEAA — Fowler 의 엔터프라이즈 애플리케이션 패턴 카탈로그)</td><td>그 특수 인스턴스가 <strong>아무 일도 하지 않는가</strong>, 특별한 규칙을 수행하는가</td><td>중립 동작이라는 좁은 쓰임이 이름에 실림</td><td>특수 경우마다 다른 규칙을 담는 넓은 쓰임</td></tr>
+<tr><td>모름을 참으로 답하는 객체 (오해받는 코드)</td><td>중립값이 <strong>부재 상태의 참값인가</strong>, 답을 아직 모른다는 뜻인가</td><td>(부르면 안 된다)</td><td>(부르면 안 된다)</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Strategy 와의 관계.</strong> 먼저 사실부터 적습니다. <strong>이 가이드의 예시 코드는 발행된 Strategy 편의 필수 조건 셋을 전부 만족합니다.</strong> 직접 대조해 봤어요. 그 편의 1번은 "교체할 알고리즘들이 같은 연산 모양을 따르고 계산 방법마다 따로 구현" 을 요구하는데, <code>BorrowNotifier</code> 가 연산 모양을 선언하고 채널 셋이 각각 별도 클래스로 구현하며 어느 구현에도 방법을 고르는 분기가 없습니다. 2번은 "Context 가 전략을 그 연산 모양으로만 보유하고 호출" 인데, 여기서 Context 자리는 회원 객체와 창구 둘로 나뉘어 있어요 — 회원의 필드 타입이 <code>BorrowNotifier</code> 이고 창구의 <code>borrow</code> 가 그 연산만 부르며 타입 검사도 다운캐스트도 하지 않아요. 3번은 "고르는 분기가 Context 안에 없고 전략을 받는 경로가 있다" 인데, 회원은 생성자로 채널을 받고, 고르는 분기는 회원에도 창구에도 없고요. 셋 다 통과예요.</p>
+<p>반대 방향은 다릅니다. Strategy 편의 구현 절 코드를 이 편의 필수 조건으로 채점하면 2번에서 떨어져요. 요금제 셋이 전부 금액을 계산하고, 중립 동작만 하는 구현이 하나도 없으니까요. 그러니 두 패턴의 관계는 대등한 두 갈래가 아니라 <strong>포함</strong>입니다 — 널 객체는 아무 일도 하지 않는 전략이지만, 전략이 모두 널 객체인 것은 아니에요. 원전도 여러 접근 가운데 하나가 한결같이 아무 일도 하지 않는 것이라면 그 구체 전략이 곧 널 객체라고 적습니다(근거: Woolf 「The Null Object Pattern」(PLoPD3) Implementation 절 Null Object as special Strategy).</p>
+<pre tabindex="0"><code class="language-text">              같은 연산 모양 · 바깥에서 설치 · 쓰는 쪽은 구체 타입을 모름   ← 여기까지는 둘이 같다
+                                    │
+                  그 구현 가운데 연산 전부가 중립 동작인 것이 있는가?
+                                    │
+        ┌───────────────────────────┴───────────────────────────┐
+       있다                                                    없다
+        │                                                       │
+   Null Object 라고도 부른다                                Strategy 라고만 부른다
+   (그 구현 하나가 협력자의 부재를 맡는다)                   예: 배송비 정책 fee(subtotal, weight)</code></pre>
+<p>그럼 이름은 무엇으로 고를까요. <strong>판정은 조건으로 하고, 이름은 그 객체가 도메인에서 무엇으로 불리는가로 고릅니다.</strong> 조용한 채널을 담당자가 알림을 끈 회원의 채널이라고 부른다면, 그 객체가 말하는 것은 알림 방식의 한 대안이 아니라 <strong>알림이 없다는 사실</strong>이에요. 그럴 때 Null Object 라고 부르면 읽는 사람이 더 알게 됩니다. 시나리오 2 의 2단계에서 두 회원이 같은 인스턴스를 나눠 쓴 것이 그 이름값이 실제로 나오는 자리예요 — 대안이라면 회원마다 따로 두는 것이 자연스럽지만, 부재라면 나눠 쓰는 것이 자연스럽습니다. 반대로 Strategy 를 고르면 계산을 갈아 끼우는 넓은 쓰임을 얻는 대신, 그 객체가 부재를 뜻한다는 정보는 이름에서 사라집니다.</p>
+<p><strong>State 와의 차이.</strong> 여기도 겹칩니다. 원전이 대부분의 연산을 아무 일도 하지 않게 구현한 구체 상태를 널 객체의 한 모양으로 적거든요(근거: Woolf 「The Null Object Pattern」(PLoPD3) Implementation 절 Null Object as special State). 그래서 둘을 구분하는 일은 최소 조건 2번이 맡습니다 — 이 가이드는 연산이 <strong>하나도 빠짐없이</strong> 중립 동작일 때만 널 객체로 봅니다. 발행된 <a href="design-pattern-guide/state/state-guide_v1.0.1.html">State 편</a>의 구현 절 코드를 그 조건으로 채점하면 2번에서 떨어져요. 상태 객체 다섯이 저마다 주문에 기록을 남기고, 취소된 주문의 상태 객체마저 거절 사유를 적습니다.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-java">// 연산 둘 가운데 하나만 중립 동작이다 — 원전은 널 객체로 보고, 이 가이드의 조건 2번은 떨어뜨린다
+final class NotLoggedIn implements SessionState {
+    public SessionState open(Session session, String docId) {
+        return this;                    // 아무 일도 하지 않는다
+    }
+
+    public SessionState logIn(Session session, String user) {
+        session.bind(user);             // 이 연산은 실제 동작이다
+        return new LoggedIn(user);
+    }
+}</code></pre>
+<p>여기서 헷갈리기 쉬운 포인트는 이 객체를 널 객체로 부를 수 있느냐입니다. 원전의 기준으로는 부를 수 있고, 이 가이드의 조건으로는 못 부릅니다. <strong>이 가이드가 원전보다 좁게 잡은 자리라 그대로 적어 둡니다.</strong> 좁게 잡은 까닭은 판정에 있어요 — "연산 대부분이 중립 동작" 을 조건으로 쓰면 어디까지가 대부분인지를 코드에서 판별할 수 없고, 판별할 수 없는 <code>[필수]</code> 는 판정 도구가 읽을 수 없습니다. Null Object 를 고르면 그 객체가 끝까지 그 객체라는 것을 얻고, 나눠 써도 답이 달라지지 않아요. 대신 아무것도 하지 않는 상태에서 실제로 일하는 상태로 넘어가는 길을 포기합니다. 그런 전이가 도메인에 있으면 State 로 가거나, 널 객체를 실제 객체로 바꿔 끼우는 일을 시나리오 1 의 1단계처럼 바깥 조립 코드가 맡아야 해요.</p>
+<p><strong>Proxy 와의 차이.</strong> 구분 기준은 가진 참조가 실제 객체를 감싸는지, 실제 객체를 대신하는지입니다. <a href="design-pattern-guide/proxy/proxy-guide_v1.0.1.html">Proxy 편</a>의 대리 객체는 뒤에 실제 객체를 두고 그리로 가는 접근을 가로채요. 널 객체 뒤에는 아무것도 없습니다. 코드에서는 그 구현이 같은 공통 타입의 다른 인스턴스를 필드로 가지는지만 보면 구분됩니다. 조용한 채널은 필드가 없죠. Null Object 를 고르면 협력자가 없다는 사실이 구조에 그대로 나타나는 것을 얻고, 나중에 실제 객체로 옮겨 가는 길을 포기합니다 — 그 길이 필요하면 원전도 Proxy 쪽을 가리킵니다(근거: Woolf 「The Null Object Pattern」(PLoPD3) Implementation 절 Null Object is not Proxy).</p>
+<pre tabindex="0"><code class="language-text">셋을 구분하는 것은 가운데 객체가 무엇을 가지고 있는가
+
+  Null Object   Client ──▶ [ NullObject ]                  뒤에 아무것도 없다
+  Proxy         Client ──▶ [ Proxy ] ──▶ [ RealObject ]    뒤에 실제 객체가 있다
+  Special Case  Client ──▶ [ 특수 인스턴스 ]               뒤에 없지만 자기 규칙을 수행한다
+                                 └ 그 규칙이 중립 동작이면 곧 Null Object 다</code></pre>
+<p><strong>Special Case 와의 관계.</strong> 이쪽은 경쟁이 아니라 <strong>일반화-특수화</strong>입니다. Special Case 는 특정한 경우에 대해 특별한 동작을 주는 하위 타입을 두라는 패턴이고(<a href="https://martinfowler.com/eaaCatalog/specialCase.html">Special Case</a>), 그 특별한 동작이 "아무 일도 하지 않음" 인 경우가 Null Object 예요. 그래서 코드에서 둘을 구분하는 것은 그 특수 인스턴스의 연산이 최소 조건 2번을 만족하는지 하나입니다. 이름을 모르는 고객을 거주자라는 이름의 특수 인스턴스로 두고 그 인스턴스가 실제 청구 규칙을 수행한다면 Special Case 이고 Null Object 는 아니에요. Null Object 라고 부르면 중립 동작이라는 좁은 쓰임이 이름에 실리고, 특수 경우마다 다른 규칙을 담는 넓은 쓰임은 포기합니다.</p>
+<p><strong>모름을 참으로 답하는 객체와의 차이.</strong> 이 모양이 가장 위험하게 오해받습니다. 구분 기준은 중립값이 부재 상태의 참값인지, 답을 아직 모른다는 뜻인지예요.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-java">// 최소 조건 넷을 전부 만족한다 — 그런데 이 자리에 두면 안 된다
+final class NoLimitCheck implements LoanLimit {
+    public boolean allows(String memberId, int alreadyBorrowed) {
+        return true;                // 인자와 상관없이 늘 같은 값 — 조건 2번을 만족한다
+    }
+}</code></pre>
+<p>이 코드는 한도를 2권으로 둔 구현과 함께 같은 공통 타입을 구현하고 창구가 그 타입으로만 한도 검사기를 다루며(1번), 연산 전부가 인자와 무관한 상수를 돌려주고(2번), 창구는 한도 검사 자리를 비우지 않으며(3번), 상태를 갖지 않습니다(4번). 조건으로는 널 객체예요. 그런데 시나리오 3 의 3단계에서 본 대로, 한도를 2권으로 둔 판이 거절하던 세 번째 대출이 이 판에서는 거절 줄 없이 성립했습니다. 구분 기준은 하나입니다 — <strong>중립값이 협력자가 없는 상태의 참값인가.</strong> 조용한 채널의 발송 건수 0 은 참값이에요. 한 건도 보내지 않았으니까요. 한도 검사기의 "통과" 는 참값이 아닙니다. 한도를 모른다는 것이 한도가 없다는 뜻은 아니니까요.</p>
+<pre tabindex="0"><code class="language-text">연산의 답이 업무 판단을 가르는가?
+
+  가르지 않는다 (알림 발송 · 로그 기록 · 통계 수집)
+      → 협력자가 없으면 그 일이 일어나지 않는 것이 참이다.    → 널 객체를 두어도 된다
+        발송 건수 0 · 기록 줄 0 은 실제로 일어난 일의 수다
+
+  가른다 (한도 검사 · 권한 확인 · 잔액 조회)
+      → 협력자가 없으면 답이 없는 것이지 답이 중립값인 것이 아니다.
+        "모름" 을 "통과" 로 바꾸면 오류가 정상 실행처럼 보인다  → 널 객체를 두지 않는다</code></pre>
+<p>이 기준이 원전 밖의 이야기는 아닙니다. 원전도 무엇을 아무 일도 하지 않음으로 볼지는 클라이언트가 무엇을 기대하느냐에 달린 주관적인 문제라고 적고, 클라이언트들이 그 답에 동의하지 않으면 구현이 어려워진다고 대가로 듭니다(근거: Woolf 「The Null Object Pattern」(PLoPD3) Participants 절 NullObject · Consequences 절). 위험하다는 지적도 그 뒤에 이어졌어요 — 이 패턴을 조심해서 써야 하고 오류나 버그를 정상 실행처럼 보이게 만들 수 있다는 것입니다(<a href="https://en.wikipedia.org/wiki/Null_object_pattern">Null object pattern</a>). 그 지적이 가리키는 자리가 바로 위 코드예요.</p>
+<p>두 경로로 판정했을 때 답이 달라지는지도 확인해 뒀습니다. 경로 A 는 최소 조건의 <code>[필수]</code> 넷만 적용한 것이고, 경로 B 는 이 절의 구분 기준만 적용한 것이에요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>코드</th><th>경로 A (필수 조건 넷)</th><th>경로 B (이 절의 구분 기준)</th><th>달라지는가</th></tr>
+</thead>
+<tbody>
+<tr><td>구현 절 정본</td><td>Null Object</td><td>Null Object — 중립값 0 이 참값이다</td><td>같음</td></tr>
+<tr><td>발행된 Strategy 편 구현 절 코드</td><td>아님 (2번)</td><td>Strategy — 중립 동작 구현이 없다</td><td>같음</td></tr>
+<tr><td>발행된 State 편 구현 절 코드</td><td>아님 (2번)</td><td>State — 상태마다 주문에 기록을 남긴다</td><td>같음</td></tr>
+<tr><td>조용한 채널이 상태를 갖는 판</td><td>아님 (2·4번)</td><td>아님 — 실제 객체로 옮겨 간다</td><td>같음</td></tr>
+<tr><td>늘 통과를 돌려주는 한도 검사기</td><td>Null Object</td><td><strong>두면 안 된다</strong> — 중립값이 참값이 아니다</td><td><strong>달라진다</strong></td></tr>
+</tbody>
+</table>
+</div>
+<p>마지막 줄의 답이 다른 것은 실수가 아니라 이 편이 밝혀 두는 사실입니다. 두 경로가 묻는 것이 다르기 때문이에요 — 경로 A 는 "이 코드가 널 객체의 모양인가" 를 묻고, 경로 B 는 "이 자리에 널 객체를 두어도 되는가" 를 묻습니다. 앞의 물음은 코드만 보고 답할 수 있지만 뒤의 물음은 <strong>그 연산의 답이 업무에서 무엇을 가르는지</strong>를 알아야 답할 수 있어요. 그래서 뒤의 물음을 최소 조건으로 올리지 않았습니다. 올리면 코드만 보고 판정할 수 없는 <code>[필수]</code> 가 생기고, 그것은 이 절의 기준을 쓸 수 없게 만듭니다.</p>
+<h2 id="구현-예시">구현 예시</h2>
+<h3 id="상황-설정">상황 설정</h3>
+<p>시나리오가 쓴 도메인을 그대로 코드 크기로 고정합니다. 도서관 대출 창구가 회원의 대출을 기록하고 반납 기한 알림을 보내는 일이에요. 연체료·예약·서가 관리는 이 예시의 관심 밖이라 두지 않고, 메일과 문자는 실제로 보내는 대신 표준 출력에 한 줄씩 찍습니다. 날짜는 도서관이 운영일을 센 정수로 두었어요 — 세 언어 표준 라이브러리에 공통으로 있는 날짜 타입이 없기 때문입니다.</p>
+<p><strong>변하는 것</strong>은 알림 채널입니다. 실제 채널이 늘고, 회원마다 어느 채널을 가지는지가 다릅니다. <strong>고정된 것</strong>은 채널 공통 타입의 연산 둘(알림 보내기 · 보낸 건수 묻기)과 창구가 대출을 처리하는 순서예요. 입력은 회원 넷과 그들이 빌리는 책 넷이고, 출력은 대출 네 줄과 알림 두 줄, 마감 보고 네 줄입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>예시 타입</th><th>역할</th></tr>
+</thead>
+<tbody>
+<tr><td><code>BorrowNotifier</code></td><td>AbstractObject</td></tr>
+<tr><td><code>EmailNotifier</code> · <code>SmsNotifier</code></td><td>RealObject</td></tr>
+<tr><td><code>SilentNotifier</code></td><td>NullObject</td></tr>
+<tr><td><code>Member</code> 와 <code>LoanDesk</code></td><td>Client — 회원이 채널을 가지고, 창구가 그 채널에 요청을 보냅니다</td></tr>
+<tr><td><code>Loan</code></td><td>요청에 실려 가는 값. 패턴의 역할이 아닙니다</td></tr>
+</tbody>
+</table>
+</div>
+<p>세 언어를 실행해 나온 출력입니다. 셋이 글자 단위로 같아요.</p>
+<pre tabindex="0"><code class="language-text">loan L-1001 M-01 "Cosmos" due day 114
+mail -&gt; M-01 : "Cosmos" due day 114
+loan L-1002 M-02 "The Selfish Gene" due day 114
+loan L-1003 M-03 "Guns, Germs, and Steel" due day 114
+sms -&gt; M-03 : "Guns, Germs, and Steel" due day 114
+loan L-1004 M-04 "Sapiens" due day 114
+-- closing --
+mail sent 1
+sms sent 1
+silent sent 0</code></pre>
+<h3 id="구현">구현</h3>
+<div class="code-tabs" id="null-object-guide-v1-0-1-tabs1">
+<div class="code-tabs__list" role="tablist" aria-label="구현 예시 언어">
+<button type="button" class="code-tabs__tab" role="tab" id="null-object-guide-v1-0-1-tabs1-tab-java" aria-controls="null-object-guide-v1-0-1-tabs1-panel-java" aria-selected="true" tabindex="0" data-lang="java">Java</button>
+<button type="button" class="code-tabs__tab" role="tab" id="null-object-guide-v1-0-1-tabs1-tab-typescript" aria-controls="null-object-guide-v1-0-1-tabs1-panel-typescript" aria-selected="false" tabindex="-1" data-lang="typescript">TypeScript</button>
+<button type="button" class="code-tabs__tab" role="tab" id="null-object-guide-v1-0-1-tabs1-tab-rust" aria-controls="null-object-guide-v1-0-1-tabs1-panel-rust" aria-selected="false" tabindex="-1" data-lang="rust">Rust</button>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="null-object-guide-v1-0-1-tabs1-panel-java" aria-labelledby="null-object-guide-v1-0-1-tabs1-tab-java">
+<p class="code-tabs__label" aria-hidden="true">Java</p>
+<pre tabindex="0"><code class="language-java">public final class LibraryLoanDesk {
+
+    // ── 대출 기록 ────────────────────────────────────────────────────────────
+    record Loan(String id, String memberId, String title, int dueDay) {
+    }
+
+    // ── 협력자 공통 타입 ─────────────────────────────────────────────────────
+    interface BorrowNotifier {
+        void send(Loan loan);
+
+        int sentCount();
+    }
+
+    // ── 실제 동작을 하는 협력자 ──────────────────────────────────────────────
+    static final class EmailNotifier implements BorrowNotifier {
+        private int sent = 0;
+
+        @Override
+        public void send(Loan loan) {
+            System.out.println("mail -&gt; " + loan.memberId() + " : \"" + loan.title()
+                    + "\" due day " + loan.dueDay());
+            sent++;
+        }
+
+        @Override
+        public int sentCount() {
+            return sent;
+        }
+    }
+
+    static final class SmsNotifier implements BorrowNotifier {
+        private int sent = 0;
+
+        @Override
+        public void send(Loan loan) {
+            System.out.println("sms -&gt; " + loan.memberId() + " : \"" + loan.title()
+                    + "\" due day " + loan.dueDay());
+            sent++;
+        }
+
+        @Override
+        public int sentCount() {
+            return sent;
+        }
+    }
+
+    // ── 아무 일도 하지 않는 협력자 ───────────────────────────────────────────
+    static final class SilentNotifier implements BorrowNotifier {
+        @Override
+        public void send(Loan loan) {
+            // 알림을 끈 회원이다. 보낼 곳이 없으므로 아무 일도 하지 않는다.
+        }
+
+        @Override
+        public int sentCount() {
+            return 0;   // 한 건도 보내지 않았으니 0 이 참값이다
+        }
+    }
+
+    // ── 협력자를 들고 다니는 도메인 객체 ─────────────────────────────────────
+    record Member(String id, BorrowNotifier notifier) {
+    }
+
+    // ── Client ───────────────────────────────────────────────────────────────
+    static final class LoanDesk {
+        private final int today;
+        private final int period;
+        private int nextNo;
+
+        LoanDesk(int today, int period, int firstNo) {
+            this.today = today;
+            this.period = period;
+            this.nextNo = firstNo;
+        }
+
+        Loan borrow(Member member, String title) {
+            Loan loan = new Loan("L-" + nextNo++, member.id(), title, today + period);
+            System.out.println("loan " + loan.id() + " " + loan.memberId() + " \"" + loan.title()
+                    + "\" due day " + loan.dueDay());
+            member.notifier().send(loan);
+            return loan;
+        }
+    }
+
+    public static void main(String[] args) {
+        EmailNotifier mail = new EmailNotifier();
+        SmsNotifier sms = new SmsNotifier();
+        BorrowNotifier silent = new SilentNotifier();   // 인스턴스 하나를 나눠 쓴다
+
+        Member m01 = new Member("M-01", mail);
+        Member m02 = new Member("M-02", silent);
+        Member m03 = new Member("M-03", sms);
+        Member m04 = new Member("M-04", silent);
+
+        LoanDesk desk = new LoanDesk(100, 14, 1001);
+        desk.borrow(m01, "Cosmos");
+        desk.borrow(m02, "The Selfish Gene");
+        desk.borrow(m03, "Guns, Germs, and Steel");
+        desk.borrow(m04, "Sapiens");
+
+        System.out.println("-- closing --");
+        System.out.println("mail sent " + mail.sentCount());
+        System.out.println("sms sent " + sms.sentCount());
+        System.out.println("silent sent " + silent.sentCount());
+    }
+}</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="null-object-guide-v1-0-1-tabs1-panel-typescript" aria-labelledby="null-object-guide-v1-0-1-tabs1-tab-typescript">
+<p class="code-tabs__label" aria-hidden="true">TypeScript</p>
+<pre tabindex="0"><code class="language-typescript">// ── 대출 기록 ────────────────────────────────────────────────────────────────
+interface Loan {
+  readonly id: string;
+  readonly memberId: string;
+  readonly title: string;
+  readonly dueDay: number;
+}
+
+// ── 협력자 공통 타입 ─────────────────────────────────────────────────────────
+interface BorrowNotifier {
+  send(loan: Loan): void;
+  sentCount(): number;
+}
+
+// ── 실제 동작을 하는 협력자 ──────────────────────────────────────────────────
+class EmailNotifier implements BorrowNotifier {
+  private sent = 0;
+
+  send(loan: Loan): void {
+    console.log(`mail -&gt; ${loan.memberId} : "${loan.title}" due day ${loan.dueDay}`);
+    this.sent++;
+  }
+
+  sentCount(): number {
+    return this.sent;
+  }
+}
+
+class SmsNotifier implements BorrowNotifier {
+  private sent = 0;
+
+  send(loan: Loan): void {
+    console.log(`sms -&gt; ${loan.memberId} : "${loan.title}" due day ${loan.dueDay}`);
+    this.sent++;
+  }
+
+  sentCount(): number {
+    return this.sent;
+  }
+}
+
+// ── 아무 일도 하지 않는 협력자 ───────────────────────────────────────────────
+class SilentNotifier implements BorrowNotifier {
+  send(loan: Loan): void {
+    // 알림을 끈 회원이다. 보낼 곳이 없으므로 아무 일도 하지 않는다.
+  }
+
+  sentCount(): number {
+    return 0; // 한 건도 보내지 않았으니 0 이 참값이다
+  }
+}
+
+// ── 협력자를 들고 다니는 도메인 객체 ─────────────────────────────────────────
+class Member {
+  constructor(
+    readonly id: string,
+    readonly notifier: BorrowNotifier,
+  ) {}
+}
+
+// ── Client ───────────────────────────────────────────────────────────────────
+class LoanDesk {
+  private nextNo: number;
+
+  constructor(
+    private readonly today: number,
+    private readonly period: number,
+    firstNo: number,
+  ) {
+    this.nextNo = firstNo;
+  }
+
+  borrow(member: Member, title: string): Loan {
+    const loan: Loan = {
+      id: `L-${this.nextNo++}`,
+      memberId: member.id,
+      title,
+      dueDay: this.today + this.period,
+    };
+    console.log(`loan ${loan.id} ${loan.memberId} "${loan.title}" due day ${loan.dueDay}`);
+    member.notifier.send(loan);
+    return loan;
+  }
+}
+
+const mail = new EmailNotifier();
+const sms = new SmsNotifier();
+const silent: BorrowNotifier = new SilentNotifier(); // 인스턴스 하나를 나눠 쓴다
+
+const m01 = new Member("M-01", mail);
+const m02 = new Member("M-02", silent);
+const m03 = new Member("M-03", sms);
+const m04 = new Member("M-04", silent);
+
+const desk = new LoanDesk(100, 14, 1001);
+desk.borrow(m01, "Cosmos");
+desk.borrow(m02, "The Selfish Gene");
+desk.borrow(m03, "Guns, Germs, and Steel");
+desk.borrow(m04, "Sapiens");
+
+console.log("-- closing --");
+console.log(`mail sent ${mail.sentCount()}`);
+console.log(`sms sent ${sms.sentCount()}`);
+console.log(`silent sent ${silent.sentCount()}`);</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="null-object-guide-v1-0-1-tabs1-panel-rust" aria-labelledby="null-object-guide-v1-0-1-tabs1-tab-rust">
+<p class="code-tabs__label" aria-hidden="true">Rust</p>
+<pre tabindex="0"><code class="language-rust">use std::cell::Cell;
+use std::rc::Rc;
+
+// ── 대출 기록 ────────────────────────────────────────────────────────────────
+struct Loan {
+    id: String,
+    member_id: String,
+    title: String,
+    due_day: u32,
+}
+
+// ── 협력자 공통 타입 ─────────────────────────────────────────────────────────
+trait BorrowNotifier {
+    fn send(&amp;self, loan: &amp;Loan);
+    fn sent_count(&amp;self) -&gt; u32;
+}
+
+// ── 실제 동작을 하는 협력자 ──────────────────────────────────────────────────
+struct EmailNotifier {
+    sent: Cell&lt;u32&gt;,
+}
+
+impl BorrowNotifier for EmailNotifier {
+    fn send(&amp;self, loan: &amp;Loan) {
+        println!(
+            "mail -&gt; {} : \"{}\" due day {}",
+            loan.member_id, loan.title, loan.due_day
+        );
+        self.sent.set(self.sent.get() + 1);
+    }
+
+    fn sent_count(&amp;self) -&gt; u32 {
+        self.sent.get()
+    }
+}
+
+struct SmsNotifier {
+    sent: Cell&lt;u32&gt;,
+}
+
+impl BorrowNotifier for SmsNotifier {
+    fn send(&amp;self, loan: &amp;Loan) {
+        println!(
+            "sms -&gt; {} : \"{}\" due day {}",
+            loan.member_id, loan.title, loan.due_day
+        );
+        self.sent.set(self.sent.get() + 1);
+    }
+
+    fn sent_count(&amp;self) -&gt; u32 {
+        self.sent.get()
+    }
+}
+
+// ── 아무 일도 하지 않는 협력자 ───────────────────────────────────────────────
+struct SilentNotifier;
+
+impl BorrowNotifier for SilentNotifier {
+    fn send(&amp;self, _loan: &amp;Loan) {
+        // 알림을 끈 회원이다. 보낼 곳이 없으므로 아무 일도 하지 않는다.
+    }
+
+    fn sent_count(&amp;self) -&gt; u32 {
+        0 // 한 건도 보내지 않았으니 0 이 참값이다
+    }
+}
+
+// ── 협력자를 들고 다니는 도메인 객체 ─────────────────────────────────────────
+struct Member {
+    id: String,
+    notifier: Rc&lt;dyn BorrowNotifier&gt;,
+}
+
+impl Member {
+    fn new(id: &amp;str, notifier: Rc&lt;dyn BorrowNotifier&gt;) -&gt; Member {
+        Member {
+            id: id.to_string(),
+            notifier,
+        }
+    }
+}
+
+// ── Client ───────────────────────────────────────────────────────────────────
+struct LoanDesk {
+    today: u32,
+    period: u32,
+    next_no: Cell&lt;u32&gt;,
+}
+
+impl LoanDesk {
+    fn new(today: u32, period: u32, first_no: u32) -&gt; LoanDesk {
+        LoanDesk {
+            today,
+            period,
+            next_no: Cell::new(first_no),
+        }
+    }
+
+    fn borrow(&amp;self, member: &amp;Member, title: &amp;str) -&gt; Loan {
+        let loan = Loan {
+            id: format!("L-{}", self.next_no.get()),
+            member_id: member.id.clone(),
+            title: title.to_string(),
+            due_day: self.today + self.period,
+        };
+        self.next_no.set(self.next_no.get() + 1);
+        println!(
+            "loan {} {} \"{}\" due day {}",
+            loan.id, loan.member_id, loan.title, loan.due_day
+        );
+        member.notifier.send(&amp;loan);
+        loan
+    }
+}
+
+fn main() {
+    let mail: Rc&lt;dyn BorrowNotifier&gt; = Rc::new(EmailNotifier { sent: Cell::new(0) });
+    let sms: Rc&lt;dyn BorrowNotifier&gt; = Rc::new(SmsNotifier { sent: Cell::new(0) });
+    let silent: Rc&lt;dyn BorrowNotifier&gt; = Rc::new(SilentNotifier); // 인스턴스 하나를 나눠 쓴다
+
+    let m01 = Member::new("M-01", Rc::clone(&amp;mail));
+    let m02 = Member::new("M-02", Rc::clone(&amp;silent));
+    let m03 = Member::new("M-03", Rc::clone(&amp;sms));
+    let m04 = Member::new("M-04", Rc::clone(&amp;silent));
+
+    let desk = LoanDesk::new(100, 14, 1001);
+    desk.borrow(&amp;m01, "Cosmos");
+    desk.borrow(&amp;m02, "The Selfish Gene");
+    desk.borrow(&amp;m03, "Guns, Germs, and Steel");
+    desk.borrow(&amp;m04, "Sapiens");
+
+    println!("-- closing --");
+    println!("mail sent {}", mail.sent_count());
+    println!("sms sent {}", sms.sent_count());
+    println!("silent sent {}", silent.sent_count());
+}</code></pre>
+</div>
+</div>
+<p>시나리오의 단계를 코드 줄로 짚어 봅시다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>시나리오 단계</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td>1 의 1단계 — 조립 코드가 채널 셋을 만든다</td><td>86~88행</td><td>86~88행</td><td>117~119행</td></tr>
+<tr><td>1 의 2단계 — 회원이 채널을 공통 타입 자리로 받는다</td><td>61행 · 90~93행</td><td>54~59행 · 90~93행</td><td>69~72행 · 121~124행</td></tr>
+<tr><td>1 의 3단계 — 창구가 채널에 요청을 넘긴다</td><td>80행</td><td>81행</td><td>111행</td></tr>
+<tr><td>1 의 4단계 — 실제 채널이 보내고 건수를 올린다</td><td>19~23행</td><td>19~22행</td><td>24~30행</td></tr>
+<tr><td>1 의 6단계 — 조용한 채널이 아무 일도 하지 않는다</td><td>49~52행</td><td>44~46행</td><td>59~61행</td></tr>
+<tr><td>1 의 7단계 — 널 결과 0 을 돌려준다</td><td>54~57행</td><td>48~50행</td><td>63~65행</td></tr>
+<tr><td>2 의 2단계 — 인스턴스 하나를 둘이 나눠 쓴다</td><td>88행 · 91행 · 93행</td><td>88행 · 91행 · 93행</td><td>119행 · 122행 · 124행</td></tr>
+</tbody>
+</table>
+</div>
+<p>여기서 가장 중요한 줄은 3단계입니다. 세 언어 모두 한 줄이고, Java 는 <code>member.notifier().send(loan);</code>, TypeScript 는 <code>member.notifier.send(loan);</code>, Rust 는 <code>member.notifier.send(&amp;loan);</code> 이에요. 이 한 줄이 최소 조건 1번과 3번을 동시에 만족시킵니다. 창구는 그 채널이 무엇인지 묻지 않고 비었는지도 묻지 않죠. 이 줄을 <code>if (member.notifier() != null) member.notifier().send(loan);</code> 으로 바꾸는 순간 시나리오 3 의 1단계가 되고, 회원의 필드 타입도 비울 수 있게 열어야 합니다.</p>
+<p>언어 차이는 세 자리에서만 나타납니다.</p>
+<ul>
+<li><strong>소유권</strong> — 조용한 채널 하나를 회원 둘이 나눠 쓰는 일은 세 언어가 다 하지만 Rust 만 <code>Rc</code> 로 소유권을 나눠 갖습니다(119·122·124행의 <code>Rc::clone</code>). Java 와 TypeScript 는 참조를 그대로 넘기면 끝이에요.</li>
+<li><strong>안에서 바뀌는 값</strong> — 실제 채널이 발송 건수를 올리는데, 창구가 채널을 공유 참조로 가지고 있어서 Rust 는 <code>Cell</code> 을 씁니다(20·38행). 조용한 채널에는 그 필드가 없어요 — 셀 것이 없으니까요.</li>
+<li><strong>값이 없는 구현을 적는 문법</strong> — 조용한 채널을 Java 는 필드 없는 클래스로, TypeScript 는 필드 없는 클래스로, Rust 는 유닛 구조체로 적습니다(56행).</li>
+</ul>
+<h3 id="실제-라이브러리에서">실제 라이브러리에서</h3>
+<p>표준 라이브러리에 이 모양이 그대로 있습니다. 둘 다 링크로 확인한 것만 적었어요.</p>
+<ul>
+<li><strong><code>java.io.OutputStream.nullOutputStream()</code></strong> — 돌려주는 것이 모든 바이트를 버리는 <code>OutputStream</code> 입니다. 여기서 <code>OutputStream</code> 이 AbstractObject 이고, 파일이나 소켓으로 쓰는 구현들이 RealObject, 이 메서드가 돌려주는 인스턴스가 NullObject 예요. 스트림이 열려 있는 동안 세 가지 <code>write</code> 와 <code>flush</code> 가 아무 일도 하지 않는다고 문서가 적고, 이것이 최소 조건 2번의 모양 그대로입니다(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/OutputStream.html#nullOutputStream()">OutputStream (Java SE 21)</a>). 눈여겨볼 것은 그다음이에요 — <strong>닫은 뒤에 <code>write</code> 를 부르면 <code>IOException</code> 을 던집니다.</strong> 삼켜도 되는 것(열려 있는 동안의 쓰기)과 삼키면 안 되는 것(닫힌 스트림에 쓰기)을 표준 라이브러리가 구분해 둔 자리라, 비교 절에서 세운 기준이 실제 API 에 그대로 있습니다.</li>
+<li><strong><code>std::io::sink()</code></strong> — 돌려주는 <code>Sink</code> 가 <code>Write</code> 를 구현하고, 쓰기 요청을 전부 성공으로 받아들이면서 버퍼의 내용을 들여다보지 않는다고 문서가 적습니다(<a href="https://doc.rust-lang.org/std/io/fn.sink.html">std::io::sink</a>). <code>Write</code> 가 AbstractObject, <code>File</code> 같은 구현이 RealObject, <code>Sink</code> 가 NullObject 자리예요. 널 참조가 없는 언어의 표준 라이브러리가 <code>Option&lt;W&gt;</code> 를 쓰지 않고 이 타입을 둔 것이, 시나리오 3 에서 본 결론과 같은 자리입니다 — 부재일 때의 답을 호출 자리마다 적는 대신 이름 붙은 타입 하나에 담아 둔 것이죠.</li>
+</ul>
+<h2 id="스스로-점검하기">스스로 점검하기</h2>
+<ol>
+<li>
+<p><strong>경계 판정.</strong> 아래 코드를 최소 조건 1~4번으로 판정해 보세요. Null Object 입니까? 아니라면 몇 번에서 걸리고, 그 자리를 어떻게 고치면 통과합니까?</p>
+<pre tabindex="0"><code class="language-java">interface AuditTrail {
+    void record(String event);
+    int lineCount();
+}
+
+final class BufferedAudit implements AuditTrail {
+    private final List&lt;String&gt; lines = new ArrayList&lt;&gt;();
+
+    public void record(String event) { lines.add(event); }
+
+    public int lineCount() { return lines.size(); }
+}
+
+final class QuietAudit implements AuditTrail {
+    private int seen = 0;
+
+    public void record(String event) { seen++; }
+
+    public int lineCount() { return seen; }
+}</code></pre>
+</li>
+<li>
+<p><strong>비교 판별.</strong> 어떤 팀이 <code>interface Compressor { byte[] pack(byte[] raw); }</code> 를 만들고, 그 구현 가운데 하나인 <code>NoCompression</code> 이 받은 바이트를 그대로 돌려줍니다. 다른 팀은 <code>interface ChangeLog { void record(String event); }</code> 를 만들고 <code>SilentLog</code> 이 그 연산을 아무 일도 하지 않게 구현했어요. 둘 중 어느 쪽을 Null Object 라고 부를 수 있고, 어느 쪽은 Strategy 라고만 부르는 편이 나을까요? 최소 조건 2번을 근거로 판단하고, <strong>두 이름이 동시에 맞는 경우가 있다면</strong> 그것이 어느 쪽인지도 적으세요.</p>
+</li>
+<li>
+<p><strong>책임·순서.</strong> 시나리오 1 의 3단계에서 창구가 하는 일을 회원 객체로 옮긴다고 해 봅시다. 창구는 대출만 기록하고, 회원이 <code>notifyBorrow(loan)</code> 같은 메서드로 자기 채널에 넘기는 식입니다. 이때 최소 조건 1~4번 가운데 성립하지 않게 되는 것이 있습니까? 없다면, 그래도 이 변경으로 무엇이 달라지는지 시나리오 2 의 3단계와 견줘 한 문장으로 적으세요.</p>
+</li>
+<li>
+<p><strong>자리 판정.</strong> 어떤 서비스가 결제 승인을 받는 협력자 <code>PaymentGateway</code> 를 두고, 개발 환경에서 쓸 <code>AlwaysApprove</code> 구현을 만들었습니다. 이 구현은 최소 조건 넷을 전부 만족해요. 그런데도 이것을 널 객체로 부르면 안 되는 이유를 비교 절의 기준 한 문장으로 설명하고, 시나리오 3 의 3단계에서 실제로 무엇이 일어났는지 함께 적으세요.</p>
+</li>
+</ol>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li>Bobby Woolf, <a href="http://www.cs.uni.edu/~wallingf/patterns/elementary/papers/null-object.pdf">「The Null Object Pattern」</a> — 이 패턴의 원전입니다. 『Pattern Languages of Program Design 3』(PLoPD3)의 「General Purpose Design Patterns」 부 1장에 실렸어요. 최소 조건 1번의 근거가 Intent 절과 Participants 절 NullObject, 2번이 같은 두 자리, 3번이 Applicability 절, 4번이 Implementation 절 Transformation to Real Object 와 Consequences 절입니다. <code>[선택]</code> 5~8번의 근거는 차례로 Implementation 절 Null Object as Singleton · Participants 절 NullObject · Implementation 절 Special null instance of Real Object · Participants 절 AbstractObject 예요. 비교 절이 인용한 "한결같이 아무 일도 하지 않는 구체 전략이 곧 널 객체" 는 Implementation 절 Null Object as special Strategy 에, Proxy 와 구분되는 자리는 Implementation 절 Null Object is not Proxy 에 있습니다. 이 패턴의 선행 발표는 Thomas Kühne 의 「Void Value」(1996)입니다.</li>
+<li><a href="https://martinfowler.com/eaaCatalog/specialCase.html">Special Case (PoEAA 카탈로그)</a> — 비교 절의 「일반화-특수화」 항목이 이 문서를 근거로 씁니다. 특정한 경우에 특별한 동작을 주는 하위 타입을 두라는 패턴이고, 그 특별한 동작이 중립 동작인 경우가 이 편의 주제예요. 『Patterns of Enterprise Application Architecture』 18장에 실려 있습니다.</li>
+<li><a href="https://en.wikipedia.org/wiki/Null_object_pattern">Null object pattern (Wikipedia)</a> — 비교 절이 인용한 "오류나 버그를 정상 실행처럼 보이게 만들 수 있다" 는 지적의 출처입니다.</li>
+<li><a href="reference/gof-vocabulary/gof-vocabulary-ref_v1.0.2.html">참고 문서 「GoF 공통 어휘」</a> — 「개념 정리」의 AbstractObject 항목이 「인터페이스에 프로그래밍한다」를, 최소 조건 4번이 「내재 상태와 외재 상태」를 가리킵니다. 두어도 되는 필드와 안 되는 필드를 구분하는 어휘가 거기 있어요.</li>
+<li><a href="design-pattern-guide/strategy/strategy-guide_v1.1.1.html">Strategy 가이드</a> — 비교 절이 그 편의 필수 조건 셋으로 이 가이드의 예시 코드를 채점하고, 반대로 그 편의 구현 절 코드를 이 편의 조건으로 채점합니다.</li>
+<li><a href="design-pattern-guide/state/state-guide_v1.0.1.html">State 가이드</a> — 비교 절이 그 편의 구현 절 코드를 이 편의 조건으로 채점하는 자리에서 씁니다.</li>
+<li><a href="design-pattern-guide/proxy/proxy-guide_v1.0.1.html">Proxy 가이드</a> — 비교 절이 대리 객체와 널 객체의 차이를 구분하는 자리에서 씁니다.</li>
+<li><a href="design-pattern-guide/singleton/singleton-guide_v1.0.1.html">Singleton 가이드</a> — 개요가 함께 쓰는 패턴으로 들고, <code>[선택]</code> 5번이 가리키는 공유 방식의 배경입니다.</li>
+<li><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/OutputStream.html#nullOutputStream()">OutputStream (Java SE 21 API 문서)</a> — 「실제 라이브러리에서」의 <code>nullOutputStream()</code> 동작과 닫힌 뒤의 <code>IOException</code> 근거입니다.</li>
+<li><a href="https://doc.rust-lang.org/std/io/fn.sink.html">std::io::sink (Rust 표준 라이브러리 문서)</a> — 「실제 라이브러리에서」의 <code>Sink</code> 가 쓰기를 전부 받아들이고 내용을 보지 않는다는 근거입니다.</li>
+<li><a href="https://doc.rust-lang.org/std/option/index.html">std::option (Rust 표준 라이브러리 문서)</a> — 시나리오 3 이 기대는 사실, 곧 Rust 의 참조가 늘 유효한 자리를 가리켜야 하고 널 참조가 없다는 것의 근거입니다.</li>
+</ul>
+</main>
+<footer class="guide-footer">
+<p>원본은 <code>pattern-guide/design-pattern-guide/null-object/null-object-guide_v1.0.1.md</code>입니다. 이 HTML 은 원본 md 에서 생성한 파생물이라, 고칠 곳이 있으면 md 를 고친 뒤 다시 렌더합니다.</p>
+</footer>
+</div>
+<script>
+/* pattern-guide HTML — 세 언어 코드 탭. render-guides.py 가 HTML 에 인라인한다.
+ * JS 가 없으면 모든 패널이 보인다(마크업 기본값). 초기화하면서 선택 안 된 패널에 hidden 을 건다.
+ * 키보드: ←/→ 이웃 탭, Home/End 처음/끝 탭(WAI-ARIA APG Tabs, 자동 활성화).
+ */
+(function () {
+  "use strict";
+
+  var STORE_KEY = "pattern-guide:code-lang";
+  var widgets = [];
+
+  function readPref() {
+    try {
+      return window.localStorage.getItem(STORE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writePref(lang) {
+    try {
+      window.localStorage.setItem(STORE_KEY, lang);
+    } catch (e) {
+      /* 저장소를 못 쓰면 이번 페이지 안에서만 유지한다 */
+    }
+  }
+
+  function select(widget, tab, moveFocus) {
+    widget.tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+    if (moveFocus) tab.focus();
+  }
+
+  function tabForLang(widget, lang) {
+    for (var i = 0; i < widget.tabs.length; i++) {
+      if (widget.tabs[i].getAttribute("data-lang") === lang) return widget.tabs[i];
+    }
+    return null;
+  }
+
+  function activate(widget, tab, moveFocus) {
+    select(widget, tab, moveFocus);
+    var lang = tab.getAttribute("data-lang");
+    if (!lang) return;
+    writePref(lang);
+    widgets.forEach(function (other) {
+      if (other === widget) return;
+      var match = tabForLang(other, lang);
+      if (match) select(other, match, false);
+    });
+  }
+
+  function init(root) {
+    var list = root.querySelector(".code-tabs__list");
+    if (!list) return;
+    var tabs = Array.prototype.slice.call(list.querySelectorAll(".code-tabs__tab"));
+    if (!tabs.length) return;
+    var widget = { root: root, tabs: tabs };
+    widgets.push(widget);
+
+    list.addEventListener("click", function (event) {
+      var tab = event.target.closest(".code-tabs__tab");
+      if (tab && tabs.indexOf(tab) !== -1) activate(widget, tab, false);
+    });
+
+    list.addEventListener("keydown", function (event) {
+      var current = event.target.closest(".code-tabs__tab");
+      var index = tabs.indexOf(current);
+      if (index === -1) return;
+      var next = null;
+      switch (event.key) {
+        case "ArrowRight":
+          next = tabs[(index + 1) % tabs.length];
+          break;
+        case "ArrowLeft":
+          next = tabs[(index - 1 + tabs.length) % tabs.length];
+          break;
+        case "Home":
+          next = tabs[0];
+          break;
+        case "End":
+          next = tabs[tabs.length - 1];
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      activate(widget, next, true);
+    });
+
+    var initial = tabForLang(widget, readPref());
+    if (!initial) {
+      initial = tabs.filter(function (t) {
+        return t.getAttribute("aria-selected") === "true";
+      })[0] || tabs[0];
+    }
+    select(widget, initial, false);
+    root.setAttribute("data-enhanced", "");
+  }
+
+  function boot() {
+    Array.prototype.forEach.call(document.querySelectorAll(".code-tabs"), init);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>

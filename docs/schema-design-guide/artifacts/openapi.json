@@ -1,0 +1,945 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "단일 매장 주문 접수 교재 API",
+    "version": "2.0.0",
+    "description": "Bounded teaching contract. Authentication and catalog are dependencies; no payment, inventory or shipping guarantees."
+  },
+  "paths": {
+    "/offers": {
+      "get": {
+        "operationId": "listOffers",
+        "summary": "구매자용 선택 가능한 상품",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-source-ids": [
+          "E00"
+        ],
+        "responses": {
+          "200": {
+            "description": "카탈로그 조회 시점의 가격 조건",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "items"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Offer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN: role mismatch before order lookup",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE: no acceptance committed; retry same key on ambiguous outcome",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "post": {
+        "operationId": "placeOrder",
+        "summary": "주문 접수 또는 같은 접수 영수증 재생",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-source-ids": [
+          "U01",
+          "R09"
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaceOrderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "최초 접수와 재생 모두 같은 역사적 접수 영수증. 현재 상태는 GET으로 확인",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptanceReceipt"
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "description": "/orders/{orderId}",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Idempotent-Replay": {
+                "description": "재생이면 true, 최초이면 false",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD_REQUEST: malformed JSON or cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN: role mismatch before order lookup",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT: state/version conflict, OFFER_CHANGED, PRODUCT_UNAVAILABLE or IDEMPOTENCY_KEY_REUSED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "INVALID_INPUT: field/range/duplicate product violation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_UNAVAILABLE: no acceptance committed; retry same key on ambiguous outcome",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "description": "Canonical fingerprint is SHA-256(JSON.stringify([\"place-order/v1\", items.map(i=>[lowercase UUID, quantity, expectedOfferRevision])])). Item order is significant. Same buyer/key and different fingerprint -> 409. Only successful acceptance is retained."
+      }
+    },
+    "/orders/{orderId}": {
+      "get": {
+        "operationId": "getMyOrder",
+        "summary": "본인 주문 상세",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-source-ids": [
+          "E01"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "원본 DB 한 statement 스냅샷의 상세",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN: role mismatch before order lookup",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND: absent or not owned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "INVALID_INPUT: field/range/duplicate product violation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{orderId}/cancellations": {
+      "post": {
+        "operationId": "cancelOrder",
+        "summary": "구매자 취소",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-source-ids": [
+          "U02",
+          "R02",
+          "R11"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeRequest"
+              }
+            }
+          }
+        },
+        "description": "Only PLACED with matching version may transition. Repeat of the old version -> 409. Server verifies trusted role and, for cancellation, ownership.",
+        "responses": {
+          "200": {
+            "description": "전이 완료",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "orderId",
+                    "state",
+                    "version"
+                  ],
+                  "properties": {
+                    "orderId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "const": "CANCELLED"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "const": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD_REQUEST: malformed JSON or cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN: role mismatch before order lookup",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND: absent or not owned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT: state/version conflict, OFFER_CHANGED, PRODUCT_UNAVAILABLE or IDEMPOTENCY_KEY_REUSED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "INVALID_INPUT: field/range/duplicate product violation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{orderId}/confirmations": {
+      "post": {
+        "operationId": "confirmOrder",
+        "summary": "판매자 확정",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-source-ids": [
+          "U03",
+          "R02",
+          "R11"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeRequest"
+              }
+            }
+          }
+        },
+        "description": "Only PLACED with matching version may transition. Repeat of the old version -> 409. Server verifies trusted role and, for cancellation, ownership.",
+        "responses": {
+          "200": {
+            "description": "전이 완료",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "orderId",
+                    "state",
+                    "version"
+                  ],
+                  "properties": {
+                    "orderId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "const": "CONFIRMED"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "const": 2
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD_REQUEST: malformed JSON or cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN: role mismatch before order lookup",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NOT_FOUND: absent or not owned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "CONFLICT: state/version conflict, OFFER_CHANGED, PRODUCT_UNAVAILABLE or IDEMPOTENCY_KEY_REUSED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "INVALID_INPUT: field/range/duplicate product violation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seller/orders": {
+      "get": {
+        "operationId": "listPendingOrders",
+        "summary": "판매자 접수 대기 목록",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "x-source-ids": [
+          "E02"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "base64url JSON [placedAt,orderId], both validated; opaque client cursor, not an authorization token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "페이지별 스냅샷; 마지막 항목 다음 cursor. 잔여가 없으면 null",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "items",
+                    "nextCursor"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "maxItems": 100,
+                      "items": {
+                        "$ref": "#/components/schemas/PendingOrder"
+                      }
+                    },
+                    "nextCursor": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "BAD_REQUEST: malformed JSON or cursor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHENTICATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN: role mismatch before order lookup",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "INVALID_INPUT: field/range/duplicate product violation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code",
+          "message",
+          "traceId"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "traceId": {
+            "type": "string"
+          }
+        }
+      },
+      "Offer": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "productId",
+          "name",
+          "unitPriceKrw",
+          "offerRevision"
+        ],
+        "properties": {
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "unitPriceKrw": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "offerRevision": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._-]{1,100}$"
+          }
+        }
+      },
+      "OrderLineView": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lineNo",
+          "productId",
+          "productName",
+          "quantity",
+          "unitPriceKrw",
+          "lineTotalKrw"
+        ],
+        "properties": {
+          "lineNo": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 99
+          },
+          "unitPriceKrw": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "lineTotalKrw": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99000000
+          }
+        }
+      },
+      "OrderDetail": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "orderId",
+          "placedAt",
+          "version",
+          "lines",
+          "totalKrw",
+          "state",
+          "canCancel"
+        ],
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "placedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC ISO-8601 milliseconds, for example 2026-10-15T01:00:01.000Z"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "lines": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/OrderLineView"
+            }
+          },
+          "totalKrw": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1980000000
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "PLACED",
+              "CONFIRMED",
+              "CANCELLED"
+            ]
+          },
+          "canCancel": {
+            "type": "boolean",
+            "description": "Advisory at read time; command rechecks"
+          }
+        }
+      },
+      "PendingOrder": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "orderId",
+          "placedAt",
+          "version",
+          "lines",
+          "totalKrw"
+        ],
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "placedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC ISO-8601 milliseconds, for example 2026-10-15T01:00:01.000Z"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          },
+          "lines": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "$ref": "#/components/schemas/OrderLineView"
+            }
+          },
+          "totalKrw": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1980000000
+          }
+        }
+      },
+      "PlaceOrderRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "items"
+        ],
+        "properties": {
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "description": "productId must be unique; item order determines lineNo",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "productId",
+                "quantity",
+                "expectedOfferRevision"
+              ],
+              "properties": {
+                "productId": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "quantity": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 99
+                },
+                "expectedOfferRevision": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9._-]{1,100}$"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AcceptanceReceipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "orderId",
+          "acceptedAt",
+          "acceptedTotalKrw"
+        ],
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "acceptedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC ISO-8601 milliseconds, for example 2026-10-15T01:00:01.000Z"
+          },
+          "acceptedTotalKrw": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1980000000
+          }
+        }
+      },
+      "ChangeRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectedVersion"
+        ],
+        "properties": {
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2
+          }
+        }
+      },
+      "OrderChange": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "orderId",
+          "state",
+          "version"
+        ],
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "CONFIRMED",
+              "CANCELLED"
+            ]
+          },
+          "version": {
+            "type": "integer",
+            "const": 2
+          }
+        }
+      }
+    }
+  }
+}

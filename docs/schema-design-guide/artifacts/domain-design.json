@@ -1,0 +1,99 @@
+{
+  "format": "teaching-domain-design/1",
+  "context": "single-store order acceptance",
+  "aggregate": {
+    "root": "Order",
+    "identity": "OrderId",
+    "members": [
+      "immutable accepted lines"
+    ],
+    "boundaryReason": [
+      "R01 nonempty order",
+      "R03 accepted snapshots immutable",
+      "R06 total over a bounded 1..20 collection"
+    ],
+    "externalReferences": [
+      "BuyerId",
+      "ProductId"
+    ],
+    "notMembers": [
+      "live Catalog product",
+      "Buyer profile",
+      "submission key record"
+    ]
+  },
+  "values": [
+    {
+      "name": "Quantity",
+      "invariant": "integer 1..99"
+    },
+    {
+      "name": "UnitPriceKrw",
+      "invariant": "integer 0..1000000 KRW"
+    },
+    {
+      "name": "AcceptedLine",
+      "invariant": "immutable productId/name/quantity/price/revision; lineNo in sequence"
+    }
+  ],
+  "operations": [
+    {
+      "name": "Order.place",
+      "input": "id,buyerId,placedAt,items,accepted catalog snapshot",
+      "ruleIds": [
+        "R01",
+        "R03",
+        "R05",
+        "R07",
+        "R08"
+      ],
+      "result": "PLACED v1; lines frozen"
+    },
+    {
+      "name": "Order.rehydrate",
+      "input": "trusted repository snapshot, still structurally validated",
+      "ruleIds": [
+        "R01",
+        "R05",
+        "R07"
+      ],
+      "result": "restore persisted state without current catalog lookup"
+    },
+    {
+      "name": "Order.cancel/confirm",
+      "input": "expectedVersion",
+      "ruleIds": [
+        "R02",
+        "R11"
+      ],
+      "result": "terminal state v2 in memory; persistence must still compare version"
+    },
+    {
+      "name": "Order.totalKrw",
+      "input": "accepted lines",
+      "ruleIds": [
+        "R06"
+      ],
+      "result": "safe integer derived total"
+    }
+  ],
+  "applicationResponsibilities": [
+    "authenticate and authorize role/owner",
+    "claim retry key and compare canonical fingerprint",
+    "fetch catalog snapshot with timeout",
+    "open/commit/rollback transaction",
+    "save conditionally; map 0 rows to domain-facing conflict",
+    "publish response only after persistence success"
+  ],
+  "repositoryContract": {
+    "load": "one consistent order snapshot including ordered lines",
+    "insert": "new header and all lines in caller transaction",
+    "saveTransition": "compare original state/version and owner for buyer; return saved or conflict",
+    "replayReceipt": "load immutable original acceptance data without repricing"
+  },
+  "limitations": [
+    "domain class cannot prevent stale DB writes alone",
+    "no payment or stock invariant",
+    "DTO projection helpers are included for teaching; may be separate application mappers"
+  ]
+}

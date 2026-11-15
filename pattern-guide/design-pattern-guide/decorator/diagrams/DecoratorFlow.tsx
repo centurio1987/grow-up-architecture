@@ -38,7 +38,7 @@ export default function DecoratorFlow() {
   const ink = f.node.process.tagColor;
   return (
     <Canvas width={W} height={632}>
-      <DiagramHeader eyebrow="Decorator collaboration" title="요청은 한 층도 건너뛰지 않고 끝까지 닿는다" />
+      <DiagramHeader eyebrow="Decorator collaboration" title="요청은 한 층도 건너뛰지 않고 끝까지 전달된다" />
       {LANES.map((l) => (
         <Lifeline key={l.id} x={l.x} y={TOP} height={LIFE_H} headWidth={HEAD_W} label={l.label} />
       ))}

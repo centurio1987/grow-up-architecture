@@ -34,7 +34,7 @@ export default function ProxyFlow() {
   const ink = f.node.process.tagColor;
   return (
     <Canvas width={W} height={545}>
-      <DiagramHeader eyebrow="Proxy collaboration" title="통제가 먼저 서고, 전달은 통과했을 때만" />
+      <DiagramHeader eyebrow="Proxy collaboration" title="통제가 먼저 오고, 전달은 통과했을 때만" />
       {LANES.map((l) => (
         <Lifeline key={l.id} x={l.x} y={TOP} height={LIFE_H} headWidth={HEAD_W} label={l.label} />
       ))}

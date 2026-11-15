@@ -1,0 +1,55 @@
+{
+  "node": "v22.22.3",
+  "v8": "12.4.254.21-node.56",
+  "platform": "darwin-arm64",
+  "cases": {
+    "globalRebind": {
+      "before": 1000000,
+      "after": 0,
+      "oldValueCollected": true,
+      "closureStillAlive": true
+    },
+    "closureSize": {
+      "bytesPerClosure_ref1": 56,
+      "bytesPerClosure_ref50": 56
+    },
+    "unreferencedLocal": {
+      "closureResult": 1000000,
+      "bigCollected": true
+    },
+    "sharedContext": {
+      "closureResult": 1,
+      "bigCollected": false,
+      "retainedMB": 7.6
+    },
+    "sharedContextCleared": {
+      "closureResult": 1000000,
+      "bigCollected": true
+    },
+    "sharedContextFunctionKeyword": {
+      "closureResult": 1,
+      "bigCollected": false
+    },
+    "sharedContextNoRefs": {
+      "retainedWhileRegistered": true,
+      "collectedAfterClear": true
+    },
+    "arrowThis": {
+      "usesThisResult": 1,
+      "receiverRetainedWhenThisUsed": true,
+      "receiverCollectedWhenThisUnused": true,
+      "noThisResult": 0
+    },
+    "directEval": {
+      "evalCanSeeBig": 1000000,
+      "bigCollected": false
+    },
+    "longLivedCallback": {
+      "retainedWhileRegistered": true,
+      "collectedAfterClear": true
+    },
+    "cycle": {
+      "cycleCollected": true
+    }
+  }
+}

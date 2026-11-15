@@ -4,7 +4,7 @@ slug: ddd-tactical-terms
 spec: reference-note
 spec_version: 1.0.0
 version: 1.0.1
-status: published
+status: legacy
 date: 2026-09-21
 serves: [account, quantity, party, accountability, knowledge-level, transaction, posting-rule, measurement, observation, range, temporal-property]
 ---
@@ -173,11 +173,11 @@ Account 가이드의 전기 흐름 — GeneralLedger 가 저장소와 전기 서
 
 ## 가이드로 돌아가기
 
-- [Account 가이드 「상황 설정」](../../ddd-analysis-pattern-guide/account/account-guide_v1.1.0.md#상황-설정) — 표의 네 행이 이 문서의 Bounded Context · 불변식 · Aggregate Root · Entity · Value Object · id 참조를 그대로 써요. 그 가이드는 여덟 낱말의 정의를 이 문서로 넘기고 표 앞에는 읽기 모델 · 도메인 이벤트 · Factory · 도메인 서비스 넷만 펴 두었으니, 표로 가기 전에 여기를 한 번 지나오시면 됩니다. 표 아래의 시간표가 id 참조 절의 예이고, `GeneralLedger` 가 Repository 의 예입니다.
-- [Account 가이드 「상황이 달라지면」](../../ddd-analysis-pattern-guide/account/account-guide_v1.1.0.md#상황이-달라지면) — Entry 소속 네 가지 표. Entry 는 entity 로 남고 Account 가 그 Entry 들의 요약 VO(④-a)나 투영 VO 목록(④-b)을 갖는 배정이 Value Object 절의 예예요.
-- [Quantity 가이드 「상황 설정」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.md#상황-설정) — 불변식을 값 객체 몫과 root 몫으로 가르는 행이 불변식 절 표의 보유량 줄이고, `IngredientId` 가 id 참조 절의 또 다른 예예요.
-- [Quantity 가이드 「구현」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.0.md#구현) — 값을 불변으로 지키는 장치를 언어별로 견준 표의 TypeScript 행, 그 -99 g 우회가 Aggregate Root 절의 예입니다.
-- 「상황 설정」 표를 같은 자리에서 쓰는 편이 아홉 더 있습니다. Repository 까지 여덟 낱말을 쓰는 쪽은 [Party](../../ddd-analysis-pattern-guide/party/party-guide_v1.0.0.md#상황-설정) · [Accountability](../../ddd-analysis-pattern-guide/accountability/accountability-guide_v1.0.0.md#상황-설정) · [Posting Rule](../../ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.0.0.md#상황-설정) · [Transaction](../../ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.0.md#상황-설정) 넷이고, Repository 를 뺀 일곱만 쓰는 쪽은 [Knowledge Level](../../ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.0.md#상황-설정) · [Measurement](../../ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.0.md#상황-설정) · [Observation](../../ddd-analysis-pattern-guide/observation/observation-guide_v1.0.0.md#상황-설정) · [Range](../../ddd-analysis-pattern-guide/range/range-guide_v1.0.0.md#상황-설정) · [Temporal Property](../../ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.0.0.md#상황-설정) 다섯이에요. 아홉 편 모두 표 앞에서 그 낱말들의 정의를 이 문서로 넘깁니다. Temporal Property 는 인사·급여를 배경으로 쓰는 유일한 편이라, 같은 여덟 낱말이 회계 밖 도메인에서 어떻게 배정되는지 견주어 볼 자리입니다.
+- [Account 가이드 「상황 설정」](../../ddd-analysis-pattern-guide/account/account-guide_v1.1.1.md#상황-설정) — 표의 네 행이 이 문서의 Bounded Context · 불변식 · Aggregate Root · Entity · Value Object · id 참조를 그대로 써요. 그 가이드는 여덟 낱말의 정의를 이 문서로 넘기고 표 앞에는 읽기 모델 · 도메인 이벤트 · Factory · 도메인 서비스 넷만 펴 두었으니, 표로 가기 전에 여기를 한 번 지나오시면 됩니다. 표 아래의 시간표가 id 참조 절의 예이고, `GeneralLedger` 가 Repository 의 예입니다.
+- [Account 가이드 「상황이 달라지면」](../../ddd-analysis-pattern-guide/account/account-guide_v1.1.1.md#상황이-달라지면) — Entry 소속 네 가지 표. Entry 는 entity 로 남고 Account 가 그 Entry 들의 요약 VO(④-a)나 투영 VO 목록(④-b)을 갖는 배정이 Value Object 절의 예예요.
+- [Quantity 가이드 「상황 설정」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.md#상황-설정) — 불변식을 값 객체 몫과 root 몫으로 가르는 행이 불변식 절 표의 보유량 줄이고, `IngredientId` 가 id 참조 절의 또 다른 예예요.
+- [Quantity 가이드 「구현」](../../ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.md#구현) — 값을 불변으로 지키는 장치를 언어별로 견준 표의 TypeScript 행, 그 -99 g 우회가 Aggregate Root 절의 예입니다.
+- 「상황 설정」 표를 같은 자리에서 쓰는 편이 아홉 더 있습니다. Repository 까지 여덟 낱말을 쓰는 쪽은 [Party](../../ddd-analysis-pattern-guide/party/party-guide_v1.0.1.md#상황-설정) · [Accountability](../../ddd-analysis-pattern-guide/accountability/accountability-guide_v1.0.1.md#상황-설정) · [Posting Rule](../../ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.0.1.md#상황-설정) · [Transaction](../../ddd-analysis-pattern-guide/transaction/transaction-guide_v1.0.1.md#상황-설정) 넷이고, Repository 를 뺀 일곱만 쓰는 쪽은 [Knowledge Level](../../ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.1.md#상황-설정) · [Measurement](../../ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.1.md#상황-설정) · [Observation](../../ddd-analysis-pattern-guide/observation/observation-guide_v1.0.1.md#상황-설정) · [Range](../../ddd-analysis-pattern-guide/range/range-guide_v1.0.1.md#상황-설정) · [Temporal Property](../../ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.0.1.md#상황-설정) 다섯이에요. 아홉 편 모두 표 앞에서 그 낱말들의 정의를 이 문서로 넘깁니다. Temporal Property 는 인사·급여를 배경으로 쓰는 유일한 편이라, 같은 여덟 낱말이 회계 밖 도메인에서 어떻게 배정되는지 견주어 볼 자리입니다.
 
 ## 참고 자료
 

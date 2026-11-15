@@ -34,7 +34,7 @@ const SPEC: DomainModelSpec = {
 export default function StateStructure() {
   return (
     <Canvas width={W} height={400}>
-      <DiagramHeader eyebrow="State structure" title="Context 는 현재 상태 하나만 들고 요청을 그리로 넘긴다" />
+      <DiagramHeader eyebrow="State structure" title="Context 는 현재 상태 하나만 가지고 요청을 그리로 넘긴다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>
   );

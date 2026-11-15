@@ -1,0 +1,1822 @@
+<!doctype html>
+<!-- guide-fp:cfb1b5cceea262f36754390894466eb8726057c46b5202b5633c83b7f7afa358 -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="generator" content="scripts/render-guides.py">
+<title>Temporal Property — 「그때는 얼마였습니까」에 값 하나로 답하는 속성</title>
+<style>
+/* pattern-guide HTML — render-guides.py 가 HTML 에 인라인한다. 외부 폰트·이미지 요청 없음. */
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --fg: #1c1e22;
+  --muted: #5a606b;
+  --border: #dcdfe4;
+  --border-strong: #b9bec7;
+  --accent: #1f4fb8;
+  --accent-soft: #e8eefb;
+  --code-bg: #f3f4f6;
+  --code-fg: #1c1e22;
+  --inline-code-bg: #eceef1;
+  --quote-fg: #454a54;
+  --quote-bar: #c5cad3;
+  --th-bg: #f1f2f4;
+  --focus: #1f4fb8;
+  --diagram-filter: none;
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR",
+    "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, "D2Coding", Consolas, "Cascadia Mono",
+    "Liberation Mono", "Noto Sans Mono CJK KR", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141619;
+    --surface: #1b1e22;
+    --fg: #e3e5e9;
+    --muted: #a1a7b1;
+    --border: #2d3138;
+    --border-strong: #464c56;
+    --accent: #8db0ff;
+    --accent-soft: #1f2a40;
+    --code-bg: #1c1f24;
+    --code-fg: #dfe2e7;
+    --inline-code-bg: #262a30;
+    --quote-fg: #b9bec7;
+    --quote-bar: #464c56;
+    --th-bg: #1f2227;
+    --focus: #8db0ff;
+    --diagram-filter: invert(0.88) hue-rotate(180deg);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141619;
+  --surface: #1b1e22;
+  --fg: #e3e5e9;
+  --muted: #a1a7b1;
+  --border: #2d3138;
+  --border-strong: #464c56;
+  --accent: #8db0ff;
+  --accent-soft: #1f2a40;
+  --code-bg: #1c1f24;
+  --code-fg: #dfe2e7;
+  --inline-code-bg: #262a30;
+  --quote-fg: #b9bec7;
+  --quote-bar: #464c56;
+  --th-bg: #1f2227;
+  --focus: #8db0ff;
+  --diagram-filter: invert(0.88) hue-rotate(180deg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.guide {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;
+}
+
+@media (min-width: 40rem) {
+  .guide {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ── 헤딩 ─────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.35;
+  font-weight: 700;
+  scroll-margin-top: 1rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.875rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 3.25rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+h5,
+h6 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* ── 본문 블록 ─────────────────────────────────────── */
+p,
+ul,
+ol,
+blockquote,
+.table-wrap,
+pre,
+.code-tabs,
+.mermaid-figure {
+  margin: 0 0 1.1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+li > ul,
+li > ol {
+  margin: 0.25rem 0 0.25rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+li > p {
+  margin: 0 0 0.6rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 3px solid var(--quote-bar);
+  color: var(--quote-fg);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── 머리 차례 · 접힌 풀이 (명세 1.5.0) ─────────────── */
+details.guide-toc {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+details.guide-toc > summary,
+details.answer > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+details.guide-toc ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+details.guide-toc ol ol {
+  margin-top: 0.15rem;
+}
+
+details.guide-toc li {
+  margin: 0.15rem 0;
+}
+
+details.answer {
+  margin: 0.75rem 0 1.25rem;
+}
+
+details.answer > blockquote {
+  margin-top: 0.5rem;
+}
+
+/* ── 코드 ─────────────────────────────────────────── */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--inline-code-bg);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 4;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+pre > code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ── 표 ───────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+th,
+td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+  min-width: 6rem;
+}
+
+th {
+  background: var(--th-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── mermaid 도식(렌더 시점 인라인 SVG) ───────────── */
+.mermaid-figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid-figure svg {
+  height: auto;
+  filter: var(--diagram-filter);
+}
+
+/* ── 세 언어 탭 ───────────────────────────────────── */
+.code-tabs__list {
+  display: none;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__list {
+  display: flex;
+}
+
+.code-tabs__tab {
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 1rem;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.9375rem/1 var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.code-tabs__tab:hover {
+  color: var(--fg);
+}
+
+.code-tabs__tab[aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.code-tabs__tab:focus-visible {
+  outline-offset: -2px;
+  border-radius: 6px 6px 0 0;
+}
+
+.code-tabs__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.code-tabs[data-enhanced] .code-tabs__label {
+  display: none;
+}
+
+.code-tabs__panel > pre {
+  margin-bottom: 1.1rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__panel > pre {
+  margin-bottom: 0;
+}
+
+.code-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── 꼬리말 ───────────────────────────────────────── */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ── 인쇄: 탭 패널 전부, 라이트 색 ───────────────── */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #ffffff !important;
+    --surface: #ffffff !important;
+    --fg: #000000 !important;
+    --muted: #444444 !important;
+    --border: #bbbbbb !important;
+    --accent: #000000 !important;
+    --code-bg: #f6f6f6 !important;
+    --code-fg: #000000 !important;
+    --inline-code-bg: #eeeeee !important;
+    --quote-fg: #222222 !important;
+    --quote-bar: #999999 !important;
+    --th-bg: #eeeeee !important;
+    --diagram-filter: none !important;
+  }
+
+  body {
+    font-size: 10.5pt;
+  }
+
+  .guide {
+    max-width: none;
+    padding: 0;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__list,
+  .code-tabs__list {
+    display: none !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__label,
+  .code-tabs__label {
+    display: block !important;
+  }
+
+  .code-tabs__panel,
+  .code-tabs__panel[hidden] {
+    display: block !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__panel > pre {
+    margin-bottom: 1.1rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow: visible;
+  }
+
+  .table-wrap,
+  .mermaid-figure {
+    overflow: visible;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="guide">
+<main>
+<h1 id="temporal-property--그때는-얼마였습니까에-값-하나로-답하는-속성">Temporal Property — 「그때는 얼마였습니까」에 값 하나로 답하는 속성</h1>
+<details class="guide-toc" open>
+<summary>차례</summary>
+<ol>
+<li><a href="#한눈에-보는-개요">한눈에 보는 개요</a></li>
+<li><a href="#패턴-자세히-들여다보기">패턴 자세히 들여다보기</a>
+<ol>
+<li><a href="#시나리오-1--2월-25일의-일당을-묻자-200000원이-나오기까지">시나리오 1 — 2월 25일의 일당을 묻자 200,000원이 나오기까지</a></li>
+<li><a href="#시나리오-2--3월-15일에-도착한-2월-15일자-발령-그리고-4월의-감사-질문">시나리오 2 — 3월 15일에 도착한 2월 15일자 발령, 그리고 4월의 감사 질문</a></li>
+<li><a href="#시나리오-3--덮어쓴-일당--화면의-시점-판정--같은-기록일에-겹친-기간--되돌린-기록일은-어디서-막히고-어떤-금액을-내는가">시나리오 3 — 덮어쓴 일당 · 화면의 시점 판정 · 같은 기록일에 겹친 기간 · 되돌린 기록일은 어디서 막히고 어떤 금액을 내는가</a></li>
+<li><a href="#개념-정리">개념 정리</a></li>
+</ol>
+</li>
+<li><a href="#사용-목적">사용 목적</a>
+<ol>
+
+<ol>
+<li><a href="#단서-1--마감정산-코드가-그때-값을-구하려고-변경-로그를-뒤집니다">단서 1 — 마감·정산 코드가 「그때 값」을 구하려고 변경 로그를 뒤집니다</a></li>
+<li><a href="#단서-2--업무가-발효일과-접수일을-다른-칸으로-부릅니다">단서 2 — 업무가 「발효일」과 「접수일」을 다른 칸으로 부릅니다</a></li>
+<li><a href="#단서-3--감사대사-요구가-그-시점에-우리가-알던-값을-묻습니다">단서 3 — 감사·대사 요구가 「그 시점에 우리가 알던 값」을 묻습니다</a></li>
+<li><a href="#쓰지-말아야-할-경우">쓰지 말아야 할 경우</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><a href="#패턴의-경계">패턴의 경계</a>
+<ol>
+<li><a href="#디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</a></li>
+<li><a href="#비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</a>
+<ol>
+<li><a href="#range-와의-차이">Range 와의 차이</a></li>
+<li><a href="#유효-기간만-붙인-모델과의-차이">유효 기간만 붙인 모델과의 차이</a></li>
+<li><a href="#감사-로그변경-이력-표와의-차이">감사 로그·변경 이력 표와의 차이</a></li>
+<li><a href="#observation-과의-차이">Observation 과의 차이</a></li>
+<li><a href="#posting-rule-의-규칙-등록부와의-차이">Posting Rule 의 규칙 등록부와의 차이</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><a href="#구현-예시">구현 예시</a>
+<ol>
+<li><a href="#상황-설정">상황 설정</a></li>
+<li><a href="#구현">구현</a></li>
+<li><a href="#상황이-달라지면">상황이 달라지면</a></li>
+<li><a href="#실제-사례">실제 사례</a></li>
+</ol>
+</li>
+<li><a href="#스스로-점검하기">스스로 점검하기</a></li>
+<li><a href="#참고-자료">참고 자료</a></li>
+</ol>
+</details>
+<h2 id="한눈에-보는-개요">한눈에 보는 개요</h2>
+<p>인사·급여 시스템에서 사원 한 명의 일당이 <code>payRate</code> 라는 칸 하나에 들어 있다고 해 봅시다. 사원 EMP-1042 는 2026년 1월 1일에 일당 200,000원으로 입사했어요. 2월 급여는 2월 28일에 그 값으로 지급됐습니다. 그런데 3월 15일에 인사팀에서 「2월 15일부터 일당 240,000원」이라는 발령이 내려와요. 담당자가 칸을 240,000으로 고치면 그 순간 두 가지가 한꺼번에 사라집니다. 2월 14일까지는 200,000원이었다는 사실이 사라지고, 2월 28일에 200,000원 기준으로 지급한 근거도 사라져요. 4월에 감사가 「2월 25일의 일당은 얼마였습니까」라고 물으면 시스템은 240,000원이라고 답하는데, 실제로 지급한 명세는 200,000원 기준입니다. 어느 쪽도 틀렸다고 말할 수 없어요 — 둘 다 맞는 답인데 묻는 시점이 다릅니다.</p>
+<pre tabindex="0"><code class="language-text">Before — 값이 칸 하나다
+  employee.payRate = 200000        (1/1 입사)
+  employee.payRate = 240000        (3/15 발령 접수 · 덮어쓴다)
+  「2/25 의 일당은?」 → 240000     2/28 지급 명세는 200000 기준 — 근거가 모델에 없다
+  「2/28 에 우리가 알던 값은?」    → 물을 자리가 없다</code></pre>
+<p>Temporal Property 의 해법은 <strong>속성의 값을 하나로 두지 않고 유효 기간이 붙은 값들의 이력으로 두고, 「언제의 값인가」를 그 속성에게 묻는 것</strong>입니다. 날짜가 접근자의 인자로 들어오면 「지금 값」은 그 인자의 기본값일 뿐이 되고, 과거 어느 날의 값도 같은 한 줄로 물을 수 있어요. 여기에 시간축을 하나 더 두면 「2월 28일에 우리가 알던 2월 25일의 값」까지 답이 됩니다.</p>
+<pre tabindex="0"><code class="language-text">After — 값이 유효 기간이 붙은 이력이다
+  일당 ─┬─ 2026-01-01.. · 200000 · 기록 2026-01-01
+        └─ 2026-02-15.. · 240000 · 기록 2026-03-15
+  payRateOn(2026-02-25)                        → 240000   (지금 아는 전부를 반영한 답)
+  payRateOn(2026-02-25, 기록 기준 2026-02-28)  → 200000   (그날 우리가 알던 답)</code></pre>
+<p>Temporal Property 는 Fowler 의 시간 관련 모델 갈래입니다(근거: Fowler <em>Analysis Patterns</em> Chapter 3 「Observations and Measurements」 §3.8 Dual Time Record · <a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property, eaaDev 초안</a>). 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html">Range</a> · <a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.html">Posting Rule</a> 이에요.</p>
+<blockquote>
+<p>원전은 둘입니다. 『Analysis Patterns』(1997)의 관측·측정 장이 두 시간축을 다루고, martinfowler.com 의 eaaDev 초안 묶음이 속성 하나에 대한 형태를 따로 정리했어요. eaaDev 초안들은 저자가 2006년 여름 이후 손대지 않아 목록 페이지에 사실상 멈춰 있다고 적혀 있는 원고입니다(<a href="https://martinfowler.com/eaaDev/">eaaDev 목록</a>, 조회 2026-09-30). 이 글이 그 글들을 근거로 댈 때는 「완성된 책의 서술」이 아니라 「저자가 공개한 미완의 초안」이라는 지위로 읽으시면 됩니다.</p>
+</blockquote>
+<p>이 글의 예제는 회사 한 곳의 인사·급여 기록이에요. 사원(<code>Employee</code>) 한 명이 일당과 소속이라는 시간 속성 둘을 갖고, 시간 속성마다 유효 기간과 기록 시각(그 값을 알게 된 날)이 붙은 값들을 이력으로 모아 둡니다. 부서는 번호(<code>DepartmentId</code>)로만 가리켜요. 이력에 값을 더하는 자리는 사원의 메서드뿐이라, 같은 기록일에 기간이 겹치는 값과 앞선 기록보다 이른 기록일을 사원이 그 자리에서 막습니다. 부서 이름은 사원 밖에서 번호로 찾아 오고, 2월 소급 차액 같은 계산값도 사원 밖에서 물을 때마다 계산할 뿐 적어 두지 않아요. 이력을 사원 밖으로 떼거나 발령·직급 쪽에 붙이는 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.</p>
+<pre tabindex="0"><code class="language-text">이 글이 고른 경계
+  사원 ────────── 일당 · 소속 두 시간 속성을 가짐 (값을 더하는 자리는 사원의 메서드뿐)
+  시간 속성 ───── 유효 기간 · 기록 시각이 붙은 값들의 이력 (사원 안에만 있음)
+  부서 ────────── 번호(DepartmentId)로만 가리킴 (이름은 사원 밖에서 찾아 옴)
+  소급 차액 ───── 사원 밖에서 물을 때마다 계산 (적어 두지 않음)</code></pre>
+<p>이 글은 인사·급여 한 도메인에서 시나리오 셋을 따라갑니다. 급여 담당자가 2월 25일의 일당을 물어 답이 나오기까지, 소급 발령과 감사 요구가 들어올 때 무엇이 바뀌고 무엇은 그대로인가, 그리고 일당을 덮어쓰거나 시점 판정을 화면에 두거나 같은 기록일에 기간을 겹치거나 기록일을 되돌리면 어디서 막히고 어떤 금액이 나오는가. 끝까지 읽으면 어떤 모델을 Temporal Property 라고 불러도 되는지 필수 조건 넷으로 판정할 수 있고, Range 와 무엇이 다른지, 유효 기간만 붙인 모델과 어디서 다른지를 세 언어 코드의 줄 번호로 짚을 수 있게 됩니다.</p>
+<h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
+<h3 id="시나리오-1--2월-25일의-일당을-묻자-200000원이-나오기까지">시나리오 1 — 2월 25일의 일당을 묻자 200,000원이 나오기까지</h3>
+<p>사원 EMP-1042 는 2026년 1월 1일에 입사했고, 그때 정해진 일당은 200,000원입니다. 2월 급여를 마감하는 자리에서 급여 담당자가 묻는 것은 하나예요 — 「2026년 2월 25일의 일당은 얼마입니까」. 나와야 하는 답은 금액 하나, 200,000원입니다. 이 장면에는 다섯이 등장해요. 시간에 따라 값이 바뀌는 속성인 <strong>시간 속성</strong>과 질문이 가리키는 하루인 시점이 둘입니다. 값 하나와 그 값이 참인 기간을 묶은 유효 기간이 붙은 값과 그 기간을 담는 구간이 그다음 둘이에요. 마지막은 이 속성들을 가진 <strong>사원</strong>입니다. 이름은 여기서 한 구절씩만 소개하고 정식 정의는 개념 정리에서 해요.</p>
+<ol>
+<li><strong>사원이 등록될 때 일당 이력에 첫 값이 들어갑니다.</strong> 들어가는 것은 금액만이 아니라 <code>2026-01-01 부터 · 200,000원</code> 한 쌍이에요. 유효 시작을 함께 넣지 않으면 나중에 시점 질문을 받았을 때 「이 값이 언제부터의 값인가」를 답할 자리가 없습니다. 이 단계가 빠지면 입사일부터 첫 발령 전까지가 빈 구간이 되어 조회가 답을 못 내요.</li>
+<li><strong>급여 담당이 시점을 인자로 줍니다.</strong> <code>payRateOn(2026-02-25)</code> 처럼 날짜를 넘겨서 묻습니다. 인자 없이 묻는 접근자는 「오늘」만 답할 수 있는데, 마감과 정정은 언제나 지난 날짜를 묻는 일이에요. 오늘이 기본값으로 쓰이는 것과 오늘밖에 못 묻는 것은 다릅니다.</li>
+<li><strong>일당 이력이 그 시점을 덮는 값을 고릅니다.</strong> 고르는 일을 이력 쪽이 맡아요. 부르는 쪽이 <code>from &lt;= when &amp;&amp; when &lt;= to</code> 를 직접 쓰면 그 부등식이 화면 코드와 정산 코드에 따로 적히게 되고, 경계 날짜에서 답이 갈립니다. 이 차이가 어떤 모양인지는 <a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html">Range 가이드</a>가 요금 구간에서 이미 보였어요.</li>
+<li><strong>고른 값 하나를 돌려줍니다.</strong> 200,000원이에요. 목록이 아니라 값 하나입니다. 이력을 통째로 돌려주면 「어느 것이 그날의 값인가」를 고르는 책임이 부르는 쪽으로 되돌아가고, 3단계에서 한 곳에 모아 둔 판정이 다시 흩어져요.</li>
+<li><strong>급여 계산은 그 값을 받아 일수를 곱합니다.</strong> 여기서부터는 이 속성의 일이 아니에요. 속성이 답하는 것은 「그때 얼마였는가」까지이고, 그 값으로 무엇을 하는지는 부르는 쪽의 몫입니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">단계   부르는 쪽 → 받는 쪽           넘기는 것              돌아오는 것
+ 1     입사 처리 → 사원              2026-01-01 · 200000    일당 이력에 값 하나
+ 2     급여 담당 → 사원              2026-02-25             (3·4 로 이어짐)
+ 3     사원 → 일당 이력              2026-02-25             그 날을 덮는 값 하나
+ 4     일당 이력 → 급여 담당         —                      200000원
+ 5     급여 담당 → (모델 밖)         200000원 · 일수         지급액</code></pre>
+<p>이 시나리오가 보여 준 것은 <strong>시점이 인자로 들어오면 판정이 한 곳에 모인다</strong>는 것입니다. 값에 유효 시작이 붙어 있고(1단계), 질문에 날짜가 붙어 있고(2단계), 고르는 일을 이력이 맡고(3단계), 답이 값 하나로 나옵니다(4단계). 이 넷이 이 패턴의 골격이고, 뒤의 최소 조건 넷이 정확히 이 넷이에요. 아직 나오지 않은 것은 「우리가 그것을 언제 알았는가」인데, 그것은 다음 시나리오에서 요구로 들어옵니다.</p>
+<h3 id="시나리오-2--3월-15일에-도착한-2월-15일자-발령-그리고-4월의-감사-질문">시나리오 2 — 3월 15일에 도착한 2월 15일자 발령, 그리고 4월의 감사 질문</h3>
+<p>3월 15일에 인사팀이 발령을 전달합니다 — 「2026년 2월 15일부터 일당 240,000원」. 그런데 2월 급여는 이미 2월 28일에 200,000원 기준으로 지급됐어요. 4월에는 감사가 들어와서 「2월 28일 지급 당시 시스템이 알던 2월 25일의 일당은 얼마였습니까」라고 묻고, 4월 4일에는 「사실은 260,000원이었다」는 정정까지 도착합니다. 이 시나리오에서 새로 나오는 이름은 둘이에요. 일이 실제로 일어난 때인 <strong>사건 시각</strong>과, 우리가 그것을 알게 된 때인 <strong>기록 시각</strong> 입니다.</p>
+<ol>
+<li><strong>발효일 2026-02-15 로 값을 하나 더합니다.</strong> 오늘이 3월 15일인데 넣는 날짜는 2월 15일이에요. 유효 시작은 「언제부터 참인가」이고 기록일은 「언제 알았는가」라서 둘이 같을 이유가 없습니다. 이 둘을 갈라 두면 소급·당일·예정 변경이 한 연산으로 처리돼요 — 과거 날짜를 주면 소급이고, 오늘이면 당장, 미래면 예정입니다.</li>
+<li><strong>조회는 한 줄도 바뀌지 않습니다.</strong> <code>payRateOn(2026-02-25)</code> 는 그대로이고 답만 240,000원으로 바뀌어요. 시점 판정이 속성 쪽에 있기 때문입니다. 만약 급여 화면이 직접 이력을 순회하고 있었다면, 값이 둘이 된 순간 그 코드부터 고쳐야 했어요.</li>
+<li><strong>급여 담당이 2월 소급 차액을 계산합니다.</strong> 2월 15일부터 28일까지 14일이고 일당 차이가 40,000원이니 560,000원입니다(직접 실행해 확인). 사원이 답하는 것은 그날의 일당까지라서, 차액은 급여 담당이 물을 때마다 계산하고 어디에도 적어 두지 않아요. 적어 두면 7단계에서 일당이 260,000원으로 정정된 뒤에도 그 칸에는 560,000원이 남아, 새로 계산한 차액 840,000원과 어긋납니다.</li>
+<li><strong>감사의 질문에 한 시간축 모델은 답하지 못합니다.</strong> 「2월 28일에 우리가 알던 값」을 물었는데, 이력이 가진 날짜는 「언제부터 유효한가」뿐이라 답이 오늘 기준으로 하나밖에 없어요. 모델은 240,000원이라고 답하고 지급 명세는 200,000원 기준이라, 대조하는 사람이 어느 쪽을 믿어야 할지 모릅니다.</li>
+<li><strong>값마다 기록 시각을 함께 답니다.</strong> 1월 1일에 알게 된 200,000원, 3월 15일에 알게 된 240,000원 — 이렇게 두 축이 생겨요. 기록 시각을 값에 다는 이유는 「언제 알았는가」가 그 값의 성질이지 이력 전체의 성질이 아니기 때문입니다.</li>
+<li><strong>조회가 날짜를 둘 받습니다.</strong> 「어느 날의 값인가」와 「어느 시점의 지식으로 보는가」예요. 기록 기준 2026-02-28 로 2월 25일을 물으면 200,000원, 기록 기준 2026-03-15 로 물으면 240,000원입니다. 같은 하루에 대한 답이 둘인데 모순이 아니에요 — 묻는 지식 시점이 다릅니다.</li>
+<li><strong>4월 4일의 정정은 앞 기록을 지우지 않습니다.</strong> 260,000원을 기록 시각 2026-04-04 로 더할 뿐이에요. 그래서 기록 기준 3월 15일로 물으면 여전히 240,000원이 나오고, 기록 기준 4월 4일로 물으면 260,000원이 나옵니다. 3월 15일에 만든 정산 문서가 왜 그 금액이었는지를 모델이 계속 설명할 수 있어요.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">                          사건 시각(언제부터 참인가) →
+기록 시각      │ 2026-01-20    2026-02-25
+(언제 알았나)  │
+  ↓           │
+2026-02-28    │ 200000        200000        ← 2월 급여를 지급한 시점의 지식
+2026-03-15    │ 200000        240000        ← 소급 발령을 접수한 뒤
+2026-04-04    │ 200000        260000        ← 정정을 접수한 뒤</code></pre>
+<p>이 시나리오가 보여 준 것은 <strong>두 시간축이 서로 독립이라는 것</strong>입니다. 유효 시작은 업무가 정하고(1단계), 기록 시각은 우리가 알게 된 순서가 정해요(5단계). 둘은 서로를 모릅니다. 그래서 「지금 아는 답」(2단계)과 「그때 알던 답」(6단계)이 따로 성립하고, 정정이 들어와도 앞의 답이 남습니다(7단계). 한 축만 가진 모델은 4단계에서 막혀요 — 틀린 답을 내는 것이 아니라 <strong>물을 자리가 없습니다.</strong></p>
+<h3 id="시나리오-3--덮어쓴-일당--화면의-시점-판정--같은-기록일에-겹친-기간--되돌린-기록일은-어디서-막히고-어떤-금액을-내는가">시나리오 3 — 덮어쓴 일당 · 화면의 시점 판정 · 같은 기록일에 겹친 기간 · 되돌린 기록일은 어디서 막히고 어떤 금액을 내는가</h3>
+<p>같은 사원 이력에 규칙을 어기는 일이 넷 들어옵니다. 값을 칸 하나로 되돌리는 것, 시점 판정을 부르는 쪽이 하는 것, 같은 기록일에 기간이 겹치는 값을 넣는 것, 그리고 기록 시각을 뒤로 되돌리는 것이에요. 아래 값은 모두 구현 예시를 그렇게 고친 사본을 Java 21 로 실제 컴파일·실행해 확인한 것입니다.</p>
+<ol>
+<li><strong>값을 칸 하나로 되돌립니다.</strong> 3월 15일에 <code>payRate = 240000</code> 으로 덮으면 2월 25일을 물어도 240,000원이 나오고, 2월 14일을 물어도 240,000원이 나와요. 2월 급여 명세의 200,000원 × 14일을 설명할 근거가 모델 어디에도 없습니다. 문제가 되는 것은 형식이 아니라 <strong>금액의 근거</strong>예요 — 덮어쓴 모델도 예외 하나 던지지 않고 잘 돌아갑니다.</li>
+<li><strong>시점 판정을 급여 화면이 직접 합니다.</strong> 이력은 그대로 두되 화면이 <code>if (from &lt;= when &amp;&amp; when &lt;= to)</code> 를 직접 써요. 값이 하나일 때는 잘 돌아가는데, 2단계에서 값이 둘이 되는 순간 「겹치는 후보 중 어느 것을 고르는가」를 화면이 정하게 됩니다. 정산 배치가 다르게 정하면 같은 2월 25일에 대해 화면은 240,000원, 배치는 200,000원을 내고 둘 다 예외를 던지지 않아요.</li>
+<li><strong>같은 기록일에 기간이 겹치는 값을 넣습니다.</strong> 기록 시각 2026-04-04 에 이미 <code>2026-02-15..</code> 의 260,000원이 있는데 같은 날짜로 <code>2026-02-01..2026-03-31</code> 의 210,000원을 더하면, 2월 25일을 덮는 값이 둘이 됩니다. 검사를 뺀 사본에서 같은 질문에 260,000원이 나왔고, 두 값을 넣는 <strong>순서만 바꾸자</strong> 같은 질문에 210,000원이 나왔어요. 같은 입력에 두 답이 나오는데 어느 쪽이 맞는지 모델 안에 정한 것이 없습니다.</li>
+<li><strong>기록 시각을 뒤로 되돌립니다.</strong> 4월 4일까지 기록한 뒤에 기록 시각 2026-03-16 으로 250,000원을 끼워 넣으면, 「기록 기준 2026-03-20 에서 본 2월 25일의 일당」이 240,000원에서 250,000원으로 바뀝니다. 이미 끝난 질문의 답이 나중에 달라지는 것이고, 그러면 기록 축을 둔 이유 자체가 사라져요.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">어긴 규칙                      막는 자리            어긋나는 값
+값을 칸 하나로 되돌림           없음(모델 형태)      2/25 · 2/14 둘 다 240000 — 2월 명세 200000 의 근거 소멸
+시점 판정을 부르는 쪽이 함       없음(호출 규율)      같은 2/25 에 화면 240000 · 배치 200000
+같은 기록일에 기간 겹침          값을 더하는 자리     같은 2/25 에 260000 또는 210000, 넣는 순서가 정함
+기록 시각 되돌리기              값을 더하는 자리     기록 기준 3/20 의 답이 240000 → 250000 으로 바뀜</code></pre>
+<p>이 시나리오가 보여 준 것은 <strong>막는 자리가 규칙마다 다르다</strong>는 것입니다. 뒤 둘은 값을 더하는 자리에서 거절 메시지가 나오지만, 앞 둘에는 막는 자리가 없어요. 그쪽이 더 위험합니다. 1단계는 모델을 어떻게 만들었는가의 문제이고 2단계는 누가 판정을 맡는가의 문제라, 둘 다 코드가 잘 돌아가는 채로 틀린 값을 냅니다. 기계가 잡아 주지 않는 자리는 사람이 기준으로 알고 있어야 해서, 이 둘이 뒤 절의 필수 조건 1번과 4번이 됐어요.</p>
+<h3 id="개념-정리">개념 정리</h3>
+<p>시나리오에 나온 이름 다섯을 정의합니다. 각 개념이 무엇을 책임지고 누구와 협력하는지를 함께 적었어요. DDD(Domain-Driven Design, 도메인 주도 설계) 전술 분류(Entity·Value Object·Aggregate)는 여기서 매기지 않습니다 — 그것은 상황 설정 표의 몫이고, 같은 개념이라도 경계를 어떻게 잡느냐에 따라 분류가 달라져요.</p>
+<ul>
+<li><strong>Temporal Property (시간 속성)</strong> — 시간에 따라 값이 바뀌는 속성 하나를 나타냅니다.
+<ul>
+<li>책임: 유효 기간이 붙은 값들을 모아 두고, 시점 하나를 받아 그 시점의 값 하나를 돌려줍니다. 어느 값이 그날의 답인지를 고르는 판정이 이 개념의 것이에요(시나리오 1 의 3·4단계).</li>
+<li>협력: 값을 더하는 요청은 이 속성을 가진 객체를 거쳐 들어옵니다. 값 하나하나는 유효 기간이 붙은 값이 맡고, 기간 비교는 구간에게 물어요.</li>
+</ul>
+</li>
+<li><strong>Effectivity (유효 기간이 붙은 값)</strong> — 값 하나와 그 값이 참인 기간을 묶은 짝입니다. 두 시간축을 쓰면 우리가 그 값을 알게 된 날도 여기 함께 붙어요.
+<ul>
+<li>책임: 「이 값은 언제부터 언제까지 참인가」와 「우리는 이것을 언제 알았는가」를 자기 안에 가지고 있습니다(시나리오 2 의 1·5단계).</li>
+<li>협력: 기간은 구간에게 맡기고, 시간 속성이 이것들을 모아 둡니다. 이 짝을 하나만 떼어 쓰면 그것이 원전이 Effectivity 라고 부른 모양이고, 그때는 고르는 일을 부르는 쪽이 해야 해요.</li>
+</ul>
+</li>
+<li><strong>Range (구간)</strong> — 두 끝과 각 끝을 포함하는지를 한 값에 담은 것입니다. 위 끝이 없으면 「추후 통지까지」를 뜻해요.
+<ul>
+<li>책임: 「이 시점이 안에 드는가」에 답하고, 다른 구간과 겹치는지에도 답합니다(시나리오 1 의 3단계, 시나리오 3 의 3단계).</li>
+<li>협력: 유효 기간이 붙은 값의 부품입니다. 끝점 자리에 시점이 와요. 구간 자체의 규칙은 <a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html">Range 가이드</a>가 따로 다룹니다.</li>
+</ul>
+</li>
+<li><strong>Time Point (시점)</strong> — 질문과 기록이 가리키는 하루입니다. 이 개념은 두 역할로 나타나요 — 값이 언제부터 참인지를 말하는 <strong>사건 시각</strong>과, 우리가 그것을 언제 알았는지를 말하는 <strong>기록 시각</strong>입니다.
+<ul>
+<li>책임: 크기 비교가 되는 값이어야 합니다. 구간의 끝점이 되고 조회의 인자가 되는데, 둘 다 「이 날이 저 날보다 앞인가」에 답할 수 있어야 성립해요(시나리오 1 의 2단계).</li>
+<li>협력: 구간의 끝점이자 시간 속성 접근자의 인자입니다. 두 역할의 이름이 다른 것은 자리가 다르다는 뜻이지 타입이 다르다는 뜻은 아니에요.</li>
+</ul>
+</li>
+<li><strong>Employee (사원)</strong> — 시간 속성을 가진 대상입니다. 이 예제에서는 일당과 소속 둘이 그 속성이에요.
+<ul>
+<li>책임: 자기 시간 속성에 값이 들어오는 길을 자기 메서드로만 열어 두고, 이력이 지켜야 할 규칙이 그 자리에서 검사되게 합니다(시나리오 3 의 3·4단계).</li>
+<li>협력: 바깥은 사원에게 시점을 물어 값을 받습니다. 소속 속성이 담는 값은 부서를 가리키는데, 부서 자체는 이 모델 밖에 있어요.</li>
+</ul>
+</li>
+</ul>
+<p><figure class="diagram-figure"><img src="data:image/png;base64,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pq998MH+YXnH7f9OPfty1i6zok23445rbht///2p6cWsrNXp3V13rRuW4TDS31oestQlS5ZkZGTE3T/9ad8JEye9NX5i7Tq1U9uEblg223fvaNPVqV1r0OCh8f3s0daTm3PPjTp1aoflnLlz40YsdFOrtqJwkUOofXiXThEAAAAAm8XLl/JS27atw/LFQYMHD30p1U3Zccc1D8fMzs5OVca9NT7adDVqVg/L8eMnLFq0MK78+OOPIeKM1o4eV9q3axuWfe68d9mypakdb771jgMOajtt2kdxN77l//4HHkq9gz40Qje1alO1P2TNl44b92a0VeXm3HOjXZs20do4e8WKFXElxJFxuh2vyg/FihbNzWbxRY4vOAAAAACbwYzRvJSRkdG1a+eBA4eEdmjkmJ/YsuWBr40YeWXPaz788KNq1aq+++57k96eXKpUqSnvvX9lz15XXHZx2bJl3xg7bswbY+PtMzMzw/K6G26Ku+0ObhO/Hr1SpYrt2rYJQ+3XolW3bkdWrFDhuQEvxBun7N6wwamnntS//2MHtzvs2G5Hr/5l9YSJb4cstUmTxnXr1om3qVOn9gl/P/6JJ//Trn2nTocdWmiHQkOGDAvjhGJYFW261q0PCstHH3+qVauW0WZJney8ed+E5ZgxY5cvXxZXel55eS4Hyc2558be+zSJf80me/85XOca1asPHvLSBx9MDcX0uagbP+ZNnTzb8qADH3/iqdSYQdMmjbt0zjkzNFzk6NcLDgAAAMBmEIzmsa5dOv03GF3nNue/HX/s3Llf9X3g4d597o7W5pIP9b136rRpva654cknn77gvHPLlo0+nDqtX79H0/dKdcuXKx8Ho8HN/75x1apVo8eMfeSRx0P3jNP/8d133w8aPDQqVCi1Y6+retSqWfOWW3vfenvvaO2bkY44okuvq64sWfK352zedOO1FStWeLjfI48+9kS8zQXnn3vRheelNihceD1ziotuIOwrUaJk2Dec3YQJE1OHul4bemtQjnOfNu2j1BzPKy+/dIcdfncwIXPMyvrdA0BTG+Tm3NdsX+gPZkz3vv2W2rVq9bnznvg6Bxde8M/z/nl27o852sRrePqpJy9dujR9zJBT5whGQ8g7atSYcKnDBY8AAAAA2CyF0u/szg+rFs+Itk91G7ZItefO/jzKIz///PPcOV9VrFRx429+z40ffsicP3/+LrvsXL58+Q1tE37fr7/+etXKVbVq1yqUFpvm2CYktqFRo0b1DW2TS8uXL2/XvtNPPy0eM2p4uXLlo60qN+eeG6tXr547Z82jRWvUrFG4cOFoq1q4cGGrNh3KlMl47ZWhxYsXjyDf1KhVfyNrZ0zfnCeBAAAAQO4Vzagb5SfB6AblUzBa4E3/+JOuRx27W4N6jz/y8FbPRguYkIqecNJpX3zx5cDnn2m4x+4R5CfBKAAAAFtXfgejXr5EHguB3aAXni1Tusx99z8Ukaf63HlPubJlw+WVigIAAABsITNGN8iMUSDJzBgFAABg6zJjFAAAAAAgjwlGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASRzC6bcnKylqRZuXKldF2aNmypc88O+C5AS9EW2D27DlLliyJtivb4zHnht9iXYOHDH36mefCn3oEAAAAbJ+KRGxL7u/70G2390l1K1as+P6UiVE+m//N/PenfhgaTRvvVbVa1WjLhKjo1NPOHvfmW88+/fh/x5//7aJFP25kl4oVK+y0U6X0ynU33NSv36M1a9Z4a9yoKB/8/PPPX331dXqlXLmyVapULlSoULS58uSYZ82ctSorq379elH+8Fvk3sZ/i0qVKh173IlDh77cv9/9JUqUjAAAAIDtjWB027Lfn5ufc85Zcfu++x6I8tnSpUu7n3P+qFFjUpXWrVv2ve+ukiU3P+i57PKrQio68IVnmzXbJ67cd/+Djz72xEZ2OfmkE264vld6ZdHCNeFdZuaC7OzsLQnINmTy5HdOPPn0HMVSpUpde03PY485OtoseXLMp3c/d+6crz75+P0of/gtcm/jv8VfWuz/woCnjzz6uPAHf8/dvSMAAABgeyMY3bY0b94sfOL2M88MiPLZyaecMWHipPCNxx3bLXSffua5EJKG4nPPPhltlpGjRg8aPPTySy9KpaLBwQe32jltIuq/br4tLHtccWmqsseeDXOM07PH5W3atGy0xx75kcSlNGnSuGOHQ6I1TzBYPentyW+MHXfpZT0qVKjQrm2baNP9b455C/kt8lD4D+eySy669fbehx/eqU3rVhEAAACwXSmUnZ0d5adVi2dE26e6DVuk2nNnfx79zzXdZ7+wzL9b6d9/7/1Ohx8dEsynn3qsePHiobJ8+fLj/nbSO+9MGTpoQNO9m0abKPwt/fXANoULFx71+vAiRTaYudeoVT/aSpc0ZfToMSeefPppp518zdU9U8UnnvxPj57X7L/fnzc7F95yfzmgdWbmgvybMZqD32IjcvNbZGVltT64w+rVq98cO3JbDsQ3T/znsSEzpo+PAAAAID8Vzagb5SczRvPGs889P2fO3O5nnV66dOlUcfnyZffc+0DVqlVO+PvxcWXlypUvvTR8zNix8zZ+mokAABAASURBVL/5tkqVyvvuu/exxxwdh5K5N2vW7AHPv9i8ebODDjwgVXzl1REffjjttFNPLl++fKr4/fc/DBjwwtRpH61YvqJx40ZdD+9cu3at1NoXBg4Jy1P/cVLqAEIjdEMwGlbFwejChQv79X+0QYP6uzdo0P+Rx2bNmlOj+i5duhx2wF//su6BvffeB+Ei3HB9r42koht31933pb9vKsc5hhCqz5337LZbvZ9+WjxixMimTZucdeZpI14fOWTIsNIZpS+9+ILq1avn8tzXq+Oh7UMYN/XDaenFuXPnvjhwyNS1z2Bt3HivI7p2rlGjRu6POcrFNZw1c9aAFwaGxnfffR8uYGikP2e2UaM9O7RvF/3P+S1y81uEP/V/nHLi1b2uf/+9qXvv0yQCAAAAth+C0bwxb97Xd99zf8iJunTulCqOHTc+FC+84J9xd9mypcf//ZQQO0Zr36o0YeKkQYOHPvX0s0MHDShevETuv2v+N/PDsOee2z099Bk2bHgY7eijjkgFo+GLTjvj7MzMzKrVqhYrWvT1kaN697m7f78HUvcmT/voo7Bs2qRx+uBxN14V/PjjT+G7Qh40c+as1Du+Qwp86803HXdctxwHNnTYsLA8vEunaHPdfsed6d0c5xjCuHAwqe7oMWOnTHn/jbHjSpUqFY4tOzv77jvvyOW5r9fKlauitenwb18xekz3cy4Ig4evCN3XRozs+8DDfe+7s1Wrlrk85igX1/CzL75MP68gvXviCX/bKsGo3yL2h79F+IMPweiQYS8JRgEAAGD7skNEXuh02KFhOWTIsPTi0KHDUquCKe99EEKi448/5sMPJr8/ZeKbY0c2a7bPJ9M/HfD8wCivLV++vPu554c06tFHHpo8cdxb40YNHjggJErnnX/xggUL4m2+++77sKxQoUL6jnE3XpUybdpHN91w7awZn4Qjv7bXVdGat37/K3xFji/9aNr0EPiWK1cu2lyffzo1/jz5xP9taJtwFh9PmzJpwhuhHZK4Ua8Pf3fyWyF0mzbt49yf+3oNGPBiWDbea8+4u3jx4pDEhcZzzzzxycfvh09ohG4ohlWbdMzRRq9hm9YtU4OECxgONdUNn+uuvSraGvwWufwtwh982DL88UcAAADAdkUwmjfq16/XqNGer40YuWjRoriydOnSQYOHhmJYFVf+0mL/0SNf+deN18XRYa1aNU85+YTQ+Hj6J1FeGzJ02Pxv5q95Bc2v74TZZ5+ml1584ZIlS55bGzkF8Z3CxYoVS98x7sarUlq02P/IIw8vXLhwOPJTTz0pJF9hnLlzv8rxpTNnz97t15PdPMWLl4g/OxYttqFtDjzwrxkZGTvvvHM4jPAJlzekV00b7/X5519kZWXl8txjI0eOubrX9eHTo+c1B7Zse+vta94tfnb3M+O1z78wMOxyxeUX77//fnElNEI3FJ9/YeAmHXO00WsYiqlBihYrmj5m+Gz2cwm2kN8i979F+LMPf/wRAAAAsF1xK32e6XZU12nTPnp95OijjuwauqNGj4mL6dvUq7drWK5atWrBgoWrV2dVqVwldH9e/HOU1z6evmb+WuWddvrkk89SxfLl1wSyn3323zftxHc9r3f3+G7llMo7VUrvtju4zeNPPJX5Q2b938egIQJr3GjPKJ/t+GuSWyLtPuv4nusQxoXoKjfnHps5c1b4pLohxb7s0gv326953P3k0zW777vP3um7xN141SbJ5TXcvvgtYhkZpcMffwQAAABsVwSjeaZDh/a9rr1x0KChcTA6ePBLcTF9m2eeHXB/34fSA6B8MuPLmWF5/oWXrLvqq6/mxY3KlXeaOXPJ0qVLy5Qpk1obuvGqjQxepmyZ9dZDnBoy32hry825x4495uiePS6L26VLl84xH3DWrDnRryleStyNV22JDV3DAiYhv0X4s8/xbwkAAADAtk8wmmeqVq1y0IEHvDF23A8/ZBYtWuSVV0eEbiimNhj35luXXtajYsWKZ5995p577F6+fPk5s+de0ePqaLP88ssvG1lbtmzZsOx7/127VNslx6pSpUv+94CrVAkR7YLMBenBaOiGZbVq1aJNV6/errNmb2lKteVyc+6x0hmlNvJE1Dh3W7UqK70Yd3MkdGxIQn6L8GcfTwYHAAAAtiOC0bx0RNcuIRh99dURJUqUiLvpax98sH9Y3nH7v1PPW5y1y6xo0+2445pbld9/f2p6MStrdXp3113rhmU4jPQ3ZYcsdcmSJRkZGXH3T3/ad8LESW+Nn1i7Tu3UNqEbls323TvadHVq1xo0eGh8D3W09eTm3HOjTp3aYTln7ty4EQvd1Cr+UBJ+i/AHH/6B4fAunSIAAABgu+LlS3mpbdvWYfnioMGDh76U6qbsuOOaBzJmZ2enKuPeGh9tuho1q4fl+PETFi1aGFd+/PHHEHFGa0ePK+3btQ3LPnfeu2zZ0tSON996xwEHtZ027aO4G9/yf/8DD6XeQR8aoZtatanaH7LmS8eNezPaqnJz7rnRrk2baG2cvWLFirgSIrA43Y5X5YdiRYv+4TaLFy/efY+m4XPhRZdF27YC/1tEv/7Bx3/8AAAAwHbEjNG8lJGR0bVr54EDh4R2aOSYE9ey5YGvjRh5Zc9rPvzwo2rVqr777nuT3p5cqlSpKe+9f2XPXldcdnHZsmXfGDtuzBtj4+0zMzPD8robboq77Q5uE7+Su1Kliu3atglD7deiVbduR1asUOG5AS/EG6fs3rDBqaee1L//Ywe3O+zYbkev/mX1hIlvhyy1SZPGdevWibepU6f2CX8//okn/9OufadOhx1aaIdCQ4YMC+OEYlgVbbrWrQ8Ky0cff6pVq5bRZkmd7Lx534TlmDFjly9fFld6Xnl5LgfJzbnnxt77NIl/zSZ7/zlc5xrVqw8e8tIHH0wNxfT5jxs/5k2dPNvyoAMff+Kp1JhB0yaNu3T+3WzETz/9PH5rVseO7aN847fIzW8Rrf2Dj3794wcAAAC2I4LRPNa1S6f/BqPr3Fr7t+OPnTv3q74PPNy7z93R2lzyob73Tp02rdc1Nzz55NMXnHdu2bLRh1On9ev3aPpeqW75cuXjYDS4+d83rlq1avSYsY888njonnH6P7777vtBg4dGhQqldux1VY9aNWvecmvvW2/vHa19M9IRR3TpddWVJUv+9mzHm268tmLFCg/3e+TRx56It7ng/HMvuvC81AaFC69nTnHRDQRMJUqUDPuGs5swYWLqUNdrQ2+qyXHu06Z9lJpXeOXll+6ww+8OJuRcWVm/e+hkaoPcnPua7Qv9wYzp3rffUrtWrT533hNf5+DCC/553j/Pzv0xR5t4DU8/9eSlS5emjxly6hxhXPyq96rVqobkLtpifost+S1CyDtq1JjwZx/++CMAAABgu1Io/c7u/LBq8Yxo+1S3YYtUe+7sz6M88vPPP8+d81XFShU3/ub33Pjhh8z58+fvssvO5cuX39A24ff9+uuvV61cVat2rUJpsWmObUJiGxo1alTf0Da5tHz58nbtO/300+Ixo4aXK1c+2qpyc+65sXr16rlz1jzOskbNGoULF462tsuvvOo//3m2xxWXdu9+RrSdKJC/xcKFC1u16VCmTMZrrwwtXrx4VODUqFV/I2tnTN+cJ4EAAABA7hXNqBvlJ8HoBuVTMFrgTf/4k65HHbtbg3qPP/LwVs9GC6QOHQ+fNu2jKe9M2GmnShFbSUhFTzjptC+++HLg88803GP3qCASjAIAALB15Xcw6uVL5LEQEg164dkypcvcd/9DEXlt9erVRYsVOevM06SiW1efO+8pV7Zs+FMvqKkoAAAAFHhmjG6QGaNAkpkxCgAAwNZlxigAAAAAQB4TjAIAAAAAiSMYBQAAAAASRzAKAAAAACSOYBQAAAAASBzBKAAAAACQOIJRAAAAACBxBKMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxgFAAAAABJHMAoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHGKRORCjVr1IwAAAACgoDBjFAAAAABIHMEoAAAAAJA4glEAAAAAIHE8Y3SDZkwfv5G1dRu2iAAAAACA7ZMZowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkTqHs7OwoP61aPCMCcm3uV1//7eR/fjXvmxz16rtUe+rRe2pU3zkCAAAASICiGXWj/GTGKGxbQvQZAtAQg6YXpaIAAAAAeUswCtucHNmoVBQAAAAgz7mVHrZR8T31oSEVBQAAABIov2+lF4zCNuque/v/+NNPoVG2TJnzzz01AgAAAEgSwSgkVN2GLVLtGdPHRwAAAABJ4uVLAAAAAAB5TDAKAAAAACSOYBQAAAAASBzBKAAAAACQOIJRAAAAACBxBKMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxgFAAAAABJHMAoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwShsj7KjfJFPwwIAAABsc4pEwPanUJQv8mlYAAAAgG2OGaMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxgFAAAAABJHMAoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEKRIBBdTCRYu++25BaFSqVK5ihQoRAAAAAL8yYxQKps++mNGu4986dPl7+Dz/4ssRAAAAAGkEo1AATf1w+pHHnpG5YOG+e+8VAQAAALAOt9JDQTPp7SnHnXRuaNx1+3XLV6x4970PIwAAAAB+z4xRKFCysrIuvPz60Oj3wG2dOraNAAAAAFgfM0ahQClSpMijD92x+Ocl++7dOAIAAABgAwSjUNDsVn/XCAAAAICNcis9AAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEqdIBBQs4ye++59nB8Xt2XO+CssXBg3/8KNP48pVl/+zatXKEQAAAECyCUahoJn/7bcvvzIyvfLFlzPDJ25fcv4ZEQAAAEDiFcrOzo7y06rFMyJg09Vt2CLVnjF9fAQAAACQJEUz6kb5yTNGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYhe1RdpQv8mlYAAAAgG1OkQjY/hSK8kU+DQsAAACwzTFjFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwShsj7KjfJFPwwIAAABsc4pEwPanUJQv8mlYAAAAgG2OGaMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxil9WUaAAAQAElEQVQFAAAAABJHMAoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkTpEIKLj6PvR4WHY/48QIAAAAgDRmjEJB9vyLw8InAgAAAOD3BKMAAAAAQOIIRqGgeeI/L3z66Zfr1kMxrIoAAAAA8IxRKGBmzZp7zQ13hEbNGjt37tj2p8U/L1+xovddDw4ZNmLO3K9D/YAWzWvXrhEBAAAAJFuh7OzsKD+tWjwjAjZd3YYtUu0Z08fncq9ffvnlvQ+mvfraGwOHvJK5YGGqXrFC+a6d2x/S7qC9mzTaYQdTxQEAAIBtXdGMulF+EozCNmrzgtGUkJCeec4VI8e8GdptWv71wftulocCAAAA25H8DkYFJVAwjX1zUkhF99yjQfiExpvjJ0cAAAAA/MqMUdhGbcmM0W+/++HgQ49dsmTpqFeei7KzW3c4plSpkq+//EyVypUiAAAAgO2BGaPAJuv70OMhFb3ztutq16peu3aNPrdcE7qhGAEAAACwlrfSQwF02UXdG++1e+fD2sbdLp0PWZ29un3bVhEAAAAAa7mVHrZRW/jyJQAAAIDtmlvpAQAAAADymGAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASRzAKAAAAACSOYBQAAAAASBzBKAAAAACQOIJR2B5lR/kin4YFAAAA2OYUiYDtT6EoX+TTsAAAAADbHDNGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASRzAKAAAAACSOYBQAAAAASBzBKAAAAACQOIJRAAAAACBxBKMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxgFAAAAABKnSARsk84/59QIAAAAgPxRKDs7O8pPqxbPiNh0dRu2iAB+NWP6+AgAAACSpGhG3Sg/uZUeAAAAAEgcwSgAAAAAkDiCUQAAAAAgcbx8aTswd/bnEZA8NWrVjwAAAID8YcYoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAInjrfQA24G6DVvkqMyYPj4CAAAANpcZowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcYpEwIZ99tnn738wdd68r7Ozs0P37387rnLlneJVy5cve2PsW7NmzV6yZEno1qtXt3Onw6L/uWXLlj7/wqBRo96oWLHCySf9vVGjPaNN9MEHUwcOHvLZp1+0bdv6b8cfW6xYsQgAAACgoBOMkhTPvzAwTjA3olq1au3atkl1b771jvvueyB9g0PbHxIHo59//sXxJ5wy/5v5qVWHdTx0qwSjgwa91KPnNXH77cnvvDH6tUKFCuV+96ysrJNOOSMzMzO0x735VuWddurYsUMEAAAAUNAJRkmKG2+6JY7/NuKgAw9IBaMTJkzMkYqmu+yKnumpaH779tvvbr/jzrjdrt3BbQ9unVo17aOPU+2ZM2f98EPmTjtVinJt7tyv0i/LpMnvpILRSZMmhzQ5bp915mm77lo3AgAAACgoBKOwfuMnTEq1a9asUad27dAoW65MWC5ZsuSdd6ak1oY4NSwbN24U5Zuv533zzLMD4nb16rukB6N169RJtatWq1qhQvloU1SrVrVUqVKpubSN9twjteq99z9IfemRRxwuGAUAAAAKEsEorN/sOXNS7X+cfNKpp56U6s6b93X6lk8+8X9RPstanbWhVUce2WX2nNlDhr68337NT/z7cYULF442RfHixe+5u/f9fR/MzFxweJdOh6XdR5+1alUEAAAAUEAJRkmi0087Zd999l63XrFixVQ7+5fsDe0ev4jpD4XN5s2b98MPmbvuWjcjI2PjGy9ZsuTLL2cUK1qs2s5Vy5Ytm75q+fLlr414fUM7litX7vrreoVPtLnaHtw6fQpqbOHChaPfGBsBAAAAFFCFchnxbLZVi2dEbLq6DVuk2nNnfx6xxZrus1/qYZoPPXBvhw6HbGjLf/371sef+E+ONzWVKlUqLB9+6L7TzzhnvasO7XBI7ztuiStff/31NdfeOO7N8akt69Sp3bFjhwvPPzfHO99/+eWXxx5/sl//R+fMmZsqtmp54KWXXLjXXmvuzX/o4f+74cZ/5zjC+Buff+6pRo32HD16TPdzLojr++zd9D9PPTp+/IR/nNY9rjRs2GDgC8+m73vpZT2GvvRy3O57352tWrXseuQx06d/Glce6f/A/vvvd8xxJ4ZB1vulY0a92rL1b5fuvXfHlyhRMtV98cXBPa7675ugzjzj1Asv+GfEFqhRq/5G1s6YPj4CAACAgqtoRv4+1s+MUchp+YoV676/Pq5krVq1oVXLli2Pu3FSmWOzmTNn3Xtv34kTJz1w/z1VqlSOiz///PPZ55w/ekzOiZmh8vbkd8eMfKVqtao//vhjtI548BCqxt+b+q5ly5eFZUhUU5V33pnyzTffVKtWLe5mZWWFVDS1tnnzP4VlZuaCVGV1PObypRv60qpVq1SuvFM4nbj45lsT02ebDnt5eGqo+NGrAAAAANumHSJInumffPrhh9NyfPLkLfOLFi1aNxVNCTHltdfdlOo+3O+RdVPRWBih+7nnr9qsp3xmZGS0P6Rtqjt69G9f8e6776WOrWPHDvEk0E3V9fDOqfarr45ItcPIr40YGbcrVqzYtGnjCAAAAGBbZcYoSdTnznvCJ0fx3HO7X37pRaFxwt+O+0uL/e+5t+8HH0yNVx3T7ai2bduExt57N+nf74EZM2be9K9bUjv2e7hvWFbZqVJYPvBQ//Tb56+7puef/tRs6EsvX3Z5z7j40rCXz//knN133+3bb7/r3efu1CAHt2n9j3+c+OOPP956W594Pub06Z9+8MGHnTt1bNx4r/v6PvDelA/iLTt3Oqxz546hUbNmjQ2dYAg9X/k1snzl1deOP/6YuD1qzBupbQ7t0G5Du99wba/533532undU5VLL7mwQYPdChde808pHdofkjryl4YNv/nfNxQpsub/Sca9+dud3Ucf1XWHHfy7CwAAALDtEoxCTvXr1wufl156ORWMNtx990PaHRy327Vt8+mnn6UHo6lVwdChw1Lt0049uVWrlqFx3LHdBg4cMmHipLg+/JVXQzA6cdKk9C/te/9dxYsXD43KO1W+osfVp/3j5MMP71Sy5JrHd4ZEcswbY1PB6G671Uv/xvVqedBvt7GPHjN28eLF8dufhg9/NW2bAze0e5MmjZusDV5TTz5t/qdm++3XPG6Hg69Tp3ac3oYUePLkd/bff7/Qfu21394QFcLTCAAAAGAbZkoX5JmVK1emv0NpwYKFzw14If4UL75jqj5r9uw1y1lzUpX2h7SNU9FozXM/m416ffjxxx8Tp6Kbp1y5cge3+e3Rn2++NWHtN85OPRs0xLtlypSJNlf63fSvvb7m9vlw7i//mrq6jx4AAADY9pkxShKFWLBe/Xo5is2b7RNtma/nfZ3evaP3XevdLA5PQ0yZqlSvsUuU1w7r2OH1kaPi9vjxEzu0bzfp7cnpa6Mt8Pu76V+55uqe7747JfUMAffRAwAAANs+wShJdNSRXTt0yPt7vbNzt9ny5SvC8pfsX6L81Lr1Qan2qNFjboh6vTV+QqrSqtVB0RZIv5t+/jfzZ8+eM2Hi26m17qMHAAAAtn2CUcgzu+yyc3r3wb737LnnHututmOxYmFZu1atVGX+N9+lb7Bq1aqiRYtGW6Z8+fIHHXjAG2PHRWvnqM6bN++11/77yvjWrVuWK1cu2jJdD++cmjT6zjtTxoz977vv3UcPAAAAbBfc7gp5plixYulviv/wo49r1aqZ+mRlZY0b91ZoVK1WNVoTjNZMbfnSsJdXrlwZt2fNnLVXkz9d2bPXJ598Fm2Zww777X75xx5/KnWre8dD20dbLH1a6MvDX0m9G8p99AAAAMB2wYxRkujGf91yX9+H1q3v3bTJDdf3irZAx44d+v468iOPPL7nHrvv9+c/L1iwYMLESf+++fYQTVaoUP7Qtbnk/vv9OX3Hiy+54pSTT/zxx0V39LknbPbkk0+Hz7339O7SuVO09mVKqS0/+nj6m2+ND42/tNi/UKFCGzmY9Pcv9X3g4bR6qygXypcvn3qXVDj+rNVZZTIyGjfeK66k303/2oiRqb3cRw8AAABsFwSjJFHI+9JfH59SrmzZaMucfdbpj/86NzMsu599fo4Nzuz+zzGjXt1117pVq1U9759n333P/XF90OCh4ZO+ZalSpVq1/O+TQOvvumuqPnz4q8PXvv995pfTixTZ2H/ClSpVbNFi//FpjxYNDjrwgAoVKkS50HD3Bh98MDVux3fNh9Geffrx1Abpd9PH3EcPAAAAbC/c8Qp5qVy5cvfd2ydkmhva4JhuR1WuvFPcPvOMU3PMG03Xp/etZcqUiduHHnpInTq1o03XaZ23z3fsmNv76M8687SNb9DhkHY5Ku6jBwAAALYXIgySolSpkn+4Tforjzby+qONz9Ns07rV6JHD27Vtk6O+9z5NHnrwvttv+3dGRkZcCbnn0/95rMcVl1asWDF9y2bN9nn26cc7tP8tdixevPiLzz9z4gl/q1OndqoY30e/Q+HCvx1zkZzHfPDBrXNW2rTeyOkUKfxbe9dd6742fGg4kdTh7Vjsd+Pv3rBB+vFE7qMHAAAAth+FsrOzo/y0avGMiE1Xt2GLVHvu7M8jtkOrV6+eO2fuV19/XX3nnWvUrFE4LcFcV2Zm5ueff1msWLGdd65WtWqVaDtx7fU39u//WNwO+emUd8abMZqHatSqv5G1M6aPjwAAAKDgKppRN8pPnjEK+SUkobXr1A6f3Gxcca1oO7Fs2dJly5aHxjvvvJcquo8eAAAA2I4IRoFN9sgjT/z7lttzFI/sengEAAAAsJ0QjAJ5oHOnw3Zv2CACAAAA2E647xXYUscec/Ttt90UAQAAAGw/zBgFNlm3bke1anlQaJQoUbxqtSrFi5eIAAAAALYrglFgk1WqVDF8IgAAAIDtllvpAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiVMkYptXo1b9CAAAAADIO2aMAgAAAACJIxgFAAAAABJHMAoAAAAAJI5njG4H5s7+PAKSx/OFAQAAIP+YMQoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAU+2YxngAAEABJREFUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASp0gEv8rKylq9enWqW6hQoWLFikUAAAAAUOAIRvnN/X0fuu32PqluxYoV358yMQIAAACAAkcwym/2+3Pzc845K27fd98DEQAAAAAUUIJRftO8ebPwidvPPDMgAgAAAIACysuXAAAAAIDEMWO0IHj2uefnzJnb/azTS5cunSouX77snnsfqFq1ygl/Pz6urFy58qWXho8ZO3b+N99WqVJ53333PvaYo4sXLx5tilmzZg94/sXmzZsddOABqeIrr4748MNpp516cvny5VPF77//YcCAF6ZO+2jF8hWNGzfqenjn2rVrRQAAAACwDTBjtCCYN+/ru++5f+So0enFsePGh2JIJ+PusmVLjznuhPMvvGTgwCGfff7FoMFDr+51fafDjwr5abQp5n8zPww7cdLk9OKwYcND8ccff0pV3nlnSttDDvv3Lbe/O+W9zz7/vHefuw846ODXRoyMAAAAAGAbIBgtCDoddmhYDhkyLL04dOiw1KpgynsfhLDy+OOP+fCDye9Pmfjm2JHNmu3zyfRPBzw/MMpry5cv737u+ZmZmY8+8tDkiePeGjdq8MABpUqVOu/8ixcsWBABAAAAwNYmGC0I6tev16jRnq+NGLlo0aK4snTp0kGDh4ZiWBVX/tJi/9EjX/nXjdeVK1cudGvVqnnKySeExsfTP4ny2pChw+Z/M79nj8vbtG4VV/bZp+mlF1+4ZMmS5wa8GAEAAADA1uYZowVEt6O6Tpv20esjRx91ZNfQHTV6TFxM36ZevV3DctWqVQsWLFy9OqtK5Sqh+/Pin6O89vH06WFZeaedPvnks1SxfPk1gexnn30eAQAAAMDWJhgtIDp0aN/r2hsHDRoaB6ODB78UF9O3eebZAff3fWjmzFlRPpvx5cywPP/CS9Zd9dVX8yIAAAAA2NoEowVE1apVDjrwgDfGjvvhh8yiRYu88uqI0A3F1Abj3nzr0st6VKxY8eyzz9xzj93Lly8/Z/bcK3pcHW2WX375ZSNry5YtG5Z9779rl2q75FhVqnTJCAAAAAC2NsFowXFE1y4hGH311RElSpSIu+lrH3ywf1jecfu/U8/9nLXLrGjT7bhj8bB8//2p6cWsrNXp3V13rRuW4TD23qdJqhiy1CVLlmRkZEQAAAAAsLV5+VLB0bZt67B8cdDgwUNfSnVTdtyxWFhmZ2enKuPeGh9tuho1q4fl+PETFi1aGFd+/PHHCRMnRWtHjyvt27UNyz533rts2dLUjjffescBB7WdNu2jCAAAAAC2NjNGC46MjIyuXTsPHDgktEMjx9zMli0PfG3EyCt7XvPhhx9Vq1b13Xffm/T25FKlSk157/0re/a64rKLy5Yt+8bYcWPeGBtvn5mZGZbX3XBT3G13cJv9998vNCpVqtiubZsw1H4tWnXrdmTFChWeG/BCvHHK7g0bnHrqSf37P3Zwu8OO7Xb06l9WT5j4dshSmzRpXLdunQgAAAAAtjbBaIHStUun/wajXTrlWPW344+dO/ervg883LvP3aFbp07th/reO3XatF7X3PDkk09fcN65ZctGH06d1q/fo+l7pbrly5WPg9Hg5n/fuGrVqtFjxj7yyOOhe8bp//juu+8HDR4aFSqU2rHXVT1q1ax5y629b729d+iGBPaII7r0uurKkiU9YxQAAACAra9Q+r3V+WHV4hkRm65uwxap9tzZn0d55Oeff54756uKlSpWrrxTtGV++CFz/vz5u+yyc/ny5Te0Tfjr+vrrr1etXFWrdq1CabEpkBs1atXfyNoZ0zfnaRgAAACwvSiaUTfKT2aMJkvp0qUb7rF7lBcqVaoYPhvfJoShu+yySwQAAAAA2xgvXwIAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASRzAKAAAAACSOYBQAAAAASBzBKAAAAACQOIJRAAAAACBxBKMAAAAAQOIIRtmGZGVlrVixIjs7O9oyeTXO9mX27DlLliyJtivb4zEDAAAABUORCLYZ113/r0cfe2L4sEGNGu0ZbYENjTP/m/nvT/0wNJo23qtqtarRtmr+/G8XLfpxIxtUrFhhp50qpVeuu+Gmfv0erVmzxlvjRkX54Oeff/7qq6/TK+XKla1SpXKhQoWizZUnxzxr5qxVWVn169eLAAAAADaFYJREWLp0afdzzh81akyq0rp1y7733VWyZMlo23Pf/Q+GYHcjG5x80gk3XN8rvbJo4ZogNTNzQXZ29paElRsyefI7J558eo5iqVKlrr2m57HHHB1tljw55tO7nzt3zleffPx+BAAAALApBKMkwsmnnDFh4qTmzZsdd2y30H36medCSBqKzz37ZLTtOfjgVjunTWj91823hWWPKy5NVfbYs2GOXXr2uLxNm5aN9tgjP1LRlCZNGnfscEi05mEFqye9PfmNseMuvaxHhQoV2rVtE226/80xAwAAAKyXYJSC7/333g+paLNm+zz1xCPFixcPlcM6djjubyeFYljVdO+m0TbmoAMPCJ9UNw5Gu3c/YyO7VKpU8bCOh0b57E9/2id1GP+Muj/x5H969LymX79HNi8YzZNjXrpkaQQAAACw6QSjBcGbb42fMGFSqnv0UUfUqlVz+vRP3hj75s8//3z0kV1r16kdr/r++x8GDHhh6rSPVixf0bhxo66Hd65du1aO0VasWDFgwIvvfzB1/vxv9/vzn/76l/3XjQ7nzp374sAhU9c+r7Nx472O6Nq5Ro0am3E8L744eNybby1YuPDPf2rWtWvn9Z5dbo554+O8MHBIWJ76j5PiVDQIjdB9550pYVV8dgsXLuzX/9EGDerv3qBB/0cemzVrTo3qu3TpctgBf/1LtFnmzJn7cL9Hflr800UXnBdOP8ofd91938qVK1Pd5s2bpSeqWVlZfe68Z7fd6v300+IRI0Y2bdrkrDNPG/H6yCFDhpXOKH3pxRdUr149tXFurnMOHQ9tH4LRqR9OSy9u/G/jD485ysVvMWvmrAEvDAyN7777Plzn0Ljt9j6p3Rs12rND+3YRAAAAwEYJRguCsWPf7PvAw6luSJq6n3P+tGkfxd399mseB5EhBzztjLMzMzOrVqtarGjR10eO6t3n7v79Hkif7heSpn+cdtYHH0yN1rzhp+IbY8fdclvUp/etRx3ZNbXN6NFjup9zwZIlS0qVKhW6r40YGb697313tmrVcpOO59LLejzz7IBo7aMqR40a89TTz+7RcPccp5abY/7DcaZ9tOarmzZpnF6Mu/Gq4Mcff7r7nvtDpjZz5qzUe9Kffe75W2++6bjjukWbLuwbPye0+i67XHrJhVH+uP2OO9O7557bPUcwGk4q1R09ZuyUKe+H3zRcqHCO2dnZd995R7wqN9d5XStXrorWpsy/fcUf/W384TFHufgtPvviy/TzCtK7J57wN8EoAAAA8Id2iNj+XXbpRZ9/OjV84tucQ0iUtTrrtlv/9fR/HnvumSf2WTsjcvny5d3PPT8kX48+8tDkiePeGjdq8MABIb067/yLFyxYkBrq9t53hlQ0jPPFZ9PenzJx1OvDQzx64UWXff31f99Ivnjx4pB8hUYY+ZOP3w+f0AjdUAyrcn88IYkLaWYYfOALz4ZBZs345Pzzznnl1RHp55WbY87NOCHtDcsKFSqkF+NuvColpLc33XBtGOTDDyZf2+uqaM2b0/8VDiPadDVq/HcyZs2aNaJ8E1/n8Hnyif/b0Dbhin08bcqkCW+EdkhFw2/67uS3QgA6bdrH8Qa5/NtY14ABL4Zl4732jLu5+dvI5TFHG/0t2rRumRok/PThUFPd8Lnu2qsiAAAAgD8iGC0IihQpUrx4ifApXLhwtOYN7MteHjrw2GOO/utfWuy//37x3L0hQ4fN/2b+mtfdtG4V77XPPk0vvfjCJUuWPLc23gq+/fa7p59+bveGDa647OIdd9wxVOrXr/fk4/2HDn5+5513jrd5/oWBYZcrLr84jBxXQiN0Q/H5tXc35/J44jmeJ51wfLNm+4RG2LLb0Uce3KZ1+nnl5phzM058t3WxYsXSi3E3XpXSosX+Rx55eBikXLlyp556UkgPw3fNnftVtOnC+Y545aUQMh7T7ago38TXOXx2LFpsQ9sceOBfMzIywi8YTid8wm8afoKmjff6/PMvsrKyotxd59jIkWOu7nV9+PToec2BLdveenvvUDy7+5nx2tz8beTymKON/hahmBqkaLGi6WOGT/jziwAAAAD+iAShADrtHycXLVo0R/Hj6dPDsvJOO33yyWepYvny5cLys88+j7szZ8wMywP/+pcddvgtMW/UaM/0cT75dM3u++6zd3ox7sarcnk8X86YEZYdOrRPL1avvsumHnNuxonvHI/WJ05pUyrvVCm92+7gNo8/8VTmD5khTIw2XYiYo23Ajr8mwiXS7nmP738PwWiIEXNznWMzZ84Kn1Q3/G1cdumF++3XPO5uxt/GRuTtbwEAAACQg2C0ANp556rrFmd8uSb0PP/CS9Zd9dVX8+LGnK/WTMcrW7ZstGGzZs2Jfk3NUuJuvCqXx/PVvDX35teuvbG3EuXmmHMzTuXKO82cuWTp0qVlypRJFUM3XrWRHcuULRMlQG6uc+zYY47u2eOyuF26dOkcczM3428j9xLyWwAAAAD/M4LRAqhQ+N864riz7/137VJtlxyrSpUuGTfi3HD12turNyTOuVat+t02cTdHIrbx4ylXruz8b+YvX748/dU9m3HMuRmnapUqM2fOWpC5ID0YDd2wrFatWpR4ubnOsdIZpcqVK7ehcTbjbwMAAABgaxGMJsWuu9YNyxIlSuy9T5NU8ZdfflmyZElGRkbcrVVjzWuCZqTdKx376aefUpFinTq1w3LO3LlxIxa6qVW5VLN69U+mf/rG2HFdOndKFZctW7apx5ybcf70p30nTJz01viJtdOOMHTDstm+e0eJl5vrnBt16tSO8uJvAwAAAOB/wMuXkqJ9u7Zh2efOe5ctW5oq3nzrHQcc1HbatI/ibv3d6tWpU3vQ4KGff/5FapsHH+rffL8Dp079MO62a9NmTfHB/itWrIgrWVlZoZtalUt//cv+0ZrXmg9cvXp1XFm0aNHrI0dv6jHnZpyjjuwalvc/8FDqHfShEbqpVfnhiy++7H72+SeedGqOx3Rug3JznXMjr/42NkmxdR5fCwAAAJAbZowWBK++9vrESZNCY+LEyWHZ96F+r77+erzqtH+cvMsua+6P3r1hg1NPPal//8cObnfYsd2OXv3L6gkT3x4/fkKTJo3r1q0Tb1ykSJGrel5x6mlntT64w9lnn1m50k7jJ0x4bcTIsG88qTDYe58mXbt2HjhwSJO9/9yt2zR5xREAABAASURBVJE1qlcfPOSlDz6YGoqp+Ya5OZ5u3Y665bY+b4wdd1S341u3bBmO56mnn81xXrk55tyMU6dO7RP+fvwTT/6nXftOnQ47tNAOhYYMGZaZmRmKYVWUP557/sWXhr289ix273HFpVH+uO6Gm+LGvHnfhOWYMWOXL//vbNmeV16ey0Fyc51zIzd/G394zJv6TvmWBx34+BNPpcYMmjZpnD59GAAAAGC9BKMFwbtT3uvX79FUd9SoMaNG/bd9yMEHx0Fk0OuqHrVq1rzl1t633t47WvtC9iOO6NLrqitLlvztOZLt2rb5z1OPXnHl1fff/2C8TceOHa7ueXn629t7335L7Vq1+tx5zyOPPB5XLrzgn+f98+xNOp4w4PBhg049vfs770wJn9C98opLvvhixqOPPVF4h8Kpff/wmHM5zk03XluxYoWH+z0S6vFeF5x/7kUXnpfaoHDh9cyeLlpk8/8D2XOP3eNG4732jLZY+vVPl36dg2nTPkrN8bzy8kt32OF3JxUyx6zfP0A2tUFu/jbWbF/oD+aY/+Hfxh8ec7SJv8Xpp568dOnS9DFD3i0YBQAAAP5Qoezs7Cg/rVo8I2LT1W3YItWeOzsv78UOv/jXX3+9auWqWrVrFSpUaEObZa6xoG7dOhuawbd69eq5c9Y8PrJGzRqFCxeONtd3332/aNGievV2zZHibeox53KcuXO/WnPMNapv5Nzzyvz535YsWSL9jU/buFz+bfyhvPrboEat+htZO2P6+AgAAAAKrqIZdaP8JBjdRuVfMApsLwSjAAAAJFl+B6NevgQAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASRzAKAAAAACROkYhtXo1a9SMAAAAAIO+YMQoAAAAAJI5gFAAAAABIHMEoAAAAAJA4njG6HZg7+/MISB7PFwYAAID8Y8YoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASRzAKAAAAACSOYBQAAAAASBzBKAAAAACQOIJRAAAAACBxBKMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxgFAAAAABJHMAoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASRzAKAAAAACSOYBQAAAAASBzBKAAAAACQOIJRAAAAACBxBKMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxgFAAAAABJHMAoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4hSJ2ObVqFU/AgAAAADyjhmjAAAAAEDiCEYBAAAAgMQRjAIAAAAAieMZo9uoGdPHb2Rt3YYtIgAAAABgc5kxCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiFMrOzo7y06rFMyJg09Vt2CLVnjF9fAQAAACQJEUz6kb5yYxRAAAAACBxBKMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxgFAAAAABJHMAoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUtkfZUb7Ip2EBAAAAtjlFImD7UyjKF/k0LAAAAMA2x4xRAAAAACBxBKMAAAAAQOIIRgEAAACAxBGMAgAAAACJIxgFAAAAABJHMAoAAAAAJI5gFAAAAABIHMEoAAAAAJA4glEAAAAAIHEEowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEqdIBBRcfR96PCy7n3FiBAAAAEAaM0ahIHv+xWHhEwEAAADwe4JRAAAAACBxBKNQ0Dzxnxc+/fTLdeuhGFZFAAAAAHjGKBQws2bNveaGO0KjZo2dO3ds+9Pin5evWNH7rgeHDBsxZ+7XoX5Ai+a1a9eIAAAAAJKtUHZ2dpSfVi2eEQGbrm7DFqn2jOnjc7nXL7/88t4H01597Y2BQ17JXLAwVa9YoXzXzu0PaXfQ3k0a7bCDqeIAAADAtq5oRt0oPwlGYRu1ecFoSkhIzzznipFj3gztNi3/+uB9N8tDAQAAgO1IfgejghIomMa+OSmkonvu0SB8QuPN8ZMjAAAAAH5lxihso7Zkxui33/1w8KHHLlmydNQrz0XZ2a07HFOqVMnXX36mSuVKEQAAAMD2wIxRYJP1fejxkIreedt1tWtVr127Rp9brgndUIwAAAAAWMtb6aEAuuyi7o332r3zYW3jbpfOh6zOXt2+basIAAAAgLXcSg/bqC18+RIAAADAds2t9AAAAAAAeUwwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQAAAAASRzAKAAAAACSOYBQAAAAASBzBKGyPsqN8kU/DAgAAAGxzikTA9qdQlC/yaVgAAACAbY4ZowAAAABA4ghGAQAAAIDEEYwCAAAAAIkjGAUAAAAAEkcwCgAAAAAkjmAUAAAAAEgcwSgAAAAAkDiCUQAAAAAgcQSjAAAAAEDiCEYBAAAAgMQRjAIAAAAAiSMYBQD4f/buO76KKu8D8ISiQEDAgGIJBAQRREBWUbChWNeKBcu7lrWt2BtNLGtdK9grrlhWRVRs2EUEBduiIAgKUlXQNYJgECnmPXj1eg0tYIIJ53l2PvM55Ze5c+fiP989MwMAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCuVRYVIqSumwAAAAAGVOpQQof7KSUlFKhwUAAAAoc6wYBQAAAACiIxgFAAAAAKIjGAUAAAAAoiMYBQAAAACiIxgFAAAAAKIjGAUAAAAAoiMYBQAAAACiIxgFAAAAAKIjGAUAAAAAoiMYBQAAAACiUykB1lKzZs/++utvQ6NOnVo566+fAAAAAPArK0Zh7fTpxEl77vt/+xz4t7A9/uTzCQAAAAAZBKOwFhr90bhDjjg5/9tZf9l6qwQAAACApbiVHtY277w78shjTw+Nm66/dP6PP/73g48SAAAAAH7PilFYqyxatOic7peFRt87r9t/3z0SAAAAAJbFilFYq1SqVKnf3TfM/b7gL1u3TAAAAABYDsEorG02b7JZAgAAAMAKuZUeAAAAAIiOYBQAAAAAiI5gFAAAAACIjmAUAAAAAIiOYBQAAAAAiI5gFAAAAACITqUEWLsMf/u/D/d/KtWeOu3zsH/iqRc+GvtJauTC7mfUq7dBAgAAABA3wSisbWZ+9dXzL76WOTLxs8lhS7XPP+vkBAAAACB6WYWFhUlpWjh3UgKsukbN2qfbk8YNTwAAAABiUrlGo6Q0ecYoAAAAABAdwSgAAAAAEB3BKAAAAAAQHcEoAAAAABAdwSgAAAAAEB3BKAAAAAAQHcEoAAAAABAdwSgAAAAAEB3BKAAAAAAQHcEoAAAAABAdwSiUR4VJqSilwwIAAACUOZUSoPzJSkpFKR0WAAAAoMyxYhQAAAAAiI5gFAAAAACIjmAUAAAAAIiOYBQAAAAAiI5gFAAAAACIjmAUAAAAAIhOVmFhYVKaFs6dlAArc9OtfW+67d/FLD7rtOPPOv3EBAAAAGDtVblGo6Q0WTEKZcLfjzmiRo3s4lSGslCcAAAAAPAHCEahTFhvverHH3N4cSpDWShOAAAAAPgDBKNQVhRn0ajlogAAAAAlQjAKZUVxFo1aLgoAAABQIgSjUIaseNGo5aIAAAAAJUUwCmXIiheNWi4KAAAAUFIEo1C2LG/RqOWiAAAAACVIMAply/IWjVouCgAAAFCCBKNQ5iy9aNRyUQAAAICSJRiFMmfpRaOWiwIAAACUrKzCwsKkNC2cOykBVtGcOd+3artHVlZWaIf/SEe9+4pgFAAAAIhK5RqNktJUKQHKnhCDZv3azvq5mwAAAABQctxKD2XUP046ep11KoctNBIAAAAASlREt9I3atY+AaD0TRo3PAEAAIA/prRvpbdiFAAAAACIjmAUAAAAAIiOYBQAAAAAiE6kb6WfPnVCAkDJyW3QJAEAAIDyw4pRAAAAACA6glEAAAAAIDqCUQAAAAAgOoJRAAAAACA6glEAAAAAIDqRvpUegNLTqFn7IiOTxg1PAAAAoCyxYhQAAAAAiI5gFAAAAACIjmAUAAAAAIiOYBQAAAAAiI5gFAAAAACIjmAUAAAAAIiOYBQAAAAAiI5gFAAAAACIjmAUAAAAAIhOpQRYFRMnfvbW8BHLnFqn8jqNGjVs2rRJrVq1EgAAAADKMMEorJpRoz668KJLV1xz7jlnnn7aKZUrV04AAAAAKJMEo1Dyeve5+ZNPJ9x5+83Jn+eDkaPeGDZs3rx5od2923kVK1ZMAAAAAPiVYBRKxaBBL7z++pBdd+2Q/Bk+/XTCAZ0OTXe7nn+OYBQAAAAgk2AUVl+9jerd1PvaVHvxTz+9995/+9x4S3r2sQEDiwSjCxYsmDFj5qxvv11n3XU33rherVq1k+KZM2fOpEmTGzbMq1mz5vJqCgoKwsFnz/4uu1q1F19+ZcUHnDdv3mefTapRvXr9BvUrVPASNgAAACA6glFYfVWrVGnfvl26u9OOO8yePfu+fg+mumM//jg9NX/+/Guuu+GRRwaE+DI9mJ2dfe45Zx79tyOqVq2WHgzR6l1335tqn9rl5Pbttr/5ltteHzI0/RE333RDnTo56frFixe/8OJL117XZ/LkKUVOL5xbiy2bhUY6+iwsLHzkkcfuvLtvZnEo69n9vNatWyUAAAAA0bBSDEpS61a/xYvp8HHu3LnH/v3kvn37Zaaiyc9rPC+/4l/HHX/KTz/9lB6cNWtWwa+++PLLE08+NZ2KBsPefOvIvx2bWX/1Ndd3OfWspVPRZMl7okbvvdeeF13YM3Uf/Q8/zDv5H6d173lhkeLhw0fsf+ChITBNAAAAAKIhGIWS9OGoUel2vY3qpRrXXtcnhI/L+5Mw1b//48ucevjh/vn5+UUGx4/75PUhb6TaI0d+eOddfdNT9evn7r3XHtnZ2aluiFZPPePs9Oy9997/4kvLvcW+W49e48d/mgAAAADEQTAKq2/OnLkWE7NoAAAQAElEQVRvDR+R2oa9+dYNvW9K30cftGyxZarRs8f5u3fcLfk5uLyx93WDX33hpj7Xp2PTYPiIt5f3ESeeeNzTAwdc0KNrOu4M3n3vv7823k8P/u1vR741bPA9d9/+0aj3cnJ+udd+5oyZ06dPD41vvsm/5rre6eIup5z03jtvvvzCs7vsvFN68Kabb0sAAAAA4uAZo7D68vPzjzjymOXNHnXU4alGtWrV7rn7tltvu7PzYQdvvPHGYaRJk8Zfff31Vf/65cVNYz8et8wjhDj1kot6hUabNq0nTPxswONPpsa//OLL9Amki3ftsEuqUbly5T123+3R/gNS3U8+nZCbm/vW8OHpypCxdut6bqVKlerV2/D00055Y+iw1Phzg57vM/+aKlWqJAAAAABrO8EolIqQiu6W8Ur6kEKefdbpixYtmjnzq2+++SY0alSvnp6d+/33yzxIixbN0+1WrbZKB6P5+d+mGg3z8tIFg55/oeNuHSpWrPj9998/+9zz6fG6deqE/ZQp09IjDRvmPTnw6VR7/vz5mZ84Y8bMMJsAAAAArO0Eo1Dy7u175557dMwc+WDkqL7/7vfMs88lqyIrKyvdrlG9xtIF2223bbr95JNPv/TSq40bbzZq1Oj0YE5OTouf7+ifMmVqenDMmLHnnd8jWZbPv/iiYcO8BAAAAGBt5xmjsPqys7Pvufv2sB1x+GGZ400ab5bZDUHkAZ0OXdVUtDg226zRv668LN0tKCjITEWDu++8NfVK+mJasGBBAgAAABABK0Zh9W2wQd2999ojNLbdpk36mZ7BLbfe0fuGa1Lt+fPn/6PLGempXXbe6aCD9s9r0OD9/4688qprkj+sXbvtWrVqWSQPDYnt/vv99fTTTmnQoH5qJC+vQXq2bdttel9/zXK+UZ0EAAAAIAKCUSgBOTk5J590/N33/DvVHfD4k2ec3qVhw7zQnjJ56rRp09OVt9x8Q+3atUOjYF5B8ocNHz7i8J/f/tS+fbv+jzwwe/bsOXPm1q2bU7VqtSKVeXn10+13332/Vq2aQar7008//fvfD+y7714bbbRRAgAAABAHt9JDyTjxhOMyu7fcekeq8eOCHzPHv/12VpLKIu97ID04c8bMEHEuXrw4WUUPPvRoqjFp8uRHHnnsozFjp02f/t+RH44c+eE777z31Vdfpyu33267zD/s0fPiiRM/y8/Pf2PosJNOPvXSy6886R+nz5//QwIAAAAQBytGoWRstNFGf/vbkQ899Eiqm140mnkPe9Bht73att1m7NhxBQW/WzF6+JHHDB3ySqhPVkWdOjmpRohWu/XotXTBnnt0PO64o3facYcNN9ygR7fzrr72htT4c4OeD1tm5ahRoy+59Mpr/nVFAgAAABABK0ahxPzjxOMzu6lFozVr1jzyyM6Z4++++35IRUNkee3VVyZ/zMEHHZidnb2Cgpdfee2o/zvuo4/GhPbxxx+ze8fdlleZk5Pz1332SgAAAADiIBiFVVOp8m8vea9U6XdrrvMa5h104P7p7oDHn5w586vQuKhXj6OOOjyzMqSi11/3r0MOOejcs88IieRyPirJfKH8OutWXrqgZasWPbqfl6zMw48+FvZVq1b79713XnftVfU2qpc5G7ohun39tRd22XmnBAAAACAOWYWFhUlpWjh3UlI2NGrWPt2ePnVCAmvWrFmzpkyeVpgUtmjRfJ111klKwkknn/riS6+ExjX/uqLBr69XCv9Rf/HFl08//dywN99KjaRezZT5h3PmzJk4ccl/m40bN1pvvfUS+MNyGzRZweykccMTAAAAWBWVazRKSpNnjMIaUvtnScmZOnVaKhUNdtqpfW5ubuZsjerV08FolSrrFvnbEIa2adM6AQAAAIiVYBTKqxkzZqbbJ59yxpFHHFYnJ6dS5coLFvw4Y8ZX/e5/MD3bulXLBAAAAIAMglEor1q1apGdnZ16u/2YMWN7XTh2mWUNG+b9/bijEwAAAAAyePkSlFdVq1Z7YdBT7bbfbgU1++67z6MP31+rVq0EAAAAgAxWjEI51rBh3mP9H/rmm/wPPhw1c+bMefN++Gnx4lq1a+Xk5Kxfu3bTpk1q1KiRAAAAALAUwSiUe3Xq5Oyx+24JAAAAAMXmVnoAAAAAIDqCUQAAAAAgOoJRAAAAACA6glEAAAAAIDqCUQAAAAAgOoJRAAAAACA6glEAAAAAIDqCUQAAAAAgOoJRAAAAACA6glEAAAAAIDqVkijlNmiSAAAAAACxsmIUAAAAAIiOYBQAAAAAiI5gFAAAAACITqTPGJ0+dUICQMnx7GYAAADKFytGAQAAAIDoCEYBAAAAgOgIRgEAAACA6AhGAQAAAIDoCEYBAAAAgOgIRgEAAACA6AhGAQAAAIDoCEYBAAAAgOgIRgEAAACA6AhGAQAAAIDoCEYBAAAAgOgIRgEAAACA6AhGAQAAAIDoCEYBAAAAgOgIRgEAAACA6AhGAQAAAIDoCEaLa+HChT/+KuH3pk6dVlBQkJQr5fGcAQAAACgplRJWZsyYsTf0vvnV1wanR6ZPnZCspWbO/Gr27O9WUJCTs37dunUyRy69/Mq+ffvVr5/71rDBSSn4/vvvP//8y8yRWrVqbrjhBllZWcnqKpFznjJ5ysJFi5o0aZwAAAAAUN4IRlfupptvG/H2O6eddkqq+0fyuLLvttvv6nf/gysoOO7Yoy+/7OLMkdmzlgSp+fnfFhYWlsbFee+994857qQig9nZ2f+8pNcRhx+WrJYSOeeTupw+fdrn4z/+MAEAAACgvBGMrtyLL73SsGFej27nJRHYffddN96oXrp71dXXhf0FPbqmR5pv2azIn/S6oHvHjh1aNG9eqpFxq1Yt991nr9BYtGjxO+++98bQYV27XbD++uvvuUfHZNWtmXMGAAAAoMwSjPI7u+y8U9jS3VQw2qXLySv4kzp1cvbb969JKdt22zbp0zgj6fLgQw9f0OuSvn3vW71gtETOeV7BvAQAAACA8kkwumyDBr3w8bjx6e7XX//vuuv7pNpZWVnnn3d2aLz51vARI95J1xx26MENGtQfN278G0Pf/P777w87pFNew7zU1PTp058c+Mzo0R+FdsuWWx3c6YDc3NzU1KJFi/rceMvmmzeeM2fuK6+81rp1q1P+ceIrr772zDODqteo3vW8szfddNNkFU2bNv2evvfNmTvn3LPPDKeUlI6bbr5twYIF6W7btttkJqqr9L3+979vBgx4YvSYsT/O/7FlyxadDjogL6/Bij9937/uHYLR0R+NyRxcwXUuzjkHs2bN6ntvv6ZNm2zRtOm9990/Zcq03E03OfDA/XbacYdUwZTJUwY8MTD5+Z9EuM6hkf6HEbRoseU+e++ZAAAAAFDmCUaX7bXBQwY8/mS6W1BQcPMtt6e7qWB06NA377jznvRgSNm6nHbWmDFjU93tt2+bCkZff31Il9PODkfIzs4O3ZdfeS381R233bjrrh2SnwPEzCO/PmToyJEfvjF0WCgOf1JYWHjzjTckq6j/Y4+nnhO66SabdD3/nKR0XH/DjZnd00/vUiQYLeb3ev/9kSeefGp+fn69jeqtU7nyq68N7t3n5nv73rnipaALFiwM+ypVqvz2ESu8zsU55+C77+aE0w755uTJU9LvrA/X89qrrzzyyM6h/enEzzK/V5DZPebo/xOMAgAAAJQLFRKW5Zqrr5jwyejUFroNG+aluxM//WWVYreu56ZGUrd4h4Bs0eJF11171SMP3//Yow+22bp1GJw7d25I60IjjIz/+MOwhUbohsEwlf64kOV9PGbkOyPeCO2QHg5+9YX/vvdWCArHjPk4WXW5ub8sxqxfPzcpNekL8tCD/15ezUq/1/z587ucflZIRfvdd/d7bw97a9jgpwcOCH915lnnffvttyv49AEDlsTWLbfaMtUt5nUuzjkHId2+8vJ/Tpk0/qNR7/3z4guTJW+xvyqcamh03K1D+iA5OTnhVNPdsF36zwsTAAAAAMoDK0aXrfLPMkeqVKlapKbSz0KjYsWKYT9v3g/PPzuwyF89/sTAgoKCyy+7uF277VMjodGj+3kXXXxZmPr7ccekBnfeeccaP6v384uPmjRpHPatW2714kuvLFq0KPUpxXfE4Ye1btmyWna1Ug1G0xdk3crrLK9mpd/rmWcHzZwxc8mrkHbbNfUnbdq07nreOf+87IrHBjx5yj9OTB/qtdeGLFq4ODQWL1785lvDJ0+eEtqndvlHaraY17k45xy0b9/ukEMOCo1atWqdcMKxd97TN5zk9Omfh/OvuMQvB6m8TuWQli79DwMAAACAsk8wWmJOPP64IqloMP6TT8P+L222zhxMdVNTKeuu80tOVzXj3vDUfeKrEYwGWzRrmpQBK/1eH48bF9ob1K07fvxvV6N27Vph/+mnEzIPFZLQVBia0qLFlt26nrP99m1T3WJe52LaoG6dzO6eu3d84MH/5H+Tnwp2AQAAAFgLCEZLzMYb11t6cMqUacmvSV9aqpuaitykzyaH/VnnnL/01Oeff5HZPeLww3pd0C3Vrl69epGwuFSv83o110sAAAAAWLsIRktMVvjfUlLZ3MKFizIHU90iKV6catasGfZ33H7TJhttUmQqu3q1zG71Gtm1ai33irnOAAAAAKwSwWjpatgwL+ynTZ+eaqSEbnoqcptt1ijsq1atunWbVunBn376qaCgoEaNGsU/TsOGeYnrDAAAAECxeSt96dqzY8ewv+uue3/88cfUyKJFi0I3PVUaJk78rMupZx1z7AlFHtNZBu295x5h3+fGW3/4YV568Oprb9hplz3GjBlb/OP8Kdd5naUeKQsAAABAeWHF6LK9/fa7L73ySro7efKUSy+/MtXeeccddt21Q2i89PKrb7/zzs/F74X9HXf3fenVV1M1Jx5/3CabLLk3fOs2rTp1OmDgwGdabb1d586H5G666dPPPDdq1OgwmLlGsmQ99viTzw16PlnyCqYtLujRNSkd6QvyxRczwn7IkKHz5/+QGunVs3sxD7JFs6YnnHDsvffev/ue+x3R+bDFPy0e8fa7w4ePaNWqZaNGDZNiK+Z1XvE5r+pLrjrssvMDD/4nfcygdauWBx6wfwIAAABAmScYXbZPPv20b99+mSPpbq2atVLB6H9HfpBZM3jwkMGDf2nvtfvuqWA06H39NXkNGvS58Zb77nsgNXLO2WececapqXaFCr9btBuyuUWLfvegzCIFxbFl8y1SjZZbbZn8YdnZ2cscL3J9xowZm17j2bN71+J/r4svvKBB/frXXNv72ut7pz7u4IMPvPjCntWq/e4ZoxWyVnIdVnydi3POYV+x4jI+pfJyAtOTTjhu3rx5mcc8+m9HCUYBAAAAyoWswsLCpDQtnDspKRsaNWufbk+fuqbvMV+8ePH0aUseeZlbP7dixYpJKZs586tq1aqut165eZ16+Hf45ZdfLlywsEFeg6ysOFJuSAAAEABJREFUrNU9zJq+zkBaboMmK5idNG54AgAAAKuico1GSWmyYnQNCSFdXsO8ZE2pV2/DpFwJYWh6je0fsYavMwAAAADllJcvAQAAAADREYwCAAAAANERjAIAAAAA0RGMAgAAAADREYwCAAAAANERjAIAAAAA0RGMAgAAAADREYwCAAAAANERjAIAAAAA0RGMAgAAAADREYwCAAAAANERjAIAAAAA0RGMAgAAAADREYwCAAAAANGplBCxqVOn1amTk52dnZQfZeec339/5KefTsgc2XvvPdZff/2k7Jk9e/bzz7+UOdKkSeNtt/1LAgAAABArwehKTJk8ZeGiRSFFSsq2mTO/mj37uxUU5OSsX7duncyRSy+/sm/ffvXr5741bHBSCr7//vvPP/8yc6RWrZobbrhBVlZWsrpK5JxL6jd9+pnn+t3/YOZIm61bFwlGZ86Y+eHoj0Kjdcut6m1ULylNs2bN+uqr/4VG3bo5QebU559/0b3nhZkjxx17tGAUAAAAiJlgdCVO6nL69Gmfj//4w6Rsu+32u4qEdEWEIOzyyy7OHJk9a0mQmp//bWFh4R8JK5fnvffeP+a4k4oMZmdn//OSXkccfliyWkrknEv2N53wyeh0u0qVqun2vHnzupx21uDBQ9Iju+3W4Y7bbqpWrVpSCj79dELnI47Oz88P7Qt6dO3S5eTM2ebNm2WeZ5OmLRMAAACAuAlG1xK7777rxhkLEq+6+rrk54AsPdJ8y2ZF/qTXBd07duzQonnz0khF01q1arnvPnuFxqJFi9959703hg7r2u2C9ddff889Oiarbs2c8yrJDEMzHff3k0e8/U779u0OO7RT6A54fGAIScPgY/0fSkraqFGjDz/ymIKCgm22afP++yOXLqhQocLyzhMAAAAgToLRlZhXMC8pD3bZeaewpbupYLTIssEi6tTJ2W/fvyalbNtt26RP44yky4MPPXxBr0v69r1v9YLREjnnNfCbfvjBhyEVbbf9dg/e33edddYJIwfsv+/fjj4+DIap1lu3TkrO2yPeOeyIv4XGrbf0nj//x2UGowAAAAAUIRhdhimTpwx4YmBofP31/6ZNmx4a113fJz3bosWW++y9Z7o7ffr0Jwc+M/rn50i2bLnVwZ0OyM3NTVZL+Kx7+t43Z+6cc88+s0GD+knpuOnm2xYsWJDutm27TWaiumjRoj433rL55o3nzJn7yiuvtW7d6pR/nPjKq68988yg6jWqdz3v7E033TRd/L//fTNgwBOjx4z9cf6PLVu26HTQAXl5DVb86fv+de8QjI7+aEzm4Eqv4YrPOfn58Zp97+3XtGmTLZo2vfe++6dMmZa76SYHHrjfTjvukCpYpd/0j3ti4DNhf+KJf0+lokFohG4IRsNUCQaj4fc645zzQ6PffXd33G3X/o89ngAAAABQDILRZfh04mc333J75khm95ij/y8dor3++pAup51dUFCQekn6y6+8dsed99xx24277tohWXUh1Uo9J3TTTTbpev45Sem4/oYbM7unn96lSDCa+WVfHzJ05MgP3xg6LHzB8DULCwtvvvGG1NT774888eRT8/Pz621Ub53KlV99bXDvPjff2/fOFS8FXbBgYbLk9vMqv31EMa7his85+O67OeG0Q745efKUcKjUYLie11595ZFHdk5W5TctEWPGjg371q1+9yjPVDc1VVIqVar00P33zp37/TbbtEkAAAAAKDbB6DJ03K1D+k0127ffdf78+R+OHJGerVSpcqoxd+7ckOiFxmOPPtiu3fahMWLE238/4ZQw+N47w2rUqJGsotzcXxZj1q+/mmtOiyP91d559/2/HX38MmtCRhm+QviC27XbJaSig199YeONN+rQce8xYz5OFYRr0uX0s0IqmlqoGEZCfnrU344786zzhr85uMib2TMNGPBk2LfcastUt5jXsDjnHIwZM/bG3tcddND+4bBPPPH0Py+74tLLr+rU6YCQwxbzNy0pX3+95O3w669fe/Hixe+++16yZJXrtqGbnipBTZtungAAAACwiiokLKVixYpVqlRNbZXXWRKZpbthq1TplzT58ScGFhQU9Oh+XirRC0IjdMPg4z/ftb2qjjj8sFdefO6tYYMP73xoUmrSX2Tdyussr2bnnXcMoeTGG29cb6N6YWvSpHGISlu33GrChImLFi0KBc88O2jmjJlLXoX0cyoatGnTuut554Tv/tjP0Wfaa68Nuejiy8J2Qa9Ldu6wx7XX9w6Dp3b5R2q2mNewOOcctG/f7pBDDgo/X61atU444dhw5uE406d/nhT7Ny0pqbv1w2FHvP1O5yOODltopD4lNQUAAADAn8uK0dU3/pNPw/4vbbbOHEx1U1OrYYtmTZMyYN1fn4xZNeOe99T97yEYDQHfx+PGhfYGdeuOH//bN61du1bYf/rphMxDTZ48JWzpbosWW3bres7227dNdUv2Gm5Qt05md8/dOz7w4H/yv8kPwW6yZqWePBAa1atVS42kG6knBgAAAADw5xKMrr4pU6Ylv6aBaaluamotNumzyWF/1s+v/Sni88+/yOwecfhhvS7olmpXr169yNrMUr2G69VcL/mTbLBB3cmTC3788cfWW7ce/eG7yZIvVTt0U1MJAAAAAH82wejqS+V3CxcuyhxMdYskfWufmjVrhv0dt9+0yUabFJnKrl4ts1u9RnatWsu9GmvrNay34YaTJ0/59ttvN9pooxCJpgZDN+zDSAIAAADAn00wuvoaNswL+2nTp6caKaGbnlqLbbZZo7CvWrXq1m1apQd/+umngoKCVXrrVMOGecnaeA233fYvI95+Z9ibwzsfdkh6MHTDfpu/bJ0AAAAA8Gfz8qWVWKfyct9XvmfHjmF/1133pm6RTn5+/mbopqdW1cSJn3U59axjjj2hyGM6y6C999wj7PvceOsPP8xLD1597Q077bLHmDFji3+cEr+GxbGC37SkHHpIp7C/9bY78/PzUyOhEbrpqUzF+d3L0b8NAAAAgHLBitGV6LDLzg88+J9LL78yPdK6VcsDD9g/NLZu06pTpwMGDnym1dbbde58SO6mmz79zHOjRo0Og5nrKIvvsceffG7Q88mSVzBtcUGPrknpSH+XL76YEfZDhgydP/+H1Eivnt2LeZAtmjU94YRj7733/t333O+Izoct/mnxiLffHT58RKtWLRs1apgUWzGv4YrPeVXfKb+C37SkNGyYd/TfjnrwoYf33vegffbaI8nKeuHFl2fOmBkGw1SR4uL87iuoeWv4iIceejTVnjJ1atgPeGLg6I9+iacvuahnvY3qJQAAAAD8nmB0JU464bh58+b17dsvPRKyrXSI1vv6a/IaNOhz4y333fdAauScs88484xTk9WyZfMtUo2WW22Z/GHLe/t55ncJxowZm17j2bN71woVfreIOGSOixb97gGg6YKLL7ygQf3611zb+9rre6c+7uCDD7z4wp7Vqv3uGaMVslayKrk413DF5xz2FSsu41MqLycwXfFv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AIDoCEYBAAAAgOhE+lZ6AEpPo2bti4xMGjc8AQAAgLLEilEAAAAAIDqCUQAAAAAgOoJRAAAAACA6glEAAAAAIDqCUQAAAAAgOoJRAAAAACA6glEAAAAAIDqCUQAAAAAgOpUSYCkzZsx4bMCT77zzXstWW/392KM33HCDZG30wosvv/jSy/MK5h166MF77bl7AgAAABANwShReP31IdOmf16cyh13aL/ZZo2u+tewpuJnAAAQAElEQVR1Tz39bOgOe/Otgu8LLr/s4uRP8vgTAwsKCpY5tUHdults0bR+/dyKFSsmq27ixM9O/sdpqfaLL73y3jtv1qu3YQIAAAAQB8EoUeg/4MlBg14oTuUtN/cOweiwN4enR94YOiz581xx5TX5+fkrKNiiWdNb+twQ9skq+u/IDzK7H3zw4T777JWslksvv/L7uUvS20YN87p0OTkBAAAAKPM8YxSW4S9tWqfb2/ylTVKGjR/3yR577zdmzNhkFTVvtkVmt9kWqxytpvXt2+/R/gPC9vqQoQkAAABAeWDFKCxD1/PPrVip0gcfjtpz944nnXBcUuZddMllTwx4pEKFVfi/OrbaqsUFPbo+0n9A3bp1Dj24U17DvGS1LFq0KAEAAAAobwSjROHM07vsv+8+6W6viy5N359+6CGddu+4a3rqLz+vD91ii83vvvPW4hz5p59+Gj/+k403rlerVu3M8W+//XbatOm1a9euXz83KytreX8+b968zz6bVKN69foN6q801jz37DO2227bVPvr/33z8MP9R7z9Tqr7/vsjJ0yY2LTp5pn1CxcunDx5SgguGzXKq1Kl6tIH7NLl5GLe+T5nzpxJkyY3bJhXs2bNzPHCwsKXXnolAQAAAChvBKNEoXnzZmFLd//d74F0MNpiyy33zchMU665rvd99z2Qap/a5eQzzzg1NGbPnr19+w7pmnffHtrnplsGDnw2dai2bbfp3vW8sP/8888vuvjyV18bnCrLycnpe/ft22zzu/vxQ574yCOP3Xl33xBcpgfbt2/Xs/t5rVu3SpZjiy2ahpp0d/vt2m673Y7pbggu08FoyEkvu/KqD0aOSs82adL4vHPOzPyms2bNarfDb4nwhyNHpMLTPjfectfd96a/e/t22998y23pe+R32nGHm2+6oU6dnNAeOfLDAzsdlnmGIajdovmSpxD07HH+scf8LQEAAAAoqzxjFJah4PvvC36VvlV8wYKFBRluvf2uvn37pQPWd999/+RTTp8yecp+BxyaTkWDUNDpkMO/+OKL9MgPP8w7+R+nde95YWYqGgwfPmL/Aw8NgWlSPPXqbVhvo3rp7hdfzEg1br31jvCJmaloMGHCxFNOPfP8rj0XL16cGlm4cFHm10lXhsA0PfjFl1+eePKpmU8OHfbmW0f+7diffvoptOd+P3fps0r94cIF7q8HAAAAyjTBKKymO+64u8hIyEB36rDHMl8i3+/+h9Lte++9/8Xl337erUev8eM/TYph5syvZs6Yme5usslGYR/y0Guu6728P+n/2OMDn3omKbaHH+6/9NcZP+6T14e8kQAAAACUZ4JRWE1NmjR+oN89N/W5vn793Mzxhg3zbrj+6rBlLud8860RqcY33+RnBpddTjnpvXfefPmFZ3fZeaf04E0337bMTxz10Zi3ho9IbQMHPn3mWedlzjZq1DDsL7vyqvRIixZb3nZrn3CSu3bYOT14xZXXzJs3Lym2E0887umBAy7o0TU7Ozs9+O57/02WvNe+Wd977jjqqMPT4+GahJGw7d6xQwIAAABQhnnGKKymm2+8PiSPofHjjz9269ErPX7xRT1377hbavyCXpekBtN3zb81fHi6MkSN3bqeW6lSpXr1Njz9tFPeGDosNf7coOf7zL+mSpUqRT7xttvuDNsyT2brNq1CKPnVV1+///7I9OBVl18axkOjdetWLVu3TQ3m5+ePHvXR9u22S4ohfJFLLlry1dq0aT1h4mcDHn8yNf7lF1+Gfd26dfbac/f58394+OH+qfE6OTlhJAEAAAAo86wYhdW02WYNU42tt26dOb7zTr+8EGnrjNcoFRQUFBYWhsaUKdPSgw0b5j058OnHBjwRtk8nTMg8yIyMe+SLI2SgFSpUmDr1t4OH1LVV661S7dq1a7fb/rckdPKUqcU8bIsWzdPtVq22Srfz879NAAAAAMozK0ZhNWVlZaUatWqut8zxmr8fT5mSEUqOGTP2vPN7JMvy+RdfNGyYlxTDFs2a3tLnhrBfcvCpvx184403ClFpurvhhhuk25OnFjcYTX+XoEb1GgkAAADA2kIwCmXRggULlh484vDDttpqy3S3bt26zZpunls/t2LFiskq+XntKgAAAEDMBKOwRuXlNUi327bdpvf11yyzbIMN6iw9uNuuu+yzz17JCg7e4LeDf/vtrJ9++im9aPTr/32TnmqYl5cAAAAAxM0zRmGNysurn26/++77tWrVbNCgfmrLzd30lVcGr7NO5dCuWrVasurq189Nt/Pz88eMGZtqz549e/jwEcs8BwAAAIA4CUZhjdp+u9+9Dr5Hz4snTvwshJhvDB120smnXnr5lSf94/T5839IVsuGG27QqlXLdPeSS694bfDrb494p1uPC9ODOTk5LVtulZScWrVqpduTp059863hYQtRbAIAAABQhrmVHtaokF326Hbe1dfekOo+N+j5sGUWjBo1+pJLr7zmX1ckqy4rK+ufF/fqdMjhqe7774887u8nF6np0f287OzspOQ0apiXbs+cMfPIo44Njccfe3i77bZNAAAAAMoqK0ZhTTv++GN277jb8mZzcnL+usIHia7YNtu0Ofus05c3u9++fz30kE5JicrNzT2886EJAAAAQLkiGCVGlSpVXnFBxUq/ved9ee98z8qq8Gvxqq28rlq12r/vvfO6a6+qt1G9zPHQPfLIzq+/9sIuO++UHszOXuWHjZ537lmPPHx/kyaNixz8huuvvuP2myr9erYVK/7uP//018mU+d3XWXe5F+3KK/55Qc9uWzRrmh6pXHklVxgAAADgz5VVWFiYlKaFcyclZUOjZu3T7elTJyRQBsyZM2fixCX/jTRu3Gi99dZLStS8efM+/XTCwoWLmjTZLPNJoFAachs0WcHspHHDEwAAAFgVlWs0SkqTZ4zCnymEoW3atE5KR7Vq1Vq3bpUAAAAAsBS30gMAAAAA0RGMAgAAAADREYwCAAAAANERjAIAAAAA0RGMAgAAAADREYwCAAAAANERjAIAAAAA0RGMAgAAAADREYwCAAAAANERjAIAAAAA0RGMAgAAAADREYwCAAAAANERjAIAAAAA0RGMAgAAAADREYwCAAAAANGplEQpt0GTBAAAAACIlRWjAAAAAEB0BKMAAAAAQHQEowAAAABAdCJ9xuj0qRMSAEqOZzcDAABQvlgxCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAAREcwCgAAAABERzAKAAAAAERHMAoAAAAARKdSEqXcBk0SAAAAACBWVowCAAAAANERjAIAAAAA0RGMAgAAAADRifQZo9OnTkgAKDme3QwAAED5YsUoAAAAABAdwSgAAAAAEB3BKAAAAAAQHcEoAAAAABAdwSgAAAAAEB3BKAAAAAAQHcEoAAAAABAdwSgAAAAAEB3BKAAAAAAQHcEoAAAAABAdwSgAAAAAEB3BKAAAAAAQHcEoAAAAABAdwSgAAAAAEB3BKAAAAAAQHcEoAAAAABCdSglr3KJFixYvXrzOOutkZWUtPTt16rQ6dXKys7OTUpD66HQ3nEA4jZX+1Q8/zHv6mUEVKlTofNgh6cGnn3l23rwfDjpwv6pVqyUAAAAAUK5YMfonuPSyqxpv3mLs2I+XMXX5lTvu3HHPvfdPSsftd9wdPjq9td1+55X+SUhFTzjx1K7dLth0k40zx+vUqdOte68wFQoSAAAAAChXBKNly+xZ34V9fv63hYWFSSnYfru2p512Smor5p90637hsDffGvhE//bt22WO79C+3RMDHglToSABAAAAgHLFrfRlS68Lunfs2KFF8+bLvMv+j2vbdpuwpdqPPjpgpfWvDX79qaef7d713G22abPMo3U7/9xrr+990EH7d9xt1wQAAAAAygkrRsuWOnVy9tv3r3kN85IyoLCw8OJLLm/YMO+UU05aXk2XLieFglBWSktcAQAAAKA0WDG6ItOnT39y4DOjR38U2i1bbnVwpwNyc3PTs2++NXzEiHfS3cMOPbhBg/rjxo1/Y+ib33///WGHdErnm08++fSwN9/6dtas7bbdplOnA5b+oJtuvm3BggXpbtu2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" alt="시점 판정은 시간 속성이 맡고, 값마다 유효 구간과 기록 시각이 붙는다" /><figcaption>시점 판정은 시간 속성이 맡고, 값마다 유효 구간과 기록 시각이 붙는다</figcaption></figure></p>
+<p>그림이 말하는 다중도를 말로 옮기면 이렇습니다. 사원 하나가 시간 속성을 여럿 가지고, 시간 속성 하나가 유효 기간이 붙은 값을 여럿 모아 둡니다. <strong>이 두 번째 다중도가 이 패턴의 전부</strong>예요 — 속성의 값이 하나가 아니라 여럿이라는 것이 바로 「이력」입니다. 그리고 값 하나는 구간 하나를 가리키고, 구간은 끝점 자리에 시점을 둘 둬요. 기록 시각은 값 쪽에 한 줄로 붙어 있습니다.</p>
+<h2 id="사용-목적">사용 목적</h2>
+<p>이 패턴이 필요하다는 단서는 업무 요구나 기존 모델에서 찾을 수 있습니다. 아래 셋 중 하나라도 보이면 이 패턴이 답일 가능성이 높아요. 관찰되는 것과 떠올릴 것을 먼저 한 표로 보고, 셋을 차례로 봅시다.</p>
+<pre tabindex="0"><code class="language-text">관찰되는 것                                     떠올릴 것
+「그때 값」을 구하려고 로그를 순회하는 함수      시점 인자 접근자 하나로 모은다
+발효일 칸과 접수일 칸이 따로 있다               두 시간축(사건 시각 · 기록 시각)
+지난 마감 문서를 오늘 재현해야 한다             기록 시각 기준 조회
+값이 바뀌어도 과거 명세는 그대로여야 한다        이력에 값을 더하고 지우지 않는다</code></pre>
+<h4 id="단서-1--마감정산-코드가-그때-값을-구하려고-변경-로그를-뒤집니다">단서 1 — 마감·정산 코드가 「그때 값」을 구하려고 변경 로그를 뒤집니다</h4>
+<p>급여 재계산 함수가 <code>payRateChangeLog</code> 를 최신순으로 순회하면서 대상 날짜보다 앞선 첫 항목을 찾는 코드가 보이면, 그 함수는 지금 시간 속성의 조회를 손으로 다시 구현하고 있는 것이에요. 같은 코드가 세 곳에 복제돼 있으면 셋의 답이 경계 날짜에서 달라집니다.</p>
+<h4 id="단서-2--업무가-발효일과-접수일을-다른-칸으로-부릅니다">단서 2 — 업무가 「발효일」과 「접수일」을 다른 칸으로 부릅니다</h4>
+<p>인사 발령서에 발효일과 결재일이 따로 있고, 보험 약관에 효력 발생일과 청약일이 따로 있으면 두 시간축이 이미 업무 언어에 있는 것입니다. 모델에 칸이 하나뿐이면 그 둘이 한 칸에 합쳐져 있어요.</p>
+<h4 id="단서-3--감사대사-요구가-그-시점에-우리가-알던-값을-묻습니다">단서 3 — 감사·대사 요구가 「그 시점에 우리가 알던 값」을 묻습니다</h4>
+<p>지난달 마감 문서의 숫자를 오늘 다시 계산했을 때 같은 값이 나와야 한다는 요구가 그것입니다. 오늘의 지식으로만 답하는 모델은 이 요구를 만족시킬 수 없어요.</p>
+<h4 id="쓰지-말아야-할-경우">쓰지 말아야 할 경우</h4>
+<p>반대로 <strong>쓰면 손해인 경우</strong>도 분명합니다. 속성의 과거 값을 아무도 묻지 않는 자리예요. 사원의 현재 연락처처럼 「지금 값」만 필요한 속성에 이력을 붙이면, 값 하나를 읽는 데 날짜를 만들어 넘겨야 하고 저장소에는 절대 조회되지 않는 행이 쌓입니다. 기록만 남기면 충분한 자리에는 변경 로그 한 줄이면 되고, 그 로그를 쓰는 비용은 이력을 조회 가능한 구조로 유지하는 비용보다 훨씬 작아요. 판단 기준은 하나입니다 — <strong>과거 값을 정말로 조회하는가, 아니면 남겨 두기만 하는가.</strong></p>
+<p>한 가지 더 있어요. 한 클래스의 속성 대부분이 시간에 따라 바뀐다면 속성마다 이력을 다는 대신 객체 전체를 시간으로 다루는 쪽이 낫습니다. 속성마다 이력을 따로 두면 발령 한 건이 일당과 소속을 같은 날짜로 함께 바꿀 때도 이력 둘에 값을 따로 넣어야 하고, 2월 25일의 사원을 한 번에 보려면 속성마다 날짜를 넘겨 답을 하나씩 모아야 하기 때문이에요. 원전도 그 자리를 따로 갈라 두었어요(근거: <a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property, eaaDev 초안</a>의 "When to Use It" — 클래스에 시간성을 띠는 속성이 <strong>몇 개</strong> 있을 때 이 패턴을 쓰라고 적고, 대부분의 속성이 그렇다면 Temporal Object 로 가라고 적습니다). 이웃 패턴과의 차이는 다음 절에서 풉니다.</p>
+<h2 id="패턴의-경계">패턴의 경계</h2>
+<h3 id="디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</h3>
+<p>아래 조건은 클래스 모양이 아니라 <strong>어떤 개념이 무엇을 책임지는가</strong>와 <strong>모델이 늘 지키는 규칙</strong>으로 판정합니다. 메서드인지 그 타입에 붙은 함수인지, 이력을 목록으로 담았는지 맵으로 담았는지는 판정에 상관없어요.</p>
+<p>조건을 적용하기 전에 <strong>속성을 먼저 지목해야 합니다</strong> — 「누구의 어떤 속성인가」. 이 예제에서는 「사원 EMP-1042 의 일당」이고, 지목한 뒤에 아래 넷을 그 속성에 대해 묻습니다. 순서가 중요해요. 지목할 속성이 없는 모델은 이 패턴이 아니라 다른 것이에요(비교 절 「Observation 과의 차이」가 그 자리입니다). 그리고 조건 4 에서 말하는 <strong>「이 속성을 읽는 자리」는 그 속성의 값을 얻어 쓰는 코드 전부</strong>입니다. 화면·배치·보고서·다른 서비스 어느 하나라도 예외가 되면 그 조건은 빠져요.</p>
+<ol>
+<li>[필수] 속성의 값은 하나가 아니라 이력 — 새 값이 옛 값을 덮어쓰지 않고, 과거 어느 시점의 값도 모델 안에 남아 있습니다. 시나리오 1 의 1단계 · 시나리오 2 의 1단계 (근거: <a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property, eaaDev 초안</a> — 글의 한 줄 부제가 "A property that changes over time" 이고, 도입부가 보통의 속성은 지금을 묻는 질문이지만 과거의 어느 시점에 대해서도 같은 질문을 하고 싶을 때가 있다고 적습니다. 자격은 <strong>의도문</strong>입니다)
+<ul>
+<li>경계 사례: 위 근거 괄호가 받쳐 주는 것은 <strong>과거 시점의 값을 물을 수 있어야 한다</strong>는 것까지입니다. 그 이력을 목록으로 담을지 맵으로 담을지, 옛 값의 끝을 닫을지 열어 둘지는 여기서 정해지지 않아요.</li>
+<li>빠지면: 칸 하나짜리 속성이 됩니다. 시나리오 3 의 1단계처럼 3월 15일에 덮어쓴 뒤로 2월 25일과 2월 14일이 똑같이 240,000원을 내고, 2월 명세의 200,000원 × 14일을 설명할 근거가 사라져요.</li>
+</ul>
+</li>
+<li>[필수] 값마다 언제부터 유효한지가 값 쪽에 붙음 — 이력의 항목이 「언제 적었는가」가 아니라 「언제부터 참인가」를 자기 안에 가집니다. 시나리오 2 의 1단계 (근거: <a href="https://martinfowler.com/eaaDev/Effectivity.html">Effectivity, eaaDev 초안</a> — 글의 한 줄 의도가 "Add a time period to an object to show when it is effective" 이고, "How it Works" 가 어떤 사실이 일정 기간에만 참이라면 그 기간을 사실에 달아 두는 것이 당연한 방법이라고 적습니다. 자격은 <strong>의도문</strong>입니다)
+<ul>
+<li>경계 사례: 위 근거 괄호가 받쳐 주는 것은 <strong>유효한 기간이 값 쪽에 붙는다</strong>는 것까지입니다. 그 기간을 Range 값으로 둘지 날짜 두 칸으로 둘지, 끝을 명시할지 다음 값의 시작으로 대신할지는 여기서 정해지지 않아요 — 앞의 선택은 [선택] 5 에 있습니다.</li>
+<li>빠지면: 순서만 있는 변경 로그가 됩니다. 시나리오 2 의 1단계에서 3월 15일에 들어온 값이 3월 15일부터의 값으로 읽혀, 2월 소급 차액 560,000원이 아예 계산되지 않아요.</li>
+</ul>
+</li>
+<li>[필수] 시점을 인자로 받는 접근자가 그 시점의 값 하나를 돌려줌 — 「2026년 2월 25일에 얼마였는가」를 물으면 금액 하나가 나오고, 이력이나 후보 목록이 나오지 않습니다. 시나리오 1 의 2·4단계 (근거: <a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property, eaaDev 초안</a>의 "How it Works" — 이 패턴의 핵심이 접근자에 있고, 시점을 인자로 받는 접근자를 <strong>항상</strong> 보게 된다고 적으며 "1998년 2월 2일에 주소가 무엇이었나" 를 그 질문의 예로 듭니다. 자격은 <strong>요점 선언</strong>입니다)
+<ul>
+<li>경계 사례: 위 근거 괄호가 받쳐 주는 것은 <strong>시점을 인자로 받는 접근자가 있어야 한다</strong>는 것까지입니다. 인자 없는 접근자를 함께 둘지는 여기서 정해지지 않아요 — [선택] 6 에 있습니다.</li>
+<li>빠지면: 이력을 돌려주는 조회가 됩니다. 시나리오 1 의 4단계에서 한 곳에 모아 둔 판정이 부르는 쪽마다 다시 흩어지고, 시나리오 3 의 2단계처럼 화면과 배치가 같은 날에 다른 금액을 내요.</li>
+</ul>
+</li>
+<li>[필수] 시점 판정은 그 속성이 맡음 — 속성을 읽는 자리는 날짜를 넘기고 값을 받을 뿐이고, 그 가운데 어느 하나도 유효 기간을 꺼내 비교하지 않습니다. 시나리오 2 의 2단계(있을 때) · 시나리오 3 의 2단계(없을 때) (근거: <a href="https://martinfowler.com/eaaDev/Effectivity.html">Effectivity, eaaDev 초안</a>의 "When to Use It" — 유효 기간만 붙이는 방식의 주된 단점이 부르는 쪽이 시간성을 알아야 하고 조회마다 유효 기간을 시험하는 절을 넣어야 한다는 것이라고 적은 뒤, 그 책임을 걷어 내는 구조로 속성 하나에는 Temporal Property 를, 객체 전체에는 Temporal Object 를 듭니다. 자격은 <strong>사용 조건</strong>입니다)
+<ul>
+<li>경계 사례: 위 근거 괄호가 받쳐 주는 것은 <strong>시간 판정의 책임이 부르는 쪽에서 속성 쪽으로 옮겨 온다</strong>는 것까지입니다. 그 판정이 메서드여야 한다거나 속성이 독립된 클래스여야 한다는 요구는 없어요.</li>
+<li>빠지면: 유효 기간만 붙인 모델, 곧 원전이 Effectivity 라고 부른 자리에 머뭅니다. 값이 하나일 때는 잘 돌아가다가 시나리오 2 의 1단계에서 값이 둘이 되는 순간 부르는 쪽마다 고르는 규칙을 따로 정하게 돼요.</li>
+</ul>
+</li>
+<li>[선택] 유효 기간은 날짜 두 칸이 아니라 Range 값 하나 — 시작과 끝, 그리고 각 끝을 포함하는지가 한 값 안에 있고 「이 시점이 안에 드는가」를 그 값에게 묻습니다. 시나리오 1 의 3단계 (근거: <a href="https://martinfowler.com/eaaDev/Effectivity.html">Effectivity, eaaDev 초안</a>의 "When to Use It" — 객체로 구현한다면 유효 기간에 Range 를 실제로 쓰라고 권하고, 그 이유로 날짜 짝을 쓰는 것보다 훨씬 쉽다는 것을 듭니다. 자격은 <strong>구현 지침</strong>이고 이유가 편의라 성립 요건이 아니라 권고입니다)</li>
+<li>[선택] 인자 없는 접근자를 함께 둠 — 「오늘의 값」을 묻는 짧은 길을 하나 더 둡니다. 시나리오 1 의 2단계 (근거: <a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property, eaaDev 초안</a>의 "How it Works" — 인자를 받지 않는 접근자도 <strong>대개</strong> 함께 보게 되고 그것은 어떤 기본값, 보통 오늘에 대한 질문이라고 적습니다. 자격은 <strong>흔한 관례</strong>라 [선택] 입니다)
+<ul>
+<li>경계 사례: 시나리오 1 의 2단계는 날짜를 꼭 넘겨야 하는 이유를 보인 자리이고, 이 조건은 그 위에 기본값 하나를 더하는 것이에요.</li>
+</ul>
+</li>
+<li>[선택] 끝이 열린 구간으로 「추후 통지까지」 — 종료일이 정해지지 않은 값을 끝 없는 구간으로 둡니다. 시나리오 2 의 1단계 (근거: <a href="https://martinfowler.com/eaaDev/Effectivity.html">Effectivity, eaaDev 초안</a>의 "How it Works" — 시작일만 받는 생성 메서드가 끝이 열린 Range 를 써서 종료일이 없음을 나타내고, 나중에 통지가 오면 더 이상 유효하지 않게 만드는 메서드를 둘 수 있다고 적습니다. 자격은 <strong>구현 지침</strong>입니다)</li>
+<li>[선택] 유효 시작을 과거·현재·미래 어디로든 줌 — 소급·당일·예정 변경이 같은 연산 하나로 처리됩니다. 시나리오 2 의 1단계(과거를 준 자리) (근거: <a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property, eaaDev 초안</a>의 "How it Works" — 넘긴 날짜가 과거면 소급 변경, 현재면 당장의 변경, 미래면 예정된 변경을 뜻한다고 적습니다. 자격은 <strong>허용</strong>이라 [선택] 입니다)</li>
+<li>[선택] 이미 넣은 값의 유효 기간을 직접 고치는 길 — 「1998년 1월로 적은 이사 날짜를 1997년 12월로 고친다」처럼 이력의 항목 자체를 손봅니다. 시나리오 2 의 7단계 (근거: <a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property, eaaDev 초안</a>의 "How it Works" — 끝에 값을 더하는 갱신과 기존 항목을 고치는 갱신 둘을 나란히 들고, 값이 값 객체라면 더하는 갱신만으로도 해낼 수 있다고 적습니다. 자격은 <strong>선택지 나열</strong>이라 [선택] 입니다. 이 예제는 더하는 쪽만 두었어요)
+<ul>
+<li>경계 사례: 시나리오 2 의 7단계는 이 길 대신 값을 하나 더 더해서 같은 일을 해낸 자리예요.</li>
+</ul>
+</li>
+<li>[선택] 사건 시각과 기록 시각 두 축 — 값마다 우리가 그것을 알게 된 날이 따로 붙고, 조회가 날짜를 둘 받습니다. 시나리오 2 의 5·6·7단계 (근거: Fowler <em>Analysis Patterns</em> Chapter 3 §3.8 Dual Time Record — 그림 3.11 이 기록에서 시간 기록으로 가는 연관을 <strong>둘</strong> 그리고 각각에 recording time 과 applicability 라는 이름을 붙입니다. 자격은 <strong>구조 선언</strong>과 <strong>연관 선언</strong>이에요. <a href="https://martinfowler.com/eaaDev/Effectivity.html">Effectivity, eaaDev 초안</a>의 "How it Works" 도 두 축 지원은 날짜 구간을 하나 더 더하는 것이라고 적으면서 그 복잡성이 쓰는 쪽으로 넘어간다고 덧붙여, 성립 요건이 아니라 더하는 장치로 다룹니다)</li>
+<li>[선택] 같은 기록일에 겹치는 유효 구간 금지 — 같은 기록일에 유효 구간이 겹치는 값을 한 속성에 둘 이상 두지 않습니다. 시나리오 3 의 3단계 (근거: 이 가이드의 정책 — 원전은 이 제약을 문장으로 적지 않고, 오히려 유효 기간을 여러 객체에 붙이는 쪽에서는 4월에 고용 둘이 겹치는 예를 듭니다. 속성 하나의 답을 하나로 정하려는 이 예제의 판단이에요)
+<ul>
+<li>빠지면: 조건 3 이 값 하나를 요구하는데 같은 지식 시점에서 겹치면 답이 둘이 돼요.</li>
+</ul>
+</li>
+<li>[선택] 기록 시각은 앞선 기록보다 이를 수 없음 — 지식이 쌓인 순서를 되돌리지 않습니다. 시나리오 3 의 4단계 (근거: 이 가이드의 정책 — 이미 답한 「그때 알던 값」이 나중에 달라지지 않게 하려는 제약이고, 원전에 같은 문장은 없습니다)</li>
+</ol>
+<blockquote>
+<p>필수는 넷이다 — 값이 이력인가, 값마다 유효 시작이 붙었는가, 시점을 받아 값 하나를 돌려주는가, 그 판정을 속성이 맡는가. 넷을 다 갖추고도 이 패턴이 아닌 모델이 있으니 비교 절을 함께 본다.</p>
+</blockquote>
+<pre tabindex="0"><code class="language-text">판정 순서                                        아니면 그것은
+0  누구의 어떤 속성인지 지목할 수 있는가?   ──▶  기록의 모음 또는 규칙의 등록부
+1  그 속성의 값이 이력인가?                 ──▶  칸 하나짜리 속성
+2  값마다 유효 시작이 붙어 있는가?          ──▶  순서만 있는 변경 로그
+3  시점을 받아 값 하나를 돌려주는가?        ──▶  이력을 돌려주는 조회
+4  그 판정을 속성이 맡는가?                 ──▶  유효 기간만 붙인 모델(Effectivity)</code></pre>
+<p>조건을 세우고 나서 <strong>이미 발행된 편들을 이 넷으로 판정해 봤습니다.</strong> 조건이 너무 넓거나 좁으면 그 자리에서 확인되기 때문이에요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>발행본</th><th>지목한 속성</th><th>조건 1~4</th><th>이 패턴인가</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html">Range</a> 의 <code>RateBand.weights</code></td><td>요금 구간 하나의 무게 범위</td><td>1 ✗ (이력이 아니라 값 하나)</td><td>아니다 — Range 는 이 패턴의 부품이지 이 패턴이 아니다</td></tr>
+<tr><td><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level</a> 의 <code>InspectionType.정상 범위</code></td><td>점검 종류의 정상 범위</td><td>1 ✗ (이력이 없다)</td><td>아니다 — 그래서 그 편의 판정은 기록 시점에 한 번 정해지고 고정된다</td></tr>
+<tr><td><a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html">Observation</a> 의 환자 관측</td><td>지목할 속성이 없다</td><td>0 ✗</td><td>아니다 — 비교 절 「Observation 과의 차이」가 이 자리다</td></tr>
+<tr><td><a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.html">Posting Rule</a> 의 규칙 등록부</td><td>사건 종류 <code>USAGE</code> 의 전기 규칙</td><td>1·2·3·4 모두 ○</td><td><strong>그렇다</strong> — 그 편의 등록부가 이 패턴의 한 적용이다</td></tr>
+</tbody>
+</table>
+</div>
+<p>마지막 행이 중요합니다. Posting Rule 편은 규칙마다 유효 기간을 두고, 사건의 <strong>발생 시점</strong>을 열쇠로 규칙 하나를 조회하며, 그 판정을 부르는 쪽이 하지 않아요. 넷을 다 통과하는 것이 오판이 아니라 사실입니다 — 두 편은 경쟁하지 않고 포개져요. 그 편의 「접수 시점과 발생 시점이 다를 수 있다」가 이 편의 기록 시각과 사건 시각을 회계 언어로 말한 것이고, 그래서 조건을 그 편이 탈락하도록 좁히지 않았습니다.</p>
+<h3 id="비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</h3>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>비교 대상</th><th>구분 기준</th><th>Temporal Property 를 고르면 얻는 것</th><th>포기하는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>Range</td><td>두 끝을 담은 값 하나인가, 그 구간에 매인 값들의 이력인가</td><td>「그때 얼마였는가」에 답할 수 있다</td><td>구간 자체를 다루는 연산(겹침·맞닿음)은 이 개념이 하지 않는다 — 부품이 한다</td></tr>
+<tr><td>유효 기간만 붙인 모델(Effectivity 단독)</td><td>시점 판정을 부르는 쪽이 하는가, 속성이 하는가</td><td>값이 늘어도 읽는 코드가 안 바뀐다</td><td>타입이 하나 늘고, 값 하나만 있는 속성에도 이력 구조가 따라온다</td></tr>
+<tr><td>감사 로그·변경 이력 표</td><td>항목에 붙은 날짜가 「언제부터 참인가」인가 「언제 적었는가」인가</td><td>소급·예정 변경이 조회에 그대로 반영된다</td><td>「누가 고쳤는가」 같은 변경 자체의 사실은 이 모델이 답하지 않는다</td></tr>
+<tr><td>Observation</td><td>지목할 속성이 있는가, 대상·항목·값 세 자리를 가진 기록인가</td><td>속성 하나의 답이 값 하나로 나온다</td><td>항목을 데이터로 늘리는 길과 값의 종류를 섞는 길을 잃는다</td></tr>
+<tr><td>Posting Rule 의 규칙 등록부</td><td>대체가 아니라 포개짐 — 값이 금액인가 규칙 객체인가</td><td>회계 밖의 어떤 속성에도 같은 모양을 쓴다</td><td>균형·전기 키 같은 회계의 요구는 이 개념만으로 나오지 않는다</td></tr>
+</tbody>
+</table>
+</div>
+<h4 id="range-와의-차이">Range 와의 차이</h4>
+<p>구분 기준은 두 끝을 담은 값 하나인가, 그 구간에 매인 값들의 이력인가입니다. <strong>이 둘은 경쟁하지 않아요.</strong> Range 는 이 패턴의 부품이고, 원전도 유효 기간에 Range 를 실제로 쓰라고 권합니다. 차이가 나는 자리는 질문의 모양이에요.</p>
+<pre tabindex="0"><code class="language-text">Range 에게 묻는 것          「2026-02-25 가 이 구간 안에 드는가?」        → true / false
+시간 속성에게 묻는 것       「2026-02-25 의 일당은 얼마인가?」            → 240000원
+
+Range 하나만 있을 때        구간 하나가 값 하나를 덮는다 — 이력이 없다
+시간 속성이 있을 때         구간이 붙은 값이 여럿이고 그중 하나가 답이 된다</code></pre>
+<p>시나리오 1 의 3단계가 정확히 그 경계입니다. 그 단계에서 「2026-02-25 가 안에 드는가」에 답하는 것은 구간이고, 「그래서 답은 어느 값인가」를 정하는 것은 시간 속성이에요. 구간에게 후자를 물을 수는 없습니다 — 구간은 자기 이웃을 모르니까요. Temporal Property 를 고르면 시점 질문에 값으로 답할 수 있게 되는 대신, 겹침과 맞닿음 같은 구간끼리의 연산은 여전히 Range 의 몫으로 남습니다.</p>
+<h4 id="유효-기간만-붙인-모델과의-차이">유효 기간만 붙인 모델과의 차이</h4>
+<p>구분 기준은 시점 판정을 누가 맡는가입니다. 이것이 이 편에서 가장 헷갈리는 자리예요. 아래 코드는 값에 유효 기간을 제대로 달아 두었는데도 이 패턴이 아닙니다.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-java">record PayRateEntry(LocalDate from, LocalDate to, long won) {}
+
+// 급여 화면 — 자기가 이력을 훑고 자기가 고른다
+long rateOn(List&lt;PayRateEntry&gt; history, LocalDate when) {
+    for (PayRateEntry e : history) {
+        if (!when.isBefore(e.from()) &amp;&amp; !when.isAfter(e.to())) return e.won();
+    }
+    throw new IllegalStateException("해당 기간의 일당이 없습니다");
+}</code></pre>
+<p>조건 1·2 는 갖췄고 조건 3 도 겉으로는 갖춘 것처럼 보입니다. 빠진 것은 조건 4 예요 — 이 <code>rateOn</code> 이 급여 화면에 있고 정산 배치에도 따로 있습니다. 값이 하나일 때는 두 사본이 같은 답을 내다가, 시나리오 2 의 1단계에서 값이 둘이 되는 순간 답이 갈려요. 한쪽이 먼저 만난 값을 내놓고 다른 쪽이 마지막 값을 내놓으면 같은 2월 25일에 대해 240,000원과 200,000원이 나오고, 시나리오 3 의 2단계가 그 과정입니다. Temporal Property 를 고르면 값이 늘어도 읽는 코드가 안 바뀌는 대신, 값이 끝까지 하나뿐인 속성에도 이력 구조가 따라와요.</p>
+<h4 id="감사-로그변경-이력-표와의-차이">감사 로그·변경 이력 표와의 차이</h4>
+<p>구분 기준은 항목에 붙은 날짜가 「언제부터 참인가」인가 「언제 적었는가」인가입니다. 둘은 모양이 거의 같아서 표만 보면 구분되지 않아요.</p>
+<pre tabindex="0"><code class="language-text">변경 이력 표   (사원, 항목, 옛값, 새값, 바꾼 사람, 바꾼 시각 2026-03-15)
+              └ 날짜가 「적은 때」 하나뿐 — 2/15 부터라는 사실이 어디에도 없다
+
+시간 속성      (사원, 일당, 값 240000, 유효 2026-02-15.., 기록 2026-03-15)
+              └ 날짜가 둘 — 「언제부터 참인가」와 「언제 알았는가」가 따로 있다</code></pre>
+<p>시나리오 2 의 1단계가 이 차이가 값으로 나타나는 자리예요. 변경 로그만 있으면 3월 15일에 바뀌었다는 사실은 남는데 2월 15일부터 적용된다는 사실이 없어서, 2월 소급 차액 560,000원이 계산되지 않습니다. 반대로 시간 속성은 「누가 고쳤는가」를 답하지 않아요 — 그 사실이 필요하면 로그를 함께 둡니다. 둘은 답하는 질문이 달라서 대체 관계가 아니에요.</p>
+<h4 id="observation-과의-차이">Observation 과의 차이</h4>
+<p>구분 기준은 지목할 속성이 있는가입니다. <a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html">Observation 가이드</a>의 모델도 두 시각을 가지고 「그 날 기준」 조회를 하기 때문에 닮아 보여요. 차이가 나는 자리는 무엇을 기록의 단위로 삼는가입니다.</p>
+<pre tabindex="0"><code class="language-text">시간 속성      사원 EMP-1042 의 「일당」이라는 속성이 먼저 있고
+              그 속성의 값이 시간에 따라 여럿이다 → 사원에게 날짜를 묻는다
+
+Observation   「대상 · 항목 · 값」 세 자리를 가진 기록이 먼저 있고
+              항목이 데이터라 얼마든지 늘어난다 → 기록들을 추려 값을 꺼낸다</code></pre>
+<p>속성을 먼저 정하면 항목을 늘리는 일이 클래스를 고치는 일이 되고, 기록을 먼저 정하면 값 하나를 얻는 데 추리는 일이 한 번 더 붙습니다. 그리고 그 추리는 일을 관측 모델에서는 속성이 아니라 바깥의 조회 자리가 해요 — 시나리오 3 의 2단계가 말한 「부르는 쪽이 판정한다」와 구조가 같아서, 조건 4 가 두 모델을 가르는 자리입니다. Temporal Property 를 고르면 답이 값 하나로 나오는 대신, 항목을 배포 없이 늘리는 길과 값의 종류를 섞는 길을 잃어요.</p>
+<h4 id="posting-rule-의-규칙-등록부와의-차이">Posting Rule 의 규칙 등록부와의 차이</h4>
+<p>구분 기준은 대체가 아니라 포개짐이고, 실제로 다른 것은 값의 종류뿐입니다. <a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.html">Posting Rule 가이드</a>는 규칙마다 유효 기간을 두고 사건의 발생 시점으로 규칙 하나를 조회하는데, 그것이 「사건 종류 <code>USAGE</code> 의 전기 규칙」이라는 속성에 이 패턴을 적용한 모습이에요. 그 편의 「접수 시점이 아니라 발생 시점으로 묻는다」가 이 편의 사건 시각이고, 「늦게 도착한 사실을 그때의 규칙으로 처리한다」가 시나리오 2 의 7단계와 같은 요구입니다. 이 편을 고르면 회계 밖의 어떤 속성에도 같은 모양을 쓸 수 있는 대신, 균형이나 전기 키 같은 회계의 요구는 이 개념만으로 나오지 않아요.</p>
+<h2 id="구현-예시">구현 예시</h2>
+<h3 id="상황-설정">상황 설정</h3>
+<p>시나리오 1·2·3 의 인사·급여 장면을 세 언어로 똑같이 구현합니다. 도메인은 그대로예요. 회사 한 곳의 인사·급여 기록 프로그램이고, 사원 한 명마다 시간에 따라 바뀌는 속성이 둘 있습니다 — 일당과 소속이에요. 발령이 들어오면 「언제부터 유효한가」와 「오늘 접수했다」를 함께 기록하고, 조회는 날짜 하나 또는 둘을 받아 값 하나를 돌려줍니다.</p>
+<p>고정인 것도 정해 둡니다. 날짜는 달력 라이브러리를 쓰지 않고 연·월·일 세 수를 담은 자체 값으로 두었어요. <strong>Rust 표준 라이브러리에 달력 날짜 타입이 없어서</strong>(근거: <a href="https://doc.rust-lang.org/std/time/index.html">std::time</a> — 이 모듈이 제공하는 것은 <code>Instant</code> 와 <code>Duration</code> 같은 시간 측정용 타입이고 달력 날짜 타입은 없습니다, 조회 2026-09-30) 세 언어를 같은 모양으로 맞추려면 이쪽이어야 합니다. 크기 비교와 일수 계산은 1970년 1월 1일을 0으로 세는 <strong>일 번호</strong> 하나로 처리해요. 세 언어가 같은 정수 산술만 쓰므로 답이 갈릴 자리가 없습니다. 금액은 원 단위 정수이고, 이력은 값을 더하기만 하며 한번 들어간 값은 지워지지도 바뀌지도 않아요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>예제 타입</th><th>대응하는 개념</th></tr>
+</thead>
+<tbody>
+<tr><td><code>TemporalProperty</code> · <code>Effectivity</code> · <code>TimePoint</code></td><td>같은 이름의 개념 그대로</td></tr>
+<tr><td><code>DateRange</code></td><td>Range 개념 그대로. 끝점이 <code>TimePoint</code> 이고 위 끝이 없으면 추후 통지까지다</td></tr>
+<tr><td><code>Employee</code></td><td>시간 속성을 가진 사원. <code>payRate</code>(일당)와 <code>assignment</code>(소속) 둘이 그 속성이다</td></tr>
+<tr><td><code>Money</code> · <code>EmployeeId</code> · <code>DepartmentId</code></td><td>패턴 밖의 값과 식별자. 부서 자체는 이 예제 밖의 aggregate 다</td></tr>
+<tr><td><code>nameOf</code> · <code>retroDifference</code></td><td>aggregate 밖에서 id 로 찾아 조립하는 자리</td></tr>
+</tbody>
+</table>
+</div>
+<p>아래 표에서 쓰는 DDD 전술 용어(Bounded Context · Aggregate · Aggregate Root · Entity · Value Object(VO) · id 참조 · 불변식)는 이 가이드의 주제 밖 사전 지식이라 <a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a>가 한 자리에 모아 두었어요. 표를 읽기 전에 그 문서를 한 번 읽고 오시면 네 행이 각각 무엇을 정하는지 바로 읽힙니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>항목</th><th>이 가이드의 설정</th></tr>
+</thead>
+<tbody>
+<tr><td>bounded context</td><td>인사·급여 — 사원 한 명의 일당과 소속을 유효 시작과 기록일 두 축으로 남기고, 어느 시점 기준으로든 되읽는다</td></tr>
+<tr><td>불변식의 위치</td><td>① 유효 기간의 시작이 끝보다 늦을 수 없다 → <code>DateRange</code> VO 가 만들어지는 자리에서 지킨다 ② 같은 기록일에 유효 구간이 겹치는 값을 한 속성에 둘 이상 두지 않는다 ③ 기록일은 앞선 기록보다 이를 수 없다 ④ 이력에 든 값은 지워지거나 바뀌지 않는다 — ②·③·④ 는 <code>Employee</code> root 의 <code>recordPayRate</code> 와 <code>recordAssignment</code> 가 자기 시간 속성 값을 갈아 끼우는 그 자리에서 지킨다 ⑤ 사원은 입사일부터 유효한 일당과 소속을 하나씩 갖고 만들어진다 → <code>Employee</code> root 의 생성자</td></tr>
+<tr><td>root·entity·VO 배정</td><td><code>Employee</code> aggregate 하나. <code>Employee</code> 가 root(entity, <code>EmployeeId</code> 로 식별)이고 child entity 는 없다. <code>TemporalProperty</code> · <code>Effectivity</code> · <code>DateRange</code> · <code>TimePoint</code> · <code>Money</code> 와 두 id 는 VO 다. 값을 더할 때도 옛 <code>TemporalProperty</code> 를 고치지 않고 새 값으로 갈아 끼운다. 부서는 이 예제 밖의 aggregate 라 <code>DepartmentId</code> 로만 등장하고, <code>nameOf</code> 와 <code>retroDifference</code> 는 aggregate 가 아니라 밖에서 조립하는 자리다</td></tr>
+<tr><td>타 aggregate 참조 방식</td><td>id 참조 — <code>Employee</code> 의 소속 시간 속성이 담는 값이 부서 aggregate(이 예제 밖)를 가리키는 <code>DepartmentId</code> 다. 부서 이름이 필요한 자리는 aggregate 밖의 <code>nameOf</code> 가 그 id 로 찾아 오고, <code>Employee</code> 의 필드와 메서드 시그니처 어디에도 부서 타입이 나오지 않는다</td></tr>
+</tbody>
+</table>
+</div>
+<p>코드에서 그 경계가 나타나는 자리는 <code>Employee</code> 의 <code>recordPayRate</code> 와 <code>recordAssignment</code> 둘입니다. 이력을 바꾸는 길이 그 둘뿐이라, 검사를 지나지 않고 값이 들어갈 방법이 없어요. 우회로가 없습니다. 표가 「어디에 두었는가」를 말했다면, 다음 표는 「다른 곳에 두면 무엇이 어긋나는가」를 불변식 다섯과 id 참조 하나에 대해 적은 것입니다. 값은 모두 구현 예시를 그렇게 고친 사본을 Java 21 로 컴파일·실행해 확인했어요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>규칙(불변식) 또는 참조</th><th>다른 곳에 두거나 바꾸면</th><th>어느 동작에서 무엇이 어긋나는가</th></tr>
+</thead>
+<tbody>
+<tr><td>① 유효 기간의 시작이 끝보다 늦을 수 없다</td><td>구간을 만드는 호출자가 넘기기 전에 확인한다</td><td>한 곳만 빠뜨리면 <code>2026-03-31..2026-02-01</code> 짜리 값이 이력에 들어갑니다. 시작 이상이면서 끝 이하인 날은 없으므로 그 값은 <strong>어떤 날짜로 물어도 답이 되지 않아요</strong> — 999,999원짜리 값을 넣고 2026-03-10 과 2026-02-20 을 물었더니 둘 다 260,000원이 나왔고, 넣은 값은 조회에 한 번도 잡히지 않았습니다</td></tr>
+<tr><td>② 같은 기록일에 유효 구간이 겹치는 값을 둘 이상 두지 않는다</td><td>검사를 빼고 값을 더한다</td><td>기록 2026-04-04 에 <code>2026-02-15..</code> 260,000원이 있는 상태에서 같은 날짜로 <code>2026-02-01..2026-03-31</code> 210,000원을 더하면, 2026-02-25 의 답이 260,000원으로 나왔고 두 값을 <strong>넣는 순서만 바꾸자</strong> 210,000원이 나왔습니다. 같은 입력에 두 답이 있고 목록 순서가 답을 정해요. 시나리오 3 의 3단계가 그 자리입니다</td></tr>
+<tr><td>③ 기록일은 앞선 기록보다 이를 수 없다</td><td>검사를 빼고 지난 날짜로 기록한다</td><td>2026-04-04 까지 기록한 뒤 기록일 2026-03-16 으로 250,000원을 끼워 넣으면, 「기록 기준 2026-03-20 에서 본 2026-02-25 의 일당」이 240,000원에서 250,000원으로 바뀝니다. 이미 답이 끝난 질문의 답이 나중에 달라져요. 시나리오 3 의 4단계가 그 자리입니다</td></tr>
+<tr><td>④ 이력에 든 값은 지워지거나 바뀌지 않는다</td><td>이력의 항목을 고치는 길을 연다</td><td>기록 2026-03-15 에 적은 240,000원을 260,000원으로 고치면 「기록 기준 2026-03-15 의 2026-02-25 일당」이 260,000원이 되고, 2월 소급 차액이 560,000원에서 <strong>840,000원</strong>으로 바뀝니다. 3월 15일에 만든 정산 문서가 왜 560,000원이었는지 설명할 근거가 사라져요</td></tr>
+<tr><td>⑤ 사원은 입사일부터 유효한 값을 갖고 만들어진다</td><td>빈 이력으로 만들고 첫 발령 때 채운다</td><td>입사일부터 첫 발령 전까지가 빈 구간이 되어 <code>payRateOn(2026-01-01)</code> 이 답을 못 냅니다. 실제로 첫 값을 빼고 실행하니 이력이 비어 있는 채로 조회가 <code>ArrayIndexOutOfBoundsException</code> 으로 멈췄고, 첫 줄 출력조차 나오지 않았어요</td></tr>
+<tr><td><code>Employee</code> 가 부서를 <code>DepartmentId</code> 로 가리킨다</td><td>부서 객체를 시간 속성의 값으로 담는다</td><td>사원의 이력을 거쳐 부서 이름을 고칠 수 있게 됩니다. 부서를 객체로 담은 사본에서 <code>assignmentOn(2026-03-20).rename("영업1부")</code> 를 부르자 같은 2026-03-20 의 소속 이름이 「영업부」에서 <strong>「영업1부」</strong>로 바뀌었어요 — 그 시점에 그 부서가 뭐라 불렸는지를 모델이 잃습니다</td></tr>
+</tbody>
+</table>
+</div>
+<p>뒤의 세 언어 구현은 이 설정을 그대로 옮긴 것이고, 실행하면 셋이 아래 열여섯 줄을 글자까지 같게 냅니다. 가이드 폴더의 <code>code/expected-output.txt</code> 와 같은 내용이고, 이 글의 실행 수치는 전부 여기서 와요.</p>
+<pre tabindex="0"><code class="language-text">사원 EMP-1042 · 입사 2026-01-01 · 첫 일당 200000원 · 첫 소속 DEP-SALES 영업부
+[기록] 2026-03-15 — 2026-02-15 부터 일당 240000원
+[기록] 2026-04-04 — 2026-02-15 부터 일당 260000원
+[기록] 2026-05-02 — 2026-04-01 부터 소속 DEP-PLAN
+[한 축] 2026-01-20 의 일당 200000원
+[한 축] 2026-02-25 의 일당 260000원
+[두 축] 2026-02-25 의 일당 · 기록 기준 2026-02-28 → 200000원
+[두 축] 2026-02-25 의 일당 · 기록 기준 2026-03-15 → 240000원
+[두 축] 2026-02-25 의 일당 · 기록 기준 2026-04-04 → 260000원
+2월 소급 차액 — 2026-02-15..2026-02-28 14일 × 40000원 = 560000원
+[한 축] 2026-03-20 의 소속 DEP-SALES 영업부
+[한 축] 2026-04-10 의 소속 DEP-PLAN 기획부
+거부 — 유효 시작이 유효 끝보다 늦습니다: 2026-03-31..2026-02-01
+거부 — 같은 기록일에 유효 구간이 겹칩니다: 2026-02-15.. 와 2026-02-01..2026-03-31
+거부 — 기록일이 앞선 기록보다 이릅니다: 2026-03-01 &lt; 2026-05-02
+거부 — 그 기록 시점에는 아는 값이 없습니다: 2026-02-25 의 일당 · 기록 기준 2025-12-31</code></pre>
+<p>잠깐, 확인 하나만 해 볼까요? 위 출력의 다섯째 줄에서 2026-01-20 의 일당이 200,000원인데 여섯째 줄에서 2026-02-25 는 260,000원입니다. 둘 다 「지금 아는 전부」 기준인데 왜 다를까요? 인상 발령의 유효 시작이 2026-02-15 라서, 1월 20일을 덮는 값은 입사 때의 <code>2026-01-01..</code> 하나뿐이고, 2월 25일은 그 값에 더해 뒤의 두 값도 함께 덮기 때문이에요. 2월 25일에서는 기록일이 가장 늦은 값이 우선합니다. 정정된 260,000원이죠.</p>
+<h3 id="구현">구현</h3>
+<div class="code-tabs" id="temporal-property-guide-v1-1-0-tabs1">
+<div class="code-tabs__list" role="tablist" aria-label="구현 예시 언어">
+<button type="button" class="code-tabs__tab" role="tab" id="temporal-property-guide-v1-1-0-tabs1-tab-java" aria-controls="temporal-property-guide-v1-1-0-tabs1-panel-java" aria-selected="true" tabindex="0" data-lang="java">Java</button>
+<button type="button" class="code-tabs__tab" role="tab" id="temporal-property-guide-v1-1-0-tabs1-tab-typescript" aria-controls="temporal-property-guide-v1-1-0-tabs1-panel-typescript" aria-selected="false" tabindex="-1" data-lang="typescript">TypeScript</button>
+<button type="button" class="code-tabs__tab" role="tab" id="temporal-property-guide-v1-1-0-tabs1-tab-rust" aria-controls="temporal-property-guide-v1-1-0-tabs1-panel-rust" aria-selected="false" tabindex="-1" data-lang="rust">Rust</button>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="temporal-property-guide-v1-1-0-tabs1-panel-java" aria-labelledby="temporal-property-guide-v1-1-0-tabs1-tab-java">
+<p class="code-tabs__label" aria-hidden="true">Java</p>
+<pre tabindex="0"><code class="language-java">import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/** 인사·급여 — 사원의 일당과 소속을 시간 속성으로 두고, 사건 시각과 기록 시각 두 축으로 조회한다. */
+public final class TemporalPropertyExample {
+
+    /** 시점. 달력 날짜 타입을 쓰지 않고 세 언어가 같은 자체 값으로 둔다. */
+    record TimePoint(long year, long month, long day) {
+        /** 1970-01-01 을 0 으로 세는 일 번호. 크기 비교와 일수 계산이 전부 이 값 위에 선다. */
+        long ordinal() {
+            long y = year - (month &lt;= 2 ? 1 : 0);
+            long era = Math.floorDiv(y, 400);
+            long yoe = y - era * 400;
+            long doy = (153 * (month + (month &gt; 2 ? -3 : 9)) + 2) / 5 + day - 1;
+            return era * 146097 + yoe * 365 + yoe / 4 - yoe / 100 + doy - 719468;
+        }
+
+        @Override public String toString() { return String.format("%04d-%02d-%02d", year, month, day); }
+    }
+
+    /** 구간. 두 끝이 모두 포함이고, 위 끝이 없으면 「추후 통지까지」다. */
+    record DateRange(TimePoint from, TimePoint to) {
+        DateRange {
+            if (to != null &amp;&amp; from.ordinal() &gt; to.ordinal()) {
+                throw new IllegalArgumentException("유효 시작이 유효 끝보다 늦습니다: " + from + ".." + to);
+            }
+        }
+
+        static DateRange openEnded(TimePoint from) { return new DateRange(from, null); }
+
+        boolean includes(TimePoint t) {
+            return from.ordinal() &lt;= t.ordinal() &amp;&amp; (to == null || t.ordinal() &lt;= to.ordinal());
+        }
+
+        boolean overlaps(DateRange other) {
+            return (to == null || other.from.ordinal() &lt;= to.ordinal())
+                    &amp;&amp; (other.to == null || from.ordinal() &lt;= other.to.ordinal());
+        }
+
+        long lengthInDays() {
+            if (to == null) {
+                throw new IllegalStateException("끝이 없는 구간은 일수를 셀 수 없습니다: " + this);
+            }
+            return to.ordinal() - from.ordinal() + 1;
+        }
+
+        @Override public String toString() { return from + ".." + (to == null ? "" : to.toString()); }
+    }
+
+    record Money(long won) {
+        Money minus(Money other) { return new Money(won - other.won); }
+
+        Money times(long count) { return new Money(won * count); }
+
+        @Override public String toString() { return won + "원"; }
+    }
+
+    record EmployeeId(String value) {
+        @Override public String toString() { return value; }
+    }
+
+    record DepartmentId(String value) {
+        @Override public String toString() { return value; }
+    }
+
+    /** 유효 기간이 붙은 값 하나. recordedOn 은 우리가 그 값을 알게 된 날이다. */
+    record Effectivity&lt;V&gt;(DateRange period, TimePoint recordedOn, V value) {
+    }
+
+    /** 시간 속성 — 값들의 이력을 쥐고, 시점을 받아 값 하나로 답한다. */
+    record TemporalProperty&lt;V&gt;(String name, List&lt;Effectivity&lt;V&gt;&gt; history) {
+        TemporalProperty {
+            history = List.copyOf(history);
+        }
+
+        static &lt;V&gt; TemporalProperty&lt;V&gt; startingWith(String name, TimePoint from, TimePoint on, V value) {
+            return new TemporalProperty&lt;&gt;(name, List.of(new Effectivity&lt;&gt;(DateRange.openEnded(from), on, value)));
+        }
+
+        TemporalProperty&lt;V&gt; asserting(DateRange period, TimePoint on, V value) {
+            TimePoint latest = latestRecord();
+            if (on.ordinal() &lt; latest.ordinal()) {
+                throw new IllegalArgumentException("기록일이 앞선 기록보다 이릅니다: " + on + " &lt; " + latest);
+            }
+            for (Effectivity&lt;V&gt; e : history) {
+                if (e.recordedOn().ordinal() == on.ordinal() &amp;&amp; e.period().overlaps(period)) {
+                    throw new IllegalArgumentException(
+                            "같은 기록일에 유효 구간이 겹칩니다: " + e.period() + " 와 " + period);
+                }
+            }
+            List&lt;Effectivity&lt;V&gt;&gt; next = new ArrayList&lt;&gt;(history);
+            next.add(new Effectivity&lt;&gt;(period, on, value));
+            return new TemporalProperty&lt;&gt;(name, next);
+        }
+
+        /** 기록 기준 asKnownOn 에서 본 when 의 값. 그 시점을 덮는 값 가운데 가장 늦게 안 것이 답이다. */
+        V valueOn(TimePoint when, TimePoint asKnownOn) {
+            Effectivity&lt;V&gt; best = null;
+            for (Effectivity&lt;V&gt; e : history) {
+                if (e.recordedOn().ordinal() &gt; asKnownOn.ordinal() || !e.period().includes(when)) {
+                    continue;
+                }
+                if (best == null || e.recordedOn().ordinal() &gt; best.recordedOn().ordinal()) {
+                    best = e;
+                }
+            }
+            if (best == null) {
+                throw new IllegalStateException(
+                        "그 기록 시점에는 아는 값이 없습니다: " + when + " 의 " + name + " · 기록 기준 " + asKnownOn);
+            }
+            return best.value();
+        }
+
+        V valueOn(TimePoint when) { return valueOn(when, latestRecord()); }
+
+        TimePoint latestRecord() {
+            TimePoint latest = history.get(0).recordedOn();
+            for (Effectivity&lt;V&gt; e : history) {
+                if (e.recordedOn().ordinal() &gt; latest.ordinal()) {
+                    latest = e.recordedOn();
+                }
+            }
+            return latest;
+        }
+    }
+
+    /** aggregate root. 두 시간 속성을 품고 이력의 불변식을 진다. */
+    static final class Employee {
+        private final EmployeeId id;
+        private final TimePoint hiredOn;
+        private TemporalProperty&lt;Money&gt; payRate;
+        private TemporalProperty&lt;DepartmentId&gt; assignment;
+
+        Employee(EmployeeId id, TimePoint hiredOn, Money rate, DepartmentId department) {
+            this.id = id;
+            this.hiredOn = hiredOn;
+            this.payRate = TemporalProperty.startingWith("일당", hiredOn, hiredOn, rate);
+            this.assignment = TemporalProperty.startingWith("소속", hiredOn, hiredOn, department);
+        }
+
+        EmployeeId id() { return id; }
+
+        TimePoint hiredOn() { return hiredOn; }
+
+        void recordPayRate(DateRange period, TimePoint on, Money rate) {
+            payRate = payRate.asserting(period, on, rate);
+        }
+
+        void recordAssignment(DateRange period, TimePoint on, DepartmentId department) {
+            assignment = assignment.asserting(period, on, department);
+        }
+
+        Money payRateOn(TimePoint when) { return payRate.valueOn(when); }
+
+        Money payRateOn(TimePoint when, TimePoint asKnownOn) { return payRate.valueOn(when, asKnownOn); }
+
+        DepartmentId assignmentOn(TimePoint when) { return assignment.valueOn(when); }
+    }
+
+    /** aggregate 밖에서 부서 aggregate 를 id 로 찾아 오는 자리. */
+    static final Map&lt;String, String&gt; DIRECTORY = Map.of("DEP-SALES", "영업부", "DEP-PLAN", "기획부");
+
+    static String nameOf(DepartmentId id) { return DIRECTORY.getOrDefault(id.value(), "미등록"); }
+
+    /** 이미 지급한 기준과 지금 아는 기준의 차이를 그 구간의 일수만큼 정산한다. */
+    static Money retroDifference(Employee e, DateRange stretch, TimePoint paidOn, TimePoint knownOn) {
+        Money paid = e.payRateOn(stretch.from(), paidOn);
+        Money current = e.payRateOn(stretch.from(), knownOn);
+        return current.minus(paid).times(stretch.lengthInDays());
+    }
+
+    static void attempt(Runnable action) {
+        try {
+            action.run();
+        } catch (RuntimeException e) {
+            System.out.println("거부 — " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        TimePoint hire = new TimePoint(2026, 1, 1);
+        Employee employee = new Employee(
+                new EmployeeId("EMP-1042"), hire, new Money(200000), new DepartmentId("DEP-SALES"));
+        DepartmentId first = employee.assignmentOn(hire);
+        System.out.println("사원 " + employee.id() + " · 입사 " + employee.hiredOn()
+                + " · 첫 일당 " + employee.payRateOn(hire)
+                + " · 첫 소속 " + first + " " + nameOf(first));
+
+        TimePoint raiseFrom = new TimePoint(2026, 2, 15);
+        TimePoint noticedOn = new TimePoint(2026, 3, 15);
+        employee.recordPayRate(DateRange.openEnded(raiseFrom), noticedOn, new Money(240000));
+        System.out.println("[기록] " + noticedOn + " — " + raiseFrom + " 부터 일당 " + new Money(240000));
+
+        TimePoint correctedOn = new TimePoint(2026, 4, 4);
+        employee.recordPayRate(DateRange.openEnded(raiseFrom), correctedOn, new Money(260000));
+        System.out.println("[기록] " + correctedOn + " — " + raiseFrom + " 부터 일당 " + new Money(260000));
+
+        TimePoint moveFrom = new TimePoint(2026, 4, 1);
+        TimePoint movedOn = new TimePoint(2026, 5, 2);
+        employee.recordAssignment(DateRange.openEnded(moveFrom), movedOn, new DepartmentId("DEP-PLAN"));
+        System.out.println("[기록] " + movedOn + " — " + moveFrom + " 부터 소속 DEP-PLAN");
+
+        TimePoint january = new TimePoint(2026, 1, 20);
+        TimePoint february = new TimePoint(2026, 2, 25);
+        System.out.println("[한 축] " + january + " 의 일당 " + employee.payRateOn(january));
+        System.out.println("[한 축] " + february + " 의 일당 " + employee.payRateOn(february));
+
+        TimePoint payday = new TimePoint(2026, 2, 28);
+        for (TimePoint asKnownOn : List.of(payday, noticedOn, correctedOn)) {
+            System.out.println("[두 축] " + february + " 의 일당 · 기록 기준 " + asKnownOn
+                    + " → " + employee.payRateOn(february, asKnownOn));
+        }
+
+        DateRange stretch = new DateRange(raiseFrom, payday);
+        Money gap = employee.payRateOn(february, noticedOn).minus(employee.payRateOn(february, payday));
+        System.out.println("2월 소급 차액 — " + stretch + " " + stretch.lengthInDays() + "일 × " + gap
+                + " = " + retroDifference(employee, stretch, payday, noticedOn));
+
+        for (TimePoint when : List.of(new TimePoint(2026, 3, 20), new TimePoint(2026, 4, 10))) {
+            DepartmentId at = employee.assignmentOn(when);
+            System.out.println("[한 축] " + when + " 의 소속 " + at + " " + nameOf(at));
+        }
+
+        attempt(() -&gt; new DateRange(new TimePoint(2026, 3, 31), new TimePoint(2026, 2, 1)));
+        attempt(() -&gt; employee.recordPayRate(
+                new DateRange(new TimePoint(2026, 2, 1), new TimePoint(2026, 3, 31)),
+                correctedOn, new Money(210000)));
+        attempt(() -&gt; employee.recordAssignment(DateRange.openEnded(new TimePoint(2026, 3, 1)),
+                new TimePoint(2026, 3, 1), new DepartmentId("DEP-SALES")));
+        attempt(() -&gt; employee.payRateOn(february, new TimePoint(2025, 12, 31)));
+    }
+}</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="temporal-property-guide-v1-1-0-tabs1-panel-typescript" aria-labelledby="temporal-property-guide-v1-1-0-tabs1-tab-typescript">
+<p class="code-tabs__label" aria-hidden="true">TypeScript</p>
+<pre tabindex="0"><code class="language-typescript">// 인사·급여 — 사원의 일당과 소속을 시간 속성으로 두고, 사건 시각과 기록 시각 두 축으로 조회한다.
+
+/** 시점. 달력 날짜 타입을 쓰지 않고 세 언어가 같은 자체 값으로 둔다. */
+class TimePoint {
+  constructor(readonly year: number, readonly month: number, readonly day: number) {}
+
+  /** 1970-01-01 을 0 으로 세는 일 번호. 크기 비교와 일수 계산이 전부 이 값 위에 선다. */
+  ordinal(): number {
+    const y = this.year - (this.month &lt;= 2 ? 1 : 0);
+    const era = Math.floor(y / 400);
+    const yoe = y - era * 400;
+    const doy = Math.floor((153 * (this.month + (this.month &gt; 2 ? -3 : 9)) + 2) / 5) + this.day - 1;
+    return era * 146097 + yoe * 365 + Math.floor(yoe / 4) - Math.floor(yoe / 100) + doy - 719468;
+  }
+
+  toString(): string {
+    const pad = (n: number, width: number): string =&gt; String(n).padStart(width, "0");
+    return `${pad(this.year, 4)}-${pad(this.month, 2)}-${pad(this.day, 2)}`;
+  }
+}
+
+/** 구간. 두 끝이 모두 포함이고, 위 끝이 없으면 「추후 통지까지」다. */
+class DateRange {
+  constructor(readonly from: TimePoint, readonly to: TimePoint | null) {
+    if (to !== null &amp;&amp; from.ordinal() &gt; to.ordinal()) {
+      throw new Error(`유효 시작이 유효 끝보다 늦습니다: ${from}..${to}`);
+    }
+  }
+
+  static openEnded(from: TimePoint): DateRange { return new DateRange(from, null); }
+
+  includes(t: TimePoint): boolean {
+    return this.from.ordinal() &lt;= t.ordinal() &amp;&amp; (this.to === null || t.ordinal() &lt;= this.to.ordinal());
+  }
+
+  overlaps(other: DateRange): boolean {
+    return (this.to === null || other.from.ordinal() &lt;= this.to.ordinal())
+      &amp;&amp; (other.to === null || this.from.ordinal() &lt;= other.to.ordinal());
+  }
+
+  lengthInDays(): number {
+    if (this.to === null) {
+      throw new Error(`끝이 없는 구간은 일수를 셀 수 없습니다: ${this}`);
+    }
+    return this.to.ordinal() - this.from.ordinal() + 1;
+  }
+
+  toString(): string { return `${this.from}..${this.to === null ? "" : this.to.toString()}`; }
+}
+
+class Money {
+  constructor(readonly won: number) {}
+
+  minus(other: Money): Money { return new Money(this.won - other.won); }
+
+  times(count: number): Money { return new Money(this.won * count); }
+
+  toString(): string { return `${this.won}원`; }
+}
+
+class EmployeeId {
+  constructor(readonly value: string) {}
+
+  toString(): string { return this.value; }
+}
+
+class DepartmentId {
+  constructor(readonly value: string) {}
+
+  toString(): string { return this.value; }
+}
+
+/** 유효 기간이 붙은 값 하나. recordedOn 은 우리가 그 값을 알게 된 날이다. */
+class Effectivity&lt;V&gt; {
+  constructor(readonly period: DateRange, readonly recordedOn: TimePoint, readonly value: V) {}
+}
+
+/** 시간 속성 — 값들의 이력을 쥐고, 시점을 받아 값 하나로 답한다. */
+class TemporalProperty&lt;V&gt; {
+  private readonly history: readonly Effectivity&lt;V&gt;[];
+
+  private constructor(readonly name: string, history: readonly Effectivity&lt;V&gt;[]) {
+    this.history = [...history];
+  }
+
+  static startingWith&lt;V&gt;(name: string, from: TimePoint, on: TimePoint, value: V): TemporalProperty&lt;V&gt; {
+    return new TemporalProperty(name, [new Effectivity(DateRange.openEnded(from), on, value)]);
+  }
+
+  asserting(period: DateRange, on: TimePoint, value: V): TemporalProperty&lt;V&gt; {
+    const latest = this.latestRecord();
+    if (on.ordinal() &lt; latest.ordinal()) {
+      throw new Error(`기록일이 앞선 기록보다 이릅니다: ${on} &lt; ${latest}`);
+    }
+    for (const e of this.history) {
+      if (e.recordedOn.ordinal() === on.ordinal() &amp;&amp; e.period.overlaps(period)) {
+        throw new Error(`같은 기록일에 유효 구간이 겹칩니다: ${e.period} 와 ${period}`);
+      }
+    }
+    return new TemporalProperty(this.name, [...this.history, new Effectivity(period, on, value)]);
+  }
+
+  /** 기록 기준 asKnownOn 에서 본 when 의 값. 그 시점을 덮는 값 가운데 가장 늦게 안 것이 답이다. */
+  valueOn(when: TimePoint, asKnownOn?: TimePoint): V {
+    const limit = asKnownOn ?? this.latestRecord();
+    let best: Effectivity&lt;V&gt; | null = null;
+    for (const e of this.history) {
+      if (e.recordedOn.ordinal() &gt; limit.ordinal() || !e.period.includes(when)) {
+        continue;
+      }
+      if (best === null || e.recordedOn.ordinal() &gt; best.recordedOn.ordinal()) {
+        best = e;
+      }
+    }
+    if (best === null) {
+      throw new Error(`그 기록 시점에는 아는 값이 없습니다: ${when} 의 ${this.name} · 기록 기준 ${limit}`);
+    }
+    return best.value;
+  }
+
+  latestRecord(): TimePoint {
+    let latest: TimePoint | null = null;
+    for (const e of this.history) {
+      if (latest === null || e.recordedOn.ordinal() &gt; latest.ordinal()) {
+        latest = e.recordedOn;
+      }
+    }
+    if (latest === null) {
+      throw new Error(`이력이 비어 있습니다: ${this.name}`);
+    }
+    return latest;
+  }
+}
+
+/** aggregate root. 두 시간 속성을 품고 이력의 불변식을 진다. */
+class Employee {
+  private payRate: TemporalProperty&lt;Money&gt;;
+  private assignment: TemporalProperty&lt;DepartmentId&gt;;
+
+  constructor(readonly id: EmployeeId, readonly hiredOn: TimePoint, rate: Money, department: DepartmentId) {
+    this.payRate = TemporalProperty.startingWith("일당", hiredOn, hiredOn, rate);
+    this.assignment = TemporalProperty.startingWith("소속", hiredOn, hiredOn, department);
+  }
+
+  recordPayRate(period: DateRange, on: TimePoint, rate: Money): void {
+    this.payRate = this.payRate.asserting(period, on, rate);
+  }
+
+  recordAssignment(period: DateRange, on: TimePoint, department: DepartmentId): void {
+    this.assignment = this.assignment.asserting(period, on, department);
+  }
+
+  payRateOn(when: TimePoint, asKnownOn?: TimePoint): Money { return this.payRate.valueOn(when, asKnownOn); }
+
+  assignmentOn(when: TimePoint, asKnownOn?: TimePoint): DepartmentId {
+    return this.assignment.valueOn(when, asKnownOn);
+  }
+}
+
+/** aggregate 밖에서 부서 aggregate 를 id 로 찾아 오는 자리. */
+const DIRECTORY = new Map&lt;string, string&gt;([["DEP-SALES", "영업부"], ["DEP-PLAN", "기획부"]]);
+
+function nameOf(id: DepartmentId): string { return DIRECTORY.get(id.value) ?? "미등록"; }
+
+/** 이미 지급한 기준과 지금 아는 기준의 차이를 그 구간의 일수만큼 정산한다. */
+function retroDifference(e: Employee, stretch: DateRange, paidOn: TimePoint, knownOn: TimePoint): Money {
+  const paid = e.payRateOn(stretch.from, paidOn);
+  const current = e.payRateOn(stretch.from, knownOn);
+  return current.minus(paid).times(stretch.lengthInDays());
+}
+
+function attempt(action: () =&gt; void): void {
+  try {
+    action();
+  } catch (e) {
+    console.log(`거부 — ${(e as Error).message}`);
+  }
+}
+
+const hire = new TimePoint(2026, 1, 1);
+const employee = new Employee(new EmployeeId("EMP-1042"), hire, new Money(200000), new DepartmentId("DEP-SALES"));
+const first = employee.assignmentOn(hire);
+console.log(`사원 ${employee.id} · 입사 ${employee.hiredOn} · 첫 일당 ${employee.payRateOn(hire)}`
+  + ` · 첫 소속 ${first} ${nameOf(first)}`);
+
+const raiseFrom = new TimePoint(2026, 2, 15);
+const noticedOn = new TimePoint(2026, 3, 15);
+employee.recordPayRate(DateRange.openEnded(raiseFrom), noticedOn, new Money(240000));
+console.log(`[기록] ${noticedOn} — ${raiseFrom} 부터 일당 ${new Money(240000)}`);
+
+const correctedOn = new TimePoint(2026, 4, 4);
+employee.recordPayRate(DateRange.openEnded(raiseFrom), correctedOn, new Money(260000));
+console.log(`[기록] ${correctedOn} — ${raiseFrom} 부터 일당 ${new Money(260000)}`);
+
+const moveFrom = new TimePoint(2026, 4, 1);
+const movedOn = new TimePoint(2026, 5, 2);
+employee.recordAssignment(DateRange.openEnded(moveFrom), movedOn, new DepartmentId("DEP-PLAN"));
+console.log(`[기록] ${movedOn} — ${moveFrom} 부터 소속 DEP-PLAN`);
+
+const january = new TimePoint(2026, 1, 20);
+const february = new TimePoint(2026, 2, 25);
+console.log(`[한 축] ${january} 의 일당 ${employee.payRateOn(january)}`);
+console.log(`[한 축] ${february} 의 일당 ${employee.payRateOn(february)}`);
+
+const payday = new TimePoint(2026, 2, 28);
+for (const asKnownOn of [payday, noticedOn, correctedOn]) {
+  console.log(`[두 축] ${february} 의 일당 · 기록 기준 ${asKnownOn} → ${employee.payRateOn(february, asKnownOn)}`);
+}
+
+const stretch = new DateRange(raiseFrom, payday);
+const gap = employee.payRateOn(february, noticedOn).minus(employee.payRateOn(february, payday));
+console.log(`2월 소급 차액 — ${stretch} ${stretch.lengthInDays()}일 × ${gap}`
+  + ` = ${retroDifference(employee, stretch, payday, noticedOn)}`);
+
+for (const when of [new TimePoint(2026, 3, 20), new TimePoint(2026, 4, 10)]) {
+  const at = employee.assignmentOn(when);
+  console.log(`[한 축] ${when} 의 소속 ${at} ${nameOf(at)}`);
+}
+
+attempt(() =&gt; new DateRange(new TimePoint(2026, 3, 31), new TimePoint(2026, 2, 1)));
+attempt(() =&gt; employee.recordPayRate(
+  new DateRange(new TimePoint(2026, 2, 1), new TimePoint(2026, 3, 31)), correctedOn, new Money(210000)));
+attempt(() =&gt; employee.recordAssignment(
+  DateRange.openEnded(new TimePoint(2026, 3, 1)), new TimePoint(2026, 3, 1), new DepartmentId("DEP-SALES")));
+attempt(() =&gt; employee.payRateOn(february, new TimePoint(2025, 12, 31)));</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="temporal-property-guide-v1-1-0-tabs1-panel-rust" aria-labelledby="temporal-property-guide-v1-1-0-tabs1-tab-rust">
+<p class="code-tabs__label" aria-hidden="true">Rust</p>
+<pre tabindex="0"><code class="language-rust">// 인사·급여 — 사원의 일당과 소속을 시간 속성으로 두고, 사건 시각과 기록 시각 두 축으로 조회한다.
+
+use std::fmt;
+
+/// 시점. 표준 라이브러리에 달력 날짜 타입이 없어 세 언어가 같은 자체 값으로 둔다.
+#[derive(Clone, Copy)]
+struct TimePoint { year: i64, month: i64, day: i64 }
+
+impl TimePoint {
+    fn of(year: i64, month: i64, day: i64) -&gt; TimePoint { TimePoint { year, month, day } }
+    /// 1970-01-01 을 0 으로 세는 일 번호. 크기 비교와 일수 계산이 전부 이 값 위에 선다.
+    fn ordinal(&amp;self) -&gt; i64 {
+        let y = self.year - if self.month &lt;= 2 { 1 } else { 0 };
+        let era = y.div_euclid(400);
+        let yoe = y - era * 400;
+        let doy = (153 * (self.month + if self.month &gt; 2 { -3 } else { 9 }) + 2) / 5 + self.day - 1;
+        era * 146097 + yoe * 365 + yoe / 4 - yoe / 100 + doy - 719468
+    }
+}
+
+impl fmt::Display for TimePoint {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+        write!(f, "{:04}-{:02}-{:02}", self.year, self.month, self.day)
+    }
+}
+
+/// 구간. 두 끝이 모두 포함이고, 위 끝이 없으면 「추후 통지까지」다.
+#[derive(Clone, Copy)]
+struct DateRange { from: TimePoint, to: Option&lt;TimePoint&gt; }
+
+impl DateRange {
+    fn new(from: TimePoint, to: TimePoint) -&gt; Result&lt;DateRange, String&gt; {
+        if from.ordinal() &gt; to.ordinal() {
+            return Err(format!("유효 시작이 유효 끝보다 늦습니다: {}..{}", from, to));
+        }
+        Ok(DateRange { from, to: Some(to) })
+    }
+    fn open_ended(from: TimePoint) -&gt; DateRange { DateRange { from, to: None } }
+    fn includes(&amp;self, t: TimePoint) -&gt; bool {
+        self.from.ordinal() &lt;= t.ordinal() &amp;&amp; self.to.map_or(true, |e| t.ordinal() &lt;= e.ordinal())
+    }
+    fn overlaps(&amp;self, other: &amp;DateRange) -&gt; bool {
+        self.to.map_or(true, |e| other.from.ordinal() &lt;= e.ordinal())
+            &amp;&amp; other.to.map_or(true, |e| self.from.ordinal() &lt;= e.ordinal())
+    }
+    fn length_in_days(&amp;self) -&gt; Result&lt;i64, String&gt; {
+        match self.to {
+            None =&gt; Err(format!("끝이 없는 구간은 일수를 셀 수 없습니다: {}", self)),
+            Some(end) =&gt; Ok(end.ordinal() - self.from.ordinal() + 1),
+        }
+    }
+}
+
+impl fmt::Display for DateRange {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+        match self.to {
+            None =&gt; write!(f, "{}..", self.from),
+            Some(end) =&gt; write!(f, "{}..{}", self.from, end),
+        }
+    }
+}
+
+#[derive(Clone, Copy)]
+struct Money(i64);
+
+impl Money {
+    fn minus(&amp;self, other: Money) -&gt; Money { Money(self.0 - other.0) }
+    fn times(&amp;self, count: i64) -&gt; Money { Money(self.0 * count) }
+}
+
+impl fmt::Display for Money {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result { write!(f, "{}원", self.0) }
+}
+
+#[derive(Clone)]
+struct EmployeeId(String);
+
+impl fmt::Display for EmployeeId {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result { write!(f, "{}", self.0) }
+}
+
+#[derive(Clone)]
+struct DepartmentId(String);
+
+impl fmt::Display for DepartmentId {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result { write!(f, "{}", self.0) }
+}
+
+/// 유효 기간이 붙은 값 하나. recorded_on 은 우리가 그 값을 알게 된 날이다.
+#[derive(Clone)]
+struct Effectivity&lt;V&gt; { period: DateRange, recorded_on: TimePoint, value: V }
+
+/// 시간 속성 — 값들의 이력을 쥐고, 시점을 받아 값 하나로 답한다.
+#[derive(Clone)]
+struct TemporalProperty&lt;V&gt; { name: String, history: Vec&lt;Effectivity&lt;V&gt;&gt; }
+
+impl&lt;V: Clone&gt; TemporalProperty&lt;V&gt; {
+    fn starting_with(name: &amp;str, from: TimePoint, recorded_on: TimePoint, value: V) -&gt; TemporalProperty&lt;V&gt; {
+        let first = Effectivity { period: DateRange::open_ended(from), recorded_on, value };
+        TemporalProperty { name: name.to_string(), history: vec![first] }
+    }
+    fn asserting(&amp;self, period: DateRange, on: TimePoint, value: V) -&gt; Result&lt;TemporalProperty&lt;V&gt;, String&gt; {
+        let latest = self.latest_record();
+        if on.ordinal() &lt; latest.ordinal() {
+            return Err(format!("기록일이 앞선 기록보다 이릅니다: {} &lt; {}", on, latest));
+        }
+        for e in &amp;self.history {
+            if e.recorded_on.ordinal() == on.ordinal() &amp;&amp; e.period.overlaps(&amp;period) {
+                return Err(format!("같은 기록일에 유효 구간이 겹칩니다: {} 와 {}", e.period, period));
+            }
+        }
+        let mut next = self.history.clone();
+        next.push(Effectivity { period, recorded_on: on, value });
+        Ok(TemporalProperty { name: self.name.clone(), history: next })
+    }
+    /// 기록 기준 as_known_on 에서 본 when 의 값. 그 시점을 덮는 값 가운데 가장 늦게 안 것이 답이다.
+    fn value_on(&amp;self, when: TimePoint, as_known_on: Option&lt;TimePoint&gt;) -&gt; Result&lt;V, String&gt; {
+        let limit = as_known_on.unwrap_or_else(|| self.latest_record());
+        let mut best: Option&lt;&amp;Effectivity&lt;V&gt;&gt; = None;
+        for e in &amp;self.history {
+            if e.recorded_on.ordinal() &gt; limit.ordinal() || !e.period.includes(when) {
+                continue;
+            }
+            if best.map_or(true, |b| e.recorded_on.ordinal() &gt; b.recorded_on.ordinal()) {
+                best = Some(e);
+            }
+        }
+        match best {
+            None =&gt; Err(format!("그 기록 시점에는 아는 값이 없습니다: {} 의 {} · 기록 기준 {}", when, self.name, limit)),
+            Some(e) =&gt; Ok(e.value.clone()),
+        }
+    }
+    fn latest_record(&amp;self) -&gt; TimePoint {
+        let mut latest = self.history[0].recorded_on;
+        for e in &amp;self.history {
+            if e.recorded_on.ordinal() &gt; latest.ordinal() { latest = e.recorded_on; }
+        }
+        latest
+    }
+}
+
+/// aggregate root. 두 시간 속성을 품고 이력의 불변식을 진다.
+struct Employee {
+    id: EmployeeId,
+    hired_on: TimePoint,
+    pay_rate: TemporalProperty&lt;Money&gt;,
+    assignment: TemporalProperty&lt;DepartmentId&gt;,
+}
+
+impl Employee {
+    fn hire(id: EmployeeId, hired_on: TimePoint, rate: Money, department: DepartmentId) -&gt; Employee {
+        let pay_rate = TemporalProperty::starting_with("일당", hired_on, hired_on, rate);
+        let assignment = TemporalProperty::starting_with("소속", hired_on, hired_on, department);
+        Employee { id, hired_on, pay_rate, assignment }
+    }
+    fn record_pay_rate(&amp;mut self, p: DateRange, on: TimePoint, rate: Money) -&gt; Result&lt;(), String&gt; {
+        self.pay_rate = self.pay_rate.asserting(p, on, rate)?;
+        Ok(())
+    }
+    fn record_assignment(&amp;mut self, p: DateRange, on: TimePoint, dept: DepartmentId) -&gt; Result&lt;(), String&gt; {
+        self.assignment = self.assignment.asserting(p, on, dept)?;
+        Ok(())
+    }
+    fn pay_rate_on(&amp;self, when: TimePoint, as_known_on: Option&lt;TimePoint&gt;) -&gt; Result&lt;Money, String&gt; {
+        self.pay_rate.value_on(when, as_known_on)
+    }
+    fn assignment_on(&amp;self, when: TimePoint, as_known_on: Option&lt;TimePoint&gt;) -&gt; Result&lt;DepartmentId, String&gt; {
+        self.assignment.value_on(when, as_known_on)
+    }
+}
+
+/// aggregate 밖에서 부서 aggregate 를 id 로 찾아 오는 자리.
+fn name_of(id: &amp;DepartmentId) -&gt; String {
+    let directory = [("DEP-SALES", "영업부"), ("DEP-PLAN", "기획부")];
+    let found = directory.iter().find(|(key, _)| *key == id.0);
+    found.map_or("미등록".to_string(), |(_, name)| name.to_string())
+}
+
+/// 이미 지급한 기준과 지금 아는 기준의 차이를 그 구간의 일수만큼 정산한다.
+fn retro_difference(e: &amp;Employee, stretch: DateRange, paid_on: TimePoint, known_on: TimePoint) -&gt; Result&lt;Money, String&gt; {
+    let paid = e.pay_rate_on(stretch.from, Some(paid_on))?;
+    let current = e.pay_rate_on(stretch.from, Some(known_on))?;
+    Ok(current.minus(paid).times(stretch.length_in_days()?))
+}
+
+fn attempt&lt;F: FnOnce() -&gt; Result&lt;(), String&gt;&gt;(action: F) {
+    if let Err(message) = action() { println!("거부 — {}", message); }
+}
+
+fn run() -&gt; Result&lt;(), String&gt; {
+    let hire = TimePoint::of(2026, 1, 1);
+    let sales = DepartmentId("DEP-SALES".to_string());
+    let mut employee = Employee::hire(EmployeeId("EMP-1042".to_string()), hire, Money(200000), sales);
+    let first = employee.assignment_on(hire, None)?;
+    println!("사원 {} · 입사 {} · 첫 일당 {} · 첫 소속 {} {}",
+        employee.id, employee.hired_on, employee.pay_rate_on(hire, None)?, first, name_of(&amp;first));
+
+    let raise_from = TimePoint::of(2026, 2, 15);
+    let noticed_on = TimePoint::of(2026, 3, 15);
+    employee.record_pay_rate(DateRange::open_ended(raise_from), noticed_on, Money(240000))?;
+    println!("[기록] {} — {} 부터 일당 {}", noticed_on, raise_from, Money(240000));
+
+    let corrected_on = TimePoint::of(2026, 4, 4);
+    employee.record_pay_rate(DateRange::open_ended(raise_from), corrected_on, Money(260000))?;
+    println!("[기록] {} — {} 부터 일당 {}", corrected_on, raise_from, Money(260000));
+
+    let move_from = TimePoint::of(2026, 4, 1);
+    let moved_on = TimePoint::of(2026, 5, 2);
+    let planning = DepartmentId("DEP-PLAN".to_string());
+    employee.record_assignment(DateRange::open_ended(move_from), moved_on, planning)?;
+    println!("[기록] {} — {} 부터 소속 DEP-PLAN", moved_on, move_from);
+
+    let january = TimePoint::of(2026, 1, 20);
+    let february = TimePoint::of(2026, 2, 25);
+    println!("[한 축] {} 의 일당 {}", january, employee.pay_rate_on(january, None)?);
+    println!("[한 축] {} 의 일당 {}", february, employee.pay_rate_on(february, None)?);
+
+    let payday = TimePoint::of(2026, 2, 28);
+    for as_known_on in [payday, noticed_on, corrected_on] {
+        let rate = employee.pay_rate_on(february, Some(as_known_on))?;
+        println!("[두 축] {} 의 일당 · 기록 기준 {} → {}", february, as_known_on, rate);
+    }
+
+    let stretch = DateRange::new(raise_from, payday)?;
+    let gap = employee.pay_rate_on(february, Some(noticed_on))?.minus(employee.pay_rate_on(february, Some(payday))?);
+    println!("2월 소급 차액 — {} {}일 × {} = {}", stretch, stretch.length_in_days()?, gap,
+        retro_difference(&amp;employee, stretch, payday, noticed_on)?);
+
+    for when in [TimePoint::of(2026, 3, 20), TimePoint::of(2026, 4, 10)] {
+        let at = employee.assignment_on(when, None)?;
+        println!("[한 축] {} 의 소속 {} {}", when, at, name_of(&amp;at));
+    }
+
+    attempt(|| DateRange::new(TimePoint::of(2026, 3, 31), TimePoint::of(2026, 2, 1)).map(|_| ()));
+    attempt(|| {
+        let period = DateRange::new(TimePoint::of(2026, 2, 1), TimePoint::of(2026, 3, 31))?;
+        employee.record_pay_rate(period, corrected_on, Money(210000))
+    });
+    attempt(|| {
+        let back = TimePoint::of(2026, 3, 1);
+        employee.record_assignment(DateRange::open_ended(back), back, DepartmentId("DEP-SALES".to_string()))
+    });
+    attempt(|| employee.pay_rate_on(february, Some(TimePoint::of(2025, 12, 31))).map(|_| ()));
+    Ok(())
+}
+
+fn main() {
+    if let Err(message) = run() { println!("중단 — {}", message); }
+}</code></pre>
+</div>
+</div>
+<p>시나리오의 단계가 코드의 어느 줄인지 표로 짚어 볼게요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>시나리오 단계</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td>시나리오 1 의 1단계 — 입사 때 첫 값이 유효 시작과 함께 들어간다</td><td><code>startingWith</code> 호출 138행, 끝이 열린 구간을 만드는 자리 78행</td><td>141행, 87행</td><td>152행, 99행</td></tr>
+<tr><td>시나리오 1 의 3·4단계 — 이력이 고르고 값 하나를 돌려준다</td><td><code>valueOn</code> 98~113행</td><td>104~119행</td><td>117~132행</td></tr>
+<tr><td>시나리오 2 의 1단계 — 소급 기록이 들어온다</td><td>192행, root 를 거쳐 들어가는 자리 146~148행</td><td>188행, 145~147행</td><td>200행, 156~159행</td></tr>
+<tr><td>시나리오 3 의 3·4단계 — 겹침과 기록일 역행을 거부한다</td><td><code>asserting</code> 83~91행</td><td>92~99행</td><td>104~111행</td></tr>
+</tbody>
+</table>
+</div>
+<p>마지막 행은 세 언어 모두 기록일 역행을 먼저 보고 겹침을 나중에 봅니다. 그리고 여기서 가장 중요한 줄은 이겁니다 — Java 101행 · TypeScript 108행 · Rust 121행. 세 언어에서 같은 자리예요.</p>
+<ul>
+<li>Java — <code>if (e.recordedOn().ordinal() &gt; asKnownOn.ordinal() || !e.period().includes(when))</code> 뒤에 <code>continue</code></li>
+<li>TypeScript — <code>if (e.recordedOn.ordinal() &gt; limit.ordinal() || !e.period.includes(when))</code> 뒤에 <code>continue</code></li>
+<li>Rust — <code>if e.recorded_on.ordinal() &gt; limit.ordinal() || !e.period.includes(when) { continue; }</code></li>
+</ul>
+<p>이 한 줄이 두 시간축을 동시에 거르고, 최소 조건 3·4번(시점을 받아 값 하나를 고르는 판정이 속성 안에 있음)과 [선택] 10(두 축)을 함께 맡습니다. 앞 조건은 기록 시각으로 「그때 아직 몰랐던 값」을 걸러 내고, 뒤 조건은 사건 시각으로 「그날을 안 덮는 값」을 걸러 내요. 앞 조건을 지우면 언제 물어도 오늘의 지식으로 답하게 되어 시나리오 2 의 6단계가 사라지고, 뒤 조건을 지우면 날짜가 무의미해져 시나리오 1 의 3단계가 사라집니다. 그리고 바로 다음 줄(Java 104행 · TypeScript 111행 · Rust 124행)이 남은 후보 중 <strong>기록 시각이 가장 늦은 것</strong>을 고르는데, 이것이 시나리오 2 의 7단계에서 정정본이 앞 기록을 덮지 않고도 앞서는 방법이에요. 상황 설정 표의 네 칸도 같은 방식으로 짚을 수 있습니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>표의 칸</th><th>코드에서 그 자리</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>불변식의 위치</code> ① 시작이 끝보다 늦을 수 없다</td><td><code>DateRange</code> 가 만들어지는 자리</td><td>25~27행</td><td>25~27행</td><td>33~35행</td></tr>
+<tr><td><code>불변식의 위치</code> ②·③ 겹침 금지 · 기록일 역행 금지</td><td>방금 본 <code>asserting</code> 안</td><td>83~91행</td><td>92~99행</td><td>104~111행</td></tr>
+<tr><td><code>불변식의 위치</code> ④ 이력에 든 값은 지워지거나 바뀌지 않는다</td><td>값을 고치지 않고 <strong>새 값을 만들어 돌려준다</strong></td><td>92~94행</td><td>100행</td><td>112~114행</td></tr>
+<tr><td><code>불변식의 위치</code> ⑤ 입사일부터 유효한 값을 갖고 만들어진다</td><td><code>Employee</code> 를 만드는 자리</td><td>135~140행</td><td>140~143행</td><td>151~155행</td></tr>
+<tr><td><code>타 aggregate 참조 방식</code> — 부서를 id 로만 가진다</td><td><code>assignment</code> 의 타입 인자가 <code>DepartmentId</code> 다</td><td>133행</td><td>138행</td><td>147행</td></tr>
+<tr><td><code>타 aggregate 참조 방식</code> — 조립은 aggregate 밖에서</td><td>부서 이름을 찾는 일이 밖에 있다</td><td>164행</td><td>163행</td><td>173~177행</td></tr>
+</tbody>
+</table>
+</div>
+<p>언어 차이는 셋입니다. Java 는 <code>record</code> 가 값 동등성과 불변을 함께 주어 VO 를 그대로 옮길 수 있고, 검사 실패를 예외로 던져요. TypeScript 는 <code>readonly</code> 필드와 배열 복사로 같은 성질을 손으로 맞추고, 선택 인자 하나로 두 시간축 조회와 한 축 조회를 겸합니다. Rust 는 소유권 때문에 <code>asserting</code> 이 새 값을 만들어 돌려주는 모양이 가장 자연스럽고, 검사 실패를 <code>Result</code> 로 돌려주어 호출 쪽이 <code>?</code> 로 이어 붙여요. 셋 다 이력을 제자리에서 고치지 않는다는 점은 같습니다.</p>
+<h3 id="상황이-달라지면">상황이 달라지면</h3>
+<p>이 패턴의 개념을 aggregate 로 묶는 길이 하나가 아니에요. 업무 조건이 달라지면 경계도 달라집니다. 이 가이드가 고른 것도 표의 한 행으로 넣어 나란히 비교했어요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>상황</th><th>경계</th><th>이유</th></tr>
+</thead>
+<tbody>
+<tr><td>이력이 길지 않고, 값을 넣고 읽는 일이 사원 한 명 안에서 끝난다 (이 가이드의 선택)</td><td><code>Employee</code> 가 root 이고 시간 속성 전체가 그 안의 VO 다</td><td>겹침·기록일 순서 같은 규칙이 한 사원의 이력 안에서만 성립하므로 한 aggregate 안에서 동기로 지킬 수 있다. 저장할 때 이력 전체가 함께 오가는 비용은 이력이 수십 줄인 동안에는 문제가 되지 않는다</td></tr>
+<tr><td>이력이 수천 줄로 길고 조회 대부분이 최근 값이다</td><td><code>PayRateHistory</code> 를 별도 root 로 떼고 <code>Employee</code> 는 <code>EmployeeId</code> 로 참조된다</td><td>사원을 읽을 때마다 이력 전체를 싣지 않아도 된다. 대신 값을 더하는 일과 사원을 바꾸는 일이 두 aggregate 에 걸쳐 두 번의 저장이 되고, 「입사와 동시에 첫 값이 있다」는 불변식을 한 자리에서 지킬 수 없다</td></tr>
+<tr><td>유효 기간이 사원이 아니라 발령 문서에 붙고, 그 문서를 결재하고 취소하는 업무가 따로 있다</td><td><code>Assignment</code>(발령)가 root 이고 <code>EmployeeId</code> 로 사원을 가리킨다. 사원은 이력을 갖지 않는다</td><td>결재·취소가 발령 하나의 상태 변화라 그 단위로 트랜잭션이 잡힌다. 대신 「2월 25일의 일당」을 묻는 일이 사원에게 묻는 일이 아니라 발령들을 모아 추리는 일이 되어, 조건 4 의 판정 책임이 조회 자리로 되돌아간다</td></tr>
+<tr><td>값이 사원별이 아니라 직급별로 정해지고, 사원은 직급만 오간다</td><td><code>PayGrade</code>(직급)가 root 이고 일당 시간 속성은 거기 붙는다. <code>Employee</code> 는 직급을 <code>PayGradeId</code> 로 가리키는 시간 속성을 가진다</td><td>일당표를 한 번 고치면 그 직급의 모든 사원에게 같은 날짜로 반영된다. 대신 개인별 예외를 둘 자리가 없어져서, 특별 수당 같은 것은 별도 속성으로 따로 만들어야 한다</td></tr>
+</tbody>
+</table>
+</div>
+<p>네 행이 공통으로 지키는 것은 하나예요 — <strong>다른 aggregate 는 언제나 id 로 가리킵니다.</strong> 위 표의 어느 경계를 골라도 <code>Employee</code> 가 <code>PayRateHistory</code> 객체를 필드로 가지거나 <code>Assignment</code> 가 <code>Employee</code> 객체를 가지지 않아요. 그 이유는 경계 반례 표의 마지막 행이 수치로 보인 그대로입니다.</p>
+<h3 id="실제-사례">실제 사례</h3>
+<p>시간 속성의 사례는 라이브러리 API(Application Programming Interface, 프로그램이 부르도록 공개한 호출 규약) 보다 데이터베이스가 제공하는 시간 지원 기능에서 자주 보입니다. 아래 둘은 공개 문서로 확인한 것이에요.</p>
+<ul>
+<li><strong>MariaDB 의 두 가지 시간 테이블.</strong> <a href="https://mariadb.com/docs/server/reference/sql-structure/temporal-tables/application-time-periods">application-time period tables</a> 는 <code>PERIOD FOR</code> 절로 같은 타입의 시간 칼럼 두 개를 한 기간으로 묶고, 첫 값이 둘째 값보다 작아야 한다는 제약을 자동으로 겁니다. 이 기간이 이 글의 <strong>유효 기간</strong>이고 그 두 칼럼이 <strong>구간</strong>의 두 끝이에요. 그리고 <a href="https://mariadb.com/docs/server/reference/sql-structure/temporal-tables/system-versioned-tables">system-versioned tables</a> 의 <code>ROW START</code> · <code>ROW END</code> 는 행이 데이터베이스에 들어오고 나간 시각을 남기고 <code>FOR SYSTEM_TIME AS OF</code> 로 과거 시점의 테이블 상태를 돌려줍니다 — 이쪽이 이 글의 <strong>기록 시각</strong>이고, 문서 자체가 행이 삽입·삭제된 시점과 그 변화가 실제로 나타난 시점이 같지 않을 수 있다고 적어 두 축을 갈라 둡니다. 둘을 함께 적용하면 이 글의 두 축 조회가 SQL(관계형 데이터베이스의 질의 언어) 문법으로 나타나요.</li>
+<li><strong>XTDB.</strong> <a href="https://docs.xtdb.com/intro/what-is-xtdb.html">What is XTDB?</a> 는 자신을 두 시간축 데이터베이스로 소개하면서 축 이름을 <strong>system time</strong>(데이터가 삽입되거나 갱신된 때)과 <strong>valid time</strong>(그 행이 응용에서 유효한 기간)으로 적습니다. valid time 이 이 글의 <strong>사건 시각</strong>이고 기간으로 주어지는 것이 <strong>유효 기간</strong>, system time 이 <strong>기록 시각</strong> 이에요. 문서는 질의가 따로 말하지 않으면 「지금」을 묻는 것으로 본다고 적는데, 그것이 이 글의 [선택] 6(인자 없는 접근자)과 같은 선택입니다.</li>
+</ul>
+<h2 id="스스로-점검하기">스스로 점검하기</h2>
+<ol>
+<li>
+<p><strong>경계 판정 문제.</strong> 아래 모델을 최소 조건 넷으로 판정해 보세요. 이 패턴인가요, 아닌가요? 아니라면 몇 번 조건에서 갈리나요?</p>
+<pre tabindex="0"><code class="language-java">record RateChange(LocalDate effectiveFrom, long won) {}
+
+class Employee {
+    private final List&lt;RateChange&gt; rateChanges = new ArrayList&lt;&gt;();
+    public List&lt;RateChange&gt; rateChanges() { return List.copyOf(rateChanges); }
+    public void addRateChange(RateChange c) { rateChanges.add(c); }
+}</code></pre>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — 이 패턴이 아닙니다. 갈리는 곳은 최소 조건 3번이에요. 조건 1 은 충족합니다 — <code>addRateChange</code> 가 덮어쓰지 않고 더하니 과거 값이 남아요. 조건 2 도 충족합니다 — 항목마다 <code>effectiveFrom</code> 이 「언제부터 참인가」를 담고 있어요. 그런데 시점을 받아 값 하나를 돌려주는 접근자가 없고 <code>rateChanges()</code> 가 목록을 통째로 돌려주니, 최소 조건 절의 판정 순서로 보면 3번 물음에서 멈추는 「이력을 돌려주는 조회」예요. 그날의 값을 고르는 일이 부르는 쪽마다 따로 생기므로 조건 4 도 함께 빠지고, 시나리오 3 의 2단계처럼 화면과 배치가 같은 날에 다른 금액을 낼 수 있어요.</p>
+</blockquote>
+</details>
+</li>
+<li>
+<p><strong>비교 판별 문제.</strong> 어떤 팀이 사원 테이블 옆에 <code>employee_audit(employee_id, column_name, old_value, new_value, changed_at, changed_by)</code> 표를 두고 「우리도 이력을 남기니 시간 속성을 쓴 것」이라고 말합니다. 이 글의 구분 기준 하나로 그 말이 왜 성립하지 않는지 설명해 보세요. 그리고 그 표에 칼럼을 <strong>하나만</strong> 더해 시나리오 2 의 3단계(2월 소급 차액 560,000원)를 계산할 수 있게 만들려면 무엇을 더해야 할까요?</p>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — 비교 절 「감사 로그·변경 이력 표와의 차이」의 구분 기준, 곧 항목에 붙은 날짜가 「언제부터 참인가」인가 「언제 적었는가」인가로 가립니다. 이 표의 날짜는 <code>changed_at</code> 하나뿐이고 그것은 「언제 적었는가」라서, 2월 15일부터 참이라는 사실이 어디에도 없어요. 더할 칼럼은 유효 시작(<code>effective_from</code>)입니다. 3월 15일 행에 <code>effective_from = 2026-02-15</code> 가 있으면 2월 15일부터 28일까지 14일 × (240,000 − 200,000)원 = 560,000원이 나와 시나리오 2 의 3단계와 같아져요(손 검산). 다만 칼럼을 더해도 그 행을 골라 읽는 일은 여전히 부르는 쪽 몫이라, 최소 조건 3·4번까지 갖추려면 시점을 받아 값 하나를 돌려주는 접근자가 있어야 합니다.</p>
+</blockquote>
+</details>
+</li>
+<li>
+<p><strong>책임·순서 문제.</strong> 구현의 <code>valueOn</code> 에서 후보를 고르는 조건 두 개 가운데 <strong>기록 시각 쪽</strong>(<code>e.recordedOn().ordinal() &gt; asKnownOn.ordinal()</code>)만 지웠다고 해 봅시다. 실행 출력 열여섯 줄 가운데 어느 줄들이 달라지고, 그 줄의 값은 무엇이 될까요? 그리고 그 변화가 어느 업무 질문을 답할 수 없게 만드나요?</p>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — 세 줄이 바뀌고 한 줄이 사라집니다(그 조건을 지운 사본을 Java 21 로 실행해 확인). <code>[두 축]</code> 의 기록 기준 2026-02-28 줄과 2026-03-15 줄이 둘 다 <code>→ 260000원</code> 이 되고, 소급 차액 줄은 <code>14일 × 0원 = 0원</code> 이 됩니다. 마지막 줄(기록 기준 2025-12-31 의 거부)은 거부가 일어나지 않아 출력에서 빠지고, 출력은 열다섯 줄이 돼요. 기록 시각으로 거르지 않으니 그날을 덮는 후보 가운데 기록이 가장 늦은 2026-04-04 의 260,000원이 언제 물어도 답이 되기 때문입니다. 답할 수 없게 되는 질문은 시나리오 2 의 6단계, 곧 감사가 물은 「2월 28일 지급 당시 알던 2월 25일의 일당」이고, 같은 까닭으로 시나리오 2 의 3단계의 2월 소급 차액 560,000원도 나오지 않아요. 최소 조건 10번(두 축)이 그 한 조건에 기대고 있었던 셈입니다.</p>
+</blockquote>
+</details>
+</li>
+</ol>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li>Martin Fowler, <em>Analysis Patterns: Reusable Object Models</em>, Addison-Wesley, 1997 — Chapter 3 「Observations and Measurements」 §3.8 Dual Time Record. 이 글의 두 시간축 갈래(최소 조건 10)의 원전입니다.</li>
+<li><a href="https://www.pearson.de/media/muster/toc/toc_9780134271439.pdf">Analysis Patterns 목차 (Pearson PDF)</a> — 3장의 장 제목과 §3.8 의 절 번호·제목 확인.</li>
+<li><a href="https://martinfowler.com/apsupp/apchap3.pdf">UML Diagrams for Chapter 3 (apchap3.pdf)</a> — 그림 3.11 에서 기록이 시간 기록으로 가는 연관을 둘 가지고 각각에 recording time 과 applicability 이름이 붙는 것. 최소 조건 10 의 근거 괄호가 가리키는 그림입니다.</li>
+<li><a href="https://martinfowler.com/eaaDev/TemporalProperty.html">Temporal Property (Fowler, eaaDev 초안)</a> — 시간에 따라 바뀌는 속성이라는 한 줄 부제와 과거 시점 질문을 든 도입부, "How it Works" 의 시점 인자 접근자·인자 없는 접근자·더하는 갱신과 고치는 갱신·과거와 미래 날짜의 뜻, "When to Use It" 의 속성이 몇 개일 때와 대부분일 때의 구분. 최소 조건 1 · 3 · 6 · 8 · 9 와 「사용 목적」의 마지막 문단의 근거입니다.</li>
+<li><a href="https://martinfowler.com/eaaDev/Effectivity.html">Effectivity (Fowler, eaaDev 초안)</a> — 객체에 기간을 달아 유효 시점을 보인다는 한 줄 의도, "How it Works" 의 끝이 열린 Range 와 두 축 지원 서술, "When to Use It" 의 「부르는 쪽이 시간성을 떠안는다」와 Range 를 실제로 쓰라는 권고. 최소 조건 2 · 4 · 5 · 7 · 10 의 근거입니다.</li>
+<li><a href="https://martinfowler.com/eaaDev/">eaaDev 목록 페이지 (Fowler)</a> — 이 초안 묶음이 2006년 여름 이후 사실상 멈춰 있다는 서술. 개요가 원전의 지위를 적을 때 근거로 든 곳입니다.</li>
+<li><a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a> — 상황 설정 표의 네 행이 쓰는 Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식.</li>
+<li><a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html">Range 가이드</a> — 유효 기간을 담는 구간 값의 정의와 경계 규칙. 개요·개념 정리·비교 절이 부품으로 가리킵니다.</li>
+<li><a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.html">Posting Rule 가이드</a> — 규칙마다 유효 기간을 두고 발생 시점으로 조회하는 모델. 교차 판정 표와 비교 절의 다섯째 대상입니다.</li>
+<li><a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html">Observation 가이드</a> — 대상·항목·값 세 자리를 가진 기록 모델. 교차 판정 표와 비교 절의 넷째 대상입니다.</li>
+<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a> — 판정이 기록 시점에 한 번 정해지고 고정되는 모델. 교차 판정 표의 두 번째 행입니다.</li>
+<li><a href="https://doc.rust-lang.org/std/time/index.html">Rust std::time</a> — 이 모듈에 달력 날짜 타입이 없다는 것. 「상황 설정」이 날짜를 자체 값으로 둔 이유입니다.</li>
+<li><a href="https://mariadb.com/docs/server/reference/sql-structure/temporal-tables/application-time-periods">MariaDB Application-Time Periods</a> — <code>PERIOD FOR</code> 가 두 시간 칼럼을 한 기간으로 묶고 순서 제약을 자동으로 거는 것. 「실제 사례」의 첫 항목입니다.</li>
+<li><a href="https://mariadb.com/docs/server/reference/sql-structure/temporal-tables/system-versioned-tables">MariaDB System-Versioned Tables</a> — <code>ROW START</code> · <code>ROW END</code> 와 <code>FOR SYSTEM_TIME AS OF</code>, 그리고 삽입·삭제 시점이 변화가 나타난 시점과 다를 수 있다는 서술. 「실제 사례」의 첫 항목입니다.</li>
+<li><a href="https://docs.xtdb.com/intro/what-is-xtdb.html">What is XTDB?</a> — system time 과 valid time 두 축의 정의와, 질의가 따로 말하지 않으면 「지금」을 묻는다는 서술. 「실제 사례」의 둘째 항목입니다.</li>
+</ul>
+</main>
+<footer class="guide-footer">
+<p>원본은 <code>pattern-guide/ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.1.0.md</code>입니다. 이 HTML 은 원본 md 에서 생성한 파생물이라, 고칠 곳이 있으면 md 를 고친 뒤 다시 렌더합니다.</p>
+</footer>
+</div>
+<script>
+/* pattern-guide HTML — 세 언어 코드 탭. render-guides.py 가 HTML 에 인라인한다.
+ * JS 가 없으면 모든 패널이 보인다(마크업 기본값). 초기화하면서 선택 안 된 패널에 hidden 을 건다.
+ * 키보드: ←/→ 이웃 탭, Home/End 처음/끝 탭(WAI-ARIA APG Tabs, 자동 활성화).
+ */
+(function () {
+  "use strict";
+
+  var STORE_KEY = "pattern-guide:code-lang";
+  var widgets = [];
+
+  function readPref() {
+    try {
+      return window.localStorage.getItem(STORE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writePref(lang) {
+    try {
+      window.localStorage.setItem(STORE_KEY, lang);
+    } catch (e) {
+      /* 저장소를 못 쓰면 이번 페이지 안에서만 유지한다 */
+    }
+  }
+
+  function select(widget, tab, moveFocus) {
+    widget.tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+    if (moveFocus) tab.focus();
+  }
+
+  function tabForLang(widget, lang) {
+    for (var i = 0; i < widget.tabs.length; i++) {
+      if (widget.tabs[i].getAttribute("data-lang") === lang) return widget.tabs[i];
+    }
+    return null;
+  }
+
+  function activate(widget, tab, moveFocus) {
+    select(widget, tab, moveFocus);
+    var lang = tab.getAttribute("data-lang");
+    if (!lang) return;
+    writePref(lang);
+    widgets.forEach(function (other) {
+      if (other === widget) return;
+      var match = tabForLang(other, lang);
+      if (match) select(other, match, false);
+    });
+  }
+
+  function init(root) {
+    var list = root.querySelector(".code-tabs__list");
+    if (!list) return;
+    var tabs = Array.prototype.slice.call(list.querySelectorAll(".code-tabs__tab"));
+    if (!tabs.length) return;
+    var widget = { root: root, tabs: tabs };
+    widgets.push(widget);
+
+    list.addEventListener("click", function (event) {
+      var tab = event.target.closest(".code-tabs__tab");
+      if (tab && tabs.indexOf(tab) !== -1) activate(widget, tab, false);
+    });
+
+    list.addEventListener("keydown", function (event) {
+      var current = event.target.closest(".code-tabs__tab");
+      var index = tabs.indexOf(current);
+      if (index === -1) return;
+      var next = null;
+      switch (event.key) {
+        case "ArrowRight":
+          next = tabs[(index + 1) % tabs.length];
+          break;
+        case "ArrowLeft":
+          next = tabs[(index - 1 + tabs.length) % tabs.length];
+          break;
+        case "Home":
+          next = tabs[0];
+          break;
+        case "End":
+          next = tabs[tabs.length - 1];
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      activate(widget, next, true);
+    });
+
+    var initial = tabForLang(widget, readPref());
+    if (!initial) {
+      initial = tabs.filter(function (t) {
+        return t.getAttribute("aria-selected") === "true";
+      })[0] || tabs[0];
+    }
+    select(widget, initial, false);
+    root.setAttribute("data-enhanced", "");
+  }
+
+  function boot() {
+    Array.prototype.forEach.call(document.querySelectorAll(".code-tabs"), init);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>

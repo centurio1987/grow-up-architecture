@@ -1,0 +1,1690 @@
+<!doctype html>
+<!-- guide-fp:4e9b5d7a68ecc527c0d5e662d501c8b7ef83be8b2051773f9549b864d8b9f912 -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="generator" content="scripts/render-guides.py">
+<title>Quantity — 숫자와 단위를 떼어 놓지 않는 값</title>
+<style>
+/* pattern-guide HTML — render-guides.py 가 HTML 에 인라인한다. 외부 폰트·이미지 요청 없음. */
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --fg: #1c1e22;
+  --muted: #5a606b;
+  --border: #dcdfe4;
+  --border-strong: #b9bec7;
+  --accent: #1f4fb8;
+  --accent-soft: #e8eefb;
+  --code-bg: #f3f4f6;
+  --code-fg: #1c1e22;
+  --inline-code-bg: #eceef1;
+  --quote-fg: #454a54;
+  --quote-bar: #c5cad3;
+  --th-bg: #f1f2f4;
+  --focus: #1f4fb8;
+  --diagram-filter: none;
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR",
+    "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, "D2Coding", Consolas, "Cascadia Mono",
+    "Liberation Mono", "Noto Sans Mono CJK KR", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141619;
+    --surface: #1b1e22;
+    --fg: #e3e5e9;
+    --muted: #a1a7b1;
+    --border: #2d3138;
+    --border-strong: #464c56;
+    --accent: #8db0ff;
+    --accent-soft: #1f2a40;
+    --code-bg: #1c1f24;
+    --code-fg: #dfe2e7;
+    --inline-code-bg: #262a30;
+    --quote-fg: #b9bec7;
+    --quote-bar: #464c56;
+    --th-bg: #1f2227;
+    --focus: #8db0ff;
+    --diagram-filter: invert(0.88) hue-rotate(180deg);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141619;
+  --surface: #1b1e22;
+  --fg: #e3e5e9;
+  --muted: #a1a7b1;
+  --border: #2d3138;
+  --border-strong: #464c56;
+  --accent: #8db0ff;
+  --accent-soft: #1f2a40;
+  --code-bg: #1c1f24;
+  --code-fg: #dfe2e7;
+  --inline-code-bg: #262a30;
+  --quote-fg: #b9bec7;
+  --quote-bar: #464c56;
+  --th-bg: #1f2227;
+  --focus: #8db0ff;
+  --diagram-filter: invert(0.88) hue-rotate(180deg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.guide {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;
+}
+
+@media (min-width: 40rem) {
+  .guide {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ── 헤딩 ─────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.35;
+  font-weight: 700;
+  scroll-margin-top: 1rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.875rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 3.25rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+h5,
+h6 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* ── 본문 블록 ─────────────────────────────────────── */
+p,
+ul,
+ol,
+blockquote,
+.table-wrap,
+pre,
+.code-tabs,
+.mermaid-figure {
+  margin: 0 0 1.1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+li > ul,
+li > ol {
+  margin: 0.25rem 0 0.25rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+li > p {
+  margin: 0 0 0.6rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 3px solid var(--quote-bar);
+  color: var(--quote-fg);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── 머리 차례 · 접힌 풀이 (명세 1.5.0) ─────────────── */
+details.guide-toc {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+details.guide-toc > summary,
+details.answer > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+details.guide-toc ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+details.guide-toc ol ol {
+  margin-top: 0.15rem;
+}
+
+details.guide-toc li {
+  margin: 0.15rem 0;
+}
+
+details.answer {
+  margin: 0.75rem 0 1.25rem;
+}
+
+details.answer > blockquote {
+  margin-top: 0.5rem;
+}
+
+/* ── 코드 ─────────────────────────────────────────── */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--inline-code-bg);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 4;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+pre > code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ── 표 ───────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+th,
+td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+  min-width: 6rem;
+}
+
+th {
+  background: var(--th-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── mermaid 도식(렌더 시점 인라인 SVG) ───────────── */
+.mermaid-figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid-figure svg {
+  height: auto;
+  filter: var(--diagram-filter);
+}
+
+/* ── 세 언어 탭 ───────────────────────────────────── */
+.code-tabs__list {
+  display: none;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__list {
+  display: flex;
+}
+
+.code-tabs__tab {
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 1rem;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.9375rem/1 var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.code-tabs__tab:hover {
+  color: var(--fg);
+}
+
+.code-tabs__tab[aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.code-tabs__tab:focus-visible {
+  outline-offset: -2px;
+  border-radius: 6px 6px 0 0;
+}
+
+.code-tabs__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.code-tabs[data-enhanced] .code-tabs__label {
+  display: none;
+}
+
+.code-tabs__panel > pre {
+  margin-bottom: 1.1rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__panel > pre {
+  margin-bottom: 0;
+}
+
+.code-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── 꼬리말 ───────────────────────────────────────── */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ── 인쇄: 탭 패널 전부, 라이트 색 ───────────────── */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #ffffff !important;
+    --surface: #ffffff !important;
+    --fg: #000000 !important;
+    --muted: #444444 !important;
+    --border: #bbbbbb !important;
+    --accent: #000000 !important;
+    --code-bg: #f6f6f6 !important;
+    --code-fg: #000000 !important;
+    --inline-code-bg: #eeeeee !important;
+    --quote-fg: #222222 !important;
+    --quote-bar: #999999 !important;
+    --th-bg: #eeeeee !important;
+    --diagram-filter: none !important;
+  }
+
+  body {
+    font-size: 10.5pt;
+  }
+
+  .guide {
+    max-width: none;
+    padding: 0;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__list,
+  .code-tabs__list {
+    display: none !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__label,
+  .code-tabs__label {
+    display: block !important;
+  }
+
+  .code-tabs__panel,
+  .code-tabs__panel[hidden] {
+    display: block !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__panel > pre {
+    margin-bottom: 1.1rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow: visible;
+  }
+
+  .table-wrap,
+  .mermaid-figure {
+    overflow: visible;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="guide">
+<main>
+<h1 id="quantity--숫자와-단위를-떼어-놓지-않는-값">Quantity — 숫자와 단위를 떼어 놓지 않는 값</h1>
+<details class="guide-toc" open>
+<summary>차례</summary>
+<ol>
+<li><a href="#한눈에-보는-개요">한눈에 보는 개요</a></li>
+<li><a href="#패턴-자세히-들여다보기">패턴 자세히 들여다보기</a>
+<ol>
+<li><a href="#시나리오-1--레시피가-이스트-100-g-을-쓰고-보유-03-kg-에서-빠지는-길">시나리오 1 — 레시피가 이스트 100 g 을 쓰고 보유 0.3 kg 에서 빠지는 길</a></li>
+<li><a href="#시나리오-2--단위가-다른-요청과-실사-대조가-더해질-때">시나리오 2 — 단위가 다른 요청과 실사 대조가 더해질 때</a></li>
+<li><a href="#시나리오-3--단위를-값-밖에-두면-어느-단계에서-어긋나는가">시나리오 3 — 단위를 값 밖에 두면 어느 단계에서 어긋나는가</a></li>
+<li><a href="#개념-정리">개념 정리</a></li>
+</ol>
+</li>
+<li><a href="#사용-목적">사용 목적</a>
+<ol>
+
+<ol>
+<li><a href="#단서-1--같은-필드에-값을-넣는-경로마다-단위가-다릅니다">단서 1 — 같은 필드에 값을 넣는 경로마다 단위가 다릅니다</a></li>
+<li><a href="#단서-2--단위-확인이-복제돼-있고-새-함수에서-그-한-줄이-빠진-적이-있습니다">단서 2 — 단위 확인이 복제돼 있고, 새 함수에서 그 한 줄이 빠진 적이 있습니다</a></li>
+<li><a href="#단서-3--자릿수와-반올림-규칙이-코드-곳곳에-흩어져-있습니다">단서 3 — 자릿수와 반올림 규칙이 코드 곳곳에 흩어져 있습니다</a></li>
+<li><a href="#쓰지-말아야-할-경우">쓰지 말아야 할 경우</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><a href="#패턴의-경계">패턴의 경계</a>
+<ol>
+<li><a href="#디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</a></li>
+<li><a href="#비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</a>
+<ol>
+<li><a href="#원시-숫자-필드와의-차이">원시 숫자 필드와의 차이</a></li>
+<li><a href="#단위를-갖고만-있는-래퍼와의-차이">단위를 갖고만 있는 래퍼와의 차이</a></li>
+<li><a href="#measurement-와의-차이">Measurement 와의 차이</a></li>
+<li><a href="#money-와의-차이">Money 와의 차이</a></li>
+</ol>
+</li>
+</ol>
+</li>
+<li><a href="#구현-예시">구현 예시</a>
+<ol>
+<li><a href="#상황-설정">상황 설정</a></li>
+<li><a href="#구현">구현</a></li>
+<li><a href="#상황이-달라지면">상황이 달라지면</a></li>
+<li><a href="#실제-사례">실제 사례</a></li>
+</ol>
+</li>
+<li><a href="#스스로-점검하기">스스로 점검하기</a></li>
+<li><a href="#참고-자료">참고 자료</a></li>
+</ol>
+</details>
+<h2 id="한눈에-보는-개요">한눈에 보는 개요</h2>
+<p>빵집 재고 프로그램이 이스트 보유량을 <code>onHandKg</code> 라는 숫자 필드 하나로 갖고 있다고 해 봅시다. 단위는 필드 이름에만 적혀 있어요. 납품서는 kg 로 들어오는데 레시피는 사용량을 g 로 적습니다. 레시피에 적힌 100 g 이 숫자 100 으로만 <code>consume</code> 에 들어가면 보유량 0.3 에서 100 을 빼게 되고, 결과는 −99.7 이에요(Java 21 로 실행해 확인). 음수 검사를 넣어 두면 이번에는 300 g 을 갖고 있는 재고가 100 g 사용을 재고 부족으로 거부합니다. 어느 쪽도 답이 아니죠.</p>
+<p>Quantity 의 해법은 <strong>수치와 단위를 한 값으로 묶고 계산을 그 값에게 맡기는 것</strong>입니다. 값이 빼기 전에 두 단위를 비교하고, 다르면 환산 비율로 맞춘 뒤에 계산해요. 맞출 비율이 없으면 계산을 거부합니다.</p>
+<pre tabindex="0"><code class="language-text">Before — 단위가 필드 이름에만 있다
+  onHandKg = 0.3
+  레시피 100 g ──(숫자만)──▶ consume(100) ──▶ 0.3 − 100 = −99.7
+                                              단위를 확인할 자리가 아예 없다
+
+After — 단위가 값 안에 있다
+  onHand = Quantity(0.3, kg)
+  레시피 100 g ──(값째로)──▶ consume(Quantity(100, g))
+                              ├─ kg 와 g 사이 비율 1000 을 찾는다
+                              ├─ 0.3 kg 을 300 g 으로 옮긴다
+                              └─ 300 g − 100 g = 200 g</code></pre>
+<p>분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고(근거: Fowler <em>Analysis Patterns</em> 3장 「Observations and Measurements」 §3.1~§3.5), 함께 쓰는 패턴은 Conversion Ratio · Compound Unit · <a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.1.0.html">Measurement</a> · Money 입니다.</p>
+<p>이 글의 예제는 빵집 재료 재고예요. 재료 하나의 <strong>재고 기록</strong>(<code>IngredientStock</code>)이 보유량 값 하나를 갖고, 재료 카탈로그는 번호(<code>IngredientId</code>)로만 가리킵니다. 단위 확인과 자릿수 규칙은 보유량 값이 스스로 지키고, 보유량이 음수가 되지 않게 하는 일은 재고 기록이 맡아요. kg → g 같은 환산 비율은 어느 재고 기록에도 속하지 않는 <strong>비율 표</strong> 하나에 두고 모든 값이 함께 찾아봐요. kg 로 보여 주는 보유량 같은 환산 결과는 물을 때마다 새 값으로 만들 뿐 따로 적어 두지 않습니다. 단위와 비율을 다른 곳에 두는 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.</p>
+<pre tabindex="0"><code class="language-text">이 글이 고른 경계
+  재고 기록 ──── 보유량 값 하나를 가짐 (보유량이 음수가 되지 않게 지킴)
+  보유량 값 ──── 수치와 단위를 함께 가짐 (단위 확인 · 자릿수 규칙을 스스로 지킴)
+  재료 카탈로그 ─ 번호(IngredientId)로만 가리킴
+  비율 표 ────── 어느 재고 기록에도 속하지 않음 (모든 값이 함께 찾아봄)
+  환산 결과 ──── 물을 때마다 새 값 (적어 두지 않음)</code></pre>
+<p>이 글은 시나리오 셋을 따라갑니다. 요청 하나가 재고에서 빠지는 길, 단위가 다른 요청과 실사 대조가 더해질 때 무엇이 바뀌는가, 단위를 값 밖에 두면 어느 단계에서 어긋나는가. 끝까지 읽으면 어떤 숫자 필드를 Quantity 로 바꿔야 하는지 필수 조건 셋으로 판정할 수 있고, 어느 규칙을 값이 지고 어느 규칙을 재고 기록이 지는지와 환산 방향에 따라 자릿수가 어떻게 달라지는지도 세 언어 코드에서 짚을 수 있게 됩니다.</p>
+<h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
+<h3 id="시나리오-1--레시피가-이스트-100-g-을-쓰고-보유-03-kg-에서-빠지는-길">시나리오 1 — 레시피가 이스트 100 g 을 쓰고 보유 0.3 kg 에서 빠지는 길</h3>
+<p>빵집의 재고 기록 <code>stock-1</code> 은 재료 <code>yeast</code> 의 보유량을 맡고 있고, 아침 납품으로 0.3 kg 이 들어왔습니다. 오후에 레시피가 1회분 50 g 을 두 번 쓰겠다고 요청해요. 나와야 하는 답은 보유 200 g 하나입니다. 이 장면에는 넷이 등장해요. 수치와 단위를 한 값으로 묶은 <strong>Quantity</strong> 와 그 수치를 무엇으로 셌는지 나타내는 Unit, 그리고 둘 사이를 옮길 근거인 ConversionRatio 입니다. 나머지 하나는 재료 하나의 재고를 맡아 보유량을 바꾸는 <strong>IngredientStock</strong> 이에요. 이름은 여기서 한 구절씩만 소개해요. 앞의 셋은 개념 정리에서 정식으로 정의하고, IngredientStock 은 개요가 재고 기록이라고 부른 패턴 밖의 타입이라 상황 설정에서 코드와 잇습니다.</p>
+<ol>
+<li><strong>레시피 쪽이 수치와 단위를 함께 넘겨 <code>Quantity(50, g)</code> 를 만들고, 횟수 2 를 곱해 100 g 으로 만듭니다.</strong> 수치만 넘기면 받는 쪽이 단위를 짐작해야 하고, 그 짐작이 틀린 결과가 개요의 −99.7 이에요(시나리오 3 의 3단계가 그 길입니다). 만들 때 자릿수 규칙(소수점 아래 세 자리)도 함께 확인합니다. 곱한 2 는 세는 횟수이지 양이 아니라서 단위는 g 그대로예요.</li>
+<li><strong>재고 기록 <code>IngredientStock</code> 이 사용량이 0 보다 큰지 먼저 보고, 뺄셈은 보유량 Quantity 에게 맡깁니다.</strong> 단위 확인을 부르는 쪽마다 따로 쓰면 한 곳만 빠뜨려도 섞인 계산이 나오는데, 확인이 연산 안에 있으면 빠뜨릴 자리가 없어요. 반대로 양수 검사는 값이 아니라 재고 기록 몫입니다. 값이 음수를 거부해 버리면 300 g − 400 g 같은 뺄셈 자체가 실패해서, 재고 기록이 얼마나 모자란지 판정할 결과값을 받지 못하거든요.</li>
+<li><strong>Quantity 가 두 Unit 을 비교해 공통 단위를 정합니다.</strong> kg 와 g 사이에는 kg 1 = g 1000 이라는 ConversionRatio 가 있고, 이 예제는 그 비율의 to 쪽인 g 를 공통 단위로 골라요. 무엇을 공통 단위로 삼을지는 패턴이 정하지 않습니다 — 왼쪽 값의 단위를 유지하거나 기준 단위로 모으는 방법도 있어요. 이 예제가 to 쪽을 고른 이유는 자릿수에 있고, 바로 아래에서 따져 봅니다.</li>
+<li><strong>공통 단위로 옮긴 뒤 계산하고, 결과를 새 Quantity 로 돌려줍니다.</strong> 0.3 kg × 1000 = 300 g 이고 300 − 100 = 200 g 이에요. 원래의 0.3 kg 과 레시피의 100 g 은 그대로 남습니다. 제자리에서 값을 바꾸면 같은 100 g 객체를 쓰던 레시피 쪽 1회분까지 함께 바뀌기 때문이에요.</li>
+<li><strong>재고 기록이 결과가 음수인지 확인한 다음에 보유량을 교체합니다.</strong> 순서를 바꿔 교체부터 하면 규칙 위반으로 거부하더라도 음수 보유량이 이미 저장돼 있어요. 「스스로 점검하기」 3번이 그 순서를 뒤집었을 때 장부에서 1 g 이 사라지는 과정을 따라갑니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">단계   부르는 쪽 → 받는 쪽            넘기는 것                   돌아오는 것
+ 1     레시피 → (new)                "50" · g,  × 2             Quantity(100, g)
+ 2     레시피 → IngredientStock      Quantity(100, g)           (5단계에서 보유 200 g)
+ 2     IngredientStock → Quantity    minus(100 g)               (4단계에서 200 g)
+ 3     Quantity → ConversionRatio    kg · g                     kg → g, 1000 → 공통 단위 g
+ 4     Quantity → IngredientStock    —                          Quantity(200, g)
+ 5     IngredientStock → 보유량      음수 확인 뒤 교체            보유 200 g</code></pre>
+<p>3단계에서 이 예제가 왜 to 쪽을 고르는지는 자릿수로 따지면 알 수 있습니다. 전제는 둘이에요. 수치는 소수점 아래 세 자리까지이고, 비율 f 는 정수(여기서는 1000)입니다.</p>
+<pre tabindex="0"><code class="language-text">수치 a 가 소수 k 자리(k ≤ 3)라면   a = n / 10^k    (n 은 정수)
+
+곱셈   a × f = (n × f) / 10^k      분모가 그대로 10^k   → 소수 자리 ≤ k ≤ 3, 규칙 유지
+나눗셈 a ÷ f = n / (10^k × 1000)   분모가 10^(k+3)       → 소수 자리가 최대 셋 늘어난다
+
+  0.3 kg → g    0.3 × 1000 = 300       소수 0자리
+  0.5 g  → kg   0.5 ÷ 1000 = 0.0005    소수 4자리, 규칙 위반</code></pre>
+<p>곱셈 쪽은 n × f 가 정수의 곱이라 여전히 정수이고, 분모가 10^k 에서 바뀌지 않습니다. 그래서 소수 자리가 k 를 넘을 수 없어요. 나눗셈 쪽은 분모에 1000 = 10³ 이 곱해지니 자리가 셋까지 늘고, 0.5 g 처럼 저울로 잰 정상 입고가 규칙에 걸립니다. 더하기·빼기의 공통 단위를 to 쪽으로 고르면 환산이 늘 곱셈이 되니, 두 전제가 성립하는 이 예제에서는 입고와 사용이 자릿수 규칙에 걸리지 않아요. 비율이 정수가 아니면 곱셈도 자릿수를 늘리므로 이 논증은 그대로 옮겨 쓸 수 없습니다.</p>
+<blockquote>
+<p>이 예제(정수 비율 kg → g)에서는 to 쪽으로 맞춘다. 정수를 곱하면 소수 자리가 늘지 않는다.</p>
+</blockquote>
+<p>잠깐, 확인 하나만 해 볼까요? 보유량이 0.3 kg 일 때 0.2 kg 을 빼면 결과는 어떤 단위로 나올까요? 답은 kg 입니다. 두 단위가 같으니 3단계에서 비교만 하고 환산 없이 4단계로 가요. 같은 0.2 kg 이라도 보유량이 200 g 일 때는 단위가 달라 공통 단위 g 로 맞춰집니다.</p>
+<pre tabindex="0"><code class="language-text">보유 0.3 kg − 0.2 kg   같은 단위      → 3단계는 비교만, 환산 없음   → 0.1 kg
+보유 200 g  − 0.2 kg   kg 와 g 다름   → 공통 단위 g, 0.2 × 1000    → 0 g</code></pre>
+<p>이 시나리오가 보여 준 것은 책임의 경계입니다. 단위를 확인하고 맞추고 계산해 새 값을 내는 일(3·4단계)은 Quantity 가, 사용량이 양수인지와 보유량이 음수가 되지 않는지(2·5단계)는 재고 기록이 맡아요. 둘을 가르는 기준은 "누가 그 규칙을 판정할 정보를 갖고 있는가" 입니다. 단위는 값 안에 있으니 값이 보고, 보유량이 음수면 안 된다는 것은 재고라는 문맥의 규칙이라 재고 기록이 봅니다. 여기서 나온 패턴의 개념 셋이 「개념 정리」로 모여요.</p>
+<h3 id="시나리오-2--단위가-다른-요청과-실사-대조가-더해질-때">시나리오 2 — 단위가 다른 요청과 실사 대조가 더해질 때</h3>
+<p>같은 재고가 보유 200 g 을 갖고 있습니다. 여기에 요구가 넷 더 들어와요. 납품 담당은 사용량을 kg 로 적어 <code>consume(0.2 kg)</code> 을 보내고, 창고 화면은 보유량을 kg 로 보고 싶어 하고, 저울에 0.5 g 으로 찍힌 소분량을 kg 로 적어 달라는 요청이 있고, 액체 재료가 1 L 로 적힌 채 입고 목록에 섞여 들어옵니다. 월말에는 장부의 2.5 kg 과 손으로 센 2500 g 을 대조해야 해요. 시나리오 1 의 다섯 단계 가운데 무엇이 바뀌고 무엇은 그대로인지를 봅니다.</p>
+<ol>
+<li><strong><code>consume(0.2 kg)</code> 은 3단계의 공통 단위 결정만 달라집니다.</strong> 단위가 kg 와 g 로 다르니 비율을 찾아 to 쪽인 g 를 고르고, 0.2 kg × 1000 = 200 g 을 200 g 에서 빼 0 g 이 나와요. 결과 단위가 kg 가 아니라 g 로 남는 이유가 여기예요. 공통 단위는 요청한 쪽 단위가 아니라 비율이 정합니다.</li>
+<li><strong>창고 화면은 <code>convertTo(kg)</code> 로 단위를 직접 지정합니다.</strong> 이번에는 옮기는 방향이 거꾸로라 곱하지 않고 나눕니다. 200 ÷ 1000 = 0.2 kg 이에요. 방향을 가르지 않고 늘 곱하면 200 g 이 200,000 kg 이 되니, 비율에 from 과 to 가 적혀 있는 것이 이 갈래를 위한 것입니다.</li>
+<li><strong>0.5 g 을 kg 로 옮기려는 요청은 거부합니다.</strong> 0.5 ÷ 1000 = 0.0005 라서 소수점 아래 네 자리가 되고, 자릿수 규칙을 넘어요. 반올림해서 0.001 kg 이나 0 kg 으로 적으면 저울로 잰 양과 장부가 달라지니 이 예제는 반올림 대신 거부를 고릅니다. 금액처럼 반올림이 규칙인 도메인이라면 바로 이 자리에 반올림 규칙이 들어가요.</li>
+<li><strong>1 L 입고는 계산 자체를 거부합니다.</strong> g 과 L 사이에는 비율이 없어요. 우유 1 L 가 몇 g 인지는 단위가 아니라 재료의 밀도에 달려 있어서, 단위 둘만 보고는 환산할 근거가 없습니다. 근거가 없을 때 짐작으로 메우지 않고 멈추는 것이 3단계의 세 번째 갈래예요.</li>
+<li><strong>실사 대조는 같은 값 판정과 크기 비교를 구분해 씁니다.</strong> 표기만 다른 2.50 kg 과 2.5 kg 은 같은 값이고(만들 때 표현을 하나로 맞춥니다), 2.5 kg 과 2500 g 은 같은 값은 아니지만 같은 양입니다. 장부에 적힌 단위까지 맞는지 보려는 요구라서 값 같음은 환산하지 않고, 크기만 물을 때는 환산한 뒤 비교해요. 둘을 한 판정으로 합치면 kg 로 적힌 장부와 g 로 적힌 실사가 그냥 통과합니다.</li>
+<li><strong>바뀌지 않는 것은 재고 기록의 검사 자리와 순서입니다.</strong> 요청이 kg 든 g 든 L 이든 <code>consume</code> 은 양수 확인 → 뺄셈 위임 → 음수 확인 → 교체를 같은 순서로 지나요. 단위를 맞추는 일이 값 안에서 끝나니 재고 기록은 단위를 알 필요가 없고, 새 단위와 새 비율이 늘어도 재고 기록의 코드는 한 줄도 바뀌지 않습니다.</li>
+</ol>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>들어온 요구</th><th>지나는 갈래</th><th>결과</th></tr>
+</thead>
+<tbody>
+<tr><td><code>consume(0.2 kg)</code> · 보유 200 g</td><td>시나리오 1 의 3단계 — 비율 있음, 공통 단위 g</td><td>0 g</td></tr>
+<tr><td><code>convertTo(kg)</code> · 보유 200 g</td><td>이 시나리오의 2단계 — 역방향 나눗셈</td><td>0.2 kg</td></tr>
+<tr><td><code>0.5 g</code> 을 kg 로</td><td>이 시나리오의 3단계 — 역방향 나눗셈 뒤 자릿수 규칙</td><td>거부</td></tr>
+<tr><td><code>receive(1 L)</code></td><td>시나리오 1 의 3단계 — 비율 없음</td><td>거부</td></tr>
+<tr><td>2.50 kg 과 2.5 kg</td><td>값 같음</td><td>true</td></tr>
+<tr><td>2.5 kg 과 2500 g</td><td>값 같음 / 크기 비교</td><td>false / true</td></tr>
+</tbody>
+</table>
+</div>
+<p>이 시나리오가 보여 준 것은 변화가 미치는 범위입니다. 새 단위나 새 요청 형태가 들어와도 바뀌는 곳은 Quantity 의 3단계(공통 단위를 어떻게 정하는가)와 비율 표뿐이고, 재고 기록의 검사 순서와 그 자리는 그대로예요(6단계). 그리고 환산이 늘 성공하는 연산이 아니라는 것도 여기서 확인됩니다 — 비율이 없거나(4단계) 자릿수 규칙을 넘으면(3단계) 값은 짐작하지 않고 거부합니다. 같은 값과 같은 양이 다른 판정이라는 것(5단계)도 이 자리에서 구분돼요.</p>
+<h3 id="시나리오-3--단위를-값-밖에-두면-어느-단계에서-어긋나는가">시나리오 3 — 단위를 값 밖에 두면 어느 단계에서 어긋나는가</h3>
+<p>같은 빵집의 다른 코드베이스는 보유량을 <code>onHandKg</code> 라는 <code>double</code> 필드 하나로 가집니다. 납품 화면이 0.3 을 넣고, 레시피 배치 작업이 1회분 50 을 두 번 더해 100 을 넘겨요. 오가는 값은 시나리오 1 과 똑같습니다. 단위만 값 안이 아니라 필드 이름과 주석에 있어요. 아래 수치는 Java 21 로 실제로 컴파일해 실행한 것이에요.</p>
+<ol>
+<li><strong>납품 화면이 <code>onHandKg = 0.3</code> 을 씁니다.</strong> 여기까지는 어긋난 것이 없어요. 단위는 필드 이름이 알려 주고, 그 이름을 읽는 사람은 kg 로 읽습니다. 다만 값 자신은 자기가 kg 인지 모르고, 그 사실이 뒤에서 문제가 됩니다.</li>
+<li><strong>레시피 배치가 <code>consume(100)</code> 을 부릅니다.</strong> 시나리오 1 의 3단계, 곧 두 Unit 을 비교하는 자리에 해당하는 코드가 여기에는 없어요. 비교할 Unit 이 값 안에 없으니 비교할 자리 자체가 생기지 않습니다. 어긋남은 이 단계에서 생겼는데 아직 아무 신호도 나오지 않아요.</li>
+<li><strong>뺄셈이 그대로 통과해 −99.7 이 나옵니다.</strong> 0.3 − 100 = −99.7 이에요(직접 실행해 확인). 시나리오 1 이었다면 3단계에서 300 g 과 100 g 으로 맞춰져 보유 200 g, 곧 0.2 kg 이 나왔을 계산입니다. 같은 요청인데 한쪽은 0.2 kg 을, 다른 쪽은 −99.7 kg 을 냈어요.</li>
+<li><strong>음수 검사를 넣어도 낫지 않습니다.</strong> −99.7 이 음수라 거부되는데, 실제로는 300 g 을 가진 재고가 100 g 사용을 거부한 것이에요. 검사는 시나리오 1 의 5단계 자리에 있고 어긋남은 2단계에서 생겼으니, 검사가 잡아낸 것은 어긋남이 아니라 그 결과입니다. 그래서 오류 메시지도 "재고 부족" 이라고 틀린 이유를 댑니다.</li>
+<li><strong>단위 필드를 하나 더 두는 것으로는 막히지 않습니다.</strong> <code>Weight(0.3, "kg")</code> 에 <code>Weight(100, "g")</code> 을 더하는 래퍼를 두고 <code>plus</code> 가 <code>other.unit</code> 을 읽지 않게 놔두면 결과가 <code>Weight[value=100.3, unit=kg]</code> 이에요(Java 21 로 실행해 확인). 단위를 갖고 있는 것과 연산이 그 단위를 읽는 것은 다른 일이고, 그 차이가 나는 자리가 시나리오 1 의 3단계입니다.</li>
+<li><strong>되돌리는 길은 3단계를 만들어 주는 것입니다.</strong> 단위를 값 안에 넣으면 시나리오 1 의 3단계가 생기고, 두 단위가 다르다는 사실을 뺄셈보다 먼저 알게 돼요. 막히는 자리가 5단계(검사)에서 3단계(비교)로 앞당겨지는 것이 이 패턴이 바꾸는 전부입니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">같은 요청 — 보유 0.3 kg 에서 100 g 사용
+
+단위가 값 밖에 있을 때                        단위가 값 안에 있을 때
+  2단계  비교할 Unit 이 없다 (자리 없음)         3단계  kg 와 g → 비율 있음 → 공통 단위 g
+  3단계  0.3 − 100 = −99.7                    4단계  300 g − 100 g = 200 g
+  4단계  음수라서 "재고 부족" 으로 거부           5단계  음수 아님 → 보유 200 g 으로 교체
+         (검사가 없으면 −99.7 이 그대로 저장)
+
+단위 필드만 붙인 래퍼
+  Weight(0.3,"kg").plus(Weight(100,"g")) → Weight[value=100.3, unit=kg]
+    other.unit 을 읽지 않으니 3단계가 여전히 없다</code></pre>
+<p>이 시나리오가 보여 준 것은 어긋남이 생기는 단계와 나타나는 단계가 다르다는 점입니다. 단위가 값 밖에 있으면 어긋남은 2단계에서 생기고, 시나리오 1 의 5단계에 해당하는 검사 자리에 가서야 엉뚱한 이름으로 나타나요(3·4단계). 단위를 값 안에 두면 같은 일이 시나리오 1 의 3단계에서 막혀요. 비율이 있으면 공통 단위로 맞춰 200 g 이 남고, 비율이 없으면(시나리오 2 의 4단계) 그 자리에서 환산 비율이 없다는 실제 이유를 대며 거부합니다. 단위 필드를 붙이는 것만으로는 부족하다는 것(5단계)이 최소 조건 1 과 2 를 나눠 두는 이유이기도 해요.</p>
+<h3 id="개념-정리">개념 정리</h3>
+<p>시나리오에 나온 개념을 정식으로 정의합니다. 다섯 가운데 앞의 셋은 코드에 실제로 나오고, CompoundUnit 과 Money 는 이 예제가 쓰지 않지만 Quantity 곁에 놓이는 모델을 이루는 개념이라 함께 둡니다.</p>
+<ul>
+<li><strong>Quantity</strong> — 수치(amount)와 단위(unit)를 한 값으로 묶은 것입니다. 더하기·빼기와 크기 비교를 스스로 맡아, 두 값의 단위를 확인하고 결과를 새 Quantity 로 돌려줄 책임을 집니다(시나리오 1 의 3·4단계). Unit 하나를 가리키고, 단위가 다르면 ConversionRatio 를 찾아 협력해요. 협력까지가 패턴의 요구는 아닙니다 — 단순한 구현은 단위가 다른 덧셈을 거부하고 환산을 호출자에게 맡기고(<a href="https://martinfowler.com/eaaDev/Quantity.html">Quantity, eaaDev</a>), 그래도 최소 조건 2 는 채워요. 환산은 [선택] 5 입니다.</li>
+<li><strong>Unit</strong> — 수치를 무엇으로 셌는지 나타냅니다. 이 예제에서는 g · kg · L 셋이에요. 두 Quantity 가 같은 단위인지 가르는 기준이고, 사람에게 보일 기호를 가집니다. 여러 Quantity 가 같은 Unit 하나를 가리키고, Unit 하나는 ConversionRatio 의 from 쪽으로도 to 쪽으로도 여러 번 놓일 수 있어요. 이 예제의 g 가 그렇습니다 — kg → g 비율에서는 to 쪽이고, g → mg 비율을 더하면 그 비율에서는 from 쪽이 돼요.</li>
+<li><strong>ConversionRatio</strong> — from 단위 1 이 to 단위로 얼마인지를 수(<code>number</code>)로 적은 것이고, 두 단위를 섞어 계산해도 되는 근거가 됩니다. 방향이 있어서 from → to 로 옮길 때는 그 수를 곱하고 to → from 으로 올 때는 나눠요(시나리오 2 의 1·2단계). 비율 하나는 from 단위 하나와 to 단위 하나만 가집니다. 비율을 코드 곳곳에 1000 으로 적어 두면 어디는 곱하고 어디는 나누는 실수를 값이 막아 줄 수 없어서, 비율을 모델의 객체로 두고 양 끝 단위를 밝혀요.</li>
+<li><strong>CompoundUnit</strong> — m/s² 처럼 여러 단위에 지수를 붙여 곱한 Unit 의 한 종류입니다. 나누기는 음수 지수예요. 이 종류가 따로 필요한 이유는 Quantity 끼리 곱하거나 나누면 어느 단위 목록에도 없던 단위가 생기기 때문입니다. 이스트를 하루 100 g 씩 쓴다면 사용 속도의 단위는 g/일 인데, 이건 g 도 아니고 일도 아닌 새 단위예요. 시나리오 1 의 1단계처럼 보통의 수를 곱하는 계산은 단위를 그대로 두므로 이 개념이 필요하지 않습니다.</li>
+<li><strong>Money</strong> — 단위 자리에 통화가 오는 Quantity 로, 금전이라는 도메인 의미를 가집니다. 수치와 통화를 한 값으로 묶고, 통화가 다른 금액의 덧셈을 값이 막고, 통화 사이를 옮기려면 비율(환율)이 필요하다는 규칙이 Quantity 와 같아서 그 한 종류로 둡니다. 다른 점은 둘이에요. 환율은 kg → g 비율과 달리 시점마다 바뀌고, 통화마다 최소 단위가 있어 계산 결과를 그 단위로 반올림하는 규칙이 따로 붙습니다.</li>
+</ul>
+<p><figure class="diagram-figure"><img src="data:image/png;base64,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JRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIVE4CAACwTqtTr3ECAEBBnEEMAAAAABApgRgAAAAAIFICMQAAAABApFyDGAAAWAdNmjCikEcbNmubAADgDGIAAAAAgGgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiFROAgAAEJlJE0YkAAA4gxgAAAAAIFoCMQAAAABApARiAAAAABoR8DQAABAASURBVIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRAD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ECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSOUmU6tRrnAAQH8d/AAAAyOYMYgAAAACASAnEAAAAAACREogBAAAAACIV0TWIJ00YUcijDZu1TQBYFzn+AwAAwPI4gxgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIlVq8eLFSXFaOGdSAgAAAADAyitbpWFSnJxBDAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAVa1c4QAAAZVJREFUAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAESq1OLFixMAAAAAAOLjDGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBSAjEAAAAAQKQEYgAAAACASAnEAAAAAACREogBAAAAACIlEAMAAAAAREogBgAAAACIlEAMAAAAABApgRgAAAAAIFICMQAAAABApARiAAAAAIBICcQAAAAAAJESiAEAAAAAIiUQAwAAAABESiAGAAAAAIiUQAwAAAAAECmBGAAAAAAgUgIxAAAAAECkBGIAAAAAgEgJxAAAAAAAkRKIAQAAAAAiJRADAAAAAERKIAYAAAAAiJRADAAAAAAQKYEYAAAAACBS/w8AAP//IePzUgAAAAZJREFUAwCiXFOn7YJV6AAAAABJRU5ErkJggg==" alt="Quantity 모델 — 수치와 단위가 한 값이고 환산 근거는 모델 안에 있다" /><figcaption>Quantity 모델 — 수치와 단위가 한 값이고 환산 근거는 모델 안에 있다</figcaption></figure></p>
+<p>그림에는 개념과 연관·다중도만 있고 전술 분류 표기는 없습니다. Quantity 에서 Unit 으로 가는 선의 <code>*</code> 와 <code>1</code> 은 여러 Quantity 가 같은 Unit 하나를 가리킨다는 뜻이고, ConversionRatio 에서 Unit 으로 가는 선이 둘인 것은 from 쪽과 to 쪽 연관이 따로 있다는 뜻이에요. 상자 안의 <code>from : Unit</code> · <code>to : Unit</code> 이 그 두 선의 끝입니다. Money 에서 Quantity 로, CompoundUnit 에서 Unit 으로 가는 화살표는 "~의 한 종류" 를 뜻해요. 개념의 포함 관계를 옮긴 것이지 코드에서 상속으로 구현하라는 뜻은 아닙니다. CompoundUnit 이 어떤 단위를 몇 제곱으로 묶는지는 Quantity 중심으로 줄이느라 뺐고, 그림의 <code>number</code> 는 뒤의 구현 예시에서 <code>factor</code> 로 부르는 값이에요. TypeScript 에서 <code>number</code> 가 수 타입 이름이라 필드 이름으로 두면 읽기 헷갈려서 세 언어에 같은 이름을 쓰려고 바꾼 자리입니다.</p>
+<p>Quantity 위에 대상과 측정 항목을 더한 Measurement, 그 위의 Observation, 끝점을 Quantity 로 두는 Range 까지 이 다섯이 어떤 층으로 놓이는지는 <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>이 그림 한 장으로 정리합니다. 이 개념들을 코드에서 어느 묶음에 넣을지는 뒤의 「상황 설정」 표가 정해요.</p>
+<h2 id="사용-목적">사용 목적</h2>
+<p>코드나 요구에서 아래 모습이 보이면 Quantity 를 쓸 때입니다. 셋을 차례로 봅시다.</p>
+<h4 id="단서-1--같은-필드에-값을-넣는-경로마다-단위가-다릅니다">단서 1 — 같은 필드에 값을 넣는 경로마다 단위가 다릅니다</h4>
+<p>값을 넣는 경로가 둘 이상인데 경로마다 단위가 다르고, 단위는 필드 이름이나 주석에만 있습니다(<code>weightKg</code>, <code>// 단위: g</code>). 개요의 납품서(kg)와 레시피(g)가 이 모습이고, 시나리오 3 이 그 코드가 어디서 어긋나는지 따라갑니다.</p>
+<h4 id="단서-2--단위-확인이-복제돼-있고-새-함수에서-그-한-줄이-빠진-적이-있습니다">단서 2 — 단위 확인이 복제돼 있고, 새 함수에서 그 한 줄이 빠진 적이 있습니다</h4>
+<p>합계를 내는 함수마다 <code>if (a.currency != b.currency)</code> 가 붙어 있다면 확인의 자리가 값이 아니라 호출자에 있다는 신호예요. 시나리오 2 의 6단계처럼 확인이 값 안에서 끝나야 빠뜨릴 자리가 없어집니다.</p>
+<h4 id="단서-3--자릿수와-반올림-규칙이-코드-곳곳에-흩어져-있습니다">단서 3 — 자릿수와 반올림 규칙이 코드 곳곳에 흩어져 있습니다</h4>
+<p>화면은 소수점 아래 두 자리에서, 저장은 세 자리에서 자르고 합계 함수마다 반올림을 따로 해서, 나눴다가 다시 더한 금액이 1원 모자랍니다. 이 규칙을 값 한 곳에 모을 자리가 필요하다는 뜻이에요(시나리오 2 의 3단계).</p>
+<h4 id="쓰지-말아야-할-경우">쓰지 말아야 할 경우</h4>
+<p>검사 항목마다 단위가 다른 경우(혈압은 mmHg, 체중은 kg)도 같은 단서인데, 그때는 값을 Quantity 로 두고 검사 항목이 계속 늘어나는 요구인지를 함께 봅니다. 늘어난다면 Measurement 도 검토할 자리예요. 차이는 「비슷한 패턴·안티패턴과의 차이」에서 가릅니다. 반대로 아래 둘은 Quantity 로 만들면 잃는 것이 큽니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>이런 경우</th><th>Quantity 로 만들면 잃는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>수가 식별자나 코드다(주문 번호, 우편번호)</td><td>더해도 뜻이 없는 수에 <code>plus</code> 같은 연산이 열립니다. 정수 id 에 산술처럼 맞지 않는 행위가 붙지 않게 하려면 별도 값 객체로 감싸라고 Fowler 가 적는데, 그 자리는 Quantity 가 아니라 id 값 객체예요(<a href="https://martinfowler.com/bliki/ValueObject.html">Value Object</a>)</td></tr>
+<tr><td>단위가 하나로 정해져 있고 환산도 섞임도 자릿수 규칙도 없다(게시글 조회수)</td><td>타입과 단위 확인 코드가 늘지만 막아 줄 오류가 없습니다. 단위가 하나여도 반올림 같은 규칙이 붙으면 이 경우가 아니에요</td></tr>
+</tbody>
+</table>
+</div>
+<p>세 모델을 가르려면 네 가지를 확인하면 됩니다. 첫 줄이 아니오이면 산술 자체가 없으니 Quantity 가 아니라 id 값 객체로 가고, 첫 줄은 예인데 나머지가 모두 아니오인 조회수에 Quantity 를 씌우면 단위 비교가 늘 같은 단위 갈래만 지나면서 타입만 늘어납니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>모델에서 확인할 것</th><th>우편번호</th><th>게시글 조회수</th><th>이스트 재고 보유량</th></tr>
+</thead>
+<tbody>
+<tr><td>이 수끼리 더하거나 빼면 도메인에서 뜻이 있는가</td><td>없음. 두 우편번호의 합은 어느 지역도 아님</td><td>있음(+1)</td><td>있음(입고·사용)</td></tr>
+<tr><td>값을 바꾸는 연산과 연산별 단위</td><td>바꾸는 연산 없음</td><td>조회 기록 하나, 늘 1회씩 늚</td><td>입고는 kg, 사용은 g — 연산마다 다름</td></tr>
+<tr><td>단위가 다른 두 수가 한 연산에서 만나는가</td><td>연산이 없음</td><td>만나지 않음</td><td>시나리오 1 의 3단계에서 kg 과 g 이 만남</td></tr>
+<tr><td>환산·자릿수 규칙이 필요한가</td><td>없음. 숫자로 저장하면 앞자리 0 이 사라져 문자열로 둠</td><td>없음</td><td>kg → g 비율 1000, 소수점 아래 세 자리</td></tr>
+<tr><td>고를 모델</td><td>id 값 객체</td><td>원시 정수 필드</td><td>Quantity</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="패턴의-경계">패턴의 경계</h2>
+<h3 id="디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</h3>
+<p>아래 조건은 클래스 모양이 아니라 <strong>개념이 무엇을 책임지는가</strong>로 판정합니다. <code>record</code> 든 <code>struct</code> 든, 필드가 하나든 둘이든 판정에는 상관없어요. 조건마다 그것을 보여 준 시나리오의 단계를 가리킵니다.</p>
+<ol>
+<li>[필수] 양은 단위와 늘 함께 있음 — 도메인 연산이 양을 주고받을 때 수치만 넘기지 않습니다. 시나리오 1 의 1단계 (근거: Fowler <em>Analysis Patterns</em> 3장 「Observations and Measurements」 §3.1 — Figure 3.1 에서 Person 의 <code>height</code>·<code>weight</code> 가 <code>Number</code> 라 단위가 모델에 없던 것을, Figure 3.2 가 <code>amount : Number</code> 와 <code>units : Unit</code> 을 가진 Quantity 로 바꿉니다)
+<ul>
+<li>경계 사례: 수치만 꺼내 쓰는 일(화면 표시, 저장)은 단위를 아는 쪽이 하면 이 조건을 어기지 않아요.</li>
+<li>빠지면: 단위가 필드 이름에만 남은 <code>onHandKg : double</code> 이 됩니다. 시나리오 3 의 3단계에서 본 −99.7 이 아무 신호 없이 통과해요.</li>
+</ul>
+</li>
+<li>[필수] 양끼리 만나는 연산과 크기 비교의 단위 확인 — Quantity 가 제공하는 더하기·빼기와 크기 비교는 같은 단위면 계산하고, 다르면 환산 근거로 맞추고, 근거가 없으면 거부합니다. 시나리오 1 의 3단계(맞춤) · 시나리오 2 의 4단계(거부) (근거: Fowler <em>Analysis Patterns</em> 3장 §3.1~§3.2 — Figure 3.2 가 <code>+ - * / = &gt; &lt;</code> 를 Quantity 자신의 연산으로 적어 산술을 값의 책임으로 두고, Figure 3.3 이 두 Unit 을 잇는 Conversion Ratio 를 모델에 둬 단위가 다른 양을 다룰 근거를 만듭니다)
+<ul>
+<li>경계 사례: 거부할지 환산할지까지는 원전이 정하지 않아서, 둘 중 무엇을 골라도 이 조건은 갖춘 것으로 봅니다. 단위가 다를 때 거부만 하고 환산은 못 하는 래퍼도 이 조건은 갖춘 것이고, 환산은 [선택] 5 의 몫이에요.</li>
+<li>경계 사례: 곱하기·나누기를 제공한다면 결과 단위를 정해요 — 보통의 수를 곱하면 단위를 유지하고(시나리오 1 의 1단계), 양끼리 곱하거나 나누면 새 단위가 나옵니다. 조건 3 의 값 같음은 크기 비교와 다른 판정이라 이 규칙을 따르지 않아요.</li>
+<li>빠지면: 단위를 갖고만 있는 래퍼가 됩니다. 시나리오 3 의 5단계에서 0.3 kg 과 100 g 의 합이 100.3 kg 으로 나온 코드가 그 모양이에요.</li>
+</ul>
+</li>
+<li>[필수] 값으로 비교하고 값으로 주고받음 — 두 Quantity 가 같은 값인지 객체 참조가 아니라 값으로 판정하는 수단(메서드든 비교 함수든)이 있고, 한 곳의 계산이 같은 값을 쓰던 다른 곳을 바꾸지 않습니다. 시나리오 1 의 4단계(새 값을 돌려줌) · 시나리오 2 의 5단계(값으로 판정) (근거: Fowler <em>Analysis Patterns</em> 3장 §3.1 — Figure 3.2 가 Quantity 의 연산 목록에 <code>=</code> 를 둔 자리와, Fowler 가 martinfowler.com 의 Value Object 글에서 값 객체에는 aliasing 을 막을 장치가 필요하다고 적은 자리)
+<ul>
+<li>경계 사례: 그 장치로 Fowler 는 불변을 먼저 권하고, 대입할 때마다 복사하는 방법도 가능하다고 적습니다(<a href="https://martinfowler.com/bliki/ValueObject.html">Value Object</a>). 무엇을 같은 값으로 볼지 — 표현이 같아야 하는지, 환산해서 크기가 같으면 되는지 — 까지는 원전이 정하지 않아요. 그 선택은 [선택] 4 에 있습니다.</li>
+<li>빠지면: 둘 중 하나가 생깁니다. <code>plus</code> 가 자기 수치를 바꾸는데 복사도 하지 않으면, 레시피 1회분 50 g 객체를 두 재고가 함께 쓰는 순간 한쪽 계산이 레시피 값까지 바꿔요. 같음을 객체 참조로 판정하면 똑같이 2.5 kg 인 두 객체가 다르다고 나옵니다.</li>
+</ul>
+</li>
+<li>[선택] 표현이 같아야 같은 값 — 같은 값 판정이 환산을 거치지 않아서, 2.5 kg 과 2500 g 은 크기가 같아도 다른 값입니다. 시나리오 2 의 5단계 (근거: 이 가이드의 정책 — 장부와 실사 기록을 대조할 때 단위까지 같은지 보려는 예제 요구라서)
+<ul>
+<li>경계 사례: 2.50 kg 과 2.5 kg 처럼 표기만 다른 것은 하나로 맞춰 둬서 같은 값이에요.</li>
+</ul>
+</li>
+<li>[선택] 환산 규칙을 모델에 둠 — 단위를 바꾸는 계산이 모델이 가진 근거를 거쳐서 일어납니다. 시나리오 1 의 3단계 · 시나리오 2 의 2단계 (근거: Fowler <em>Analysis Patterns</em> 3장 §3.2 — Conversion Ratio 를 방향이 있는 비율로 두고, JAOO(덴마크에서 열리던 소프트웨어 개발 학회) 1999 튜토리얼 슬라이드의 <code>as(Unit)</code> 연산이 그 비율로 단위를 바꿉니다)
+<ul>
+<li>빠지면: 단위가 다른 양을 만났을 때 조건 2 에 따라 거부할 수밖에 없어요.</li>
+</ul>
+</li>
+<li>[선택] 자릿수와 반올림 규칙을 값이 앎 — 수치가 가질 수 있는 소수 자리와 그 자리를 넘을 때의 처리(거부 또는 반올림)가 Quantity 쪽에 있습니다. 시나리오 2 의 3단계 (근거: 이 가이드의 정책 — 저울로 잰 양과 장부를 어긋나게 하지 않으려고 반올림 대신 거부를 골랐고, Money 에서는 자릿수 쪽을 통화의 최소 단위가 정합니다)</li>
+<li>[선택] CompoundUnit 으로 단위 합성 — 양끼리 곱하거나 나눈 결과를 m/s² 나 g/일 같은 단위로 표현합니다. 시나리오 1 의 1단계 (근거: Fowler <em>Analysis Patterns</em> 3장 §3.3 — Compound Unit 을 Unit 의 하위 타입으로 두고 지수를 가진 단위 참조로 구성합니다)
+<ul>
+<li>경계 사례: 시나리오 1 의 1단계는 보통의 수 2 를 곱해 단위가 g 그대로인 갈래만 보여 주는데, 양끼리 곱하는 연산을 열면 그 자리에서 새 단위가 필요해져요.</li>
+</ul>
+</li>
+<li>[선택] 문자열로 읽고 쓰기 — <code>0.3 kg</code> 같은 표기와 값을 오갈 수 있습니다. 시나리오 1 의 1단계(<code>"50"</code> 을 읽어 값을 만듦) · 시나리오 2 의 2단계(<code>0.2 kg</code> 으로 적어 냄) (근거: Fowler <em>Analysis Patterns</em> 3장의 JAOO 1999 튜토리얼 슬라이드 — Quantity 의 연산으로 <code>valueOf(String)</code> 과 <code>toString()</code> 을 듭니다)</li>
+</ol>
+<h3 id="비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</h3>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>비교 대상</th><th>구분 기준</th><th>Quantity 를 고르면 얻는 것</th><th>포기하는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>원시 숫자 필드(Primitive Obsession)</td><td>단위가 값 안에 있는가, 이름·주석에만 있는가</td><td>단위가 섞인 계산을 연산이 막고, 확인 코드가 한 곳에 모인다</td><td>타입 하나가 늘고, 단위가 섞이는 도메인이면 환산 규칙도 관리해야 한다</td></tr>
+<tr><td>단위를 갖고만 있는 래퍼</td><td>호환되지 않는 단위의 산술을 값이 막는가(거부하든 환산하든)</td><td>단위가 맞지 않는 계산을 값이 거부한다</td><td>연산마다 단위 확인 코드가 들어간다. 래퍼는 그 코드를 아낀 대가로 틀린 합을 낸다</td></tr>
+<tr><td>Measurement</td><td>대상과 측정 항목을 가진 기록 계층이 필요한가</td><td>값만 필요한 자리(재고·가격)에 기록 계층 없이 쓴다</td><td>대상·항목 기록은 없다. 필요하면 Measurement 가 Quantity 를 속성으로 가진다</td></tr>
+<tr><td>Money</td><td>단위가 통화이고 통화마다 정해진 자릿수가 붙는가</td><td>질량·부피·금액이 같은 연산 규칙을 공유한다</td><td>반올림 시점·방식 같은 업무 규칙은 그 위에 따로 더해야 한다</td></tr>
+</tbody>
+</table>
+</div>
+<h4 id="원시-숫자-필드와의-차이">원시 숫자 필드와의 차이</h4>
+<p>구분 기준은 단위가 어디에 있느냐입니다. 원시 필드는 이름과 주석에 두고, Quantity 는 값 안에 둡니다. 자리 하나 차이예요. 그 차이를 단계별로 따라간 것이 시나리오 3 의 1~4단계이고, 같은 요청이 한쪽에서는 0.2 kg 다른 쪽에서는 −99.7 kg 으로 끝났습니다. Quantity 를 고르면 단위 확인이 연산 한 곳에 모이는 대신 타입 하나와 환산 규칙을 관리하게 돼요.</p>
+<p>여기서 헷갈리기 쉬운 포인트는 부동소수점 오차까지 Quantity 가 없애 준다고 보는 것입니다. 단위 확인과 수치 표현은 서로 다른 결정이에요. 아래 코드는 단위를 제대로 확인하는데도 수치를 TypeScript <code>number</code> 로 두었습니다.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-typescript">class Quantity {
+  constructor(readonly amount: number, readonly unit: "kg" | "g") {}
+  minus(other: Quantity): Quantity {
+    if (this.unit !== other.unit) throw new Error("단위가 다릅니다");
+    return new Quantity(this.amount - other.amount, this.unit);
+  }
+}
+// new Quantity(0.3, "kg").minus(new Quantity(0.1, "kg")).minus(new Quantity(0.2, "kg")).amount
+//   → -2.7755575615628914e-17</code></pre>
+<p>단위는 kg 로 맞았는데 0 이어야 할 수치가 음수로 남습니다(node 로 실행해 확인). <code>number</code> 는 IEEE 754(2진 부동소수점 표준) 배정밀도예요(<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">MDN Number</a> — MDN 은 모질라가 운영하는 웹 기술 문서). 0.1 은 1/10 이고 분모 10 = 2 × 5 에 5 가 들어 있는데, 2진 소수로 유한하게 적을 수 있는 수는 분모가 2의 거듭제곱인 분수뿐이라 0.1 은 가장 가까운 2진수로 반올림된 채 저장됩니다. 반대로 원시 필드라도 정수 그램이나 10진 타입으로 두면 이 오차는 생기지 않아요. 이 글의 구현이 <code>BigDecimal</code>·<code>bigint</code>·<code>i64</code> 를 고른 것은 패턴과 별개인 예제의 결정이고, Quantity 가 보태는 것은 그 결정을 값 한 곳에서 내릴 자리입니다.</p>
+<h4 id="단위를-갖고만-있는-래퍼와의-차이">단위를 갖고만 있는 래퍼와의 차이</h4>
+<p>구분 기준은 호환되지 않는 단위의 산술을 값이 막는가입니다. 막는 방법이 거부든 환산이든 상관없고, 단위 필드가 있다는 것만으로는 판정이 나지 않아요. 아래 코드는 단위를 저장하지만 계산에서는 읽지 않습니다.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-java">record Weight(double value, String unit) {
+    Weight plus(Weight other) {
+        return new Weight(value + other.value, unit); // other.unit 을 읽지 않는다
+    }
+}
+// new Weight(0.3, "kg").plus(new Weight(100, "g"))  →  Weight[value=100.3, unit=kg]</code></pre>
+<p>시나리오 3 의 5단계가 이 코드를 실행해 본 자리예요. 0.3 kg 과 100 g 을 더했는데 100.3 kg 이 나옵니다(Java 21 로 실행해 확인). 조건 1 은 갖췄지만 조건 2 가 빠져 Quantity 가 아니에요. 같은 래퍼라도 <code>plus</code> 가 <code>other.unit</code> 을 비교해 다르면 거부한다면 조건 2 를 갖춘 것이고, 그때 남는 차이는 환산([선택] 5)을 하느냐입니다. Quantity 를 고르면 단위가 맞지 않는 계산을 값이 거부하게 되고, 대신 연산마다 단위 확인이 들어가요.</p>
+<h4 id="measurement-와의-차이">Measurement 와의 차이</h4>
+<p>구분 기준은 대상과 측정 항목을 가진 기록 계층이 필요한가입니다. Measurement 는 Quantity 의 대안이 아니라 Quantity 를 담는 기록이에요. 같은 120 mmHg 를 두 층으로 나누면 이렇게 보입니다.</p>
+<pre tabindex="0"><code class="language-text">Quantity       120 mmHg                                     얼마인가
+Measurement    환자 A · 수축기 혈압 · 120 mmHg               누구를 · 무엇을 · 얼마
+                 │        │             └─ Quantity
+                 │        └─ 무엇을 쟀는가(측정 항목)
+                 └─ 누구를 쟀는가</code></pre>
+<p>시나리오 1 의 재고 보유량이나 가격처럼 값만 필요한 자리에서는 Quantity 만으로 충분해요. 대상과 항목을 함께 기록해야 하면 Quantity 를 버리는 것이 아니라 그 위에 Measurement 한 층을 더합니다. Measurement 의 구조와, 잰 시각·적은 시각을 따로 두는 문제, 잘못 잰 값을 지우지 않고 거부 표시로 남기는 방식은 <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>의 「Measurement」·「Observation」·「Rejected Observation」에 있어요.</p>
+<h4 id="money-와의-차이">Money 와의 차이</h4>
+<p>구분 기준은 단위 자리가 통화이고 통화마다 정해진 자릿수가 붙는가입니다. 반올림은 통화가 정해 주지 않고 업무가 고르는 정책이라 구분 기준에서 뺐어요. 금액까지 한 Quantity 타입으로 다루면 질량·부피·금액이 같은 연산 규칙을 공유하지만, 원 단위 반올림 같은 업무 규칙은 그 위에 따로 더해야 합니다. Money 를 별도 타입으로 두면 통화 자릿수와 업무가 고른 반올림 규칙을 그 타입 한 곳에 모으기 쉽고요. 환산 비율의 성격도 달라요. kg → g 은 한 번 정하면 바뀌지 않지만 환율은 시점마다 바뀌어서, 금액끼리 통화를 맞출 때는 시나리오 2 의 1단계가 쓰는 비율 표의 고정 비율이 아니라 그 시점의 비율을 찾아야 합니다(「상황이 달라지면」 표의 환율 행).</p>
+<pre tabindex="0"><code class="language-text">Quantity(0.3, kg)     단위 kg      kg → g 비율 1000 은 한 번 정하면 그대로
+Money(10000, KRW)     단위 KRW     KRW → USD 비율(환율)은 시점마다 다르다
+
+10,000원을 셋으로 나누면   3,333.33…원   → 원 단위로 맞춰야 한다
+3,333원 × 3 = 9,999원                    → 남는 1원을 누가 받는지 규칙이 필요하다</code></pre>
+<p>Java 21 에서 <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Currency.html"><code>Currency</code></a><code>.getInstance("KRW").getDefaultFractionDigits()</code> 를 실행하면 원화는 0, 미국 달러로 바꾸면 2 가 나옵니다(실행해 확인). 이 값은 자릿수만 알려 줄 뿐 언제 어떤 방식으로 반올림할지는 정하지 않아요. 위 그림의 마지막 두 줄에서 남는 1원을 누구에게 붙일지가 바로 업무가 따로 정해야 하는 규칙입니다(<a href="https://martinfowler.com/eaaCatalog/money.html">Money, PoEAA 요약</a>).</p>
+<h2 id="구현-예시">구현 예시</h2>
+<h3 id="상황-설정">상황 설정</h3>
+<p>시나리오 1·2 의 재고 장면을 세 언어로 똑같이 구현합니다. 빵집 한 곳의 재료 재고 프로그램이고, 재료 하나마다 재고 기록이 하나 있으며 입고와 사용이 보유량을 바꿔요. 요청마다 달라지는 것은 수치의 단위입니다. 납품서는 kg, 레시피는 g 로 적고, 레시피 1회분을 여러 번 쓰면 사용량은 1회분에 횟수를 곱해 만들어요. 가끔은 L 로 적힌 액체 재료가 잘못 들어옵니다.</p>
+<p>고정인 것도 정해 둡니다. 단위는 g · kg · L 셋이고 환산 비율은 kg → g 1000 하나이며, 새 단위는 코드를 고쳐 배포할 때만 늘어요. 수치는 소수점 아래 세 자리까지 기록하고(kg 로 적으면 1 g 까지), 이 자리를 넘는 환산은 반올림하지 않고 거부합니다. 보유량은 음수가 될 수 없지만 Quantity 자체는 음수를 담을 수 있어야 해요 — 시나리오 1 의 2단계에서 본 이유입니다. 보유량을 kg 와 g 중 어느 단위로 적어 두는지는 요구 전제가 아니라서 크기만 맞으면 되고, 같은 값 판정은 시나리오 2 의 5단계가 고른 표현 동등성을 씁니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>예제 타입</th><th>대응하는 개념</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Quantity</code> · <code>Unit</code> · <code>ConversionRatio</code></td><td>같은 이름의 개념 그대로</td></tr>
+<tr><td><code>ConversionRatio.ALL</code></td><td>개요의 비율 표. 세 언어 모두 같은 이름의 상수</td></tr>
+<tr><td><code>IngredientStock</code></td><td>패턴 밖의 타입. 개요의 재고 기록으로, Quantity 를 보유량 속성으로 가진 재료 하나의 재고</td></tr>
+<tr><td><code>StockId</code> · <code>IngredientId</code></td><td>패턴 밖의 식별자. 재고 자신과 재료 카탈로그를 가리킨다</td></tr>
+<tr><td>(예제에 없음)</td><td>CompoundUnit · Money</td></tr>
+</tbody>
+</table>
+</div>
+<p>아래 표에서 쓰는 DDD(Domain-Driven Design, 도메인 주도 설계) 전술 용어(Bounded Context · Aggregate · Aggregate Root · Entity · Value Object(VO) · id 참조 · 불변식)는 이 가이드의 주제 밖 사전 지식이라 <a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a>가 한 자리에 모아 둡니다. 표를 읽기 전에 그 문서를 한 번 읽고 오시면 네 행이 각각 무엇을 정하는지 바로 읽혀요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>항목</th><th>이 가이드의 설정</th></tr>
+</thead>
+<tbody>
+<tr><td>bounded context</td><td>빵집 재료 재고 — 입고와 사용으로 재료별 보유량을 기록한다</td></tr>
+<tr><td>불변식의 위치</td><td>최소 조건 1~3(양과 단위가 늘 함께 있음, 연산의 단위 확인, 값으로 비교·전달)과 표현 동등성([선택] 4), 소수점 아래 세 자리 규칙(역방향 환산의 자릿수 초과 거부 포함)은 root 가 아니라 Quantity 가 생성과 연산에서 지킨다. 보유량이 음수가 되지 않고 입고·사용량이 0보다 크다는 규칙은 IngredientStock root 의 <code>receive</code>·<code>consume</code> 이 지킨다</td></tr>
+<tr><td>root·entity·VO 배정</td><td>IngredientStock aggregate 하나. IngredientStock 은 root(entity, <code>StockId</code> 로 식별)이고, 보유량 Quantity 와 그 안의 Unit 은 VO. ConversionRatio 는 어느 aggregate 에도 속하지 않는 불변 VO 로, 코드 상수로 둔 비율 표 하나를 모든 Quantity 의 연산이 함께 조회한다. <code>StockId</code>·<code>IngredientId</code> 는 id VO</td></tr>
+<tr><td>타 aggregate 참조 방식</td><td>IngredientStock 이 재료 카탈로그 aggregate(이 예제 밖)의 재료를 <code>IngredientId</code> 로 가리킨다. Quantity 는 id 없이 불변 값으로 주고받으므로, 같은 인스턴스를 함께 써도 복사한 것과 결과가 같다</td></tr>
+</tbody>
+</table>
+</div>
+<p>코드에서 그 경계가 나타나는 자리는 Rust 판의 <code>mod inventory</code> 입니다. 모듈 밖에서는 <code>Quantity</code> 의 <code>scaled</code> 필드에 접근할 수 없어서 보유량을 만들거나 바꾸는 길이 <code>Quantity::of</code> 와 연산뿐이에요. 표가 "어디에 두었는가" 를 말했다면, 다음 표는 "다른 곳에 두면 무엇이 어긋나는가" 를 불변식과 id 참조 전부에 대해 적은 것입니다. 호출자는 재고를 부르는 바깥 코드로, 납품 화면·레시피 배치 작업·실사 화면이 있다고 칩니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>규칙(불변식) 또는 참조</th><th>다른 곳에 두거나 바꾸면</th><th>어느 동작에서 무엇이 어긋나는가</th></tr>
+</thead>
+<tbody>
+<tr><td>수치와 단위가 한 값이다</td><td>root 가 <code>onHandAmount</code>·<code>onHandUnit</code> 두 필드로 따로 가진다</td><td>실사 화면이 g 로 센 300 을 보정 메서드에 넘기면 수치 필드만 300 으로 바뀌고 단위 필드는 kg 로 남아 보유량이 300 kg 이 됩니다. 한 값이면 수치만 바꾸는 길이 없어요</td></tr>
+<tr><td>연산이 단위를 확인한다</td><td>root 의 <code>receive</code>·<code>consume</code> 만 단위를 확인하고 <code>Quantity.plus</code> 는 수치만 더한다</td><td>레시피 배치가 1회분 합계를 내려고 <code>plus</code> 를 직접 부르면 0.3 kg + 100 g 이 100.3 kg 이 됩니다(시나리오 3 의 5단계와 같은 결과). root 를 거치지 않는 계산은 확인을 받지 못해요</td></tr>
+<tr><td>값으로 비교하고 값으로 주고받는다</td><td>연산이 새 값을 만들지 않고 받은 Quantity 를 제자리에서 줄인다</td><td>재고 <code>consume</code> 이 레시피의 1회분 50 g 객체를 그대로 줄이면 레시피 쪽 1회분이 바뀌어, 다음 배치가 다른 양을 씁니다. 레시피 root 는 불리지도 않았어요</td></tr>
+<tr><td>표현 동등성과 자릿수 규칙</td><td>호출자가 만들 때마다 자릿수를 확인하고 표기를 맞춘다</td><td>실사 화면만 <code>2.50</code> 을 <code>2.5</code> 로 맞추고 납품 화면은 그대로 두면, 같은 2.5 kg 인 두 기록이 대조에서 다른 값으로 판정됩니다. 0.5 g → kg 거부도 화면마다 달라져요</td></tr>
+<tr><td>보유량은 음수가 되지 않는다</td><td>호출자가 뺀 결과를 보고 음수면 되돌린다</td><td>보유 0 g 에서 1 g 사용이 거부돼도 되돌리기 전까지 보유량이 −1 g 으로 남습니다. 그 사이에 1 g 입고가 들어오면 0 g 이 되어 실제로 들어온 1 g 이 장부에서 사라져요</td></tr>
+<tr><td>입고·사용량은 0보다 크다</td><td>값이 음수를 거부하게 한다</td><td>300 g − 400 g 같은 뺄셈 자체가 실패해서 root 가 얼마나 모자란지 판정할 결과값을 받지 못합니다. 시나리오 1 의 2단계가 이 규칙을 root 에 둔 이유예요</td></tr>
+<tr><td>재료 카탈로그를 <code>IngredientId</code> 로 가리킨다</td><td>재료 객체를 <code>IngredientStock</code> 필드로 가진다</td><td>카탈로그가 재료마다 한 포대의 무게를 갖는다고 치면(「상황이 달라지면」 3행의 전제), 입고 처리 하나가 <code>stock.ingredient</code> 를 거쳐 그 무게를 25 kg 으로 고칠 수 있게 됩니다. 그 재료를 쓰는 다른 재고들의 다음 입고 환산까지 함께 바뀌어요</td></tr>
+<tr><td>ConversionRatio 는 모든 Quantity 가 조회하는 비율 표 하나에 있다</td><td><code>IngredientStock</code> 마다 비율 목록을 필드로 갖고 연산 때 넘긴다</td><td>분점 재고를 만들 때 kg → g 비율을 100 으로 잘못 넣으면 같은 0.3 kg 입고가 본점에는 300 g, 분점에는 30 g 으로 기록됩니다. 재고 밖의 레시피 배치가 만든 Quantity 는 비율 목록이 없어 kg 과 g 을 더하지도 못해요</td></tr>
+<tr><td>Quantity 를 불변 값으로 주고받는다</td><td>레시피 aggregate 의 1회분 Quantity 를 가변 객체로 두고 재고가 같은 객체를 받는다</td><td>재고 <code>consume</code> 이 받은 객체를 제자리에서 줄이면 레시피 aggregate 의 1회분 50 g 이 바뀝니다. 두 aggregate 가 한 객체를 공유하는 순간 경계가 사실상 없어져요</td></tr>
+</tbody>
+</table>
+</div>
+<p>뒤의 세 언어 구현은 이 설정을 그대로 옮긴 것이고, 실행하면 셋이 아래 열한 줄을 글자까지 같게 냅니다. 가이드 폴더의 <code>code/expected-output.txt</code> 와 같은 내용이고, 이 글의 실행 수치는 전부 여기서 와요. 무엇이 나오는지 먼저 보아 두면 뒤의 코드와 해설을 따라가기 쉽습니다.</p>
+<pre tabindex="0"><code class="language-text">재고 stock-1 · 재료 yeast
+입고 0.3 kg → 보유 0.3 kg
+사용 50 g × 2 → 보유 200 g
+보유량을 kg 로 → 0.2 kg
+사용 0.2 kg → 보유 0 g
+거부 — 재고가 모자랍니다: 보유 0 g, 요청 1 g
+거부 — 환산 비율이 없습니다: g ↔ L
+거부 — kg 로 옮기면 소수점 아래 세 자리를 넘습니다: 0.5 g
+같은 값인가 2.50 kg / 2.5 kg: true
+같은 값인가 2.5 kg / 2500 g: false
+같은 양인가 2.5 kg / 2500 g: true</code></pre>
+<h3 id="구현">구현</h3>
+<div class="code-tabs" id="quantity-guide-v1-2-0-tabs1">
+<div class="code-tabs__list" role="tablist" aria-label="구현 예시 언어">
+<button type="button" class="code-tabs__tab" role="tab" id="quantity-guide-v1-2-0-tabs1-tab-java" aria-controls="quantity-guide-v1-2-0-tabs1-panel-java" aria-selected="true" tabindex="0" data-lang="java">Java</button>
+<button type="button" class="code-tabs__tab" role="tab" id="quantity-guide-v1-2-0-tabs1-tab-typescript" aria-controls="quantity-guide-v1-2-0-tabs1-panel-typescript" aria-selected="false" tabindex="-1" data-lang="typescript">TypeScript</button>
+<button type="button" class="code-tabs__tab" role="tab" id="quantity-guide-v1-2-0-tabs1-tab-rust" aria-controls="quantity-guide-v1-2-0-tabs1-panel-rust" aria-selected="false" tabindex="-1" data-lang="rust">Rust</button>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="quantity-guide-v1-2-0-tabs1-panel-java" aria-labelledby="quantity-guide-v1-2-0-tabs1-tab-java">
+<p class="code-tabs__label" aria-hidden="true">Java</p>
+<pre tabindex="0"><code class="language-java">import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+enum Unit {
+    G("g"), KG("kg"), L("L");
+
+    final String symbol;
+
+    Unit(String symbol) { this.symbol = symbol; }
+}
+
+// from 1 = to factor. 방향이 있다: from → to 는 곱하고, to → from 은 나눈다.
+record ConversionRatio(Unit from, Unit to, long factor) {
+    static final List&lt;ConversionRatio&gt; ALL = List.of(new ConversionRatio(Unit.KG, Unit.G, 1000));
+
+    static Optional&lt;ConversionRatio&gt; between(Unit a, Unit b) {
+        return ALL.stream()
+                .filter(r -&gt; (r.from == a &amp;&amp; r.to == b) || (r.from == b &amp;&amp; r.to == a))
+                .findFirst();
+    }
+}
+
+record Quantity(BigDecimal amount, Unit unit) {
+    static final int MAX_SCALE = 3;
+
+    Quantity {
+        Objects.requireNonNull(amount, "수치가 없습니다");
+        Objects.requireNonNull(unit, "단위가 없습니다");
+        amount = amount.stripTrailingZeros(); // 2.50 과 2.5 를 같은 표현으로 맞춘다
+        if (amount.scale() &gt; MAX_SCALE) {
+            throw new IllegalArgumentException(
+                    "소수점 아래 세 자리까지만 기록합니다: " + amount.toPlainString() + " " + unit.symbol);
+        }
+    }
+
+    static Quantity of(String amount, Unit unit) {
+        return new Quantity(new BigDecimal(amount), unit);
+    }
+
+    Quantity plus(Quantity other) {
+        Unit common = commonUnit(other);
+        return new Quantity(convertTo(common).amount.add(other.convertTo(common).amount), common);
+    }
+
+    Quantity minus(Quantity other) {
+        Unit common = commonUnit(other);
+        return new Quantity(convertTo(common).amount.subtract(other.convertTo(common).amount), common);
+    }
+
+    Quantity times(long n) {
+        return new Quantity(amount.multiply(BigDecimal.valueOf(n)), unit);
+    }
+
+    // 크기 비교: 단위를 맞춘 뒤 비교한다. equals 는 수치와 단위가 둘 다 같아야 참이다.
+    int compareTo(Quantity other) {
+        Unit common = commonUnit(other);
+        return convertTo(common).amount.compareTo(other.convertTo(common).amount);
+    }
+
+    boolean isPositive() { return amount.signum() &gt; 0; }
+
+    boolean isNegative() { return amount.signum() &lt; 0; }
+
+    Quantity convertTo(Unit target) {
+        if (unit == target) {
+            return this;
+        }
+        ConversionRatio ratio = ConversionRatio.between(unit, target).orElseThrow(() -&gt; noRatio(unit, target));
+        BigDecimal factor = BigDecimal.valueOf(ratio.factor());
+        if (ratio.from() == unit) {
+            return new Quantity(amount.multiply(factor), target); // 정방향: 곱셈
+        }
+        BigDecimal divided = amount.divide(factor); // 역방향: 나눗셈
+        if (divided.stripTrailingZeros().scale() &gt; MAX_SCALE) {
+            throw new IllegalArgumentException(target.symbol + " 로 옮기면 소수점 아래 세 자리를 넘습니다: " + this);
+        }
+        return new Quantity(divided, target);
+    }
+
+    // 이 예제의 선택: 단위가 다르면 비율의 to 쪽(kg→g 이므로 g)으로 맞춰 곱셈만 일어나게 한다.
+    private Unit commonUnit(Quantity other) {
+        if (unit == other.unit) {
+            return unit;
+        }
+        return ConversionRatio.between(unit, other.unit)
+                .map(ConversionRatio::to)
+                .orElseThrow(() -&gt; noRatio(unit, other.unit));
+    }
+
+    private static IllegalArgumentException noRatio(Unit a, Unit b) {
+        return new IllegalArgumentException("환산 비율이 없습니다: " + a.symbol + " ↔ " + b.symbol);
+    }
+
+    @Override
+    public String toString() {
+        return amount.toPlainString() + " " + unit.symbol;
+    }
+}
+
+record StockId(String value) {}
+
+record IngredientId(String value) {}
+
+final class IngredientStock {
+    private final StockId id;
+    private final IngredientId ingredientId; // 재료 카탈로그 aggregate 는 id 로만 가리킨다
+    private Quantity onHand;
+
+    IngredientStock(StockId id, IngredientId ingredientId, Unit unit) {
+        this.id = id;
+        this.ingredientId = ingredientId;
+        this.onHand = Quantity.of("0", unit);
+    }
+
+    void receive(Quantity received) {
+        requirePositive(received);
+        onHand = onHand.plus(received);
+    }
+
+    void consume(Quantity used) {
+        requirePositive(used);
+        Quantity after = onHand.minus(used);
+        if (after.isNegative()) {
+            throw new IllegalStateException("재고가 모자랍니다: 보유 " + onHand + ", 요청 " + used);
+        }
+        onHand = after;
+    }
+
+    private static void requirePositive(Quantity q) {
+        if (!q.isPositive()) {
+            throw new IllegalArgumentException("입고·사용량은 0보다 커야 합니다: " + q);
+        }
+    }
+
+    StockId id() { return id; }
+
+    IngredientId ingredientId() { return ingredientId; }
+
+    Quantity onHand() { return onHand; }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        IngredientStock stock = new IngredientStock(new StockId("stock-1"), new IngredientId("yeast"), Unit.KG);
+        System.out.println("재고 " + stock.id().value() + " · 재료 " + stock.ingredientId().value());
+
+        stock.receive(Quantity.of("0.3", Unit.KG));
+        System.out.println("입고 0.3 kg → 보유 " + stock.onHand());
+        stock.consume(Quantity.of("50", Unit.G).times(2));
+        System.out.println("사용 50 g × 2 → 보유 " + stock.onHand());
+        System.out.println("보유량을 kg 로 → " + stock.onHand().convertTo(Unit.KG));
+        stock.consume(Quantity.of("0.2", Unit.KG));
+        System.out.println("사용 0.2 kg → 보유 " + stock.onHand());
+
+        attempt(() -&gt; stock.consume(Quantity.of("1", Unit.G)));
+        attempt(() -&gt; stock.receive(Quantity.of("1", Unit.L)));
+        attempt(() -&gt; Quantity.of("0.5", Unit.G).convertTo(Unit.KG));
+
+        Quantity kg = Quantity.of("2.5", Unit.KG);
+        System.out.println("같은 값인가 2.50 kg / 2.5 kg: " + Quantity.of("2.50", Unit.KG).equals(kg));
+        System.out.println("같은 값인가 2.5 kg / 2500 g: " + kg.equals(Quantity.of("2500", Unit.G)));
+        System.out.println("같은 양인가 2.5 kg / 2500 g: " + (kg.compareTo(Quantity.of("2500", Unit.G)) == 0));
+    }
+
+    static void attempt(Runnable action) {
+        try {
+            action.run();
+        } catch (RuntimeException e) {
+            System.out.println("거부 — " + e.getMessage());
+        }
+    }
+}</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="quantity-guide-v1-2-0-tabs1-panel-typescript" aria-labelledby="quantity-guide-v1-2-0-tabs1-tab-typescript">
+<p class="code-tabs__label" aria-hidden="true">TypeScript</p>
+<pre tabindex="0"><code class="language-typescript">const Unit = { G: "g", KG: "kg", L: "L" } as const;
+type Unit = (typeof Unit)[keyof typeof Unit];
+
+// from 1 = to factor. 방향이 있다: from → to 는 곱하고, to → from 은 나눈다.
+class ConversionRatio {
+  static readonly ALL: readonly ConversionRatio[] = Object.freeze([new ConversionRatio(Unit.KG, Unit.G, 1000n)]);
+
+  private constructor(
+    readonly from: Unit,
+    readonly to: Unit,
+    readonly factor: bigint,
+  ) {
+    Object.freeze(this);
+  }
+
+  equals(other: ConversionRatio): boolean {
+    return this.from === other.from &amp;&amp; this.to === other.to &amp;&amp; this.factor === other.factor;
+  }
+
+  static between(a: Unit, b: Unit): ConversionRatio | undefined {
+    return ConversionRatio.ALL.find((r) =&gt; (r.from === a &amp;&amp; r.to === b) || (r.from === b &amp;&amp; r.to === a));
+  }
+}
+
+// 배열을 얼리면 원소 교체만 막힌다. 클래스까지 얼려야 ConversionRatio.ALL = [] 같은 정적 필드 재대입이 막힌다.
+Object.freeze(ConversionRatio);
+
+const ONE = 1000n; // 소수점 아래 세 자리
+
+class Quantity {
+  // scaled = 수치 × 1000. number(2진 부동소수점) 대신 bigint 정수로 들어 자릿수 규칙이 표현에 담긴다.
+  private constructor(
+    private readonly scaled: bigint,
+    readonly unit: Unit,
+  ) {
+    Object.freeze(this);
+  }
+
+  static of(text: string, unit: Unit): Quantity {
+    const m = /^(-?)(\d+)(?:\.(\d*?)0*)?$/.exec(text);
+    if (m === null) throw new Error(`수치 형식이 아닙니다: ${text}`);
+    const [, sign = "", whole = "0", fraction = ""] = m;
+    if (fraction.length &gt; 3) throw new Error(`소수점 아래 세 자리까지만 기록합니다: ${text} ${unit}`);
+    const scaled = BigInt(whole) * ONE + BigInt(fraction.padEnd(3, "0"));
+    return new Quantity(sign === "-" ? -scaled : scaled, unit);
+  }
+
+  plus(other: Quantity): Quantity {
+    const common = this.commonUnit(other);
+    return new Quantity(this.convertTo(common).scaled + other.convertTo(common).scaled, common);
+  }
+
+  minus(other: Quantity): Quantity {
+    const common = this.commonUnit(other);
+    return new Quantity(this.convertTo(common).scaled - other.convertTo(common).scaled, common);
+  }
+
+  times(n: bigint): Quantity {
+    return new Quantity(this.scaled * n, this.unit);
+  }
+
+  equals(other: Quantity): boolean {
+    return this.scaled === other.scaled &amp;&amp; this.unit === other.unit;
+  }
+
+  // 크기 비교: 단위를 맞춘 뒤 비교한다. equals 는 수치와 단위가 둘 다 같아야 참이다.
+  compareTo(other: Quantity): number {
+    const common = this.commonUnit(other);
+    const diff = this.convertTo(common).scaled - other.convertTo(common).scaled;
+    return diff === 0n ? 0 : diff &lt; 0n ? -1 : 1;
+  }
+
+  isPositive(): boolean { return this.scaled &gt; 0n; }
+
+  isNegative(): boolean { return this.scaled &lt; 0n; }
+
+  convertTo(target: Unit): Quantity {
+    if (this.unit === target) return this;
+    const ratio = ConversionRatio.between(this.unit, target);
+    if (ratio === undefined) throw noRatio(this.unit, target);
+    if (ratio.from === this.unit) return new Quantity(this.scaled * ratio.factor, target); // 정방향: 곱셈
+    if (this.scaled % ratio.factor !== 0n) {
+      throw new Error(`${target} 로 옮기면 소수점 아래 세 자리를 넘습니다: ${this}`);
+    }
+    return new Quantity(this.scaled / ratio.factor, target); // 역방향: 나눗셈
+  }
+
+  // 이 예제의 선택: 단위가 다르면 비율의 to 쪽(kg→g 이므로 g)으로 맞춰 곱셈만 일어나게 한다.
+  private commonUnit(other: Quantity): Unit {
+    if (this.unit === other.unit) return this.unit;
+    const ratio = ConversionRatio.between(this.unit, other.unit);
+    if (ratio === undefined) throw noRatio(this.unit, other.unit);
+    return ratio.to;
+  }
+
+  toString(): string {
+    const abs = this.scaled &lt; 0n ? -this.scaled : this.scaled;
+    const fraction = (abs % ONE).toString().padStart(3, "0").replace(/0+$/, "");
+    return `${this.scaled &lt; 0n ? "-" : ""}${abs / ONE}${fraction &amp;&amp; "." + fraction} ${this.unit}`;
+  }
+}
+
+function noRatio(a: Unit, b: Unit): Error {
+  return new Error(`환산 비율이 없습니다: ${a} ↔ ${b}`);
+}
+
+class StockId {
+  private readonly brand = "StockId"; // IngredientId 와 섞이지 않게 하는 표식
+  constructor(readonly value: string) {
+    Object.freeze(this);
+  }
+
+  equals(other: StockId): boolean { return this.value === other.value; }
+}
+
+class IngredientId {
+  private readonly brand = "IngredientId";
+  constructor(readonly value: string) {
+    Object.freeze(this);
+  }
+
+  equals(other: IngredientId): boolean { return this.value === other.value; }
+}
+
+class IngredientStock {
+  private onHandValue: Quantity;
+
+  constructor(
+    readonly id: StockId,
+    readonly ingredientId: IngredientId, // 재료 카탈로그 aggregate 는 id 로만 가리킨다
+    unit: Unit,
+  ) {
+    this.onHandValue = Quantity.of("0", unit);
+  }
+
+  receive(received: Quantity): void {
+    requirePositive(received);
+    this.onHandValue = this.onHandValue.plus(received);
+  }
+
+  consume(used: Quantity): void {
+    requirePositive(used);
+    const after = this.onHandValue.minus(used);
+    if (after.isNegative()) {
+      throw new Error(`재고가 모자랍니다: 보유 ${this.onHandValue}, 요청 ${used}`);
+    }
+    this.onHandValue = after;
+  }
+
+  onHand(): Quantity { return this.onHandValue; }
+}
+
+function requirePositive(q: Quantity): void {
+  if (!q.isPositive()) throw new Error(`입고·사용량은 0보다 커야 합니다: ${q}`);
+}
+
+function attempt(action: () =&gt; void): void {
+  try {
+    action();
+  } catch (e) {
+    console.log(`거부 — ${e instanceof Error ? e.message : String(e)}`);
+  }
+}
+
+const stock = new IngredientStock(new StockId("stock-1"), new IngredientId("yeast"), Unit.KG);
+console.log(`재고 ${stock.id.value} · 재료 ${stock.ingredientId.value}`);
+
+stock.receive(Quantity.of("0.3", Unit.KG));
+console.log(`입고 0.3 kg → 보유 ${stock.onHand()}`);
+stock.consume(Quantity.of("50", Unit.G).times(2n));
+console.log(`사용 50 g × 2 → 보유 ${stock.onHand()}`);
+console.log(`보유량을 kg 로 → ${stock.onHand().convertTo(Unit.KG)}`);
+stock.consume(Quantity.of("0.2", Unit.KG));
+console.log(`사용 0.2 kg → 보유 ${stock.onHand()}`);
+
+attempt(() =&gt; stock.consume(Quantity.of("1", Unit.G)));
+attempt(() =&gt; stock.receive(Quantity.of("1", Unit.L)));
+attempt(() =&gt; Quantity.of("0.5", Unit.G).convertTo(Unit.KG));
+
+const kg = Quantity.of("2.5", Unit.KG);
+console.log(`같은 값인가 2.50 kg / 2.5 kg: ${Quantity.of("2.50", Unit.KG).equals(kg)}`);
+console.log(`같은 값인가 2.5 kg / 2500 g: ${kg.equals(Quantity.of("2500", Unit.G))}`);
+console.log(`같은 양인가 2.5 kg / 2500 g: ${kg.compareTo(Quantity.of("2500", Unit.G)) === 0}`);</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="quantity-guide-v1-2-0-tabs1-panel-rust" aria-labelledby="quantity-guide-v1-2-0-tabs1-tab-rust">
+<p class="code-tabs__label" aria-hidden="true">Rust</p>
+<pre tabindex="0"><code class="language-rust">mod inventory {
+    use std::cmp::Ordering;
+    use std::fmt;
+
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    pub enum Unit { G, Kg, L }
+
+    impl Unit {
+        pub fn symbol(self) -&gt; &amp;'static str {
+            match self { Unit::G =&gt; "g", Unit::Kg =&gt; "kg", Unit::L =&gt; "L" }
+        }
+    }
+
+    // from 1 = to factor. 방향이 있다: from → to 는 곱하고, to → from 은 나눈다.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+    pub struct ConversionRatio {
+        from: Unit,
+        to: Unit,
+        factor: i64,
+    }
+
+    impl ConversionRatio {
+        const ALL: [ConversionRatio; 1] = [ConversionRatio { from: Unit::Kg, to: Unit::G, factor: 1000 }];
+
+        pub fn between(a: Unit, b: Unit) -&gt; Option&lt;ConversionRatio&gt; {
+            Self::ALL.iter().copied().find(|r| (r.from == a &amp;&amp; r.to == b) || (r.from == b &amp;&amp; r.to == a))
+        }
+    }
+
+    const ONE: i64 = 1000; // 소수점 아래 세 자리
+
+    // scaled = 수치 × 1000. f64 는 Eq 를 구현하지 않으므로 i64 정수로 든다.
+    #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+    pub struct Quantity {
+        scaled: i64,
+        unit: Unit,
+    }
+
+    fn overflow() -&gt; String {
+        "수치가 표현 범위를 넘었습니다".to_string()
+    }
+
+    fn no_ratio(a: Unit, b: Unit) -&gt; String {
+        format!("환산 비율이 없습니다: {} ↔ {}", a.symbol(), b.symbol())
+    }
+
+    impl Quantity {
+        pub fn of(text: &amp;str, unit: Unit) -&gt; Result&lt;Quantity, String&gt; {
+            let (whole, fraction) = text.split_once('.').unwrap_or((text, ""));
+            let fraction = fraction.trim_end_matches('0');
+            let whole_value: i64 = whole.parse().map_err(|_| format!("수치 형식이 아닙니다: {text}"))?;
+            if !fraction.bytes().all(|b| b.is_ascii_digit()) {
+                return Err(format!("수치 형식이 아닙니다: {text}"));
+            }
+            if fraction.len() &gt; 3 {
+                return Err(format!("소수점 아래 세 자리까지만 기록합니다: {text} {}", unit.symbol()));
+            }
+            let fraction_value: i64 = format!("{fraction:0&lt;3}").parse().map_err(|_| overflow())?;
+            let magnitude = whole_value.checked_abs().and_then(|w| w.checked_mul(ONE)?.checked_add(fraction_value));
+            let scaled = magnitude.ok_or_else(overflow)?;
+            Ok(Quantity { scaled: if whole.starts_with('-') { -scaled } else { scaled }, unit })
+        }
+
+        pub fn plus(self, other: Quantity) -&gt; Result&lt;Quantity, String&gt; {
+            let common = self.common_unit(other)?;
+            let sum = self.convert_to(common)?.scaled.checked_add(other.convert_to(common)?.scaled);
+            Ok(Quantity { scaled: sum.ok_or_else(overflow)?, unit: common })
+        }
+
+        pub fn minus(self, other: Quantity) -&gt; Result&lt;Quantity, String&gt; {
+            let common = self.common_unit(other)?;
+            let diff = self.convert_to(common)?.scaled.checked_sub(other.convert_to(common)?.scaled);
+            Ok(Quantity { scaled: diff.ok_or_else(overflow)?, unit: common })
+        }
+
+        pub fn times(self, n: i64) -&gt; Result&lt;Quantity, String&gt; {
+            Ok(Quantity { scaled: self.scaled.checked_mul(n).ok_or_else(overflow)?, unit: self.unit })
+        }
+
+        // 크기 비교: 단위를 맞춘 뒤 비교한다. == 는 수치와 단위가 둘 다 같아야 참이다.
+        pub fn compare_to(self, other: Quantity) -&gt; Result&lt;Ordering, String&gt; {
+            let common = self.common_unit(other)?;
+            Ok(self.convert_to(common)?.scaled.cmp(&amp;other.convert_to(common)?.scaled))
+        }
+
+        pub fn is_positive(self) -&gt; bool { self.scaled &gt; 0 }
+
+        pub fn is_negative(self) -&gt; bool { self.scaled &lt; 0 }
+
+        pub fn convert_to(self, target: Unit) -&gt; Result&lt;Quantity, String&gt; {
+            if self.unit == target {
+                return Ok(self);
+            }
+            let ratio = ConversionRatio::between(self.unit, target).ok_or_else(|| no_ratio(self.unit, target))?;
+            if ratio.from == self.unit {
+                let scaled = self.scaled.checked_mul(ratio.factor).ok_or_else(overflow)?; // 정방향: 곱셈
+                return Ok(Quantity { scaled, unit: target });
+            }
+            if self.scaled % ratio.factor != 0 {
+                return Err(format!("{} 로 옮기면 소수점 아래 세 자리를 넘습니다: {self}", target.symbol()));
+            }
+            Ok(Quantity { scaled: self.scaled / ratio.factor, unit: target }) // 역방향: 나눗셈
+        }
+
+        // 이 예제의 선택: 단위가 다르면 비율의 to 쪽(kg→g 이므로 g)으로 맞춰 곱셈만 일어나게 한다.
+        fn common_unit(self, other: Quantity) -&gt; Result&lt;Unit, String&gt; {
+            if self.unit == other.unit {
+                return Ok(self.unit);
+            }
+            ConversionRatio::between(self.unit, other.unit).map(|r| r.to).ok_or_else(|| no_ratio(self.unit, other.unit))
+        }
+    }
+
+    impl fmt::Display for Quantity {
+        fn fmt(&amp;self, f: &amp;mut fmt::Formatter&lt;'_&gt;) -&gt; fmt::Result {
+            let abs = self.scaled.unsigned_abs();
+            let fraction = format!("{:03}", abs % ONE as u64);
+            let fraction = fraction.trim_end_matches('0');
+            let sign = if self.scaled &lt; 0 { "-" } else { "" };
+            let dot = if fraction.is_empty() { "" } else { "." };
+            write!(f, "{sign}{}{dot}{fraction} {}", abs / ONE as u64, self.unit.symbol())
+        }
+    }
+
+    #[derive(Clone, Debug, PartialEq, Eq, Hash)]
+    pub struct StockId(pub String);
+
+    #[derive(Clone, Debug, PartialEq, Eq, Hash)]
+    pub struct IngredientId(pub String);
+
+    pub struct IngredientStock {
+        id: StockId,
+        ingredient_id: IngredientId, // 재료 카탈로그 aggregate 는 id 로만 가리킨다
+        on_hand: Quantity,
+    }
+
+    fn require_positive(q: Quantity) -&gt; Result&lt;(), String&gt; {
+        if q.is_positive() { Ok(()) } else { Err(format!("입고·사용량은 0보다 커야 합니다: {q}")) }
+    }
+
+    impl IngredientStock {
+        pub fn new(id: StockId, ingredient_id: IngredientId, unit: Unit) -&gt; Result&lt;IngredientStock, String&gt; {
+            Ok(IngredientStock { id, ingredient_id, on_hand: Quantity::of("0", unit)? })
+        }
+
+        pub fn receive(&amp;mut self, received: Quantity) -&gt; Result&lt;(), String&gt; {
+            require_positive(received)?;
+            self.on_hand = self.on_hand.plus(received)?;
+            Ok(())
+        }
+
+        pub fn consume(&amp;mut self, used: Quantity) -&gt; Result&lt;(), String&gt; {
+            require_positive(used)?;
+            let after = self.on_hand.minus(used)?;
+            if after.is_negative() {
+                return Err(format!("재고가 모자랍니다: 보유 {}, 요청 {used}", self.on_hand));
+            }
+            self.on_hand = after;
+            Ok(())
+        }
+
+        pub fn id(&amp;self) -&gt; &amp;StockId { &amp;self.id }
+
+        pub fn ingredient_id(&amp;self) -&gt; &amp;IngredientId { &amp;self.ingredient_id }
+
+        pub fn on_hand(&amp;self) -&gt; Quantity { self.on_hand }
+    }
+}
+
+use inventory::{IngredientId, IngredientStock, Quantity, StockId, Unit};
+use std::cmp::Ordering;
+
+fn attempt&lt;T&gt;(result: Result&lt;T, String&gt;) {
+    if let Err(message) = result {
+        println!("거부 — {message}");
+    }
+}
+
+fn main() -&gt; Result&lt;(), String&gt; {
+    let mut stock = IngredientStock::new(StockId("stock-1".into()), IngredientId("yeast".into()), Unit::Kg)?;
+    println!("재고 {} · 재료 {}", stock.id().0, stock.ingredient_id().0);
+
+    stock.receive(Quantity::of("0.3", Unit::Kg)?)?;
+    println!("입고 0.3 kg → 보유 {}", stock.on_hand());
+    stock.consume(Quantity::of("50", Unit::G)?.times(2)?)?;
+    println!("사용 50 g × 2 → 보유 {}", stock.on_hand());
+    println!("보유량을 kg 로 → {}", stock.on_hand().convert_to(Unit::Kg)?);
+    stock.consume(Quantity::of("0.2", Unit::Kg)?)?;
+    println!("사용 0.2 kg → 보유 {}", stock.on_hand());
+
+    attempt(stock.consume(Quantity::of("1", Unit::G)?));
+    attempt(stock.receive(Quantity::of("1", Unit::L)?));
+    attempt(Quantity::of("0.5", Unit::G)?.convert_to(Unit::Kg));
+
+    let kg = Quantity::of("2.5", Unit::Kg)?;
+    println!("같은 값인가 2.50 kg / 2.5 kg: {}", Quantity::of("2.50", Unit::Kg)? == kg);
+    println!("같은 값인가 2.5 kg / 2500 g: {}", kg == Quantity::of("2500", Unit::G)?);
+    println!("같은 양인가 2.5 kg / 2500 g: {}", kg.compare_to(Quantity::of("2500", Unit::G)?)? == Ordering::Equal);
+    Ok(())
+}</code></pre>
+</div>
+</div>
+<p>세 프로그램을 실제로 실행하면 「상황 설정」에 실은 그 열한 줄이 나옵니다. Java 는 21.0.11 로, TypeScript 는 5.9.3 으로 컴파일해 Node.js 22.22.3 에서, Rust 는 1.95.0 으로 실행했고 세 언어의 출력이 글자까지 같아요. 시나리오의 단계가 코드의 어느 줄인지부터 맞춰 봅시다. 줄 번호는 위 펜스의 첫 줄을 1 로 센 것입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>시나리오 단계</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td>시나리오 1 의 1단계 — 수치와 단위로 값을 만들고 횟수를 곱한다</td><td>38~40행 <code>of</code> · 52~54행 <code>times</code>, 호출은 151행</td><td>39~46행 · 58~60행, 호출은 170행</td><td>48~62행 · 76~78행, 호출은 185행</td></tr>
+<tr><td>시나리오 1 의 2단계 — root 가 양수를 확인하고 뺄셈을 맡긴다</td><td>123행(검사는 131~135행) · 124행</td><td>142행(153~155행) · 143행</td><td>153행(137~139행) · 154행</td></tr>
+<tr><td>시나리오 1 의 3단계 — 두 Unit 을 비교해 공통 단위를 정한다</td><td>83~90행 <code>commonUnit</code></td><td>89~94행</td><td>106~111행 <code>common_unit</code></td></tr>
+<tr><td>시나리오 1 의 4단계 — 옮겨 계산하고 새 값을 돌려준다</td><td>47~50행 <code>minus</code> · 73행(정방향 곱셈)</td><td>53~56행 · 81행</td><td>70~74행 · 96행</td></tr>
+<tr><td>시나리오 1 의 5단계 — 음수 확인 뒤에 교체한다</td><td>125~127행 · 128행</td><td>144~146행 · 147행</td><td>155~157행 · 158행</td></tr>
+<tr><td>시나리오 2 의 1단계 — 단위가 다른 요청, 공통 단위 g</td><td>호출은 154행, 판정은 83~90행</td><td>173행 · 89~94행</td><td>188행 · 106~111행</td></tr>
+<tr><td>시나리오 2 의 2단계 — 명시 환산, 역방향 나눗셈</td><td>호출은 153행, 나눗셈은 75행</td><td>172행 · 85행</td><td>187행 · 102행</td></tr>
+<tr><td>시나리오 2 의 3단계 — 자릿수 규칙 초과 거부</td><td>76~78행(생성 때는 32~35행)</td><td>82~84행(43행)</td><td>99~101행(55~57행)</td></tr>
+<tr><td>시나리오 2 의 4단계 — 비율 없음 거부</td><td>87~89행 · 92~94행, 호출은 158행</td><td>91~93행 · 103~105행 · 177행</td><td>110행 · 43~45행 · 192행</td></tr>
+<tr><td>시나리오 2 의 5단계 — 값 같음과 크기 비교를 가른다</td><td>31행의 표현 맞춤 · 57~60행 <code>compareTo</code>, 호출은 161~164행</td><td>62~64행 · 67~71행 · 180~183행</td><td>33행의 <code>PartialEq</code> 파생 · 81~84행 · 195~198행</td></tr>
+<tr><td>시나리오 2 의 6단계 — root 의 순서는 그대로</td><td>122~129행에 단위 이름이 없다</td><td>141~148행</td><td>152~160행</td></tr>
+</tbody>
+</table>
+</div>
+<p>상황 설정 표의 네 칸은 코드에서 아래 자리에 나타납니다. root 몫의 핵심은 음수 검사가 보유량 교체보다 먼저 온다는 점이에요. 출력 6행에서 1 g 사용이 거부된 뒤에도 보유량이 0 g 으로 남는 것이 그 순서 덕분입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>표의 칸</th><th>코드에서 보이는 곳</th></tr>
+</thead>
+<tbody>
+<tr><td>bounded context</td><td>Rust 1~168행의 <code>mod inventory</code>. 모듈 밖에서는 <code>scaled</code> 필드에 접근할 수 없어 값을 만드는 길이 <code>of</code> 와 연산뿐입니다. Java·TypeScript 는 한 파일 안의 <code>private</code> 로 같은 경계를 흉내 냅니다</td></tr>
+<tr><td>불변식의 위치 · Quantity 몫</td><td>생성 때 자릿수 확인 — Java 28~36 · TypeScript 39~46 · Rust 48~62행. 역방향 자릿수 초과 거부 — 76~78 · 82~84 · 99~101행. 비율 없음 거부 — 87~89 · 91~93 · 110행</td></tr>
+<tr><td>불변식의 위치 · root 몫</td><td>양수 검사 — Java 123 · TypeScript 142 · Rust 153행. 음수 검사를 통과해야 교체 — 125~128 · 144~147 · 155~158행</td></tr>
+<tr><td>root·entity·VO 배정</td><td>식별자를 가진 타입은 <code>IngredientStock</code> 하나입니다(Java 107 · TypeScript 129 · Rust 132행의 <code>id</code> 필드). 비율 표는 어느 필드에도 없고 연산이 조회하는 공유 상수예요(Java 16 · TypeScript 6 · Rust 23행)</td></tr>
+<tr><td>타 aggregate 참조 방식</td><td>Java 108 · TypeScript 130 · Rust 133행의 <code>IngredientId</code> 필드뿐이고, 재료 카탈로그 타입은 세 코드 어디에도 없습니다</td></tr>
+</tbody>
+</table>
+</div>
+<p>여기서 가장 중요한 줄은 환산 방향을 가르는 줄입니다. ConversionRatio 에는 방향이 있으니, 옮기는 값의 단위가 비율의 from 쪽인지 확인해야 곱할지 나눌지가 정해져요. 이 줄이 맡는 것은 최소 조건 2 의 「다르면 환산 근거로 맞춘다」와 [선택] 5 입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>언어</th><th>환산 방향을 가르는 줄</th></tr>
+</thead>
+<tbody>
+<tr><td>Java</td><td>72~73행 <code>if (ratio.from() == unit) { return new Quantity(amount.multiply(factor), target); }</code></td></tr>
+<tr><td>TypeScript</td><td>81행 <code>if (ratio.from === this.unit) return new Quantity(this.scaled * ratio.factor, target);</code></td></tr>
+<tr><td>Rust</td><td>95~96행 <code>if ratio.from == self.unit { … checked_mul(ratio.factor) … }</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>이 줄 없이 늘 곱하면 시나리오 2 의 2단계에서 200 g 이 0.2 kg 이 아니라 200,000 kg 이 됩니다. 출력 3행이 곱셈 갈래를, 4행이 나눗셈 갈래를 차례로 보여 줍니다. 8행은 그 나눗셈이 자릿수 규칙을 넘은 경우예요. 공통 단위를 비율의 to 쪽으로 고르는 <code>commonUnit</code> 은 이 예제의 선택이라 주석으로 표시했습니다. from 쪽(kg)을 고르면 입고와 사용마다 g 값을 나눠야 하고, 0.5 g 입고가 8행과 같은 이유로 거부돼요. 나눗셈 갈래에는 Java 판의 한계가 하나 있습니다. 75행의 <code>amount.divide(factor)</code> 는 반올림 방식을 주지 않은 호출이라, 몫이 유한 소수로 끝나지 않으면 자릿수 검사에 이르기도 전에 <code>ArithmeticException</code> 이 나요. 이 예제의 비율은 1000 = 2³ × 5³ 하나뿐이라 늘 나눠떨어지지만, 1 yard = 3 ft 같은 비율을 표에 더하면 1 ft 를 yard 로 옮기는 자리에서 예외가 납니다(Java 21 에서 <code>new BigDecimal("1").divide(BigDecimal.valueOf(3))</code> 를 실행하면 <code>Non-terminating decimal expansion</code> 입니다). TypeScript·Rust 판은 나눠떨어지는지를 먼저 확인해 도메인 오류로 돌려줍니다.</p>
+<p>언어 차이는 셋만 짚습니다. 수치는 세 언어 모두 2진 부동소수점을 피하는데, Java 는 10진 수를 그대로 담는 <code>BigDecimal</code> 이고 그 <code>equals</code> 가 scale 까지 비교해 2.0 과 2.00 을 다르게 보므로(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html">BigDecimal</a>) 생성자 31행에서 표기를 맞춰야 출력 9행이 <code>true</code> 가 돼요. TypeScript 와 Rust 는 수치 × 1000 을 <code>bigint</code> · <code>i64</code> 정수로 두어 자릿수 규칙이 표현에 담기고, Rust 는 <code>checked_*</code> 연산이 돌려주는 <code>Option</code> 으로 오버플로를 도메인 오류로 바꿉니다(<a href="https://doc.rust-lang.org/std/primitive.i64.html">i64</a>). 그리고 TypeScript 의 <code>private</code> 은 컴파일 시점에만 막아서, <code>IngredientStock</code> 의 <code>onHandValue</code> 를 밖에서 −99 g 으로 바꿔 보니 그대로 들어갔습니다(실행해 확인). Java 의 <code>private</code> 은 리플렉션을 쓰지 않는 한 실행 중에도 막고, Rust 의 <code>mod inventory</code> 는 모듈 밖의 접근을 컴파일에서 막아요.</p>
+<h3 id="상황이-달라지면">상황이 달라지면</h3>
+<p>Unit 과 ConversionRatio 를 어디에 둘지는 단위가 얼마나 자주 바뀌는지에 따라 달라집니다. 이 가이드가 고른 경계를 첫 행에 두고 나란히 비교해 봅시다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>상황</th><th>경계</th><th>이유</th></tr>
+</thead>
+<tbody>
+<tr><td>단위와 비율이 g·kg 처럼 표준으로 정해져 있고, 새 단위를 넣을 일이 드물다(이 가이드)</td><td>Unit 은 Quantity 안의 VO, ConversionRatio 는 모든 Quantity 가 함께 조회하는 비율 표(코드 상수). IngredientStock root 안의 Quantity 가 단위를 값으로 담는다</td><td>시나리오 1 의 3단계가 조회 없이 끝나고, 비율이 없는 경우가 컴파일된 표 하나로 정해진다. 새 단위는 배포해야 들어오고, Quantity 가 표를 직접 조회하므로 시험 때 다른 비율 표로 바꿔 끼우기 어렵다</td></tr>
+<tr><td>운영 중에 단위를 추가하거나 비율을 고친다</td><td>단위와 비율을 단위 카탈로그 aggregate 로 따로 둔다. Quantity 에는 단위 코드 VO 만 넣고, 환산은 비율을 조회하는 도메인 서비스(어느 한 객체에 속하지 않는 도메인 연산을 맡는 객체)가 맡는다</td><td>배포 없이 단위가 늘어난다. 대신 Quantity 의 연산이 혼자 끝나지 않고, 조회한 비율이 없을 때 어떻게 할지를 서비스가 정해야 한다</td></tr>
+<tr><td>포대(20 kg)·박스처럼 비율이 재료마다 다르다</td><td>포장 단위 비율을 재료 카탈로그 aggregate 가 갖는다. 재고는 <code>IngredientId</code> 로 그 비율을 찾아 g·kg 로 옮긴 뒤 자기 Quantity 에 더한다</td><td>같은 포대라도 재료마다 무게가 달라 전역 상수 하나로는 맞는 비율을 줄 수 없다. 대신 입고 한 건마다 카탈로그 조회가 한 번 끼고, 카탈로그의 비율 변경이 이미 들어온 재고에는 반영되지 않는다</td></tr>
+<tr><td>환율처럼 비율이 시점마다 바뀐다(Money)</td><td>비율을 적용 시점별 이력을 가진 aggregate 로 두고, 환산 결과 옆에 적용한 비율의 id 와 시점을 남긴다</td><td>같은 금액을 나중에 다시 봐도 그때 쓴 비율로 결과를 설명할 수 있다. 대신 환산마다 시점으로 이력을 찾아야 하고 기록할 값이 늘어난다</td></tr>
+</tbody>
+</table>
+</div>
+<p>어느 행이든 Quantity 자신은 VO 로 남습니다. 달라지는 것은 Unit 과 ConversionRatio 가 코드 상수인지, 식별자로 찾아가는 데이터인지예요. 2행부터는 상황 설정 표의 <code>타 aggregate 참조 방식</code> 칸에 단위 코드·재료 id·비율 id 로 찾아가는 조회가 더해집니다.</p>
+<h3 id="실제-사례">실제 사례</h3>
+<p>Quantity 의 개념은 표준과 공개 API(Application Programming Interface)에서 이름을 바꿔 가며 나타납니다. 아래 표의 HL7(Health Level Seven, 의료 정보 표준 단체) FHIR(Fast Healthcare Interoperability Resources)는 의료 데이터 교환 표준이고, UCUM(Unified Code for Units of Measure)은 단위 코드 체계, JSR(Java Specification Request) 385 는 Java 의 단위·수량 API 명세예요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>사례</th><th>사례 쪽 이름</th><th>이 글의 개념</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://hl7.org/fhir/R5/datatypes.html">HL7 FHIR R5</a> Quantity 데이터 타입</td><td><code>value</code>(decimal)</td><td>Quantity 의 amount</td></tr>
+<tr><td>〃</td><td><code>unit</code>(사람이 읽는 표기) · <code>system</code> · <code>code</code></td><td>Unit. <code>code</code> 는 <a href="https://ucum.org/ucum">UCUM</a> 코드를 권고한다</td></tr>
+<tr><td><a href="https://jcp.org/en/jsr/detail?id=385">JSR 385</a> Units of Measurement API</td><td><code>Quantity&lt;Q&gt;</code> 의 <code>getValue()</code> · <code>getUnit()</code> · <code>add</code> · <code>subtract</code></td><td>Quantity 의 amount · unit · plus · minus</td></tr>
+<tr><td>〃</td><td><code>Unit&lt;Q&gt;.getConverterTo(Unit&lt;Q&gt;)</code> 가 돌려주는 <code>UnitConverter</code></td><td>곱셈 하나로 끝나는 배율 변환일 때 ConversionRatio. <a href="https://unitsofmeasurement.github.io/unit-api/site/apidocs/javax/measure/UnitConverter.html"><code>UnitConverter</code></a> 는 역변환·합성·선형 여부까지 다루는 더 넓은 개념이다</td></tr>
+<tr><td>〃</td><td><code>Quantity&lt;Q&gt;.isEquivalentTo(Quantity&lt;Q&gt;)</code></td><td>시나리오 2 의 5단계가 쓰는 크기 비교</td></tr>
+<tr><td><a href="https://docs.tigerbeetle.com/coding/data-modeling/">TigerBeetle</a></td><td>부호 없는 128비트 정수 금액 · asset scale</td><td>Money 의 최소 단위 정수 표현과 자릿수 규칙</td></tr>
+</tbody>
+</table>
+</div>
+<p>FHIR 은 <code>value</code> 를 적힌 자릿수에 정밀도가 담긴(implicit precision) 수치로 정의합니다. 여기서 헷갈리기 쉬운 포인트는 소수 끝의 0 이에요. 이 예제는 2.50 kg 과 2.5 kg 을 같은 값으로 맞췄지만, FHIR 은 적힌 자릿수가 측정 정밀도를 뜻한다고 보므로 측정 기록에 쓰는 Quantity 라면 끝의 0 을 지우지 않는 편이 맞습니다. 같은 패턴이라도 무엇을 같은 값으로 볼지가 도메인마다 다르다는 것이 최소 조건에서 그 판정을 [선택] 4 로 내려 둔 이유예요.</p>
+<p>JSR 385 의 <a href="https://unitsofmeasurement.github.io/unit-api/site/apidocs/javax/measure/Quantity.html">Quantity javadoc</a> 은 <code>isEquivalentTo</code> 가 필요하면 단위를 변환한 뒤 비교한다고 적고, <a href="https://unitsofmeasurement.github.io/unit-api/site/apidocs/javax/measure/Unit.html">Unit javadoc</a> 의 <code>getConverterTo</code> 는 변환기를 만들 수 없으면 <code>UnconvertibleException</code> 을 던집니다. 시나리오 2 의 4단계가 비율이 없을 때 거부하는 것과 같은 자리예요. TigerBeetle 은 통화에서 쓸모 있는 가장 작은 단위를 1 로 삼는 정수로 금액을 두고 USD 센트를 asset scale 2 로 표현하는데, 이 예제가 수치 × 1000 을 정수로 둔 것과 같은 방향입니다.</p>
+<h2 id="스스로-점검하기">스스로 점검하기</h2>
+<p><strong>1. 경계 판정.</strong> 아래 <code>Amount</code> 는 Quantity 일까요? 최소 조건의 <code>[필수]</code> 셋을 하나씩 적용해 판정해 보세요.</p>
+<pre tabindex="0"><code class="language-typescript">class Amount {
+  constructor(
+    readonly value: bigint,
+    readonly unit: "g" | "kg",
+  ) {}
+
+  plus(other: Amount): Amount {
+    if (this.unit !== other.unit) throw new Error("단위가 다릅니다");
+    return new Amount(this.value + other.value, this.unit);
+  }
+}</code></pre>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — 아직 Quantity 가 아닙니다. 판정을 가르는 것은 최소 조건 3번이에요. 조건 1 은 충족합니다. 수치와 단위가 한 값 안에 있어요. 조건 2 도 충족합니다. 단위가 다르면 거부하는데, 최소 조건은 환산 근거가 없을 때 거부하는 것을 허용해요. 환산을 못 하는 것은 <code>[선택]</code> 5 가 빠진 것이지 필수 위반이 아닙니다. 조건 3 에서 판정이 갈려요. <code>plus</code> 는 자기 값을 바꾸지 않고 새 값을 돌려주니 시나리오 1 의 4단계는 지키지만, 두 <code>Amount</code> 가 같은 값인지 값으로 판정하는 수단이 메서드로도 비교 함수로도 없습니다. <code>new Amount(5n, "g") === new Amount(5n, "g")</code> 는 참조 비교라 <code>false</code> 예요(node 로 실행해 확인). 그래서 <code>[필수]</code> 3 을 채우지 못해요. 값 비교 수단 하나만 더하면 조건 셋을 갖춰요. 그 수단이 표현이 같은지를 볼지 환산해서 크기로 볼지는 그다음 선택이고, 조건 3 의 판정에는 어느 쪽이든 상관없습니다.</p>
+</blockquote>
+</details>
+<p><strong>2. 비교 판별.</strong> 병원 시스템이 <code>{ patientId: "p-7", item: "체온", takenAt: "2026-09-17T09:00", value: 36.5, unit: "°C" }</code> 를 JSON(JavaScript Object Notation, 글자로 적는 데이터 형식) 으로 저장합니다. 이 기록 전체와 그 안의 <code>value</code>·<code>unit</code> 부분은 각각 무엇을 나타낼까요? 비교 절의 구분 기준과 최소 조건으로 답해 보세요.</p>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — 기록 전체는 환자(<code>patientId</code>)와 측정 항목(<code>item</code>)이 붙어 있으니 Measurement 를 나타냅니다. 비교 절 「Measurement 와의 차이」의 구분 기준인 "대상과 측정 항목을 가진 기록 계층" 이 여기 있어요. <code>value</code> 와 <code>unit</code> 을 묶은 36.5 °C 는 Quantity 를 나타내는 데이터입니다. 다만 JSON 은 연산이 없는 직렬화 형식이라 그 자체로 최소 조건 2·3번을 갖출 수 없고, 읽어 들여 단위 확인 연산과 값 같음을 가진 Quantity 로 만들 때 비로소 Quantity 가 돼요. 덧붙여 36.5 는 73/2 라서 2진 부동소수점으로 정확히 표현됩니다. 그래도 <code>number</code> 로 읽으면 36.50 과 36.5 가 구분되지 않아, 측정 정밀도를 담은 끝의 0 은 사라져요.</p>
+</blockquote>
+</details>
+<p><strong>3. 책임과 순서.</strong> 누군가 <code>IngredientStock.consume</code> 을 아래처럼 줄였습니다. 보유량이 0 g 일 때 1 g 사용을 요청하면 예외는 그대로 납니다. 그런데 그 뒤에 <code>onHand()</code> 는 무엇을 돌려주고, 이어서 1 g 을 입고하면 보유량은 얼마가 될까요?</p>
+<pre tabindex="0"><code class="language-java">void consume(Quantity used) {
+    onHand = onHand.minus(used);
+    if (onHand.isNegative()) {
+        throw new IllegalStateException("재고가 모자랍니다");
+    }
+}</code></pre>
+<details class="answer">
+<summary>풀이 보기</summary>
+<blockquote>
+<p>풀이 — <code>onHand()</code> 는 −1 g 을, 이어지는 입고 뒤에는 0 g 을 돌려줍니다(줄인 코드로 실행해 확인). 첫 줄에서 <code>onHand</code> 가 0 g − 1 g = −1 g 으로 먼저 바뀌고, 그다음에 검사가 예외를 던집니다. 예외는 이미 끝난 대입을 되돌리지 않으니 <code>onHand()</code> 는 −1 g 을 돌려줘요. 이어서 1 g 을 입고하면 −1 g + 1 g = 0 g 이 되어, 실제로 들어온 1 g 이 장부에서 사라집니다. 시나리오 1 의 5단계가 검사 뒤에 교체하라고 한 이유가 이것이고, 상황 설정 표의 <code>불변식의 위치</code> 칸이 root 의 <code>consume</code> 을 가리키는 이유도 같아요.</p>
+</blockquote>
+</details>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li>Martin Fowler, <em>Analysis Patterns: Reusable Object Models</em>, Addison-Wesley, 1997 — Chapter 3 「Observations and Measurements」(35쪽부터) §3.1 Quantity · §3.2 Conversion Ratio · §3.3 Compound Units · §3.4 Measurement · §3.5 Observation. 이 글의 원전으로, 최소 조건 1·2·3·5·7 의 근거 괄호가 여기를 가리킵니다.</li>
+<li><a href="https://www.pearson.de/media/muster/toc/toc_9780134271439.pdf">Analysis Patterns 목차 (Pearson PDF)</a> — 3장의 절 번호·제목과 3장이 35쪽에서 시작한다는 확인.</li>
+<li><a href="https://martinfowler.com/apsupp/apchap3.pdf">UML Diagrams for Chapter 3 (apchap3.pdf)</a> — Figure 3.1·3.2(Quantity 의 속성과 연산 목록), 3.3(Conversion Ratio 의 from·to 연관), 3.4(Compound Unit 의 구성과 제약). 최소 조건의 근거 괄호가 가리키는 그림들입니다.</li>
+<li><a href="http://jaoo.dk/jaoo1999/schedule/MartinFowlerAnalysisPatterns.pdf">Analysis Patterns 튜토리얼 슬라이드 (Fowler, JAOO 1999)</a> — <code>as(Unit)</code> · <code>valueOf(String)</code> · <code>toString()</code> 연산과 Money 가 Quantity 의 한 종류라는 서술. 최소 조건 5·8 의 근거.</li>
+<li><a href="https://martinfowler.com/eaaDev/Quantity.html">Quantity (Fowler, eaaDev 초안)</a> — 단순한 구현은 단위가 다른 덧셈을 거부하고 환산을 호출자에게 맡긴다는 서술. 개념 정리에서 환산 협력까지가 패턴의 요구는 아니라고 한정한 근거입니다.</li>
+<li><a href="https://martinfowler.com/eaaCatalog/money.html">Money (PoEAA 요약 페이지)</a> — 통화가 다른 금액의 합산 문제와 반올림으로 잔돈을 잃는 문제. Money 비교 절의 근거.</li>
+<li><a href="https://martinfowler.com/bliki/ValueObject.html">Value Object (Fowler bliki)</a> — 값 객체의 aliasing bug 와 그 대책(불변 또는 대입 때 복사), 정수 id 를 값 객체로 감싸는 경우. 최소 조건 3 과 사용 목적의 id 값 객체 항목.</li>
+<li><a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a> — 개념 정리가 가리키는 Quantity 둘레의 개념 지도, 비교 절이 가리키는 Measurement · Observation · Rejected Observation · Range.</li>
+<li><a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.1.0.html">Measurement 가이드</a> — 개요가 함께 쓰는 패턴으로 잇는 Measurement.</li>
+<li><a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a> — 상황 설정 표의 네 행이 쓰는 Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식.</li>
+<li>Java — <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html">BigDecimal</a>(<code>equals</code> 의 scale 비교, 나눠떨어지지 않을 때의 예외) · <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Currency.html">Currency</a>(<code>getDefaultFractionDigits</code>).</li>
+<li>TypeScript·JavaScript — <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">MDN Number</a>(IEEE 754 배정밀도). 비교 절의 부동소수점 오차 예.</li>
+<li>Rust — <a href="https://doc.rust-lang.org/std/primitive.i64.html">i64</a>(<code>checked_*</code> 가 <code>Option</code> 반환). 구현 해설의 언어 차이.</li>
+<li><a href="https://hl7.org/fhir/R5/datatypes.html">HL7 FHIR R5 Data Types</a> · <a href="https://ucum.org/ucum">UCUM</a> — Quantity 의 <code>value</code>·<code>unit</code>·<code>system</code>·<code>code</code>, value 의 implicit precision, 단위 코드로 UCUM 을 권고한다는 점. 「실제 사례」 표의 첫 두 행.</li>
+<li><a href="https://jcp.org/en/jsr/detail?id=385">JSR 385</a> · <a href="https://unitsofmeasurement.github.io/unit-api/site/apidocs/javax/measure/Quantity.html">Quantity javadoc</a> · <a href="https://unitsofmeasurement.github.io/unit-api/site/apidocs/javax/measure/Unit.html">Unit javadoc</a> · <a href="https://unitsofmeasurement.github.io/unit-api/site/apidocs/javax/measure/UnitConverter.html">UnitConverter javadoc</a> — <code>getValue</code>·<code>getUnit</code>·<code>add</code>·<code>subtract</code>·<code>isEquivalentTo</code>, <code>getConverterTo</code> 와 <code>UnconvertibleException</code>. 「실제 사례」 표의 JSR 385 행.</li>
+<li><a href="https://docs.tigerbeetle.com/coding/data-modeling/">TigerBeetle: Data Modeling</a> — 금액을 최소 단위 정수로 두고 asset scale 로 자릿수를 나타내는 방식. 「실제 사례」 표의 마지막 행.</li>
+</ul>
+</main>
+<footer class="guide-footer">
+<p>원본은 <code>pattern-guide/ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.md</code>입니다. 이 HTML 은 원본 md 에서 생성한 파생물이라, 고칠 곳이 있으면 md 를 고친 뒤 다시 렌더합니다.</p>
+</footer>
+</div>
+<script>
+/* pattern-guide HTML — 세 언어 코드 탭. render-guides.py 가 HTML 에 인라인한다.
+ * JS 가 없으면 모든 패널이 보인다(마크업 기본값). 초기화하면서 선택 안 된 패널에 hidden 을 건다.
+ * 키보드: ←/→ 이웃 탭, Home/End 처음/끝 탭(WAI-ARIA APG Tabs, 자동 활성화).
+ */
+(function () {
+  "use strict";
+
+  var STORE_KEY = "pattern-guide:code-lang";
+  var widgets = [];
+
+  function readPref() {
+    try {
+      return window.localStorage.getItem(STORE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writePref(lang) {
+    try {
+      window.localStorage.setItem(STORE_KEY, lang);
+    } catch (e) {
+      /* 저장소를 못 쓰면 이번 페이지 안에서만 유지한다 */
+    }
+  }
+
+  function select(widget, tab, moveFocus) {
+    widget.tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+    if (moveFocus) tab.focus();
+  }
+
+  function tabForLang(widget, lang) {
+    for (var i = 0; i < widget.tabs.length; i++) {
+      if (widget.tabs[i].getAttribute("data-lang") === lang) return widget.tabs[i];
+    }
+    return null;
+  }
+
+  function activate(widget, tab, moveFocus) {
+    select(widget, tab, moveFocus);
+    var lang = tab.getAttribute("data-lang");
+    if (!lang) return;
+    writePref(lang);
+    widgets.forEach(function (other) {
+      if (other === widget) return;
+      var match = tabForLang(other, lang);
+      if (match) select(other, match, false);
+    });
+  }
+
+  function init(root) {
+    var list = root.querySelector(".code-tabs__list");
+    if (!list) return;
+    var tabs = Array.prototype.slice.call(list.querySelectorAll(".code-tabs__tab"));
+    if (!tabs.length) return;
+    var widget = { root: root, tabs: tabs };
+    widgets.push(widget);
+
+    list.addEventListener("click", function (event) {
+      var tab = event.target.closest(".code-tabs__tab");
+      if (tab && tabs.indexOf(tab) !== -1) activate(widget, tab, false);
+    });
+
+    list.addEventListener("keydown", function (event) {
+      var current = event.target.closest(".code-tabs__tab");
+      var index = tabs.indexOf(current);
+      if (index === -1) return;
+      var next = null;
+      switch (event.key) {
+        case "ArrowRight":
+          next = tabs[(index + 1) % tabs.length];
+          break;
+        case "ArrowLeft":
+          next = tabs[(index - 1 + tabs.length) % tabs.length];
+          break;
+        case "Home":
+          next = tabs[0];
+          break;
+        case "End":
+          next = tabs[tabs.length - 1];
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      activate(widget, next, true);
+    });
+
+    var initial = tabForLang(widget, readPref());
+    if (!initial) {
+      initial = tabs.filter(function (t) {
+        return t.getAttribute("aria-selected") === "true";
+      })[0] || tabs[0];
+    }
+    select(widget, initial, false);
+    root.setAttribute("data-enhanced", "");
+  }
+
+  function boot() {
+    Array.prototype.forEach.call(document.querySelectorAll(".code-tabs"), init);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>

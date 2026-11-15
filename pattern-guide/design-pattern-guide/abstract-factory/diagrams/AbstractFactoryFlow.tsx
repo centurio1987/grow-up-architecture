@@ -37,7 +37,7 @@ export default function AbstractFactoryFlow() {
   const ink = f.node.process.tagColor;
   return (
     <Canvas width={W} height={610}>
-      <DiagramHeader eyebrow="Abstract Factory collaboration" title="계열은 맨 앞에서 한 번, 그 뒤는 추상 타입 위를 지난다" />
+      <DiagramHeader eyebrow="Abstract Factory collaboration" title="계열은 맨 앞에서 한 번, 그 뒤로는 추상 타입만 쓴다" />
       {LANES.map((l) => (
         <Lifeline key={l.id} x={l.x} y={TOP} height={LIFE_H} headWidth={HEAD_W} label={l.label} />
       ))}

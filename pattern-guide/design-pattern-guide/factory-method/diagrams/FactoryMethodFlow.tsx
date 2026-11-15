@@ -23,7 +23,7 @@ const CX = Object.fromEntries(LANES.map((l) => [l.id, l.x])) as Record<string, n
 
 const STEPS = [
   { from: 'client', to: 'creator', y: 200, text: '1. Creator 타입으로 마감을 요청한다' },
-  { from: 'creator', to: 'creator', y: 245, text: '2. 제품이 필요한 자리에 닿는다' },
+  { from: 'creator', to: 'creator', y: 245, text: '2. 제품이 필요한 자리에 이른다' },
   { from: 'creator', to: 'concrete', y: 305, text: '3. 팩토리 메서드를 부른다' },
   { from: 'concrete', to: 'concrete', y: 350, text: '4. ConcreteProduct 를 만든다' },
   { from: 'concrete', to: 'creator', y: 410, text: '5. Product 타입으로 돌려준다', dashed: true },

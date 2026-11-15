@@ -39,8 +39,8 @@ export default function AccountabilityModel() {
         width={W - GUTTER * 2}
         label="세 규칙"
         lines={[
-          '관계는 어느 한쪽 Party 에 얹힌 칸이 아니라 자기 자리를 갖는 개념이다',
-          '양 끝은 둘 다 Party 이고, 위임하는 쪽과 책임지는 쪽으로 자리가 갈린다',
+          '관계는 어느 한쪽 Party 에 딸린 칸이 아니라 자기 자리를 갖는 개념이다',
+          '양 끝은 둘 다 Party 이고, 위임하는 쪽과 책임지는 쪽으로 자리가 나뉜다',
           '계통을 하나 더 쓰는 일은 클래스를 더하는 일이 아니라 AccountabilityType 인스턴스를 더하는 일이다',
         ]}
       />

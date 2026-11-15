@@ -1,0 +1,127 @@
+[
+  {
+    "id": "orientation",
+    "label": "서론",
+    "title": "개요를 읽는 대신, 설계자가 하는 일을 따라가기"
+  },
+  {
+    "id": "scenarios",
+    "label": "제1장",
+    "title": "사람과 시간이 있는 시나리오를 먼저 만든다"
+  },
+  {
+    "id": "assumptions",
+    "label": "제2장",
+    "title": "가정과 한계를 검토 가능한 명세로 만든다"
+  },
+  {
+    "id": "extraction",
+    "label": "제3장",
+    "title": "시나리오에서 정보 요구를 추출하는 실제 작업"
+  },
+  {
+    "id": "external-format",
+    "label": "제4장",
+    "title": "외부 스키마의 형식을 정의하고 E00·E01을 완성한다"
+  },
+  {
+    "id": "external-queue",
+    "label": "제5장",
+    "title": "E02와 갱신 의미: 외부 스키마는 화면 복사본이 아니다"
+  },
+  {
+    "id": "conceptual-derivation",
+    "label": "제6장",
+    "title": "세 외부 관점을 하나의 의미 모델로 통합한다"
+  },
+  {
+    "id": "conceptual-structure",
+    "label": "제7장",
+    "title": "개념 스키마의 구조: 타입·동일성·관계·시간·규칙"
+  },
+  {
+    "id": "behavior-spec",
+    "label": "제8장",
+    "title": "행위 명세를 완성한다: 상태의 정적 정의에서 변화의 계약으로"
+  },
+  {
+    "id": "logical-design",
+    "label": "제9장",
+    "title": "개념 모델을 관계형 논리 모델로 바꾸는 과정"
+  },
+  {
+    "id": "internal-format",
+    "label": "제10장",
+    "title": "내부 스키마를 설계하는 형식과 결정 기록"
+  },
+  {
+    "id": "ddl",
+    "label": "제11장",
+    "title": "내부 스키마의 실제 결과물: SQL과 보장 범위"
+  },
+  {
+    "id": "read-mapping",
+    "label": "제12장",
+    "title": "내부 기록을 외부 스키마로 다시 투영한다"
+  },
+  {
+    "id": "write-protocol",
+    "label": "제13장",
+    "title": "접수·재시도·경쟁을 트랜잭션으로 실현한다"
+  },
+  {
+    "id": "mechanical-generation",
+    "label": "제14장",
+    "title": "기계적 생성의 입력·알고리즘·출력·실패를 모두 본다"
+  },
+  {
+    "id": "domain-derivation",
+    "label": "제15장",
+    "title": "개념에서 도메인 모델로: 클래스를 복사하지 않고 책임을 정한다"
+  },
+  {
+    "id": "domain-code",
+    "label": "제16장",
+    "title": "도메인 모델의 실제 코드와 복원·동시성의 경계"
+  },
+  {
+    "id": "api-derivation",
+    "label": "제17장",
+    "title": "외부 관점·행위·개념을 API 계약으로 바꾸는 과정"
+  },
+  {
+    "id": "api-result",
+    "label": "제18장",
+    "title": "완전한 API 명세와 실제 HTTP 대화"
+  },
+  {
+    "id": "end-to-end",
+    "label": "제19장",
+    "title": "O1을 여섯 표현으로 따라가며 변환을 검산한다"
+  },
+  {
+    "id": "derivation-limits",
+    "label": "제20장",
+    "title": "API·도메인 모델을 내부 스키마에서 뽑는다는 주장을 평가한다"
+  },
+  {
+    "id": "change-analysis",
+    "label": "제21장",
+    "title": "요구 변경으로 모델의 경계와 한계를 시험한다"
+  },
+  {
+    "id": "exercises",
+    "label": "제22장",
+    "title": "연습 문제와 풀이: 외워서가 아니라 설계해서 답하기"
+  },
+  {
+    "id": "verification",
+    "label": "제23장",
+    "title": "검증 명세: 어느 수준의 증거로 무엇을 주장하는가"
+  },
+  {
+    "id": "reference",
+    "label": "제24장",
+    "title": "설계 작업지·용어 사전·전체 산출물"
+  }
+]

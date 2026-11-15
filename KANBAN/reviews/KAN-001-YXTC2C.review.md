@@ -2,10 +2,11 @@
 card: KAN-001-YXTC2C
 title: 전체 가이드 재집필
 created: 2026-09-30
-branch: KAN-001-YXTC2C
-worktree: /Users/centurio/orca/workspaces/design-pattern-guide/KAN-001-YXTC2C
+branch: main
+worktree: /Users/centurio/grow-up-architecture
 base: b62d572
 status: 검토 대기
+merged: 0c871ca29c83
 ---
 
 # KAN-001-YXTC2C 검토 요청 — 전체 가이드 재집필
@@ -19,10 +20,10 @@ status: 검토 대기
 
 | 항목 | 값 |
 |---|---|
-| 브랜치 | `KAN-001-YXTC2C` |
-| 워크트리 | `/Users/centurio/orca/workspaces/design-pattern-guide/KAN-001-YXTC2C` |
+| 브랜치 | `main` — **머지됨**(카드 브랜치 `KAN-001-YXTC2C` 의 끝 `0c871ca29c83` 을 main 에 병합), 대상은 아래 고정 범위 |
+| 워크트리 | `/Users/centurio/grow-up-architecture` |
 | 베이스 | `b62d572` |
-| 변경 훑기 | `git diff b62d572...HEAD` |
+| 변경 훑기 | `git diff b62d572..0c871ca29c83` |
 
 **커밋 103건**
 

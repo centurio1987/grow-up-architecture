@@ -1,0 +1,85 @@
+{
+  "format": "teaching-use-case/1",
+  "commands": [
+    {
+      "id": "U01",
+      "name": "PlaceOrder",
+      "inputs": [
+        "trusted BUYER actor",
+        "requestKey",
+        "items[productId,quantity,expectedOfferRevision]"
+      ],
+      "preconditions": "valid shape; key unused OR same previous request; all revisions accepted",
+      "postconditions": "one immutable PLACED order + receipt OR replay of existing receipt",
+      "errors": [
+        "InvalidInput",
+        "OfferChanged",
+        "ProductUnavailable",
+        "IdempotencyConflict",
+        "DependencyUnavailable"
+      ],
+      "sources": [
+        "SC01",
+        "SC06",
+        "SC08"
+      ]
+    },
+    {
+      "id": "U02",
+      "name": "CancelOrder",
+      "inputs": [
+        "trusted BUYER actor",
+        "orderId",
+        "expectedVersion"
+      ],
+      "preconditions": "ownership; PLACED; expectedVersion matches",
+      "postconditions": "CANCELLED; version +1; same lines and placedAt",
+      "errors": [
+        "NotFound",
+        "Conflict",
+        "InvalidInput"
+      ],
+      "sources": [
+        "SC03",
+        "SC05",
+        "SC07"
+      ]
+    },
+    {
+      "id": "U03",
+      "name": "ConfirmOrder",
+      "inputs": [
+        "trusted SELLER actor",
+        "orderId",
+        "expectedVersion"
+      ],
+      "preconditions": "seller role; PLACED; expectedVersion matches",
+      "postconditions": "CONFIRMED; version +1; same lines and placedAt",
+      "errors": [
+        "Forbidden",
+        "NotFound",
+        "Conflict",
+        "InvalidInput"
+      ],
+      "sources": [
+        "SC04",
+        "SC05"
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "name": "ListOffers",
+      "view": "E00"
+    },
+    {
+      "name": "GetMyOrder",
+      "view": "E01"
+    },
+    {
+      "name": "ListPendingOrders",
+      "view": "E02"
+    }
+  ],
+  "changeRetry": "cancel/confirm are not response-replaying operations; repeat with old version -> Conflict; reread current state"
+}

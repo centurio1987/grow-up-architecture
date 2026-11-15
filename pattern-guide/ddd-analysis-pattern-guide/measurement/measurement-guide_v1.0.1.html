@@ -1,0 +1,1671 @@
+<!doctype html>
+<!-- guide-fp:d88ac8a260749b285b406f9081194fe15191bbd905113c150cb5f94d12966cf0 -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="generator" content="scripts/render-guides.py">
+<title>Measurement — 값 하나를 누구의 무엇으로 만드는 기록 한 층</title>
+<style>
+/* pattern-guide HTML — render-guides.py 가 HTML 에 인라인한다. 외부 폰트·이미지 요청 없음. */
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfa;
+  --surface: #ffffff;
+  --fg: #1c1e22;
+  --muted: #5a606b;
+  --border: #dcdfe4;
+  --border-strong: #b9bec7;
+  --accent: #1f4fb8;
+  --accent-soft: #e8eefb;
+  --code-bg: #f3f4f6;
+  --code-fg: #1c1e22;
+  --inline-code-bg: #eceef1;
+  --quote-fg: #454a54;
+  --quote-bar: #c5cad3;
+  --th-bg: #f1f2f4;
+  --focus: #1f4fb8;
+  --diagram-filter: none;
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR",
+    "Malgun Gothic", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, "D2Coding", Consolas, "Cascadia Mono",
+    "Liberation Mono", "Noto Sans Mono CJK KR", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #141619;
+    --surface: #1b1e22;
+    --fg: #e3e5e9;
+    --muted: #a1a7b1;
+    --border: #2d3138;
+    --border-strong: #464c56;
+    --accent: #8db0ff;
+    --accent-soft: #1f2a40;
+    --code-bg: #1c1f24;
+    --code-fg: #dfe2e7;
+    --inline-code-bg: #262a30;
+    --quote-fg: #b9bec7;
+    --quote-bar: #464c56;
+    --th-bg: #1f2227;
+    --focus: #8db0ff;
+    --diagram-filter: invert(0.88) hue-rotate(180deg);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141619;
+  --surface: #1b1e22;
+  --fg: #e3e5e9;
+  --muted: #a1a7b1;
+  --border: #2d3138;
+  --border-strong: #464c56;
+  --accent: #8db0ff;
+  --accent-soft: #1f2a40;
+  --code-bg: #1c1f24;
+  --code-fg: #dfe2e7;
+  --inline-code-bg: #262a30;
+  --quote-fg: #b9bec7;
+  --quote-bar: #464c56;
+  --th-bg: #1f2227;
+  --focus: #8db0ff;
+  --diagram-filter: invert(0.88) hue-rotate(180deg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.guide {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 16px 4rem;
+}
+
+@media (min-width: 40rem) {
+  .guide {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* ── 헤딩 ─────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.35;
+  font-weight: 700;
+  scroll-margin-top: 1rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: 1.875rem;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 3.25rem 0 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.2rem;
+  margin: 2.25rem 0 0.75rem;
+}
+
+h4 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+h5,
+h6 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+/* ── 본문 블록 ─────────────────────────────────────── */
+p,
+ul,
+ol,
+blockquote,
+.table-wrap,
+pre,
+.code-tabs,
+.mermaid-figure {
+  margin: 0 0 1.1rem;
+}
+
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+
+li > ul,
+li > ol {
+  margin: 0.25rem 0 0.25rem;
+}
+
+li + li {
+  margin-top: 0.25rem;
+}
+
+li > p {
+  margin: 0 0 0.6rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2.5rem 0;
+}
+
+blockquote {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0.1rem 0 0.1rem 1rem;
+  border-left: 3px solid var(--quote-bar);
+  color: var(--quote-fg);
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* ── 코드 ─────────────────────────────────────────── */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: var(--inline-code-bg);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  tab-size: 4;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+pre > code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ── 표 ───────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+th,
+td {
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+  min-width: 6rem;
+}
+
+th {
+  background: var(--th-bg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ── mermaid 도식(렌더 시점 인라인 SVG) ───────────── */
+.mermaid-figure {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.mermaid-figure svg {
+  height: auto;
+  filter: var(--diagram-filter);
+}
+
+/* ── 세 언어 탭 ───────────────────────────────────── */
+.code-tabs__list {
+  display: none;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__list {
+  display: flex;
+}
+
+.code-tabs__tab {
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 1rem;
+  margin: 0 0 -1px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.9375rem/1 var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.code-tabs__tab:hover {
+  color: var(--fg);
+}
+
+.code-tabs__tab[aria-selected="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.code-tabs__tab:focus-visible {
+  outline-offset: -2px;
+  border-radius: 6px 6px 0 0;
+}
+
+.code-tabs__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.code-tabs[data-enhanced] .code-tabs__label {
+  display: none;
+}
+
+.code-tabs__panel > pre {
+  margin-bottom: 1.1rem;
+}
+
+.code-tabs[data-enhanced] .code-tabs__panel > pre {
+  margin-bottom: 0;
+}
+
+.code-tabs__panel[hidden] {
+  display: none;
+}
+
+/* ── 꼬리말 ───────────────────────────────────────── */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* ── 인쇄: 탭 패널 전부, 라이트 색 ───────────────── */
+@media print {
+  :root {
+    color-scheme: light;
+    --bg: #ffffff !important;
+    --surface: #ffffff !important;
+    --fg: #000000 !important;
+    --muted: #444444 !important;
+    --border: #bbbbbb !important;
+    --accent: #000000 !important;
+    --code-bg: #f6f6f6 !important;
+    --code-fg: #000000 !important;
+    --inline-code-bg: #eeeeee !important;
+    --quote-fg: #222222 !important;
+    --quote-bar: #999999 !important;
+    --th-bg: #eeeeee !important;
+    --diagram-filter: none !important;
+  }
+
+  body {
+    font-size: 10.5pt;
+  }
+
+  .guide {
+    max-width: none;
+    padding: 0;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__list,
+  .code-tabs__list {
+    display: none !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__label,
+  .code-tabs__label {
+    display: block !important;
+  }
+
+  .code-tabs__panel,
+  .code-tabs__panel[hidden] {
+    display: block !important;
+  }
+
+  .code-tabs[data-enhanced] .code-tabs__panel > pre {
+    margin-bottom: 1.1rem;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow: visible;
+  }
+
+  .table-wrap,
+  .mermaid-figure {
+    overflow: visible;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="guide">
+<main>
+<hr>
+<p>pattern: Measurement
+slug: measurement
+spec: analysis-guide
+spec_version: 1.4.0
+version: 1.0.1
+status: published
+date: 2026-11-11</p>
+<hr>
+<h1 id="measurement--값-하나를-누구의-무엇으로-만드는-기록-한-층">Measurement — 값 하나를 누구의 무엇으로 만드는 기록 한 층</h1>
+<h2 id="한눈에-보는-개요">한눈에 보는 개요</h2>
+<p>병원 기록 프로그램이 환자 한 사람을 <code>Patient { systolic, pulse }</code> 처럼 담고 있다고 해 봅시다. 9월 1일에 잰 수축기 혈압 118 mmHg 가 <code>systolic</code> 칸에 들어가요. 그런데 검사 항목은 계속 늘어납니다. 혈당이 붙고, 산소포화도가 붙고, 다음 분기에는 스무 개가 더 붙어요. 항목 하나마다 칸 하나를 더하고 배포를 한 번 합니다. 더 큰 문제는 그다음이에요. 9월 3일에 다시 재서 120 을 넣으면 118 은 사라집니다. 9월 2일에 우리가 알던 이 환자의 혈압이 얼마였는지 물으면 답할 자리가 아예 없어요.</p>
+<p>Measurement 의 해법은 <strong>값을 대상의 칸에서 꺼내 「누구를 · 무엇을 · 얼마」 세 자리를 가진 기록 한 건으로 만드는 것</strong>입니다. 항목이 칸 이름이 아니라 데이터 값이 되고, 기록은 덮어쓰는 것이 아니라 쌓이는 것이 돼요.</p>
+<pre tabindex="0"><code class="language-text">Before — 측정값이 대상의 칸일 때
+  Patient { systolic: 118, pulse: 72, ... }
+  새 검사 항목 하나  ──▶  칸 하나 추가 + 배포 한 번
+  9/3 에 120 을 넣음  ──▶  118 은 사라진다
+
+After — 측정값이 기록일 때
+  Measurement(환자 A · systolic · 118 mmHg · 9/1)
+  Measurement(환자 A · systolic · 120 mmHg · 9/3)
+  새 검사 항목 하나  ──▶  항목 데이터 한 줄
+  9/3 에 120 을 적음  ──▶  118 도 그대로 남는다</code></pre>
+<p>분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고, 함께 쓰는 패턴은 Quantity · Knowledge Level · Observation 입니다(근거: Fowler <em>Analysis Patterns</em> 3장 「Observations and Measurements」 §3.4~§3.9). 이웃 개념들이 서로 어떻게 놓이는지는 <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>에 따로 정리돼 있어요. 이 글이 파고드는 것은 그중 기록 한 층입니다.</p>
+<p>이 글은 시나리오 셋을 따라갑니다. 측정 한 건이 기록되고 되읽히는 길, 검사 항목이 늘고 잰 날과 적은 날이 다를 때 무엇이 바뀌는가, 잘못 적은 값을 고치려 할 때 어느 단계에서 무엇이 어긋나는가. 끝까지 읽으면 어떤 기록을 Measurement 라고 불러도 되는지 필수 조건 넷으로 판정할 수 있고, 그 기록이 aggregate 안 어디에 놓이는지와 두 시각을 따로 둘 때 조회가 어떻게 달라지는지도 세 언어 코드에서 짚을 수 있게 됩니다.</p>
+<h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
+<h3 id="시나리오-1--환자-a-의-수축기-혈압-118-mmhg-한-건이-기록되고-되읽히기까지">시나리오 1 — 환자 A 의 수축기 혈압 118 mmHg 한 건이 기록되고 되읽히기까지</h3>
+<p>병동 간호사가 9월 1일에 환자 A(기록 위의 id 는 <code>p-7</code>)의 수축기 혈압을 재서 118 mmHg 를 얻었습니다. 같은 날 바로 단말에 입력해요. 나와야 하는 답은 둘입니다. 기록 한 건이 남는 것, 그리고 "환자 A 의 수축기 혈압은 얼마인가" 에 118 mmHg 가 돌아오는 것. 이 장면에는 넷이 등장해요. 잰 값을 대상·항목과 묶는 <strong>Measurement</strong>, 무엇을 쟀는지 답하는 <strong>PhenomenonType</strong>, 수치와 단위를 한 값으로 묶은 Quantity, 그리고 둘을 id 로 찾아 조립하는 창구 역할의 MeasurementDesk 입니다. 이름은 여기서 한 구절씩만 소개하고 정식 정의는 개념 정리에서 해요.</p>
+<ol>
+<li><strong>간호사 쪽이 수치와 단위를 함께 넘겨 <code>Quantity(118, mmHg)</code> 를 만듭니다.</strong> 수치 118 만 넘기면 받는 쪽이 단위를 짐작해야 하고, 같은 칸에 mmHg 와 kPa 가 섞여 들어옵니다. 단위를 값 안에 두는 이유와 단위가 다를 때의 처리는 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.html">Quantity 가이드</a>의 몫이고, 이 글은 그 값을 <strong>받아서 어디에 묶는가</strong>를 봅니다.</li>
+<li><strong>창구가 항목 id <code>pt-1</code> 로 PhenomenonType 을 찾습니다.</strong> 항목을 코드의 이름이 아니라 데이터로 두었기 때문에 이 단계가 조회예요. 여기서 찾아 온 항목이 "systolic" 이라는 이름과 "mmHg" 라는 허용 단위를 가지고 있습니다. 순서를 뒤집어 기록부터 만들면, 없는 항목에 붙은 기록이 장부에 남고 나서야 발견됩니다.</li>
+<li><strong>창구가 대상 id <code>p-7</code> 과 항목 id <code>pt-1</code> 과 값을 넘겨 Measurement 한 건을 만듭니다.</strong> 세 자리가 다 채워진 채로만 만들어지게 하는 것이 여기서 지켜지는 불변식이에요. 셋 중 하나라도 비어 있으면 그 기록은 나중에 "누구의 것인지 모르는 118 mmHg" 가 되는데, 그때는 고칠 근거가 남아 있지 않습니다.</li>
+<li><strong>만들어지기 직전에 값의 단위가 항목의 허용 단위와 같은지 대조합니다.</strong> 이 검사는 Measurement 안이 아니라 창구에 있어요. 항목과 기록이 서로 다른 aggregate 라서, 기록 혼자서는 상대편 항목의 허용 단위를 볼 수 없기 때문입니다. <code>Quantity(72, bpm)</code> 을 systolic 자리에 넣으려 하면 이 단계가 막아요.</li>
+<li><strong>조회가 대상 id 와 항목 id 로 기록을 골라 답합니다.</strong> 답은 값 하나가 아니라 <strong>기록 하나</strong>예요. 값만 돌려주면 그 값이 언제 잰 것인지 되물을 자리가 없어집니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">단계   부르는 쪽 → 받는 쪽                 넘기는 것                       돌아오는 것
+ 1     간호사 → (new)                      118 · mmHg                      Quantity(118, mmHg)
+ 2     창구 → PhenomenonType               pt-1                            systolic · 허용 단위 mmHg
+ 3     창구 → (new Measurement)            p-7 · pt-1 · 118 mmHg · 9/1     기록 m-1
+ 4     창구 → PhenomenonType.allows        Quantity(118, mmHg)             같다 → 통과
+ 5     조회 → 창구                          p-7 · pt-1                      기록 m-1 (118 mmHg)</code></pre>
+<p>이 시나리오가 보여 준 것은 <strong>기록 한 건이 세 자리를 따로 가진다</strong>는 것입니다. 값(118 mmHg)은 그 자체로 완전하지만 누구의 무엇인지는 모르고, 그 두 가지를 기록이 채워요. 값은 그대로 남습니다. 그리고 항목이 코드가 아니라 데이터라서 2단계가 조회가 됐습니다. 4단계의 단위 대조가 창구에 있는 것은 경계 때문인데, 이 자리는 「상황 설정」 표가 다시 짚습니다.</p>
+<h3 id="시나리오-2--검사-항목이-늘고-잰-날과-적은-날이-다를-때">시나리오 2 — 검사 항목이 늘고, 잰 날과 적은 날이 다를 때</h3>
+<p>같은 병동에 맥박(pulse, 단위 bpm)을 기록해 달라는 요구가 들어왔습니다. 그리고 이번에는 현장에서 바로 입력하지 못했어요. 9월 1일에 잰 72 bpm 을 9월 3일에야 단말에 넣습니다. 나와야 하는 답은 셋입니다. 항목 추가로 고친 코드가 0 줄일 것, 9월 2일에 "지금 이 환자의 맥박은?" 을 물으면 "없음" 이 나올 것, 9월 4일에 같은 질문을 하면 72 bpm 이 나올 것.</p>
+<ol>
+<li><strong>맥박을 PhenomenonType 인스턴스 하나로 등록합니다.</strong> 클래스도 enum 상수도 늘지 않아요. <code>PhenomenonType.of("pulse", "bpm")</code> 한 줄이 데이터로 들어가고, 기록 쪽 타입은 그대로입니다. 항목을 칸 이름으로 두었다면 이 단계가 필드 추가와 배포였습니다.</li>
+<li><strong>기록을 만드는 길은 시나리오 1 과 똑같습니다.</strong> 창구가 <code>pt-2</code> 로 항목을 찾고, 허용 단위 bpm 과 값의 단위 bpm 을 대조하고, 세 자리를 채워 기록을 만들어요. 항목이 늘어도 이 길이 변하지 않는 것이 이 패턴이 주는 이득입니다.</li>
+<li><strong>기록이 시각을 둘 답니다 — 잰 날 9/1 과 적은 날 9/3.</strong> 하나만 두면 둘 중 하나를 포기하게 돼요. 잰 날만 두면 "9월 2일에 우리가 알던 값" 을 물을 수 없고, 적은 날만 두면 그 값이 언제의 몸 상태인지 알 수 없습니다. 두 날이 같은 경우가 흔하다고 해서 한 칸으로 합치면, 두 날이 달라지는 순간 되돌릴 방법이 없어요.</li>
+<li><strong>9월 2일 기준 조회가 "없음" 을 답합니다.</strong> 조회가 보는 것은 잰 날이 아니라 <strong>적은 날</strong>이에요. 9/1 에 잰 값이라도 9/3 에 적혔으니 9/2 에는 우리 손에 없었습니다. 순서를 바꿔 잰 날로 걸렀다면 9/2 에 72 bpm 이 돌아오는데, 그날 의사가 그 값을 본 적이 없으니 사실과 다른 답이 됩니다.</li>
+<li><strong>9월 4일 기준 조회가 72 bpm 을 답합니다.</strong> 같은 질문, 다른 기준 날짜예요. 조회 하나가 "지금 아는 값" 과 "그때 알던 값" 을 함께 답하는 것이 두 시각을 따로 둔 이득입니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">                9/1 잰 날        9/2 그날 알던 값      9/3 적은 날        9/4 그날 알던 값
+맥박 72 bpm      유효 시작        없음 (아직 안 적힘)     기록됨            72 bpm
+                applicability                          recording time</code></pre>
+<p>이 시나리오가 보여 준 것은 둘입니다. 하나는 <strong>항목이 데이터라서 새 항목을 더해도 배포하지 않는다</strong>는 것이고, 다른 하나는 <strong>시각이 둘이라야 답할 수 있는 질문이 있다</strong>는 것이에요. 4단계와 5단계는 같은 조회를 기준 날짜만 바꿔 부른 것인데 답이 달랐습니다. 여기서 헷갈리기 쉬운 포인트는 두 시각을 "정확도" 문제로 보는 것입니다. 정확도가 아니라 답할 수 있는 질문의 종류가 달라져요. 적은 날이 없으면 9/2 의 결정이 어떤 정보 위에서 내려졌는지 다시 확인할 길 자체가 없습니다.</p>
+<h3 id="시나리오-3--잘못-적은-1200-mmhg-를-고치려-할-때-어느-단계에서-무엇이-어긋나는가">시나리오 3 — 잘못 적은 1200 mmHg 를 고치려 할 때 어느 단계에서 무엇이 어긋나는가</h3>
+<p>9월 3일에 수축기 혈압을 입력하다가 120 을 1200 으로 잘못 쳤습니다. 기록 <code>m-3</code> 이 1200 mmHg 로 남았고, 의사가 그 값을 보고 처방을 바꿨어요. 9월 4일에 오기를 발견합니다. 나와야 하는 답은 "지금 환자 A 의 수축기 혈압은 120 mmHg" 이면서, 동시에 "9월 3일에는 1200 이 있었다" 가 남아 있는 것입니다.</p>
+<ol>
+<li><strong>값만 고치려 하면 — 기록의 값 자리를 1200 에서 120 으로 바꿉니다.</strong> 조회는 곧바로 맞는 답을 냅니다. 그런데 9월 3일의 처방 기록 옆에 남은 근거가 120 mmHg 가 되어, 정상 범위 값을 보고 처방을 바꾼 꼴이 돼요. 무엇이 왜 일어났는지 설명할 수 없는 상태가 조용히 만들어집니다.</li>
+<li><strong>지우려 하면 — 기록 <code>m-3</code> 을 통째로 없앱니다.</strong> 이번에는 근거가 아예 사라져요. 1단계보다 나은 것 같지만 같은 문제입니다. 처방은 남아 있는데 그 처방의 근거가 된 값이 어디에도 없어요.</li>
+<li><strong>거부로 남기면 — 값은 그대로 두고 기록에 거부 표시를 붙입니다.</strong> 사유("오기")와 거부한 날(9/4)이 함께 붙고, <code>m-3</code> 의 값은 1200 mmHg 그대로예요. 그리고 다시 잰 120 mmHg 는 <code>m-3</code> 을 고친 것이 아니라 <strong>새 기록 <code>m-4</code></strong> 로 남습니다. 거부 표시가 값이 아니라 기록 자체에 붙기 때문에, 수축기 혈압이든 혈액형이든 같은 방식으로 거부됩니다.</li>
+<li><strong>아직 재지 않은 목표 혈압 120 mmHg 를 같은 표에 표시 없이 적으면</strong> — 대상 하나 · 항목 하나 · 크기 하나를 갖춘 줄이 하나 더 생깁니다. 모양만 보면 3단계의 <code>m-4</code> 와 구별되지 않아요. 그러면 "환자 A 의 수축기 혈압" 조회가 잰 값과 맞추려는 값을 섞어서 답합니다. 기록에 <strong>관찰한 값인지 계획한 값인지 표시</strong>가 있어야 조회가 둘을 가릅니다.</li>
+<li><strong>그 날 기준 조회가 거부 시각까지 봅니다.</strong> 9/3 기준으로 물으면 1200 mmHg 가 돌아와요 — 그날은 아직 거부되기 전이니까요. 9/30 기준으로 물으면 120 mmHg 가 돌아옵니다. 거부를 삭제로 처리했다면 9/3 기준 조회가 "없음" 을 답해서, 그날 실제로 있었던 일과 어긋납니다.</li>
+</ol>
+<pre tabindex="0"><code class="language-text">지우는 방식    9/3 1200 mmHg ──삭제──▶ (없음)                     처방의 근거가 사라진다
+고치는 방식    9/3 1200 mmHg ──수정──▶ 120 mmHg                   처방이 정상 값에서 나온 꼴이 된다
+거부하는 방식  9/3 1200 mmHg ──거부──▶ 거부 표시(오기 · 9/4)        "그때는 이 값이 있었다" 가 남는다
+                                       9/3 120 mmHg (m-4)         다시 잰 값은 새 기록으로 남는다</code></pre>
+<p>이 시나리오가 보여 준 것은 <strong>고친 흔적이 모델의 일부</strong>라는 것입니다. 값을 덮어쓰거나 지우는 순간, 그 값을 쓴 다른 기록이 설명을 잃어요. 그리고 4단계에서 확인된 것이 하나 더 있습니다 — 세 자리를 갖춘 모양만으로는 <strong>이미 잰 값과 앞으로 맞출 값이 구별되지 않아요.</strong> 그 구별은 자리를 하나 더 두어서 하는데, 최소 조건 절이 그 자리를 다시 짚습니다.</p>
+<h3 id="개념-정리">개념 정리</h3>
+<p>시나리오에 나온 분석 층위의 개념 여섯을 정식으로 정의합니다. 이 절이 정하는 것은 개념이 무엇을 책임지고 누구와 협력하는가까지예요. 그 책임을 코드의 어느 객체가 지는지, 무엇이 aggregate 의 root 인지는 뒤의 「상황 설정」 표가 정합니다.</p>
+<ul>
+<li><strong>Measurement</strong>(측정 기록) — 대상 하나에 대해 항목 하나를 재서 얻은 값 하나를 묶은 사실 한 건입니다.
+<ul>
+<li>책임: 누구를 · 무엇을 · 얼마 세 자리를 채운 채로 만들어지고, 만들어진 뒤에는 그 세 자리를 바꾸지 않습니다(시나리오 1 의 3단계, 시나리오 3 의 1단계).</li>
+<li>협력: 대상 하나와 PhenomenonType 하나를 가리키고, Quantity 하나를 담아요. 같은 대상·항목·값을 가진 기록 둘도 서로 다른 사실입니다 — 같은 날 두 번 쟀으면 기록도 두 건이에요.</li>
+</ul>
+</li>
+<li><strong>PhenomenonType</strong>(측정 항목) — 무엇을 재는가를 답하는 개념입니다. 수축기 혈압 · 맥박 · 혈당이 각각 하나씩이에요.
+<ul>
+<li>책임: 항목의 이름을 가지고, 이 예제에서는 그 항목이 어떤 단위로 적히는지도 함께 가집니다. 매일 생기는 사실이 아니라 사실을 해석하는 쪽이라 기록과는 따로 바뀌어요(시나리오 2 의 1단계).</li>
+<li>협력: 항목 하나에 Measurement 가 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.1.html">Knowledge Level 가이드</a>가 패턴으로 다뤄요.</li>
+</ul>
+</li>
+<li><strong>Quantity</strong>(측정값) — 수치와 단위를 한 값으로 묶은 것입니다. 118 mmHg 가 하나예요.
+<ul>
+<li>책임: 수치가 무엇으로 셌는지를 값 안에 담습니다. 단위가 다른 값끼리의 계산과 환산은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.html">Quantity 가이드</a>의 몫이고, 이 글에서는 값 자리에 오는 것이 그것이라는 데까지가 필요합니다(시나리오 1 의 1단계).</li>
+<li>협력: Measurement 하나가 Quantity 하나를 담습니다. 같은 118 mmHg 를 담은 기록이 여럿일 수 있어요.</li>
+</ul>
+</li>
+<li><strong>Subject</strong>(대상) — 재어지는 쪽입니다. 이 예제에서는 환자이고, 원전의 그림은 사람으로 그려 두었어요.
+<ul>
+<li>책임: 식별자로 자기를 구별합니다. 자기에게 붙은 기록을 자기가 가지고 있을 필요는 없어요 — 그 선택지는 「상황이 달라지면」이 나란히 둡니다.</li>
+<li>협력: 대상 하나에 기록이 여럿 붙습니다.</li>
+</ul>
+</li>
+<li><strong>Observation</strong>(관측) — 대상에 대한 사실 하나를 나타내는 상위 개념이고, Measurement 는 그 한 종류입니다.
+<ul>
+<li>책임: 대상과 항목, 그리고 잰 시각·적은 시각처럼 <strong>값의 종류와 무관한 것</strong>을 답니다. 그래서 수치 사실과 범주 사실이 그것을 함께 물려받아요(시나리오 2 의 3단계).</li>
+<li>협력: 값 자리에 크기가 오면 Measurement 이고, 범주가 오면 범주 관측입니다. 두 시각과 거부 표시가 왜 이 층에 붙는지는 <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>의 「Observation」 절이 풀어요.</li>
+</ul>
+</li>
+<li><strong>RejectedObservation</strong>(거부된 관측) — 틀렸다고 판정된 관측입니다. 지우는 대신 거부됐다는 표시가 붙은 종류로 바뀌어요.
+<ul>
+<li>책임: 값을 그대로 둔 채 사유와 거부한 시각을 답니다. 한 번 거부된 것은 다시 거부되지 않아요(시나리오 3 의 3단계).</li>
+<li>협력: Observation 의 한 종류라서, 수치 관측이든 범주 관측이든 같은 방식으로 거부됩니다. 지우지 않는 이유는 <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>의 「Rejected Observation」 절에 있어요.</li>
+</ul>
+</li>
+</ul>
+<p><figure class="diagram-figure"><img src="data:image/png;base64,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AAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAO1VknQAAEABJREFUKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIogiAIAAAAAAAAAAIAiCKIAAAAAAAAAAACgCIIoAAAAAAAAAAAAKIIgCgAAAAAAAAAAAIog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" alt="기록 한 건이 대상 · 항목 · 값 세 자리를 따로 가진다" /><figcaption>기록 한 건이 대상 · 항목 · 값 세 자리를 따로 가진다</figcaption></figure></p>
+<p>그림에서 Measurement 는 세 방향으로 선을 냅니다. 위로는 Observation 의 한 종류라는 선, 아래로는 항목 하나와 값 하나를 가리키는 선이에요. 대상으로 가는 선이 Measurement 가 아니라 Observation 에 붙어 있는 것이 눈에 띌 텐데, 그래서 범주 관측도 같은 대상 연결을 씁니다. 두 시각이 Observation 칸 안에 적혀 있는 것도 같은 이유예요(근거: Fowler <em>Analysis Patterns</em> 3장 §3.4 의 그림 3.6 과 §3.5 의 그림 3.7 · §3.8 의 그림 3.11 · §3.9 의 그림 3.12). 분석 모델은 연관만 정할 뿐 누가 기록을 소유하는지는 정하지 않아요. 소유는 설계가 정하고, 그 선택지 넷은 「상황이 달라지면」에서 나란히 봅니다.</p>
+<h2 id="사용-목적">사용 목적</h2>
+<p>이 패턴이 필요하다는 단서는 업무 요구나 기존 모델에서 <strong>눈으로 보이는 것</strong>이어야 합니다. 아래 넷 중 하나라도 보이면 값을 대상의 칸에서 꺼낼 때예요.</p>
+<ul>
+<li><strong>분기마다 "이 항목도 기록해 주세요" 가 오고, 그때마다 테이블에 컬럼을 하나 붙이고 배포한다.</strong> 이것이 가장 흔한 단서입니다. 항목 목록이 업무의 변수인데 모델에서는 상수로 박혀 있는 상태예요.</li>
+<li><strong>화면에 "최근 값" 만 있고, 지난달에 무엇을 봤는지 물으면 답할 자리가 없다.</strong> 값이 덮어써지고 있다는 뜻입니다. 시나리오 1 의 5단계가 기록을 돌려준 이유가 이것이에요.</li>
+<li><strong>같은 값을 두 화면이 다르게 보여 준다 — 한쪽은 잰 날 기준, 한쪽은 입력 날 기준.</strong> 두 시각이 모델에 없어서 화면마다 하나를 골라 쓰고 있는 상태입니다.</li>
+<li><strong>잘못 입력한 값을 지웠는데, 그 값을 보고 내린 결정이 그대로 남아 있다.</strong> 시나리오 3 의 2단계가 그 장면이에요.</li>
+</ul>
+<p>반대로 <strong>쓰지 말아야 할 때</strong>도 있습니다. 항목이 두셋으로 고정돼 있고 앞으로 늘 계획이 없으며 이력도 필요 없다면, 대상의 칸으로 두는 편이 낫습니다. 이 패턴을 적용하면 조회 하나가 두 단계(항목 조회 + 기록 조회)로 늘고, 항목 데이터를 관리할 자리가 새로 생기는데 그 대가로 막아 주는 것이 없어요. 그럴 때는 칸이 정답입니다. 다만 "늘 계획이 없다" 를 확인할 때는 업무 담당자에게 물어보는 편이 안전합니다. 항목이 늘지 않는 측정 도메인은 생각보다 드뭅니다(판단 — 원전은 이 질문을 던지되 답을 적어 두지 않았고, 이 문단은 이 가이드의 판단입니다).</p>
+<pre tabindex="0"><code class="language-text">보이는 단서                               고를 모델
+항목이 몇 개로 고정이고 이력도 필요 없다     대상의 칸
+항목이 계속 늘거나 지난 값을 되읽어야 한다    기록으로 만든다(Measurement)
+값 자리에 크기가 아니라 범주가 온다          범주형 관측
+기록들이 합해져 잔액을 만든다                Account 의 Entry</code></pre>
+<p>비슷한 단서에서 다른 모델을 고르게 되는 경우도 있어요. 값 자리에 크기가 아니라 범주가 오거나, 기록들이 합해져서 잔액 하나를 설명해야 한다면 다른 패턴입니다. 그 차이는 바로 다음 절에서 풉니다.</p>
+<h2 id="패턴의-경계">패턴의 경계</h2>
+<h3 id="디자인-패턴을-충족하는-최소-조건">디자인 패턴을 충족하는 최소 조건</h3>
+<p>어떤 기록을 Measurement 라고 불러도 되는지 가르는 기준입니다. 클래스 모양이 아니라 개념이 맡는 책임과 모델이 늘 지키는 불변식으로 판정해요. <code>[필수]</code> 에는 <strong>원전이 이 패턴의 성립 요건으로 적어 둔 것만</strong> 올렸고, 원전이 한 가지 형태로 든 것과 이 가이드 예제의 정책은 번호 순서와 무관하게 <code>[선택]</code> 입니다. 이 패턴의 원전 근거는 대부분 <strong>모델 그림</strong>이라, 조건마다 그림이 무엇을 선언한 것인지(전후 대조 · 연관 · 다중도 · 속성 타입)를 함께 적었어요.</p>
+<ol>
+<li>[필수] <strong>측정 한 건이 대상의 칸이 아니라 독립된 기록이고, 누구를 쟀는지를 자기 안에 담는다</strong> — 측정을 하나 남기는 일이 대상 객체의 값을 덮어쓰는 일이 아니고, 기록만 가지고도 그것이 누구의 것인지 답할 수 있습니다. 시나리오 1 의 3단계가 이 자리예요. (근거: Fowler <em>Analysis Patterns</em> 3장 §3.1 과 §3.4 — §3.1 의 그림 3.1 과 3.2 가 키·몸무게·혈당을 Person 의 속성으로 두었던 모델을, §3.4 의 그림 3.6 이 Person 과 Measurement 를 잇는 연관으로 바꾸고 Person 에서 그 속성들을 지웁니다. 세 그림이 잇달아 놓인 <strong>모델의 전후 대조</strong>가 이 조건의 자격입니다)
+<ul>
+<li>빠지면: <code>Patient.systolic</code> 칸이 됩니다. 시나리오 3 의 1단계처럼 새 값이 옛 값을 덮어써서, 9/1 에 잰 118 mmHg 를 9/3 에 물으면 답이 없어요.</li>
+<li>위 근거 괄호가 받쳐 주는 것은 <strong>측정값이 대상의 속성 자리에서 나와 자기 기록이 된다</strong>까지입니다. 그 기록을 어느 aggregate 가 담는지 — 대상 안에 있는지 따로 있는지 — 는 그림이 정하지 않아요. 그 선택지는 「상황이 달라지면」이 나란히 둡니다.</li>
+</ul>
+</li>
+<li>[필수] <strong>무엇을 쟀는가가 기록의 모양이 아니라 기록이 가진 값이다</strong> — 새 검사 항목을 하나 더하는 일이 타입·칸·enum 상수를 더하는 일이 아니라 데이터를 하나 더하는 일입니다. 시나리오 2 의 1·2단계가 이 자리예요. (근거: Fowler <em>Analysis Patterns</em> 3장 §3.4 — 그림 3.6 이 Phenomenon Type 을 Measurement 의 <strong>연관 상대</strong>로 두고 항목 하나에 측정 여럿이 붙게 하며, 같은 그림의 지식·운영 구분선이 그 항목을 지식 쪽에 올립니다. 속성이던 것이 연관 상대가 된 <strong>구조 선언</strong>이 자격입니다)
+<ul>
+<li>빠지면: <code>enum Kind { SYSTOLIC, PULSE }</code> 나 항목마다 칸 하나인 표가 됩니다. 시나리오 2 의 1단계에서 고친 코드가 0 줄이었던 자리가 여기서는 배포 한 번이 돼요.</li>
+<li>위 근거 괄호가 받쳐 주는 것은 <strong>항목이 기록의 상대편 자리에 놓인다</strong>까지입니다. 그 자리에 오는 것이 규칙을 가진 통제된 객체여야 하는지 이름 문자열 한 줄이어도 되는지는 그림이 정하지 않아요 — 그 자리가 <code>[선택]</code> 5 입니다.</li>
+</ul>
+</li>
+<li>[필수] <strong>얼마인가를 수치와 단위가 한 값으로 붙은 크기로 담는다</strong> — 값 자리에 오는 것이 더하거나 크기를 비교하는 것이 도메인에서 뜻이 있는 수치이고, 단위가 칸 이름이나 주석이 아니라 그 값 안에 있습니다. 시나리오 1 의 1단계와 4단계가 이 자리예요. (근거: Fowler <em>Analysis Patterns</em> 3장 §3.4 — 그림 3.6 이 Measurement 의 속성을 <code>quantity : Quantity</code> 로 적어 값 자리의 타입을 정하고, 같은 장 §3.1 의 그림 3.2 가 그 Quantity 를 <code>amount : Number</code> 와 <code>units : Unit</code> 을 가진 값으로 정의하고, <strong>같은 칸에 <code>+ - * / = &gt; &lt;</code> 를 적어</strong> 더하고 비교하는 것이 그 값의 연산임을 밝힙니다 — 조건 문면의 「더하거나 크기를 비교하는 것이 뜻이 있는」이 이 연산 목록에서 옵니다. <strong>속성 타입 선언</strong>이 자격입니다)
+<ul>
+<li>빠지면: <code>value: 118</code> 만 남은 기록이 됩니다. 시나리오 1 의 4단계에서 막힌 <code>72 bpm</code> 이 수축기 혈압 자리에 그대로 들어가고, mmHg 와 kPa 가 같은 칸에 섞여요.</li>
+<li>위 근거 괄호가 받쳐 주는 것은 <strong>값 자리가 수치와 단위를 함께 담은 Quantity 다</strong>까지입니다. 단위가 다를 때 거부할지 환산할지, 자릿수를 어떻게 다룰지는 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.html">Quantity 가이드</a>의 조건이 정합니다.</li>
+</ul>
+</li>
+<li>[필수] <strong>한 기록은 대상 하나 · 항목 하나 · 값 하나다</strong> — 세 자리가 각각 하나로 정해지고, 한 기록이 항목 둘이나 값 둘을 담지 않습니다. 시나리오 1 의 3단계와 5단계가 이 자리예요. (근거: Fowler <em>Analysis Patterns</em> 3장 §3.4 — 그림 3.6 이 Person 과 Measurement, Phenomenon Type 과 Measurement 를 각각 하나 대 여럿으로 잇고 값은 속성 하나로 둡니다. <strong>다중도 선언</strong>이 자격입니다)
+<ul>
+<li>빠지면: 한 기록이 수축기와 이완기를 함께 담습니다. 시나리오 1 의 5단계가 답한 "환자 A 의 수축기 혈압은 얼마인가" 에 값 둘이 돌아와서, 무엇이 수축기인지를 자리 순서로 다시 약속해야 해요.</li>
+<li>위 근거 괄호가 받쳐 주는 것은 <strong>한 기록에 세 자리가 하나씩</strong>까지입니다. 여러 측정을 한 묶음으로 함께 확정해야 하는 상황이라면 묶음을 따로 두는데, 그 선택지는 「상황이 달라지면」 3행입니다.</li>
+</ul>
+</li>
+<li>[선택] <strong>항목을 통제된 지식 층위 객체로 둔다</strong> — 항목이 이름만이 아니라 규칙을 가지고, 기록은 그것을 id 로 가리킵니다. 이 예제에서는 항목이 허용 단위를 가지고 시나리오 1 의 4단계가 그것을 물어봐요. (근거: Fowler <em>Analysis Patterns</em> 3장 §3.4 — 그림 3.6 의 지식·운영 구분선이 Phenomenon Type 을 지식 쪽에 올려 둡니다. 다만 그 항목이 <strong>허용 단위를 제약한다</strong>는 규칙은 그림에 없어요 — 이 가이드가 예제 정책으로 보탠 것이고, 원전이 그 제약을 적었는지는 확인하지 못했습니다)
+<ul>
+<li>빠지면 잃는 것: 시나리오 1 의 4단계가 막아 준 자리입니다. 항목이 자유 문자열이면 "systolic" 과 "Systolic" 과 "수축기 혈압" 이 세 항목이 되고, bpm 으로 적힌 수축기 혈압을 막아 줄 자리도 없어요.</li>
+</ul>
+</li>
+<li>[선택] <strong>잰 시각과 적은 시각을 따로 둔다</strong> — 사실이 유효한 시각과 그 사실을 적은 시각을 두 자리로 둡니다. 시나리오 2 의 3~5단계 전체가 이 조건이 있을 때의 모양이에요. (근거: Fowler <em>Analysis Patterns</em> 3장 §3.8 Dual Time Record — 그림 3.11 이 Observation 에서 Time Record 로 가는 연관을 <strong>둘</strong> 그리고 각각에 recording time · applicability 이름을 붙입니다)
+<ul>
+<li>빠지면 잃는 것: "그때 알던 값" 을 묻는 길입니다. 시나리오 2 의 4단계가 답한 9/2 의 "없음" 이 72 bpm 으로 바뀌어, 그날 아무도 본 적 없는 값이 그날의 답이 돼요.</li>
+</ul>
+</li>
+<li>[선택] <strong>잘못 잰 값을 지우지 않고 거부 표시로 남긴다</strong> — 틀린 기록의 값을 그대로 둔 채 거부 표시를 붙이고, 다시 잰 값은 새 기록으로 남깁니다. 시나리오 3 의 3단계가 이 자리예요. (근거: Fowler <em>Analysis Patterns</em> 3장 §3.9 Rejected Observation — 그림 3.12 가 Rejected Observation 을 Observation 의 하위 타입으로 두고 그 일반화에 «dynamic» 표기를 붙입니다. <strong>이 글은 그 표기를</strong> 관측이 나중에 그 종류로 옮겨 간다는 뜻<strong>으로 읽었습니다</strong> — UML 관례상 무리한 읽기는 아니지만 원전이 그 낱말로 적어 둔 것은 아니고, <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>도 같은 완충으로 적습니다)
+<ul>
+<li>빠지면 잃는 것: 그 값을 쓴 다른 기록의 설명입니다. 시나리오 3 의 1·2단계가 그 경우예요 — 1200 mmHg 를 보고 바꾼 처방이 정상 값에서 나온 꼴이 되거나, 근거가 아예 사라집니다.</li>
+</ul>
+</li>
+<li>[선택] <strong>관찰한 값인지 계획한 값인지를 기록이 표시한다</strong> — 이미 잰 값과 앞으로 맞추려는 값이 같은 모양으로 쌓이므로, 둘을 가르는 표시를 기록에 답니다. 시나리오 3 의 4단계가 표시가 없을 때의 모양이에요. (근거: Fowler <em>Analysis Patterns</em> 4장 「Observations for Corporate Finance」 — 그림 4.11 이 Observation 에 Status Type 을 붙이고 그 하위 타입을 Actual 과 Planned 로 둡니다. 같은 그림에서 Measurement 가 Observation 의 하위 타입이라 그 표시를 함께 물려받아요)
+<ul>
+<li>빠지면 잃는 것: 조회의 신뢰입니다. 시나리오 3 의 4단계처럼 "환자 A 의 수축기 혈압" 하나가 잰 값과 목표 값을 섞어서 답해요.</li>
+</ul>
+</li>
+<li>[선택] <strong>범주형 사실과 공통 상위 아래 둔다</strong> — 수치로 적히지 않는 사실(혈액형이 A 라는 것)도 대상·항목·시각 구조를 함께 쓰게 상위 개념을 둡니다. 시나리오 3 의 3단계에서 거부 표시가 값이 아니라 기록 자체에 붙은 것이 이 구조 덕이에요. (근거: Fowler <em>Analysis Patterns</em> 3장 §3.5 — 그림 3.7 이 Observation 을 대상·항목과 잇고, Measurement 와 Category Observation 을 그 하위 타입으로 나란히 둡니다)
+<ul>
+<li>빠지면 잃는 것: "이 환자에 대해 기록된 사실 전부" 조회입니다. 수치 사실과 범주 사실이 서로 다른 두 모델에 있으면 그 조회가 둘을 합쳐야 하고, 두 시각과 거부 표시도 두 벌이 돼요.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>필수는 넷이다 — 기록이 대상의 칸에서 떨어져 나왔는가, 항목이 값 자리에 있는가, 값이 단위를 단 크기인가, 세 자리가 하나씩인가.</p>
+</blockquote>
+<p>위 조건 넷이 가려 주는 것은 <strong>기록이 측정 기록의 모양을 갖췄는가</strong>까지입니다. 그 모양을 갖춘 기록이 <strong>이미 잰 값인지 앞으로 맞출 값인지</strong>는 조건 넷이 묻지 않아요 — 목표 수축기 혈압 120 mmHg 를 적은 줄도 대상 하나 · 항목 하나 · 크기 하나를 갖춥니다. 원전은 그 둘을 다른 패턴으로 가르지 않고 기록에 표시를 하나 더 붙여 가르는데, 그 자리가 <code>[선택]</code> 8 이에요. 표시가 없으면 시나리오 3 의 4단계처럼 조회 하나가 둘을 섞어서 답합니다.</p>
+<h3 id="비슷한-패턴안티패턴과의-차이">비슷한 패턴·안티패턴과의 차이</h3>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>비교 대상</th><th>구분 기준</th><th>Measurement 를 고르면 얻는 것</th><th>포기하는 것</th></tr>
+</thead>
+<tbody>
+<tr><td>Quantity</td><td>대상과 측정 항목을 가진 기록 계층이 필요한가</td><td>같은 값이 누구의 무엇인지가 값 밖의 자리에 남는다</td><td>조회가 두 단계로 늘고, 값만 필요한 자리에는 과한 층이 된다</td></tr>
+<tr><td>대상의 칸으로 둔 측정 필드</td><td>새 항목이 늘 때 타입이 바뀌는가, 데이터가 늘어나는가</td><td>새 항목을 더해도 배포하지 않고, 옛 값이 덮어써지지 않는다</td><td>한 대상의 값을 읽는 일이 칸 읽기에서 조회로 바뀐다</td></tr>
+<tr><td>범주형 관측(Category Observation)</td><td>값 자리에 오는 것이 크기인가 범주인가</td><td>더하고 비교하는 것이 뜻을 갖는 값만 이 자리에 온다</td><td>혈액형·소견 같은 사실은 이 모델로 못 담아 나란한 모델이 따로 필요하다</td></tr>
+<tr><td>계획된 값(Planned)</td><td>기록이 이미 잰 값인지 앞으로 맞출 값인지를 표시하는가</td><td>조회가 관측과 계획을 섞지 않는다</td><td>기록마다 표시가 하나 더 붙고, 표시를 안 붙인 옛 기록의 해석이 애매해진다</td></tr>
+<tr><td>EAV(Entity–Attribute–Value) 표</td><td>항목과 값이 뜻을 가진 모델 요소인가, 이름 칸과 문자열 칸인가</td><td>항목이 규칙을 가질 수 있고 값이 단위를 단 크기다</td><td>한 표에 아무거나 담는 자유를 잃는다</td></tr>
+<tr><td>Account 의 Entry</td><td>기록들이 합해져 잔액 하나를 설명하는가, 건마다 독립한 사실인가</td><td>기록 하나하나가 그것만으로 완결된 사실이다</td><td>기록들을 합한 값이 따로 뜻을 갖는 도메인에는 맞지 않는다</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Quantity 와의 차이.</strong> 구분 기준은 대상과 측정 항목을 가진 기록 계층이 필요한가입니다. 여기서 헷갈리기 쉬운 포인트는 둘을 <strong>고르는 관계</strong>로 보는 것이에요. Measurement 는 Quantity 의 대안이 아니라 Quantity 를 담는 기록입니다. 층이 쌓이는 거죠. 같은 120 mmHg 를 두 층으로 나누면 이렇게 보입니다.</p>
+<pre tabindex="0"><code class="language-text">Quantity       120 mmHg                                     얼마인가
+Measurement    환자 A · 수축기 혈압 · 120 mmHg               누구를 · 무엇을 · 얼마
+                 │        │             └─ Quantity
+                 │        └─ 무엇을 쟀는가(측정 항목)
+                 └─ 누구를 쟀는가</code></pre>
+<p>그림의 120 mmHg 는 시나리오 3 의 4단계에서 다시 잰 값이에요. 값만 필요한 자리(재고 보유량이나 가격)에서는 Quantity 만으로 충분하고, 대상과 항목을 함께 기록해야 하면 Quantity 를 버리는 것이 아니라 그 위에 Measurement 한 층을 더 둡니다. Quantity 편의 「비슷한 패턴·안티패턴과의 차이」가 같은 기준을 반대 방향에서 적어 두었어요. 그쪽은 값만 필요한 자리에 기록 계층 없이 쓰는 것을 얻는 것으로 꼽고, 이쪽은 같은 기록 계층을 얻는 것으로 꼽습니다. 대가는 조회예요. 한 번에 끝나던 것이 두 단계가 되고, 시나리오 1 의 2단계와 5단계가 그 둘입니다.</p>
+<p><strong>대상의 칸으로 둔 측정 필드와의 차이.</strong> 구분 기준은 새 항목이 늘 때 바뀌는 것이 타입인가 데이터인가입니다. 아래 코드는 시나리오 2 의 요구(맥박 추가)를 칸으로 받은 모양이에요.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-java">class Patient {
+    int systolic;   // mmHg 라고 이름에만 적혀 있다
+    int pulse;      // 맥박이 늘면서 이 줄이 추가됐다
+    // 혈당이 늘면 또 한 줄, 산소포화도가 늘면 또 한 줄
+}</code></pre>
+<p>칸 하나가 늘 때마다 타입이 바뀌고 배포가 한 번 붙어요. 시나리오 2 의 1단계는 같은 요구를 데이터 한 줄로 받았죠. 이 모양은 조건 1 도 함께 놓칩니다 — <code>systolic</code> 에 120 을 넣는 순간 118 이 사라지니까요. 잃는 것도 있습니다. Measurement 를 고르면 한 대상의 값을 읽는 일이 칸 읽기에서 조회로 바뀌어요.</p>
+<p><strong>범주형 관측과의 차이.</strong> 구분 기준은 값 자리에 오는 것이 크기인가 범주인가입니다. 혈액형이 A 라는 사실은 대상(환자 A)도 있고 항목(혈액형)도 있는데 값이 크기가 아니에요 — A 형과 B 형을 더하거나 크기를 비교하는 것은 도메인에서 뜻이 없습니다. 그래서 조건 3 에서 구분돼요. 여기서 헷갈리기 쉬운 포인트는 범주에 번호를 붙여 이 자리에 억지로 넣는 것입니다.</p>
+<pre class="code-block--no-compile" tabindex="0"><code class="language-java">// 혈액형을 코드 숫자로 적어 Measurement 모양에 맞춘 것
+record BloodTypeRow(String patientId, String item, int amount, String unit) {}
+// new BloodTypeRow("p-7", "혈액형", 1, "code")  →  1 + 1 = 2 는 무엇인가?</code></pre>
+<p>모양은 네 자리를 다 갖췄지만 <code>1</code> 은 크기가 아니라 A 형을 가리키는 표예요. 둘을 더한 <code>2</code> 가 어떤 혈액형도 아니라는 것이 판정의 근거입니다. 이런 사실은 값 자리에 범주가 오는 나란한 모델이 받고, 둘이 상위 개념을 공유하는 것이 <code>[선택]</code> 9 예요.</p>
+<p><strong>계획된 값과의 차이.</strong> 구분 기준은 기록이 이미 잰 값인지 앞으로 맞출 값인지를 표시하는가입니다. 시나리오 3 의 4단계가 표시 없이 섞었을 때의 결과를 보여 줬어요. 원전은 이 둘을 다른 패턴으로 가르지 않고 기록에 상태 표시를 붙여 가릅니다. 그러니 "목표 혈압 120 mmHg" 를 적은 줄을 보고 "이건 Measurement 가 아니다" 라고 말하는 것은 절반만 맞아요 — 모양은 Measurement 이고, 빠진 것은 상태 표시입니다. 아래 두 줄이 그 자리예요. 둘 다 대상 하나 · 항목 하나 · 크기 하나를 똑같이 갖춰 <code>[필수]</code> 넷을 다 통과하고, 다른 것은 기록이 스스로 붙인 표시뿐입니다.</p>
+<pre tabindex="0"><code class="language-text">p-7 · systolic · 120 mmHg · 2026-09-03    간호사가 재서 적음    관측한 값
+p-7 · systolic · 120 mmHg · 2026-12-31    의사가 맞추려는 목표   계획한 값
+└──────────── 여기까지가 같다 ───────────┘                     └ 여기서만 다르다</code></pre>
+<p><strong>EAV 표와의 차이.</strong> 구분 기준은 항목과 값이 뜻을 가진 모델 요소인가, 이름 칸과 문자열 칸인가입니다. <code>(entity_id, attribute_name, value_text)</code> 세 칸짜리 표는 구조가 닮았어요. 다른 점은 둘입니다. 하나는 항목이 규칙을 가질 수 있는가입니다. 시나리오 1 의 4단계가 허용 단위를 물어본 자리가 EAV 에는 없어요. 다른 하나는 값이 단위를 단 크기인가입니다. EAV 의 값 칸은 보통 문자열이라 <code>"118"</code> 과 <code>"118mmHg"</code> 와 <code>"높음"</code> 이 같은 칸에 들어갑니다(판단 — EAV 를 규정한 1차 출처는 확인하지 못했고, 이 비교는 그 이름으로 흔히 불리는 세 칸 표를 대상으로 합니다).</p>
+<p><strong>Account 의 Entry 와의 차이.</strong> 구분 기준은 기록들이 합해져 잔액 하나를 설명하는가, 건마다 독립한 사실인가입니다. 둘 다 "값이 붙은 사실 한 건" 이 쌓이는 모양이라 닮아 보여요. 그런데 Entry 는 합해지려고 모입니다 — 어느 시점의 잔액은 그 시점까지의 Entry 합이고, Entry 하나는 그 합의 재료예요(<a href="ddd-analysis-pattern-guide/account/account-guide_v1.1.1.html">Account 가이드</a>). Measurement 는 반대로 건마다 독립한 사실이라, 환자 A 의 수축기 혈압 기록 셋을 더한 값은 아무것도 뜻하지 않습니다. 그래서 Entry 에는 항목 자리가 따로 없고(무엇인지는 계정이 답합니다) 조건 2 에서 이미 구분돼요.</p>
+<h2 id="구현-예시">구현 예시</h2>
+<h3 id="상황-설정">상황 설정</h3>
+<p>시나리오 1·2·3 의 병동 기록 장면을 세 언어로 똑같이 구현합니다. 도메인은 그대로예요. 병원 한 곳의 활력징후 기록 프로그램이고, 검사 항목마다 항목 정의가 하나 있으며 측정 한 건마다 기록 하나가 생겨요. 요청마다 달라지는 것은 항목과 단위, 그리고 잰 날과 적은 날입니다. 수축기 혈압은 mmHg 로, 맥박은 bpm 으로 적고, 현장에서 바로 입력하지 못한 값은 며칠 뒤에 들어옵니다.</p>
+<p>고정인 것도 정해 둡니다. 값은 정수이고(이 도메인의 두 항목이 정수로 적혀요), 항목은 허용 단위를 하나만 가지며, 날짜는 <code>2026-09-01</code> 같은 ISO 하루 표기입니다. 이 표기를 고른 이유는 <strong>문자열 순서가 날짜 순서와 같기 때문</strong>이고, 그래서 세 언어가 달력 라이브러리 없이 같은 비교를 씁니다. 기록은 만들어진 뒤 세 자리와 두 시각이 바뀌지 않고, 바뀔 수 있는 것은 거부 표시 하나뿐이에요. 거부는 한 번만 되고 되돌릴 수 없습니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>예제 타입</th><th>대응하는 개념</th></tr>
+</thead>
+<tbody>
+<tr><td><code>Measurement</code> · <code>PhenomenonType</code> · <code>Quantity</code></td><td>같은 이름의 개념 그대로</td></tr>
+<tr><td><code>TimePoint</code></td><td>잰 시각·적은 시각·거부한 시각에 쓰는 하루 단위 시점</td></tr>
+<tr><td><code>Rejection</code></td><td>거부된 관측을 나타내는 표시(사유 + 거부한 날)</td></tr>
+<tr><td><code>MeasurementDesk</code></td><td>패턴 밖의 타입. aggregate 가 아니라 두 aggregate 를 id 로 찾아 조립하고 조회에 답하는 자리</td></tr>
+<tr><td><code>SubjectId</code> · <code>PhenomenonTypeId</code> · <code>MeasurementId</code></td><td>패턴 밖의 식별자. 대상·항목·기록을 가리킨다</td></tr>
+<tr><td>(예제에 없음)</td><td>Observation · RejectedObservation 을 타입으로 두는 것, 계획/관측 상태 표시</td></tr>
+</tbody>
+</table>
+</div>
+<p>아래 표에서 쓰는 DDD(Domain-Driven Design, 도메인 주도 설계) 전술 용어(Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식)는 이 가이드의 주제 밖 사전 지식이라 <a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a>가 한 자리에 모아 둡니다. 표를 읽기 전에 그 문서를 한 번 읽고 오시면 네 행이 각각 무엇을 정하는지 바로 읽혀요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>항목</th><th>이 가이드의 설정</th></tr>
+</thead>
+<tbody>
+<tr><td>bounded context</td><td>임상 관측 기록 — 환자에 대한 측정 사실을 항목 정의에 따라 남기고, 어느 시점 기준으로든 되읽는다</td></tr>
+<tr><td>불변식의 위치</td><td>기록이 대상 하나·항목 하나·값 하나를 모두 갖춘 채로만 만들어진다는 것, 잰 날이 적은 날보다 뒤일 수 없다는 것, 만들어진 뒤 세 자리와 두 시각이 바뀌지 않는다는 것, 거부는 한 번만이고 사유를 달며 적은 날보다 앞선 날짜로는 남기지 않는다는 것, 거부해도 값은 지워지지 않는다는 것은 Measurement root 가 지킨다. 항목이 이름과 허용 단위를 하나씩 갖는다는 것은 PhenomenonType root 가 지킨다. 값의 단위가 항목의 허용 단위와 같아야 한다는 것과, 그 날 기준 조회가 적은 날이 지났고 아직 거부되지 않은 기록만 본다는 것은 두 aggregate 를 함께 봐야 하므로 MeasurementDesk 가 aggregate 밖에서 지킨다</td></tr>
+<tr><td>root·entity·VO 배정</td><td>aggregate 둘. Measurement 는 root(entity, <code>MeasurementId</code> 로 식별)이고 그 안의 Quantity · TimePoint · Rejection 은 VO. PhenomenonType 은 또 하나의 root(entity, <code>PhenomenonTypeId</code> 로 식별)이고 이름과 허용 단위는 그 안의 값이다. 대상(환자)은 이 예제 밖의 aggregate 라 <code>SubjectId</code> 로만 등장하고, <code>MeasurementDesk</code> 는 aggregate 가 아니라 조립과 조회를 맡는 자리다</td></tr>
+<tr><td>타 aggregate 참조 방식</td><td>Measurement 가 대상을 <code>SubjectId</code> 로, 항목을 <code>PhenomenonTypeId</code> 로 가리킨다. 두 id 로 상대를 찾아 오는 일은 Measurement 가 아니라 MeasurementDesk 가 하고, 그래서 항목의 허용 단위를 보는 검사도 거기 있다</td></tr>
+</tbody>
+</table>
+</div>
+<p>코드에서 그 경계를 확인할 수 있는 자리는 Rust 판의 <code>MeasurementDesk</code> 입니다. <code>book</code> 과 <code>types</code> 가 그 구조체 안에 함께 있고, <code>Measurement</code> 구조체에는 <code>PhenomenonType</code> 타입이 한 번도 나오지 않아요 — 항목은 <code>PhenomenonTypeId</code> 로만 들어 있죠. 그게 경계입니다. 표가 "어디에 두었는가" 를 말했다면, 다음 표는 "다른 곳에 두면 무엇이 어긋나는가" 를 불변식과 id 참조 전부에 대해 적은 것이에요. 호출자는 기록을 부르는 바깥 코드로, 병동 단말·검사실 배치 작업·통계 화면이 있다고 칩니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>규칙(불변식) 또는 참조</th><th>다른 곳에 두거나 바꾸면</th><th>어느 동작에서 무엇이 어긋나는가</th></tr>
+</thead>
+<tbody>
+<tr><td>기록은 세 자리를 모두 갖춘 채로만 만들어진다</td><td>기록을 빈 자리로 먼저 만들고 호출자가 채운다</td><td>병동 단말이 항목을 고르기 전에 값부터 넣으면 항목 없는 118 mmHg 가 저장됩니다. 나중에 그 기록을 보면 무엇을 잰 것인지 물을 자리가 없어요</td></tr>
+<tr><td>잰 날은 적은 날보다 뒤일 수 없다</td><td>호출자가 두 날짜의 순서를 확인한다</td><td>검사실 배치가 잰 날을 9/5, 적은 날을 9/4 로 넣으면 아직 재지 않은 값이 이미 적힌 것이 됩니다. 9/4 기준 조회가 미래의 값을 답해요</td></tr>
+<tr><td>만들어진 뒤 세 자리와 두 시각은 바뀌지 않는다</td><td>root 가 값 교체 메서드를 연다</td><td>통계 화면이 1200 을 120 으로 고치면 시나리오 3 의 1단계가 됩니다. 9/3 의 처방이 정상 값에서 나온 꼴이 돼요</td></tr>
+<tr><td>거부는 한 번만이고 사유를 단다</td><td>호출자가 이미 거부됐는지 보고 부른다</td><td>두 화면이 같은 기록을 거의 동시에 거부하면 거부 사유와 거부한 날이 나중 것으로 덮입니다. "왜 거부됐나" 의 답이 바뀌어요</td></tr>
+<tr><td>거부한 날은 적은 날보다 앞설 수 없다</td><td>검사를 빼고 호출자가 넘긴 날짜를 그대로 쓴다</td><td>9/3 에 적힌 기록에 9/1 거부를 달면 9/2 기준 조회가 "적히기도 전에 거부된 값" 을 만나 그 기록을 건너뜁니다. 그날 실제로 보이던 값이 조회에서 사라져요</td></tr>
+<tr><td>거부해도 값은 지워지지 않는다</td><td>거부할 때 값 자리를 비운다</td><td>9/3 기준 조회가 1200 mmHg 대신 빈 값을 답합니다. 시나리오 3 의 2단계와 결과가 같아져, 거부로 바꾼 뜻이 없어져요</td></tr>
+<tr><td>항목은 이름과 허용 단위를 하나씩 갖는다</td><td>허용 단위를 비워 둘 수 있게 한다</td><td>허용 단위가 빈 항목이 등록되면 그 항목의 기록은 단위 대조를 통과시킬 기준이 없습니다. mmHg 와 bpm 이 같은 항목에 섞여 쌓여요</td></tr>
+<tr><td>값의 단위는 항목의 허용 단위와 같다</td><td>Measurement 가 항목 객체를 가지고 스스로 검사한다</td><td>기록이 항목을 객체로 가지면 통계 화면이 <code>measurement.type.allowedUnit</code> 를 거쳐 허용 단위를 kPa 로 고칠 수 있게 됩니다. 그 항목을 쓰는 다른 기록 전부의 대조 기준이 함께 바뀌어요</td></tr>
+<tr><td>그 날 기준 조회는 적은 날이 지났고 아직 거부되지 않은 기록만 본다</td><td>화면마다 걸러 낸다</td><td>병동 단말은 거부된 기록을 빼고 통계 화면은 빼지 않으면, 같은 9/30 질문에 한쪽은 120 mmHg 다른 쪽은 1200 mmHg 를 답합니다</td></tr>
+<tr><td>Measurement 가 대상을 <code>SubjectId</code> 로 가리킨다</td><td>환자 객체를 기록의 자리에 둔다</td><td>검사실 배치가 <code>measurement.subject</code> 를 거쳐 환자 이름을 고칠 수 있게 됩니다. 기록 한 건을 다루는 코드가 환자 aggregate 를 바꾸는 길이 열려요</td></tr>
+<tr><td>Measurement 가 항목을 <code>PhenomenonTypeId</code> 로 가리킨다</td><td>항목 객체를 기록의 자리에 둔다</td><td>항목 이름을 "systolic" 에서 "SBP" 로 바꾸는 일이 기록 한 건을 통해 일어납니다. 이미 쌓인 기록들이 가리키던 이름이 조용히 바뀌어요</td></tr>
+</tbody>
+</table>
+</div>
+<p>뒤의 세 언어 구현은 이 설정을 그대로 옮긴 것이고, 실행하면 셋이 아래 열네 줄을 글자까지 같게 냅니다. 가이드 폴더의 <code>code/expected-output.txt</code> 와 같은 내용이고, 이 글의 실행 수치는 전부 여기서 와요. 무엇이 나오는지 먼저 보아 두면 뒤의 코드와 해설을 따라가기 쉽습니다.</p>
+<pre tabindex="0"><code class="language-text">항목 systolic — 허용 단위 mmHg
+기록 m-1 — 환자 p-7 · systolic · 118 mmHg · 잰 날 2026-09-01 · 적은 날 2026-09-01
+거부 — 항목 systolic 의 허용 단위는 mmHg 인데 값의 단위는 bpm 입니다
+항목 추가 pulse — 허용 단위 bpm (고친 코드 없음)
+기록 m-2 — 환자 p-7 · pulse · 72 bpm · 잰 날 2026-09-01 · 적은 날 2026-09-03
+2026-09-02 에 알던 p-7 의 pulse — 없음
+2026-09-04 에 알던 p-7 의 pulse — 72 bpm
+기록 m-3 — 환자 p-7 · systolic · 1200 mmHg · 잰 날 2026-09-03 · 적은 날 2026-09-03
+m-3 거부 — 사유 오기 · 거부한 날 2026-09-04
+m-3 의 값은 그대로 1200 mmHg
+기록 m-4 — 환자 p-7 · systolic · 120 mmHg · 잰 날 2026-09-03 · 적은 날 2026-09-04
+2026-09-30 에 알던 p-7 의 systolic — 120 mmHg (잰 날 2026-09-03) · 전체 3건 중 거부 1건 제외
+거부 — m-3 은 이미 거부된 기록입니다
+거부 — 잰 날 2026-09-05 는 적은 날 2026-09-04 보다 뒤입니다</code></pre>
+<h3 id="구현">구현</h3>
+<div class="code-tabs" id="measurement-guide-v1-0-1-tabs1">
+<div class="code-tabs__list" role="tablist" aria-label="구현 예시 언어">
+<button type="button" class="code-tabs__tab" role="tab" id="measurement-guide-v1-0-1-tabs1-tab-java" aria-controls="measurement-guide-v1-0-1-tabs1-panel-java" aria-selected="true" tabindex="0" data-lang="java">Java</button>
+<button type="button" class="code-tabs__tab" role="tab" id="measurement-guide-v1-0-1-tabs1-tab-typescript" aria-controls="measurement-guide-v1-0-1-tabs1-panel-typescript" aria-selected="false" tabindex="-1" data-lang="typescript">TypeScript</button>
+<button type="button" class="code-tabs__tab" role="tab" id="measurement-guide-v1-0-1-tabs1-tab-rust" aria-controls="measurement-guide-v1-0-1-tabs1-panel-rust" aria-selected="false" tabindex="-1" data-lang="rust">Rust</button>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="measurement-guide-v1-0-1-tabs1-panel-java" aria-labelledby="measurement-guide-v1-0-1-tabs1-tab-java">
+<p class="code-tabs__label" aria-hidden="true">Java</p>
+<pre tabindex="0"><code class="language-java">import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+/** 값 — 수치와 단위를 한 값으로 묶는다. 단위끼리의 환산과 산술은 Quantity 패턴의 몫이다. */
+record Quantity(long amount, String unit) {
+    @Override public String toString() { return amount + " " + unit; }
+}
+
+/** 값 — ISO yyyy-mm-dd 하루. 이 표기는 문자열 순서가 날짜 순서와 같다. */
+record TimePoint(String iso) implements Comparable&lt;TimePoint&gt; {
+    static TimePoint of(String iso) {
+        if (iso == null || !iso.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new IllegalArgumentException("날짜 꼴이 아닙니다: " + iso);
+        }
+        return new TimePoint(iso);
+    }
+
+    @Override public int compareTo(TimePoint other) { return iso.compareTo(other.iso); }
+    @Override public String toString() { return iso; }
+}
+
+record SubjectId(String value) {}
+record PhenomenonTypeId(String value) {}
+record MeasurementId(String value) {}
+
+/** 값 — 거부 표시. 값을 지우는 대신 이것이 붙는다. */
+record Rejection(String reason, TimePoint rejectedOn) {}
+
+/** 지식 층위 aggregate root — 무엇을 재는가. 새 항목은 인스턴스 하나이지 타입 하나가 아니다. */
+final class PhenomenonType {
+    private final String name;
+    private final String allowedUnit;
+
+    static PhenomenonType of(String name, String allowedUnit) {
+        if (name == null || name.isBlank() || allowedUnit == null || allowedUnit.isBlank()) {
+            throw new IllegalArgumentException("항목은 이름과 허용 단위를 하나씩 가집니다");
+        }
+        return new PhenomenonType(name, allowedUnit);
+    }
+
+    private PhenomenonType(String name, String allowedUnit) {
+        this.name = name;
+        this.allowedUnit = allowedUnit;
+    }
+
+    String name() { return name; }
+    String allowedUnit() { return allowedUnit; }
+    boolean allows(Quantity q) { return allowedUnit.equals(q.unit()); }
+}
+
+/** 운영 층위 aggregate root — 대상 하나 · 항목 하나 · 값 하나를 묶은 기록 한 건. */
+final class Measurement {
+    private final MeasurementId id;
+    private final SubjectId subjectId;
+    private final PhenomenonTypeId typeId;
+    private final Quantity quantity;
+    private final TimePoint takenOn;
+    private final TimePoint recordedOn;
+    private Rejection rejection;
+
+    Measurement(MeasurementId id, SubjectId subjectId, PhenomenonTypeId typeId, Quantity quantity,
+                TimePoint takenOn, TimePoint recordedOn) {
+        if (id == null || subjectId == null || typeId == null || quantity == null) {
+            throw new IllegalArgumentException("기록은 대상 하나 · 항목 하나 · 값 하나를 모두 가집니다");
+        }
+        if (takenOn.compareTo(recordedOn) &gt; 0) {
+            throw new IllegalArgumentException("잰 날 " + takenOn + " 는 적은 날 " + recordedOn + " 보다 뒤입니다");
+        }
+        this.id = id;
+        this.subjectId = subjectId;
+        this.typeId = typeId;
+        this.quantity = quantity;
+        this.takenOn = takenOn;
+        this.recordedOn = recordedOn;
+    }
+
+    MeasurementId id() { return id; }
+    SubjectId subjectId() { return subjectId; }
+    PhenomenonTypeId typeId() { return typeId; }
+    Quantity quantity() { return quantity; }
+    TimePoint takenOn() { return takenOn; }
+    TimePoint recordedOn() { return recordedOn; }
+    Optional&lt;Rejection&gt; rejection() { return Optional.ofNullable(rejection); }
+
+    void reject(String reason, TimePoint on) {
+        if (rejection != null) throw new IllegalStateException(id.value() + " 은 이미 거부된 기록입니다");
+        if (on.compareTo(recordedOn) &lt; 0 || reason == null || reason.isBlank()) {
+            throw new IllegalArgumentException("거부는 사유를 달고, 적은 날보다 앞선 날짜로는 남기지 않습니다");
+        }
+        this.rejection = new Rejection(reason, on);
+    }
+
+    /** asOf 시점에 이 기록이 유효한 것으로 읽혔는가 — 적은 날이 지났고, 아직 거부되지 않았는가. */
+    boolean validAsOf(TimePoint asOf) {
+        if (recordedOn.compareTo(asOf) &gt; 0) return false;
+        return rejection == null || rejection.rejectedOn().compareTo(asOf) &gt; 0;
+    }
+}
+
+/** aggregate 가 아니다 — 두 aggregate 를 id 로 찾아 조립하고 조회에 답하는 자리. */
+final class MeasurementDesk {
+    private final Map&lt;String, PhenomenonType&gt; types = new HashMap&lt;&gt;();
+    private final List&lt;Measurement&gt; book = new ArrayList&lt;&gt;();
+
+    void addType(PhenomenonTypeId id, PhenomenonType type) { types.put(id.value(), type); }
+
+    int record(String id, SubjectId subjectId, PhenomenonTypeId typeId,
+               Quantity quantity, String takenOn, String recordedOn) {
+        PhenomenonType type = types.get(typeId.value());
+        if (type == null) throw new IllegalArgumentException("등록되지 않은 항목입니다: " + typeId.value());
+        if (!type.allows(quantity)) {
+            throw new IllegalArgumentException("항목 " + type.name() + " 의 허용 단위는 " + type.allowedUnit()
+                    + " 인데 값의 단위는 " + quantity.unit() + " 입니다");
+        }
+        book.add(new Measurement(new MeasurementId(id), subjectId, typeId, quantity,
+                TimePoint.of(takenOn), TimePoint.of(recordedOn)));
+        return book.size() - 1;
+    }
+
+    int indexOf(String id) {
+        for (int i = 0; i &lt; book.size(); i++) {
+            if (book.get(i).id().value().equals(id)) return i;
+        }
+        throw new IllegalArgumentException("없는 기록입니다: " + id);
+    }
+
+    void reject(String id, String reason, String on) { book.get(indexOf(id)).reject(reason, TimePoint.of(on)); }
+
+    Measurement at(int index) { return book.get(index); }
+
+    String typeName(PhenomenonTypeId typeId) {
+        PhenomenonType type = types.get(typeId.value());
+        return type == null ? "" : type.name();
+    }
+
+    List&lt;Measurement&gt; rows(SubjectId subjectId, PhenomenonTypeId typeId) {
+        return book.stream()
+                .filter(m -&gt; m.subjectId().equals(subjectId) &amp;&amp; m.typeId().equals(typeId)).toList();
+    }
+
+    /** 그 날 기준으로 알고 있던 값 — 두 시각을 따로 두면 이 질문 하나로 과거와 현재를 함께 답한다. */
+    Optional&lt;Measurement&gt; knownOn(String asOf, SubjectId subjectId, PhenomenonTypeId typeId) {
+        TimePoint day = TimePoint.of(asOf);
+        return rows(subjectId, typeId).stream().filter(m -&gt; m.validAsOf(day))
+                .reduce((best, m) -&gt; best.takenOn().compareTo(m.takenOn()) &gt; 0 ? best : m);
+    }
+}
+
+public class Main {
+    static void show(MeasurementDesk desk, int at) {
+        Measurement m = desk.at(at);
+        System.out.println("기록 " + m.id().value() + " — 환자 " + m.subjectId().value() + " · "
+                + desk.typeName(m.typeId()) + " · " + m.quantity()
+                + " · 잰 날 " + m.takenOn() + " · 적은 날 " + m.recordedOn());
+    }
+
+    static void attempt(Runnable action) {
+        try {
+            action.run();
+        } catch (RuntimeException e) {
+            System.out.println("거부 — " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        MeasurementDesk desk = new MeasurementDesk();
+        SubjectId patient = new SubjectId("p-7");
+        PhenomenonTypeId systolic = new PhenomenonTypeId("pt-1");
+        desk.addType(systolic, PhenomenonType.of("systolic", "mmHg"));
+        System.out.println("항목 systolic — 허용 단위 mmHg");
+
+        show(desk, desk.record("m-1", patient, systolic, new Quantity(118, "mmHg"), "2026-09-01", "2026-09-01"));
+        attempt(() -&gt; desk.record("m-x", patient, systolic, new Quantity(72, "bpm"), "2026-09-01", "2026-09-01"));
+
+        PhenomenonTypeId pulse = new PhenomenonTypeId("pt-2");
+        desk.addType(pulse, PhenomenonType.of("pulse", "bpm"));
+        System.out.println("항목 추가 pulse — 허용 단위 bpm (고친 코드 없음)");
+        show(desk, desk.record("m-2", patient, pulse, new Quantity(72, "bpm"), "2026-09-01", "2026-09-03"));
+        for (String day : List.of("2026-09-02", "2026-09-04")) {
+            Optional&lt;Measurement&gt; seen = desk.knownOn(day, patient, pulse);
+            System.out.println(day + " 에 알던 p-7 의 pulse — "
+                    + seen.map(m -&gt; m.quantity().toString()).orElse("없음"));
+        }
+
+        show(desk, desk.record("m-3", patient, systolic, new Quantity(1200, "mmHg"), "2026-09-03", "2026-09-03"));
+        desk.reject("m-3", "오기", "2026-09-04");
+        Measurement wrong = desk.at(desk.indexOf("m-3"));
+        Rejection mark = wrong.rejection().orElseThrow();
+        System.out.println("m-3 거부 — 사유 " + mark.reason() + " · 거부한 날 " + mark.rejectedOn());
+        System.out.println("m-3 의 값은 그대로 " + wrong.quantity());
+        show(desk, desk.record("m-4", patient, systolic, new Quantity(120, "mmHg"), "2026-09-03", "2026-09-04"));
+
+        List&lt;Measurement&gt; rows = desk.rows(patient, systolic);
+        long rejected = rows.stream().filter(m -&gt; m.rejection().isPresent()).count();
+        Measurement latest = desk.knownOn("2026-09-30", patient, systolic).orElseThrow();
+        System.out.println("2026-09-30 에 알던 p-7 의 systolic — " + latest.quantity()
+                + " (잰 날 " + latest.takenOn() + ") · 전체 " + rows.size() + "건 중 거부 " + rejected + "건 제외");
+        attempt(() -&gt; desk.reject("m-3", "또 오기", "2026-09-05"));
+        attempt(() -&gt; desk.record("m-5", patient, systolic, new Quantity(119, "mmHg"), "2026-09-05", "2026-09-04"));
+    }
+}</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="measurement-guide-v1-0-1-tabs1-panel-typescript" aria-labelledby="measurement-guide-v1-0-1-tabs1-tab-typescript">
+<p class="code-tabs__label" aria-hidden="true">TypeScript</p>
+<pre tabindex="0"><code class="language-typescript">/** 값 — 수치와 단위를 한 값으로 묶는다. 단위끼리의 환산과 산술은 Quantity 패턴의 몫이다. */
+class Quantity {
+  constructor(readonly amount: number, readonly unit: string) {
+    Object.freeze(this);
+  }
+  toString(): string {
+    return `${this.amount} ${this.unit}`;
+  }
+}
+
+/** 값 — ISO yyyy-mm-dd 하루. 이 표기는 문자열 순서가 날짜 순서와 같다. */
+class TimePoint {
+  private constructor(readonly iso: string) {
+    Object.freeze(this);
+  }
+  static of(iso: string): TimePoint {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) throw new Error(`날짜 꼴이 아닙니다: ${iso}`);
+    return new TimePoint(iso);
+  }
+  compareTo(other: TimePoint): number {
+    return this.iso &lt; other.iso ? -1 : this.iso &gt; other.iso ? 1 : 0;
+  }
+  toString(): string {
+    return this.iso;
+  }
+}
+
+class SubjectId {
+  constructor(readonly value: string) {
+    Object.freeze(this);
+  }
+}
+class PhenomenonTypeId {
+  constructor(readonly value: string) {
+    Object.freeze(this);
+  }
+}
+class MeasurementId {
+  constructor(readonly value: string) {
+    Object.freeze(this);
+  }
+}
+
+/** 값 — 거부 표시. 값을 지우는 대신 이것이 붙는다. */
+class Rejection {
+  constructor(readonly reason: string, readonly rejectedOn: TimePoint) {
+    Object.freeze(this);
+  }
+}
+
+/** 지식 층위 aggregate root — 무엇을 재는가. 새 항목은 인스턴스 하나이지 타입 하나가 아니다. */
+class PhenomenonType {
+  private constructor(readonly name: string, readonly allowedUnit: string) {
+    Object.freeze(this);
+  }
+  static of(name: string, allowedUnit: string): PhenomenonType {
+    if (name.trim() === '' || allowedUnit.trim() === '') {
+      throw new Error('항목은 이름과 허용 단위를 하나씩 가집니다');
+    }
+    return new PhenomenonType(name, allowedUnit);
+  }
+  allows(q: Quantity): boolean {
+    return this.allowedUnit === q.unit;
+  }
+}
+
+/** 운영 층위 aggregate root — 대상 하나 · 항목 하나 · 값 하나를 묶은 기록 한 건. */
+class Measurement {
+  private rejectionMark: Rejection | null = null;
+
+  constructor(
+    readonly id: MeasurementId,
+    readonly subjectId: SubjectId,
+    readonly typeId: PhenomenonTypeId,
+    readonly quantity: Quantity,
+    readonly takenOn: TimePoint,
+    readonly recordedOn: TimePoint,
+  ) {
+    if (takenOn.compareTo(recordedOn) &gt; 0) {
+      throw new Error(`잰 날 ${takenOn} 는 적은 날 ${recordedOn} 보다 뒤입니다`);
+    }
+  }
+
+  get rejection(): Rejection | null {
+    return this.rejectionMark;
+  }
+
+  reject(reason: string, on: TimePoint): void {
+    if (this.rejectionMark !== null) throw new Error(`${this.id.value} 은 이미 거부된 기록입니다`);
+    if (on.compareTo(this.recordedOn) &lt; 0 || reason.trim() === '') {
+      throw new Error('거부는 사유를 달고, 적은 날보다 앞선 날짜로는 남기지 않습니다');
+    }
+    this.rejectionMark = new Rejection(reason, on);
+  }
+
+  /** asOf 시점에 이 기록이 유효한 것으로 읽혔는가 — 적은 날이 지났고, 아직 거부되지 않았는가. */
+  validAsOf(asOf: TimePoint): boolean {
+    if (this.recordedOn.compareTo(asOf) &gt; 0) return false;
+    return this.rejectionMark === null || this.rejectionMark.rejectedOn.compareTo(asOf) &gt; 0;
+  }
+}
+
+/** aggregate 가 아니다 — 두 aggregate 를 id 로 찾아 조립하고 조회에 답하는 자리. */
+class MeasurementDesk {
+  private readonly types = new Map&lt;string, PhenomenonType&gt;();
+  private readonly book: Measurement[] = [];
+
+  addType(id: PhenomenonTypeId, type: PhenomenonType): void {
+    this.types.set(id.value, type);
+  }
+
+  record(id: string, subjectId: SubjectId, typeId: PhenomenonTypeId,
+         quantity: Quantity, takenOn: string, recordedOn: string): number {
+    const type = this.types.get(typeId.value);
+    if (type === undefined) throw new Error(`등록되지 않은 항목입니다: ${typeId.value}`);
+    if (!type.allows(quantity)) {
+      throw new Error(
+        `항목 ${type.name} 의 허용 단위는 ${type.allowedUnit} 인데 값의 단위는 ${quantity.unit} 입니다`,
+      );
+    }
+    this.book.push(new Measurement(new MeasurementId(id), subjectId, typeId, quantity,
+      TimePoint.of(takenOn), TimePoint.of(recordedOn)));
+    return this.book.length - 1;
+  }
+
+  indexOf(id: string): number {
+    const at = this.book.findIndex((m) =&gt; m.id.value === id);
+    if (at &lt; 0) throw new Error(`없는 기록입니다: ${id}`);
+    return at;
+  }
+
+  reject(id: string, reason: string, on: string): void {
+    this.at(this.indexOf(id)).reject(reason, TimePoint.of(on));
+  }
+
+  at(index: number): Measurement {
+    const found = this.book[index];
+    if (found === undefined) throw new Error(`없는 자리입니다: ${index}`);
+    return found;
+  }
+
+  typeName(typeId: PhenomenonTypeId): string {
+    return this.types.get(typeId.value)?.name ?? '';
+  }
+
+  rows(subjectId: SubjectId, typeId: PhenomenonTypeId): Measurement[] {
+    return this.book.filter((m) =&gt; m.subjectId.value === subjectId.value &amp;&amp; m.typeId.value === typeId.value);
+  }
+
+  /** 그 날 기준으로 알고 있던 값 — 두 시각을 따로 두면 이 질문 하나로 과거와 현재를 함께 답한다. */
+  knownOn(asOf: string, subjectId: SubjectId, typeId: PhenomenonTypeId): Measurement | null {
+    const day = TimePoint.of(asOf);
+    return this.rows(subjectId, typeId)
+      .filter((m) =&gt; m.validAsOf(day))
+      .reduce&lt;Measurement | null&gt;(
+        (best, m) =&gt; (best !== null &amp;&amp; best.takenOn.compareTo(m.takenOn) &gt; 0 ? best : m),
+        null,
+      );
+  }
+}
+
+function show(desk: MeasurementDesk, at: number): void {
+  const m = desk.at(at);
+  console.log(
+    `기록 ${m.id.value} — 환자 ${m.subjectId.value} · ${desk.typeName(m.typeId)} · ${m.quantity}` +
+      ` · 잰 날 ${m.takenOn} · 적은 날 ${m.recordedOn}`,
+  );
+}
+
+function attempt(action: () =&gt; void): void {
+  try {
+    action();
+  } catch (thrown) {
+    console.log(`거부 — ${thrown instanceof Error ? thrown.message : String(thrown)}`);
+  }
+}
+
+const desk = new MeasurementDesk();
+const patient = new SubjectId('p-7');
+const systolic = new PhenomenonTypeId('pt-1');
+desk.addType(systolic, PhenomenonType.of('systolic', 'mmHg'));
+console.log('항목 systolic — 허용 단위 mmHg');
+
+show(desk, desk.record('m-1', patient, systolic, new Quantity(118, 'mmHg'), '2026-09-01', '2026-09-01'));
+attempt(() =&gt; desk.record('m-x', patient, systolic, new Quantity(72, 'bpm'), '2026-09-01', '2026-09-01'));
+
+const pulse = new PhenomenonTypeId('pt-2');
+desk.addType(pulse, PhenomenonType.of('pulse', 'bpm'));
+console.log('항목 추가 pulse — 허용 단위 bpm (고친 코드 없음)');
+show(desk, desk.record('m-2', patient, pulse, new Quantity(72, 'bpm'), '2026-09-01', '2026-09-03'));
+for (const day of ['2026-09-02', '2026-09-04']) {
+  const seen = desk.knownOn(day, patient, pulse);
+  console.log(`${day} 에 알던 p-7 의 pulse — ${seen === null ? '없음' : seen.quantity.toString()}`);
+}
+
+show(desk, desk.record('m-3', patient, systolic, new Quantity(1200, 'mmHg'), '2026-09-03', '2026-09-03'));
+desk.reject('m-3', '오기', '2026-09-04');
+const wrong = desk.at(desk.indexOf('m-3'));
+const mark = wrong.rejection;
+if (mark === null) throw new Error('거부 표시가 없습니다');
+console.log(`m-3 거부 — 사유 ${mark.reason} · 거부한 날 ${mark.rejectedOn}`);
+console.log(`m-3 의 값은 그대로 ${wrong.quantity}`);
+show(desk, desk.record('m-4', patient, systolic, new Quantity(120, 'mmHg'), '2026-09-03', '2026-09-04'));
+
+const rows = desk.rows(patient, systolic);
+const rejected = rows.filter((m) =&gt; m.rejection !== null).length;
+const latest = desk.knownOn('2026-09-30', patient, systolic);
+if (latest === null) throw new Error('유효한 기록이 없습니다');
+console.log(
+  `2026-09-30 에 알던 p-7 의 systolic — ${latest.quantity} (잰 날 ${latest.takenOn})` +
+    ` · 전체 ${rows.length}건 중 거부 ${rejected}건 제외`,
+);
+attempt(() =&gt; desk.reject('m-3', '또 오기', '2026-09-05'));
+attempt(() =&gt; desk.record('m-5', patient, systolic, new Quantity(119, 'mmHg'), '2026-09-05', '2026-09-04'));</code></pre>
+</div>
+<div class="code-tabs__panel" role="tabpanel" id="measurement-guide-v1-0-1-tabs1-panel-rust" aria-labelledby="measurement-guide-v1-0-1-tabs1-tab-rust">
+<p class="code-tabs__label" aria-hidden="true">Rust</p>
+<pre tabindex="0"><code class="language-rust">use std::collections::HashMap;
+use std::fmt;
+
+/// 값 — 수치와 단위를 한 값으로 묶는다. 단위끼리의 환산과 산술은 Quantity 패턴의 몫이다.
+#[derive(Clone, PartialEq, Eq)]
+struct Quantity {
+    amount: i64,
+    unit: String,
+}
+
+impl Quantity {
+    fn new(amount: i64, unit: &amp;str) -&gt; Quantity {
+        Quantity { amount, unit: unit.to_string() }
+    }
+}
+
+impl fmt::Display for Quantity {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, "{} {}", self.amount, self.unit)
+    }
+}
+
+/// 값 — ISO yyyy-mm-dd 하루. 이 표기는 문자열 순서가 날짜 순서와 같다.
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+struct TimePoint(String);
+
+impl TimePoint {
+    fn of(iso: &amp;str) -&gt; Result&lt;TimePoint, String&gt; {
+        let b = iso.as_bytes();
+        let shaped = b.len() == 10
+            &amp;&amp; b[4] == b'-'
+            &amp;&amp; b[7] == b'-'
+            &amp;&amp; (0..10).all(|i| i == 4 || i == 7 || b[i].is_ascii_digit());
+        if !shaped {
+            return Err(format!("날짜 꼴이 아닙니다: {}", iso));
+        }
+        Ok(TimePoint(iso.to_string()))
+    }
+}
+
+impl fmt::Display for TimePoint {
+    fn fmt(&amp;self, f: &amp;mut fmt::Formatter) -&gt; fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+#[derive(Clone, PartialEq, Eq)]
+struct SubjectId(String);
+#[derive(Clone, PartialEq, Eq)]
+struct PhenomenonTypeId(String);
+#[derive(Clone, PartialEq, Eq)]
+struct MeasurementId(String);
+
+/// 값 — 거부 표시. 값을 지우는 대신 이것이 붙는다.
+#[derive(Clone)]
+struct Rejection {
+    reason: String,
+    rejected_on: TimePoint,
+}
+
+/// 지식 층위 aggregate root — 무엇을 재는가. 새 항목은 인스턴스 하나이지 타입 하나가 아니다.
+struct PhenomenonType {
+    name: String,
+    allowed_unit: String,
+}
+
+impl PhenomenonType {
+    fn of(name: &amp;str, allowed_unit: &amp;str) -&gt; Result&lt;PhenomenonType, String&gt; {
+        if name.trim().is_empty() || allowed_unit.trim().is_empty() {
+            return Err("항목은 이름과 허용 단위를 하나씩 가집니다".to_string());
+        }
+        Ok(PhenomenonType { name: name.to_string(), allowed_unit: allowed_unit.to_string() })
+    }
+
+    fn allows(&amp;self, q: &amp;Quantity) -&gt; bool {
+        self.allowed_unit == q.unit
+    }
+}
+
+/// 운영 층위 aggregate root — 대상 하나 · 항목 하나 · 값 하나를 묶은 기록 한 건.
+struct Measurement {
+    id: MeasurementId,
+    subject_id: SubjectId,
+    type_id: PhenomenonTypeId,
+    quantity: Quantity,
+    taken_on: TimePoint,
+    recorded_on: TimePoint,
+    rejection: Option&lt;Rejection&gt;,
+}
+
+impl Measurement {
+    fn of(id: MeasurementId, subject_id: SubjectId, type_id: PhenomenonTypeId, quantity: Quantity,
+          taken_on: TimePoint, recorded_on: TimePoint) -&gt; Result&lt;Measurement, String&gt; {
+        if taken_on &gt; recorded_on {
+            return Err(format!("잰 날 {} 는 적은 날 {} 보다 뒤입니다", taken_on, recorded_on));
+        }
+        Ok(Measurement { id, subject_id, type_id, quantity, taken_on, recorded_on, rejection: None })
+    }
+
+    fn is_rejected(&amp;self) -&gt; bool {
+        self.rejection.is_some()
+    }
+
+    fn reject(&amp;mut self, reason: &amp;str, on: TimePoint) -&gt; Result&lt;(), String&gt; {
+        if self.rejection.is_some() {
+            return Err(format!("{} 은 이미 거부된 기록입니다", self.id.0));
+        }
+        if on &lt; self.recorded_on || reason.trim().is_empty() {
+            return Err("거부는 사유를 달고, 적은 날보다 앞선 날짜로는 남기지 않습니다".to_string());
+        }
+        self.rejection = Some(Rejection { reason: reason.to_string(), rejected_on: on });
+        Ok(())
+    }
+
+    /// as_of 시점에 이 기록이 유효한 것으로 읽혔는가 — 적은 날이 지났고, 아직 거부되지 않았는가.
+    fn valid_as_of(&amp;self, as_of: &amp;TimePoint) -&gt; bool {
+        if self.recorded_on &gt; *as_of {
+            return false;
+        }
+        match &amp;self.rejection {
+            None =&gt; true,
+            Some(r) =&gt; r.rejected_on &gt; *as_of,
+        }
+    }
+}
+
+/// aggregate 가 아니다 — 두 aggregate 를 id 로 찾아 조립하고 조회에 답하는 자리.
+struct MeasurementDesk {
+    types: HashMap&lt;String, PhenomenonType&gt;,
+    book: Vec&lt;Measurement&gt;,
+}
+
+impl MeasurementDesk {
+    fn new() -&gt; MeasurementDesk {
+        MeasurementDesk { types: HashMap::new(), book: Vec::new() }
+    }
+
+    fn add_type(&amp;mut self, id: &amp;PhenomenonTypeId, type_of: PhenomenonType) {
+        self.types.insert(id.0.clone(), type_of);
+    }
+
+    fn record(&amp;mut self, id: &amp;str, subject_id: &amp;SubjectId, type_id: &amp;PhenomenonTypeId,
+              quantity: Quantity, taken_on: &amp;str, recorded_on: &amp;str) -&gt; Result&lt;usize, String&gt; {
+        let type_of = self.types.get(&amp;type_id.0).ok_or(format!("등록되지 않은 항목입니다: {}", type_id.0))?;
+        if !type_of.allows(&amp;quantity) {
+            return Err(format!(
+                "항목 {} 의 허용 단위는 {} 인데 값의 단위는 {} 입니다",
+                type_of.name, type_of.allowed_unit, quantity.unit
+            ));
+        }
+        self.book.push(Measurement::of(
+            MeasurementId(id.to_string()), subject_id.clone(), type_id.clone(), quantity,
+            TimePoint::of(taken_on)?, TimePoint::of(recorded_on)?,
+        )?);
+        Ok(self.book.len() - 1)
+    }
+
+    fn index_of(&amp;self, id: &amp;str) -&gt; Result&lt;usize, String&gt; {
+        self.book.iter().position(|m| m.id.0 == id).ok_or(format!("없는 기록입니다: {}", id))
+    }
+
+    fn reject(&amp;mut self, id: &amp;str, reason: &amp;str, on: &amp;str) -&gt; Result&lt;(), String&gt; {
+        let at = self.index_of(id)?;
+        let on = TimePoint::of(on)?;
+        self.book[at].reject(reason, on)
+    }
+
+    fn type_name(&amp;self, type_id: &amp;PhenomenonTypeId) -&gt; String {
+        self.types.get(&amp;type_id.0).map_or(String::new(), |t| t.name.clone())
+    }
+
+    fn rows(&amp;self, subject_id: &amp;SubjectId, type_id: &amp;PhenomenonTypeId) -&gt; Vec&lt;&amp;Measurement&gt; {
+        self.book.iter().filter(|m| m.subject_id == *subject_id &amp;&amp; m.type_id == *type_id).collect()
+    }
+
+    /// 그 날 기준으로 알고 있던 값 — 두 시각을 따로 두면 이 질문 하나로 과거와 현재를 함께 답한다.
+    fn known_on(&amp;self, as_of: &amp;str, subject_id: &amp;SubjectId, type_id: &amp;PhenomenonTypeId) -&gt; Option&lt;&amp;Measurement&gt; {
+        let day = TimePoint::of(as_of).ok()?;
+        self.rows(subject_id, type_id)
+            .into_iter()
+            .filter(|m| m.valid_as_of(&amp;day))
+            .fold(None, |best: Option&lt;&amp;Measurement&gt;, m| match best {
+                Some(b) if b.taken_on &gt; m.taken_on =&gt; Some(b),
+                _ =&gt; Some(m),
+            })
+    }
+}
+
+fn show(desk: &amp;MeasurementDesk, at: usize) {
+    let m = &amp;desk.book[at];
+    println!(
+        "기록 {} — 환자 {} · {} · {} · 잰 날 {} · 적은 날 {}",
+        m.id.0, m.subject_id.0, desk.type_name(&amp;m.type_id), m.quantity, m.taken_on, m.recorded_on
+    );
+}
+
+fn attempt&lt;T&gt;(outcome: Result&lt;T, String&gt;) {
+    if let Err(message) = outcome {
+        println!("거부 — {}", message);
+    }
+}
+
+fn main() -&gt; Result&lt;(), String&gt; {
+    let mut desk = MeasurementDesk::new();
+    let patient = SubjectId("p-7".to_string());
+    let systolic = PhenomenonTypeId("pt-1".to_string());
+    desk.add_type(&amp;systolic, PhenomenonType::of("systolic", "mmHg")?);
+    println!("항목 systolic — 허용 단위 mmHg");
+
+    let at = desk.record("m-1", &amp;patient, &amp;systolic, Quantity::new(118, "mmHg"), "2026-09-01", "2026-09-01")?;
+    show(&amp;desk, at);
+    attempt(desk.record("m-x", &amp;patient, &amp;systolic, Quantity::new(72, "bpm"), "2026-09-01", "2026-09-01"));
+
+    let pulse = PhenomenonTypeId("pt-2".to_string());
+    desk.add_type(&amp;pulse, PhenomenonType::of("pulse", "bpm")?);
+    println!("항목 추가 pulse — 허용 단위 bpm (고친 코드 없음)");
+    let at = desk.record("m-2", &amp;patient, &amp;pulse, Quantity::new(72, "bpm"), "2026-09-01", "2026-09-03")?;
+    show(&amp;desk, at);
+    for day in ["2026-09-02", "2026-09-04"] {
+        let seen = desk.known_on(day, &amp;patient, &amp;pulse);
+        let text = seen.map_or("없음".to_string(), |m| m.quantity.to_string());
+        println!("{} 에 알던 p-7 의 pulse — {}", day, text);
+    }
+
+    let at = desk.record("m-3", &amp;patient, &amp;systolic, Quantity::new(1200, "mmHg"), "2026-09-03", "2026-09-03")?;
+    show(&amp;desk, at);
+    desk.reject("m-3", "오기", "2026-09-04")?;
+    let wrong = &amp;desk.book[desk.index_of("m-3")?];
+    let mark = wrong.rejection.clone().ok_or("거부 표시가 없습니다")?;
+    println!("m-3 거부 — 사유 {} · 거부한 날 {}", mark.reason, mark.rejected_on);
+    println!("m-3 의 값은 그대로 {}", wrong.quantity);
+    let at = desk.record("m-4", &amp;patient, &amp;systolic, Quantity::new(120, "mmHg"), "2026-09-03", "2026-09-04")?;
+    show(&amp;desk, at);
+
+    let rows = desk.rows(&amp;patient, &amp;systolic);
+    let total = rows.len();
+    let rejected = rows.iter().filter(|m| m.is_rejected()).count();
+    let latest = desk.known_on("2026-09-30", &amp;patient, &amp;systolic).ok_or("유효한 기록이 없습니다")?;
+    println!(
+        "2026-09-30 에 알던 p-7 의 systolic — {} (잰 날 {}) · 전체 {}건 중 거부 {}건 제외",
+        latest.quantity, latest.taken_on, total, rejected
+    );
+    attempt(desk.reject("m-3", "또 오기", "2026-09-05"));
+    attempt(desk.record("m-5", &amp;patient, &amp;systolic, Quantity::new(119, "mmHg"), "2026-09-05", "2026-09-04"));
+    Ok(())
+}</code></pre>
+</div>
+</div>
+<p>세 언어가 같은 자리에서 같은 일을 합니다. 시나리오의 단계가 코드의 어느 줄인지부터 짚을게요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>시나리오 단계</th><th>하는 일</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td>1 의 2단계</td><td>항목 id 로 항목을 찾는다</td><td>112</td><td>114</td><td>143</td></tr>
+<tr><td>1 의 3단계</td><td>세 자리를 갖춘 채로만 기록이 만들어진다</td><td>66</td><td>(타입이 막는다)</td><td>(타입이 막는다)</td></tr>
+<tr><td>1 의 4단계</td><td>값의 단위와 항목의 허용 단위를 대조한다</td><td>114</td><td>117</td><td>146</td></tr>
+<tr><td>2 의 1단계</td><td>새 항목을 인스턴스 하나로 등록한다</td><td>108</td><td>108</td><td>138</td></tr>
+<tr><td>2 의 3단계</td><td>잰 날이 적은 날보다 뒤가 아닌지 본다</td><td>69</td><td>79</td><td>94</td></tr>
+<tr><td>2 의 4·5단계</td><td>그 날 기준으로 알던 값을 고른다</td><td>145</td><td>151</td><td>177</td></tr>
+<tr><td>3 의 3단계</td><td>거부 표시를 붙이고 값은 그대로 둔다</td><td>93</td><td>93</td><td>110</td></tr>
+<tr><td>3 의 5단계</td><td>적은 날과 거부한 날을 함께 보고 거른다</td><td>97</td><td>97</td><td>116</td></tr>
+</tbody>
+</table>
+</div>
+<p>상황 설정 표의 네 칸도 코드에 자리가 있습니다. <code>불변식의 위치</code> 칸이 Measurement root 몫이라고 적은 것들은 전부 그 타입 안에 있어요. 생성자(Java 64 · TypeScript 70 · Rust 92)와 <code>reject</code>(Java 88 · TypeScript 88 · Rust 104) 둘뿐이에요. 그 바깥에 적은 둘은 <code>MeasurementDesk.record</code>(Java 110 · TypeScript 112 · Rust 142)와 <code>knownOn</code>(Java 145 · TypeScript 151 · Rust 177)에 있고요. <code>타 aggregate 참조 방식</code> 칸은 Measurement 의 필드 선언에서 바로 보입니다(Java 57~58 · TypeScript 72~73 · Rust 83~84) — <code>SubjectId</code> 와 <code>PhenomenonTypeId</code> 뿐이고 <code>PhenomenonType</code> 은 없어요.</p>
+<p>여기서 가장 중요한 줄은 거부를 붙이는 줄입니다(Java 93 · TypeScript 93 · Rust 110). 이 줄이 하는 일은 표시를 <strong>더하는 것</strong>뿐이에요. 값 자리도 두 시각도 건드리지 않습니다. 이 줄을 값을 지우는 쪽으로 바꾸는 순간 시나리오 3 의 2단계가 되고, 9/3 기준 조회가 그날 실제로 있던 1200 mmHg 를 답하지 못해요. 언어 차이는 셋인데, 앞의 둘부터 나란히 봅시다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>같은 규칙</th><th>Java</th><th>TypeScript</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td>세 자리가 다 있어야 한다</td><td>생성자가 실행 시점에 검사한다(66행)</td><td>타입이 <code>null</code> 을 막는다</td><td>소유된 값을 받아 빈 자리가 생기지 않는다</td></tr>
+<tr><td>날짜를 무엇으로 나타내는가</td><td><code>java.time</code> 이 있다</td><td><code>Date</code> 가 가변이라 값으로 쓰기 어렵다</td><td>표준 라이브러리에 달력이 없다</td></tr>
+</tbody>
+</table>
+</div>
+<p>같은 규칙이 한쪽에서는 검사고 다른 쪽에서는 타입이에요. 날짜는 셋이 제각각이라, 같은 모양으로 맞추려고 ISO 하루 표기를 값 객체로 감쌌습니다. 남은 하나는 불변을 지키는 층입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>언어</th><th>세 자리를 밖에서 바꾸지 못하게 막는 것</th><th>실행 중에도 막히는가</th></tr>
+</thead>
+<tbody>
+<tr><td>Java</td><td><code>private final</code> 필드와 게터만 노출</td><td>리플렉션을 쓰지 않는 한 막힘</td></tr>
+<tr><td>TypeScript</td><td><code>readonly</code> 와 거부 표시를 담은 <code>private</code> 필드</td><td><code>readonly</code> 는 컴파일 시점까지. 거부 표시만 <code>private</code> 이라 실행 중 접근이 막힌다</td></tr>
+<tr><td>Rust</td><td>필드 접근이 같은 모듈 안으로 제한되고 <code>&amp;mut</code> 가 있어야 바뀜</td><td>컴파일에서 막힘</td></tr>
+</tbody>
+</table>
+</div>
+<p>마지막 열이 이 예제가 치른 대가입니다. TypeScript 에서 세 자리까지 실행 시점에 얼리려면 생성자에서 <code>Object.freeze(this)</code> 를 부르거나 <code>#</code> 로 시작하는 필드를 써야 해요. 이 예제는 VO 쪽만 얼렸고 <code>Measurement</code> 는 거부 표시가 바뀌어야 해서 얼리지 않았습니다.</p>
+<h3 id="상황이-달라지면">상황이 달라지면</h3>
+<p>기록을 어느 aggregate 가 담을지는 무엇을 함께 확정해야 하는지에 따라 달라집니다. 이 가이드가 고른 경계를 첫 행에 두고 나란히 비교해 봅시다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>상황</th><th>경계</th><th>이유</th></tr>
+</thead>
+<tbody>
+<tr><td>측정이 대량으로 쌓이고 기록 하나하나가 따로 거부되거나 다른 기록의 근거로 지목된다(이 가이드)</td><td>Measurement 하나가 aggregate 하나. 대상과 항목을 id 로 가리키고, 둘을 함께 보는 일은 aggregate 밖이 맡는다</td><td>aggregate 가 작아 동시 기록이 서로를 막지 않고, 거부가 기록 한 건 안에서 끝난다. 대신 "한 대상·한 항목·한 시점에 유효 기록은 하나" 같은 집합 규칙은 경계 밖이라 따로 지켜야 한다</td></tr>
+<tr><td>한 대상의 기록 수가 적고, 대상 단위로 함께 읽고 함께 고친다</td><td>대상 aggregate 가 측정 기록을 child 로 갖는다</td><td>대상 하나를 부르면 그 기록이 함께 와서 집합 규칙을 root 가 지킬 수 있다. 대신 기록이 무한히 늘어나는 도메인에서는 대상 하나를 읽는 일이 기록 전부를 읽는 일이 된다</td></tr>
+<tr><td>검사 패널처럼 여러 측정을 묶음 단위로 확정하거나 함께 거부한다</td><td>묶음 aggregate 가 여러 측정을 child 로 갖는다</td><td>묶음 불변식(세 항목이 다 채워져야 확정)을 root 가 지킨다. 대신 한 측정이 여러 묶음에 속하는 도메인에는 맞지 않는다</td></tr>
+<tr><td>센서가 초 단위로 값을 쏟고 기록 하나를 따로 지목할 일이 없다</td><td>측정을 식별자 없는 VO(시점 + 값)로 두고 시계열 저장소에 쌓는다</td><td>식별자와 aggregate 관리 비용이 사라진다. 대신 기록 하나를 거부하거나 근거로 지목하는 길이 없어져 <code>[선택]</code> 7 을 포기하게 된다</td></tr>
+</tbody>
+</table>
+</div>
+<p>어느 행이든 세 자리는 그대로입니다. 달라지는 것은 그 세 자리를 담은 기록을 누가 가지는가이고, 2행부터는 상황 설정 표의 <code>타 aggregate 참조 방식</code> 칸에서 <code>SubjectId</code> 참조가 사라지거나(2행) 묶음 id 가 더해집니다(3행).</p>
+<h3 id="실제-사례">실제 사례</h3>
+<p>측정 기록의 세 자리는 의료 데이터 표준에서 이름을 바꿔 가며 나타납니다. 아래 표의 HL7 FHIR(Fast Healthcare Interoperability Resources)는 의료 데이터 교환 표준이고, UCUM(Unified Code for Units of Measure)은 단위 코드 체계예요.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>사례</th><th>사례 쪽 이름</th><th>이 글의 개념</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="https://hl7.org/fhir/R5/observation.html">HL7 FHIR R5</a> Observation 리소스</td><td><code>code</code> (1..1)</td><td>PhenomenonType — 무엇을 쟀는가</td></tr>
+<tr><td>〃</td><td><code>subject</code> (0..1)</td><td>Subject — 누구를 쟀는가</td></tr>
+<tr><td>〃</td><td><code>valueQuantity</code></td><td>Quantity — 얼마인가</td></tr>
+<tr><td>〃</td><td><code>effective[x]</code> (dateTime · Period · Timing · instant)</td><td>잰 시각(applicability)</td></tr>
+<tr><td>〃</td><td><code>hasMember</code> · <code>derivedFrom</code></td><td>묶음과 계산의 재료 — 「상황이 달라지면」 3행, 그리고 다른 측정에서 계산한 측정</td></tr>
+<tr><td><a href="https://hl7.org/fhir/R5/datatypes.html">HL7 FHIR R5 데이터 타입</a> Quantity</td><td><code>value</code> · <code>unit</code> · <code>system</code> · <code>code</code></td><td>Quantity 의 수치와 단위. <code>code</code> 는 <a href="https://ucum.org/ucum">UCUM</a> 코드를 권고한다</td></tr>
+</tbody>
+</table>
+</div>
+<p>FHIR 이 이 패턴과 특히 닮은 자리는 <strong>값 자리를 선택형으로 둔 것</strong>이에요. <code>valueQuantity</code> 말고도 범주 값을 담는 자리가 같은 리소스에 있어서, 수치 사실과 범주 사실이 한 구조를 공유합니다 — <code>[선택]</code> 9 가 말한 공통 상위와 같은 방향이고, 방법만 달라요(상속 대신 값 자리의 선택형). 그리고 FHIR 은 <code>value</code> 를 <strong>적힌 자릿수에 정밀도가 담긴</strong> 수치로 정의합니다. 이 예제가 값을 정수로 둔 것은 두 항목이 정수로 적히는 도메인이라서이고, 소수 자릿수가 측정 정밀도를 뜻하는 항목을 다룬다면 그 자릿수를 지우지 않는 편이 맞습니다.</p>
+<p>관측과 측정을 개념 스키마로 표준화한 문서로 <a href="https://docs.ogc.org/as/20-082r4/20-082r4.html">OGC Abstract Specification Topic 20</a>(ISO 19156:2023 과 공동)도 있습니다. 다만 그 본문에서 Fowler 계보를 밝힌 문장은 찾지 못했어요 — 계보를 적은 것은 보조 출처인 <a href="https://en.wikipedia.org/wiki/Observations_and_Measurements">Wikipedia 문서</a>이고, 이 글은 그 계보를 단정하지 않습니다.</p>
+<h2 id="스스로-점검하기">스스로 점검하기</h2>
+<p><strong>문제 1.</strong> 병원 시스템이 아래 JSON 을 저장합니다. 이 기록은 Measurement 일까요? 최소 조건의 <code>[필수]</code> 넷을 하나씩 적용해 판정해 보세요.</p>
+<pre tabindex="0"><code class="language-json">{ "subjectId": "p-7", "item": "systolic", "takenOn": "2026-09-01", "amount": 118, "unit": "mmHg" }</code></pre>
+<blockquote>
+<p>풀이 — 조건 1 은 충족합니다. 이 줄은 환자 객체의 칸이 아니라 독립된 한 줄이고, <code>subjectId</code> 로 누구의 것인지 답해요. 조건 2 도 충족합니다. <code>item</code> 이 칸 이름이 아니라 값이라, 맥박을 더하는 일이 <code>"pulse"</code> 라는 값 하나를 넣는 일이에요. 조건 3 도 충족합니다. <code>amount</code> 와 <code>unit</code> 이 함께 있고 118 mmHg 는 더하고 비교하는 것이 뜻을 갖는 크기예요. 조건 4 도 충족합니다 — 대상 하나, 항목 하나, 값 하나입니다. 그래서 이 기록은 Measurement 를 나타냅니다. 다만 JSON 은 연산이 없는 직렬화 형식이라 그 자체가 규칙을 검사할 자리는 없어요. 읽어 들여 항목의 허용 단위와 대조하고 세 자리를 갖춘 채로만 만들어지는 타입으로 바꿀 때 비로소 시나리오 1 의 3·4단계가 생깁니다. <code>[선택]</code> 쪽을 보면 적은 시각이 없어서 6 이 빠졌고, 그래서 이 데이터로는 "9월 2일에 알던 값" 을 물을 수 없어요. Quantity 편의 「스스로 점검하기」 2번이 같은 모양의 기록을 놓고 같은 판정을 냅니다.</p>
+</blockquote>
+<p><strong>문제 2.</strong> 아래 두 줄은 같은 표에 나란히 쌓여 있습니다. 둘 다 Measurement 일까요? 비교 절의 구분 기준으로 답해 보세요.</p>
+<pre tabindex="0"><code class="language-text">p-7 · systolic · 120 mmHg · 2026-09-03   (간호사가 재서 적음)
+p-7 · systolic · 120 mmHg · 2026-12-31   (의사가 연말까지 맞추려는 목표)</code></pre>
+<blockquote>
+<p>풀이 — 모양만 보면 둘은 구별되지 않습니다. 둘 다 대상 하나 · 항목 하나 · 크기 하나를 갖췄고 조건 1~4 를 모두 통과해요. 그래서 "아래쪽은 Measurement 가 아니다" 라고 답하면 절반만 맞습니다. 비교 절의 「계획된 값」 행이 든 구분 기준은 <strong>모양이 아니라 표시</strong>예요 — 기록이 이미 잰 값인지 앞으로 맞출 값인지를 스스로 밝히는가입니다. 원전도 둘을 다른 패턴으로 가르지 않고 상태 표시를 붙여 가르고, 그 자리가 <code>[선택]</code> 8 이에요. 표시가 없는 지금 상태에서 "환자 A 의 수축기 혈압" 을 물으면 잰 값과 목표 값이 섞여 돌아옵니다. 시나리오 3 의 4단계가 그 장면이에요.</p>
+</blockquote>
+<p><strong>문제 3.</strong> 누군가 거부 처리를 아래처럼 줄였습니다. 기록 <code>m-3</code> 을 9/4 에 거부한 뒤, 9/3 기준으로 "그날 알던 수축기 혈압" 을 물으면 무엇이 돌아올까요? 그리고 그 답이 왜 틀렸을까요?</p>
+<pre tabindex="0"><code class="language-java">void reject(String reason, TimePoint on) {
+    this.quantity = null;
+    this.rejection = new Rejection(reason, on);
+}</code></pre>
+<blockquote>
+<p>풀이 — 9/3 기준 조회는 <code>m-3</code> 을 고릅니다. 적은 날 9/3 이 지났고, 거부한 날 9/4 는 9/3 보다 뒤라서 그날 기준으로는 아직 유효하거든요(Java 97행의 판정이 이것입니다). 그런데 값 자리가 비어 있어서 돌아오는 것은 1200 mmHg 가 아니라 빈 값이에요. 답이 틀린 이유는 <strong>그날 실제로 있던 것과 다르기</strong> 때문입니다. 9/3 에 의사가 본 것은 1200 mmHg 였고 그 값을 보고 처방을 바꿨는데, 모델은 그날에 대해 "값이 없었다" 고 답해요. 시나리오 3 의 2단계가 지적한 것과 결과가 같습니다 — 거부의 뜻은 값을 없애는 것이 아니라 표시를 더하는 것이고, 상황 설정 표의 「거부해도 값은 지워지지 않는다」 행이 그래서 있습니다.</p>
+</blockquote>
+<p><strong>문제 4.</strong> 병원이 검사 패널을 도입했습니다. 혈압 검사 한 번에 수축기와 이완기가 <strong>함께</strong> 나오고, 둘은 같이 확정되거나 같이 거부돼야 해요. 한 기록에 값 둘을 담으면 어떤 조건이 성립하지 않고, 대신 어디로 가야 할까요?</p>
+<blockquote>
+<p>풀이 — 조건 4 가 성립하지 않습니다. 한 기록은 대상 하나 · 항목 하나 · 값 하나인데, 수축기와 이완기를 한 줄에 담으면 항목 하나에 값이 둘이 돼요. 그러면 시나리오 1 의 5단계가 답한 "환자 A 의 수축기 혈압은 얼마인가" 에 값 둘이 돌아오고, 무엇이 수축기인지를 자리 순서로 다시 약속하게 됩니다. 갈 곳은 「상황이 달라지면」 3행이에요 — 기록은 항목마다 하나씩 그대로 두고, 그 위에 묶음 aggregate 를 두어 묶음 root 가 "함께 확정, 함께 거부" 를 지킵니다. 그러면 상황 설정 표의 <code>root·entity·VO 배정</code> 칸에 묶음 root 가 하나 더해지고, <code>타 aggregate 참조 방식</code> 칸에는 기록이 묶음을 가리키는 id 가 더해져요.</p>
+</blockquote>
+<h2 id="참고-자료">참고 자료</h2>
+<ul>
+<li>Martin Fowler, <em>Analysis Patterns: Reusable Object Models</em>, Addison-Wesley, 1997 — Chapter 3 「Observations and Measurements」(35쪽부터) §3.1 Quantity · §3.4 Measurement · §3.5 Observation · §3.8 Dual Time Record · §3.9 Rejected Observation, Chapter 4 「Observations for Corporate Finance」. 이 글의 원전으로, 최소 조건 1·2·3·4 와 <code>[선택]</code> 6·7·8·9 의 근거 괄호가 여기를 가리킵니다.</li>
+<li><a href="https://www.pearson.de/media/muster/toc/toc_9780134271439.pdf">Analysis Patterns 목차 (Pearson PDF)</a> — 3장·4장의 절 번호와 제목 확인. 근거 괄호가 든 §3.4·§3.5·§3.8·§3.9 가 실제 그 제목인지 여기서 대조했습니다.</li>
+<li><a href="https://martinfowler.com/apsupp/apchap3.pdf">UML Diagrams for Chapter 3 (apchap3.pdf)</a> — 그림 3.1·3.2(측정값이 대상의 속성이던 모델), 3.6(Measurement 의 대상·항목 연관과 <code>quantity : Quantity</code>, 지식·운영 구분선), 3.7(Observation 의 하위 타입), 3.11(두 Time Record 와 각각의 이름), 3.12(Rejected Observation 의 «dynamic» 표기). 최소 조건 1·2·3·4 와 <code>[선택]</code> 6·7·9 의 근거가 이 그림들입니다.</li>
+<li><a href="https://martinfowler.com/apsupp/apchap4.pdf">UML Diagrams for Chapter 4 (apchap4.pdf)</a> — 그림 4.11(Observation 의 Status Type 과 그 하위 타입 Actual · Planned). <code>[선택]</code> 8 의 근거입니다.</li>
+<li><a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a> — Quantity · Unit · Measurement · Observation · Rejected Observation 이 서로 어떻게 놓이는지를 정리한 문서. 개념 정리 절이 두 시각과 거부 표시의 자리를 이 문서로 보냅니다.</li>
+<li><a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a> — 상황 설정 표가 쓰는 Bounded Context · Aggregate · Entity · Value Object · id 참조의 뜻.</li>
+<li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.1.1.html">Quantity 가이드</a> — 값 자리에 오는 Quantity 의 최소 조건과 단위 환산. 조건 3 이 값의 내부 규칙을 이 글로 넘깁니다.</li>
+<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.0.1.html">Knowledge Level 가이드</a> — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.</li>
+<li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.1.1.html">Account 가이드</a> — 기록들이 합해져 잔액을 설명하는 모델. 비교 절의 마지막 행이 이 글과 대조합니다.</li>
+<li><a href="https://hl7.org/fhir/R5/observation.html">HL7 FHIR R5 Observation</a> · <a href="https://hl7.org/fhir/R5/datatypes.html">HL7 FHIR R5 데이터 타입</a> — 실제 사례 표의 요소 이름과 <code>value</code> 의 정밀도 서술.</li>
+<li><a href="https://ucum.org/ucum">UCUM</a> — FHIR 이 단위 코드로 권고하는 체계. 실제 사례 표의 <code>code</code> 행이 가리킵니다.</li>
+<li><a href="https://docs.ogc.org/as/20-082r4/20-082r4.html">OGC Abstract Specification Topic 20 (20-082r4)</a> · <a href="https://en.wikipedia.org/wiki/Observations_and_Measurements">Observations and Measurements (Wikipedia, 보조 출처)</a> — 관측·측정의 표준화 문서와, Fowler 계보를 적은 것이 보조 출처뿐이라는 확인.</li>
+</ul>
+</main>
+<footer class="guide-footer">
+<p>원본은 <code>pattern-guide/ddd-analysis-pattern-guide/measurement/measurement-guide_v1.0.1.md</code>입니다. 이 HTML 은 원본 md 에서 생성한 파생물이라, 고칠 곳이 있으면 md 를 고친 뒤 다시 렌더합니다.</p>
+</footer>
+</div>
+<script>
+/* pattern-guide HTML — 세 언어 코드 탭. render-guides.py 가 HTML 에 인라인한다.
+ * JS 가 없으면 모든 패널이 보인다(마크업 기본값). 초기화하면서 선택 안 된 패널에 hidden 을 건다.
+ * 키보드: ←/→ 이웃 탭, Home/End 처음/끝 탭(WAI-ARIA APG Tabs, 자동 활성화).
+ */
+(function () {
+  "use strict";
+
+  var STORE_KEY = "pattern-guide:code-lang";
+  var widgets = [];
+
+  function readPref() {
+    try {
+      return window.localStorage.getItem(STORE_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function writePref(lang) {
+    try {
+      window.localStorage.setItem(STORE_KEY, lang);
+    } catch (e) {
+      /* 저장소를 못 쓰면 이번 페이지 안에서만 유지한다 */
+    }
+  }
+
+  function select(widget, tab, moveFocus) {
+    widget.tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+    if (moveFocus) tab.focus();
+  }
+
+  function tabForLang(widget, lang) {
+    for (var i = 0; i < widget.tabs.length; i++) {
+      if (widget.tabs[i].getAttribute("data-lang") === lang) return widget.tabs[i];
+    }
+    return null;
+  }
+
+  function activate(widget, tab, moveFocus) {
+    select(widget, tab, moveFocus);
+    var lang = tab.getAttribute("data-lang");
+    if (!lang) return;
+    writePref(lang);
+    widgets.forEach(function (other) {
+      if (other === widget) return;
+      var match = tabForLang(other, lang);
+      if (match) select(other, match, false);
+    });
+  }
+
+  function init(root) {
+    var list = root.querySelector(".code-tabs__list");
+    if (!list) return;
+    var tabs = Array.prototype.slice.call(list.querySelectorAll(".code-tabs__tab"));
+    if (!tabs.length) return;
+    var widget = { root: root, tabs: tabs };
+    widgets.push(widget);
+
+    list.addEventListener("click", function (event) {
+      var tab = event.target.closest(".code-tabs__tab");
+      if (tab && tabs.indexOf(tab) !== -1) activate(widget, tab, false);
+    });
+
+    list.addEventListener("keydown", function (event) {
+      var current = event.target.closest(".code-tabs__tab");
+      var index = tabs.indexOf(current);
+      if (index === -1) return;
+      var next = null;
+      switch (event.key) {
+        case "ArrowRight":
+          next = tabs[(index + 1) % tabs.length];
+          break;
+        case "ArrowLeft":
+          next = tabs[(index - 1 + tabs.length) % tabs.length];
+          break;
+        case "Home":
+          next = tabs[0];
+          break;
+        case "End":
+          next = tabs[tabs.length - 1];
+          break;
+        default:
+          return;
+      }
+      event.preventDefault();
+      activate(widget, next, true);
+    });
+
+    var initial = tabForLang(widget, readPref());
+    if (!initial) {
+      initial = tabs.filter(function (t) {
+        return t.getAttribute("aria-selected") === "true";
+      })[0] || tabs[0];
+    }
+    select(widget, initial, false);
+    root.setAttribute("data-enhanced", "");
+  }
+
+  function boot() {
+    Array.prototype.forEach.call(document.querySelectorAll(".code-tabs"), init);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>

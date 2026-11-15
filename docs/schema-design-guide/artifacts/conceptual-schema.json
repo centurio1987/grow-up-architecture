@@ -1,0 +1,220 @@
+{
+  "format": "teaching-conceptual-schema/1",
+  "scope": "single-store order acceptance",
+  "types": {
+    "Identity": {
+      "meaning": "stable identity; UUID is a representation choice"
+    },
+    "Quantity": {
+      "kind": "integer",
+      "min": 1,
+      "max": 99
+    },
+    "UnitPrice": {
+      "kind": "integer",
+      "min": 0,
+      "max": 1000000,
+      "currency": "KRW"
+    },
+    "LineNo": {
+      "kind": "integer",
+      "min": 1,
+      "max": 20
+    },
+    "ProductName": {
+      "kind": "string",
+      "minCodePoints": 1,
+      "maxCodePoints": 100
+    },
+    "Revision": {
+      "kind": "string",
+      "pattern": "^[A-Za-z0-9._-]{1,100}$"
+    },
+    "OrderState": {
+      "kind": "enum",
+      "values": [
+        "PLACED",
+        "CONFIRMED",
+        "CANCELLED"
+      ]
+    },
+    "Instant": {
+      "meaning": "a point in time; UTC millisecond ISO string in API"
+    }
+  },
+  "entities": [
+    {
+      "id": "C01",
+      "name": "Order",
+      "identity": [
+        "id"
+      ],
+      "meaning": "one accepted purchase intention",
+      "attributes": {
+        "id": "Identity",
+        "buyerId": "Identity reference to account boundary",
+        "placedAt": "Instant",
+        "state": "OrderState"
+      },
+      "relations": [
+        {
+          "name": "lines",
+          "target": "OrderLine",
+          "min": 1,
+          "max": 20,
+          "ownership": "exclusive; each line belongs to exactly one order"
+        }
+      ],
+      "derived": {
+        "totalKrw": "SUM(lines.quantity * lines.unitPriceKrw)"
+      }
+    },
+    {
+      "id": "C02",
+      "name": "OrderLine",
+      "identity": [
+        "orderId",
+        "lineNo"
+      ],
+      "meaning": "one product selection occurrence in one order",
+      "attributes": {
+        "orderId": "Identity reference to Order",
+        "lineNo": "LineNo",
+        "productId": "Identity reference to catalog boundary",
+        "productName": "ProductName at acceptance",
+        "quantity": "Quantity",
+        "unitPriceKrw": "UnitPrice at acceptance",
+        "offerRevision": "Revision at acceptance"
+      },
+      "uniqueWithinOrder": [
+        "productId"
+      ]
+    }
+  ],
+  "externalReferences": [
+    {
+      "name": "Buyer",
+      "ownedBy": "account system",
+      "localGuarantee": "authenticated subject at acceptance; no local FK"
+    },
+    {
+      "name": "Product",
+      "ownedBy": "catalog",
+      "localGuarantee": "accepted snapshot at acceptance; no current-price join"
+    }
+  ],
+  "rules": [
+    {
+      "id": "R01",
+      "kind": "structural",
+      "predicate": "Order.lines size in 1..20",
+      "scenarioSources": "SC01,SC07",
+      "enforcementCandidate": "creation + atomic write"
+    },
+    {
+      "id": "R02",
+      "kind": "behavioral",
+      "predicate": "Only PLACED -> CANCELLED or CONFIRMED",
+      "scenarioSources": "SC03,SC04,SC05",
+      "enforcementCandidate": "Order methods + conditional UPDATE"
+    },
+    {
+      "id": "R03",
+      "kind": "temporal",
+      "predicate": "OrderLine productId/name/quantity/unitPrice/offerRevision never change after acceptance",
+      "scenarioSources": "SC02",
+      "enforcementCandidate": "immutable domain snapshot + controlled write path"
+    },
+    {
+      "id": "R04",
+      "kind": "authorization",
+      "predicate": "Buyer may read/cancel only orders whose buyerId = actor.id; only SELLER may confirm/list",
+      "scenarioSources": "SC07",
+      "enforcementCandidate": "application policy + SQL ownership filter"
+    },
+    {
+      "id": "R05",
+      "kind": "value",
+      "predicate": "quantity 1..99; price 0..1000000; name 1..100 Unicode code points; revision 1..100 ASCII token",
+      "scenarioSources": "SC01,SC07",
+      "enforcementCandidate": "domain + API validation + SQL CHECK"
+    },
+    {
+      "id": "R06",
+      "kind": "derived",
+      "predicate": "totalKrw = sum(line.quantity * line.unitPriceKrw)",
+      "scenarioSources": "SC02",
+      "enforcementCandidate": "one calculation definition; not stored"
+    },
+    {
+      "id": "R07",
+      "kind": "uniqueness",
+      "predicate": "ProductId is unique within one order; lineNo is sequential 1..n",
+      "scenarioSources": "SC01,SC07",
+      "enforcementCandidate": "factory + SQL composite UNIQUE and PK; sequence continuity in factory"
+    },
+    {
+      "id": "R08",
+      "kind": "acceptance",
+      "predicate": "All submitted expected revisions equal the accepted catalog snapshot revisions; products offerable",
+      "scenarioSources": "SC08",
+      "enforcementCandidate": "catalog adapter + application orchestration"
+    },
+    {
+      "id": "R09",
+      "kind": "retry",
+      "predicate": "Same buyer/key + same canonical request -> same acceptance receipt; different request -> conflict",
+      "scenarioSources": "SC06",
+      "enforcementCandidate": "unique submission key + fingerprint + transaction"
+    },
+    {
+      "id": "R10",
+      "kind": "atomicity",
+      "predicate": "Order + all lines + submission record commit or roll back together",
+      "scenarioSources": "SC08",
+      "enforcementCandidate": "one DB transaction"
+    },
+    {
+      "id": "R11",
+      "kind": "concurrency",
+      "predicate": "A transition based on version v succeeds only if stored state=PLACED and version=v",
+      "scenarioSources": "SC05",
+      "enforcementCandidate": "conditional storage write"
+    },
+    {
+      "id": "R12",
+      "kind": "time",
+      "predicate": "PlacedAt and acceptance snapshots remain fixed; current catalog is not historical truth",
+      "scenarioSources": "SC02",
+      "enforcementCandidate": "persisted snapshots"
+    }
+  ],
+  "notConceptualFacts": [
+    "version is a technical change token",
+    "request fingerprint is retry infrastructure",
+    "physical index is a storage decision"
+  ],
+  "definitionBoundary": "entities/types define the conceptual data schema; the linked rule registry also carries behavioral, authorization and implementation obligations, distinguished by kind.",
+  "ruleClassification": {
+    "conceptual": [
+      "R01",
+      "R03",
+      "R05",
+      "R06",
+      "R07",
+      "R12"
+    ],
+    "behaviorOrAcceptance": [
+      "R02",
+      "R08"
+    ],
+    "authorization": [
+      "R04"
+    ],
+    "implementationOrProtocol": [
+      "R09",
+      "R10",
+      "R11"
+    ]
+  }
+}

@@ -27,7 +27,7 @@ const SPEC: DomainModelSpec = {
 export default function CoRStructure() {
   return (
     <Canvas width={W} height={424}>
-      <DiagramHeader eyebrow="Chain of Responsibility structure" title="ConcreteHandler 는 Handler 를 구현하면서 Handler 를 다음으로 든다" />
+      <DiagramHeader eyebrow="Chain of Responsibility structure" title="ConcreteHandler 는 Handler 를 구현하면서 Handler 를 다음으로 가진다" />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>
   );

@@ -10,7 +10,7 @@
         (참고 문서 — 가이드가 링크로 잇는 개념 설명. 머리말 serves 에 이 문서를 링크하는 가이드 slug 를 적는다)
 
 모드 (여러 개 동시 지정 가능 · 실패가 하나라도 있으면 종료코드 1 · --json 이면 기계 판독 출력)
-    --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · 펜스·도식 · 상대 링크 · 자립성(PG30·PG31) ·
+    --all [files]            헤딩(spec sections) · 플레이스홀더 · 문체 A/B · voice 금지 어휘(표·text 도식 포함) · 펜스·도식 · 상대 링크 · 자립성(PG30·PG31) ·
                              (spec 에 그 절이 있을 때) 최소 조건 [필수]/[선택] · 시나리오 구성(PG32) · 조건·비교의 시나리오 참조(PG33) ·
                              (analysis) 상황 설정 표 · (참고 문서) serves
     --compile [files]        `### 구현` 절 펜스 3개(java → typescript → rust) 컴파일. 도구가 없으면 실패.
@@ -161,7 +161,26 @@ AUTHORITY = re.compile(r"(?:원서|원전|Fowler|GoF|Evans|Vernon)\s*(?:가|는|
 # PG32 · PG33 — 시나리오 구성과 참조.
 SCENARIO_NUM = re.compile(r"시나리오\s*(\d+)")
 SCENARIO_MENTION = re.compile(r"시나리오\s*\d")
+# PG33(1.5.0 보충) — 최소 조건은 시나리오 번호만이 아니라 그 안의 자리까지 댄다: k단계 · Rk · 끝/뒤 · 이름 붙은 문단·그림·표·질문·자리·경로.
+SCENARIO_PLACE = re.compile(
+    r"시나리오\s*\d+\s*(?:의|에서)?\s*(?:"
+    r"\d+(?:\s*[~·,]\s*\d+)*\s*단계|R\d+|끝|뒤"
+    r"|[\"「『][^\"」』\n]{1,30}[\"」』]\s*(?:문단|절|표|그림)"
+    r"|[^\s()]{1,10}\s+(?:질문|문단|그림|표|자리|경로))")
 STEP_ITEM = re.compile(r"^\d+\.\s")                             # 들여쓰기 없는 번호 목록 항목
+# 명세 1.5.0(2026-11-13 구성 검토 — `pattern-guide/consideration/guide-structure-review-2026-11-13.md`).
+SELFCHECK_HEADING = "스스로 점검하기"
+PURPOSE_HEADING = "사용 목적"
+EXAMPLE_HEADING = "구현 예시"
+# PG36 — 점검 문제는 들여쓰기 없는 번호 목록(`1. …`) 또는 굵은 번호 문단(`**1. …**`)이고, 문제마다 `> 풀이 —` 블록이 붙는다.
+SELFCHECK_PROBLEM = re.compile(r"^(?:\d+\.\s|\*\*\d+\.)")
+SELFCHECK_ANSWER = re.compile(r"^\s*>\s*풀이\s*—")
+# PG37 — 구현 예시 앞의 절이 구현 절의 코드 줄·행 번호·실행 출력에 기대는 표현. 실패가 아니라 줄 수만 낸다(채점이 본다).
+FORWARD_DEP = re.compile(r"구현 절|구현 해설|정본 코드|실행 출력|구현 예시의|구현 예시와|펜스\s*\d+|\d+(?:~\d+)?행(?=[ ·,)의에과와을이은]|$)|출력\s*\d+(?:~\d+)?\s*번(?:째)?\s*줄")
+# PG38 — 시나리오 제목에 명세의 종류 설명 문구를 옮겨 적은 틀 제목.
+GENERIC_SCENARIO_TITLE = re.compile(r"규칙을 어기|구조를 어기")
+# PG40 — 비교 대상·단서를 굵은 글씨 문단 머리로만 나눈 자리. `####` 헤딩으로 쓴다.
+PSEUDO_HEADING = re.compile(r"^\*\*(?:[^*]+(?:와|과)의 차이|단서\s*\d+)[^*]*\*\*")
 SHARED_OPEN = b"<!-- shared:pattern-guide-common -->"
 SHARED_CLOSE = b"<!-- /shared -->"
 LANGS = [("java", {"java"}), ("typescript", {"typescript", "ts"}), ("rust", {"rust"})]
@@ -597,6 +616,70 @@ def check_style(ctx: Ctx, path: Path) -> tuple[bool, str]:
     return grade in ("A", "B"), msg
 
 
+TEXT_FENCE_LANGS = {"", "text", "txt", "plain"}
+
+
+def voice_style_path() -> Path:
+    home = os.environ.get("AUTHORING_KIT_HOME")
+    base = Path(home).expanduser() if home else Path.home() / ".claude/authoring"
+    return base / "voices" / VOICE / "style.json"
+
+
+def load_lexicon(path: Path | None = None) -> tuple[list[tuple[str, str, "re.Pattern[str]", str]], str]:
+    """voice `style.json` 의 `lexicon.add` 가운데 켜진 금지(-3) 항목. (항목들, 오류 메시지) — 오류가 있으면 항목은 빈 목록."""
+    p = path or voice_style_path()
+    if not p.exists():
+        return [], f"voice 어휘 규약이 없습니다: {p}"
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        return [], f"voice 어휘 규약을 읽을 수 없습니다: {p} ({e})"
+    out = []
+    for e in data.get("lexicon", {}).get("add", []):
+        if not e.get("enabled", True) or e.get("weight", 0) > -3:
+            continue
+        rx = e.get("regex") or "|".join(re.escape(f) for f in e.get("forms", []))
+        if not rx:
+            continue
+        try:
+            out.append((e["id"], e.get("label", e["id"]), re.compile(rx), " / ".join(e.get("alternatives", []))))
+        except re.error as err:
+            return [], f"어휘 규약 {e.get('id')} 의 정규식이 틀렸습니다: {err}"
+    return out, ""
+
+
+def check_lexicon(md: Md, lexicon: list) -> list[str]:
+    """voice 어휘 규약(금지 -3)을 문서 전체에 건다 — 산문·목록·표 칸·헤딩·```text 도식·그림 alt.
+
+    2026-11-13 에 넣었다. 그 전까지 이 규약은 authoring-kit 0.4.2 의 `scan_lexicon.py` 로만 세어졌고,
+    이 프로젝트가 고정한 0.3.0 에는 그 스캐너가 없어 `--all` 이 보지 않았다. 그 사이 가이드 37편에
+    581건이 쌓였다(2026-11-11 교정 3,399곳). `scan_lexicon` 은 표 칸과 도식을 세지 않으므로 여기서는
+    프로그래밍 언어 코드 펜스 · `코드` · 링크 대상 · 머리말 · HTML 주석만 빼고 전부 본다.
+    """
+    allowed: set[int] = set()
+    for f in md.fences:
+        if f["lang"] in TEXT_FENCE_LANGS:
+            end = f["end"] if f["end"] is not None else len(md.lines)
+            allowed.update(range(f["start"] + 1, end))
+    front_end = -1
+    if md.lines and md.lines[0].strip() == "---":
+        for i in range(1, len(md.lines)):
+            if md.lines[i].strip() == "---":
+                front_end = i
+                break
+    errs = []
+    for i, line in enumerate(md.lines):
+        if i <= front_end or (md.masked[i] and i not in allowed):
+            continue
+        s = INLINE_CODE.sub(lambda m: " " * len(m.group(0)), line)
+        s = re.sub(r"\]\([^)]*\)", lambda m: " " * len(m.group(0)), s)
+        for eid, label, rx, alt in lexicon:
+            for m in rx.finditer(s):
+                ctx_ = line[max(0, m.start() - 15):m.end() + 10].strip()
+                errs.append(f"L{i + 1} [{eid}] {label} — 「{ctx_}」" + (f" → {alt}" if alt else ""))
+    return errs
+
+
 PROSE_RUN_MAX = 2
 
 
@@ -794,6 +877,31 @@ def check_basis_refs(md: Md) -> list[str]:
             f"{' · '.join(missing)}: 그 절·그림을 참고 자료에 올리거나 근거 괄호를 고칩니다"]
 
 
+EXT_LINK = re.compile(r"\]\((https?://[^)\s]+)\)")
+
+
+def check_refs_links(md: Md) -> list[str]:
+    """PG25 — 본문이 출처로 단 바깥 링크(http·https)가 전부 `## 참고 자료` 에도 있다.
+
+    1.5.0 게이트(2026-11-13)가 손으로 대조하던 것을 회귀 가드로 넣었다. 그날 새 판본 37편 누락 0.
+    `#…` 조각과 끝의 `/` 는 견주지 않는다(같은 문서의 다른 절을 가리켜도 참고 자료에는 문서 한 번이면 된다).
+    개요의 함께 쓰는 패턴 링크는 상대 경로라 여기 걸리지 않는다.
+    """
+    refs = md.section(2, REFS_HEADING)
+    if not refs:
+        return []
+    norm = lambda u: u.split("#")[0].rstrip("/")
+    have = {norm(u) for i in range(*refs) if not md.masked[i] for u in EXT_LINK.findall(md.lines[i])}
+    missing: dict[str, int] = {}
+    for i, line in enumerate(md.lines):
+        if md.masked[i] or refs[0] <= i < refs[1]:
+            continue
+        for u in EXT_LINK.findall(line):
+            if norm(u) not in have:
+                missing.setdefault(norm(u), i + 1)
+    return [f"L{ln} 본문이 단 바깥 링크가 `## {REFS_HEADING}` 에 없습니다(PG25): {u}" for u, ln in missing.items()]
+
+
 def check_self_contained(md: Md) -> tuple[list[str], int]:
     """PG30 — 본문이 원서의 자리(그림·절·구현 쟁점 번호·원서의 ~ 설명)를 가리키면 오류.
 
@@ -856,16 +964,70 @@ def check_scenario_refs(md: Md) -> list[str]:
     if rng is not None:
         _, _, tops = _min_items(md, rng)
         for k, i in enumerate(tops, 1):
-            nxt = next((j for j in tops if j > i), rng[1])      # 항목 줄 + 들여쓴 이어지는 줄(check_min_conditions 와 같은 범위)
-            span = "\n".join(md.lines[j] for j in range(i, nxt) if not md.masked[j])
+            nxt = next((j for j in tops if j > i), rng[1])      # 항목 줄 + 들여쓴 이어지는 줄
+            end = i + 1                                          # 목록이 끝난 뒤 들여쓰지 않은 문단은 항목이 아니다
+            while end < nxt and (not md.lines[end].strip() or md.lines[end][:1] in " \t"):
+                end += 1
+            span = "\n".join(md.lines[j] for j in range(i, end) if not md.masked[j])
             if not SCENARIO_MENTION.search(span):
                 errors.append(f"L{i + 1} 조건 {k} 이 어느 시나리오의 단계를 보여 주는지 적지 않았습니다(PG33)")
+            elif not SCENARIO_PLACE.search(span):
+                errors.append(f"L{i + 1} 조건 {k} 이 시나리오 번호만 적었습니다 — "
+                              f"「시나리오 n 의 k단계」처럼 그 안의 자리까지 댑니다(PG33)")
     rng = md.section(3, COMPARE_HEADING)
     if rng is not None:
         n = sum(len(SCENARIO_MENTION.findall(md.lines[j])) for j in range(*rng) if not md.masked[j])
         if n < 2:
             errors.append(f"'### {COMPARE_HEADING}' 절이 시나리오를 {n}회 언급합니다 — "
                           f"차이는 시나리오의 단계로 2회 이상 보여 줍니다(PG33)")
+    return errors
+
+
+def check_selfcheck_answers(md: Md) -> tuple[list[str], int]:
+    """PG36 — 점검 문제마다 `> 풀이 —` 블록이 있다. 문제 수와 풀이 수가 같아야 한다."""
+    rng = md.section(2, SELFCHECK_HEADING)
+    if rng is None:
+        return [], 0                                  # 절 자체가 없는 것은 헤딩 검사가 잡는다
+    problems = [k for k in range(*rng) if not md.masked[k] and SELFCHECK_PROBLEM.match(md.lines[k])]
+    answers = [k for k in range(*rng) if not md.masked[k] and SELFCHECK_ANSWER.match(md.lines[k])]
+    errors: list[str] = []
+    if not problems:
+        errors.append(f"'## {SELFCHECK_HEADING}' 절에 문제가 없습니다 — `1. …` 또는 `**1. …**` 로 씁니다(PG36)")
+    for n, k in enumerate(problems):
+        end = problems[n + 1] if n + 1 < len(problems) else rng[1]
+        if not any(k < a < end for a in answers):
+            errors.append(f"L{k + 1} 점검 문제 {n + 1} 에 `> 풀이 —` 블록이 없습니다(PG36)")
+    return errors, len(problems)
+
+
+def check_scenario_titles(md: Md, spec: dict) -> list[str]:
+    """PG38 — 시나리오 제목은 그 시나리오에서 무슨 일이 일어나는지 쓴다. 종류 설명 문구를 옮긴 틀 제목은 막는다."""
+    sc = _spec_heading(spec, "detail.scenario")
+    if sc is None:
+        return []
+    return [f"L{ln + 1} 시나리오 제목이 종류 설명을 옮긴 틀 제목입니다: '{tx}' — 어긴 규칙과 그 결과를 제목에 씁니다(PG38)"
+            for ln, lv, tx in md.headings if lv == sc[0] and sc[2].match(tx) and GENERIC_SCENARIO_TITLE.search(tx)]
+
+
+def check_forward_deps(md: Md) -> list[int]:
+    """PG37 — `## 구현 예시` 앞에서 구현 절의 코드·행·실행 출력을 가리키는 줄(1부터 센 줄 번호). 판정은 채점이 한다."""
+    ex = next((ln for ln, lv, tx in md.headings if lv == 2 and tx == EXAMPLE_HEADING), None)
+    if ex is None:
+        return []
+    return [k + 1 for k in range(ex) if not md.masked[k] and FORWARD_DEP.search(md.lines[k])]
+
+
+def check_pseudo_headings(md: Md) -> list[str]:
+    """PG40 — 비교 대상과 사용 목적의 단서는 굵은 글씨 문단 머리가 아니라 `####` 헤딩으로 나눈다."""
+    errors: list[str] = []
+    for level, heading in ((3, COMPARE_HEADING), (2, PURPOSE_HEADING)):
+        rng = md.section(level, heading)
+        if rng is None:
+            continue
+        for k in range(*rng):
+            if not md.masked[k] and PSEUDO_HEADING.match(md.lines[k]):
+                errors.append(f"L{k + 1} 굵은 글씨 문단 머리로 나눈 자리입니다 — `#### …` 헤딩으로 씁니다(PG40): "
+                              f"'{md.lines[k][:40]}'")
     return errors
 
 
@@ -1013,6 +1175,7 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         plan.append((p, sid, ctx.spec(sid)))
     rep.info(M, "files", len(files))
     rep.info(M, "plugin", str(ctx.plugin))
+    lexicon, lex_err = load_lexicon()
     for p, sid, spec in plan:
         f = ctx.rel(p)
         if not p.exists():
@@ -1043,6 +1206,14 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
         rep.add(M, "placeholder", ok, msg, f)
         ok, msg = check_style(ctx, p)
         rep.add(M, "style", ok, msg, f)
+        if lex_err:
+            rep.add(M, "lexicon", False, lex_err, f)
+        else:
+            errs = check_lexicon(md, lexicon)
+            for e in errs:
+                rep.add(M, "lexicon", False, e, f)
+            if not errs:
+                rep.add(M, "lexicon", True, f"voice 금지 어휘 {len(lexicon)}항목 · 적발 0", f)
         ok, msg = check_prose_run(ctx, p, sid)
         rep.add(M, "prose-run", ok, msg, f)
         errs = check_fences(md)
@@ -1083,6 +1254,11 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
             rep.add(M, "basis-refs", False, e, f)
         if not errs:
             rep.add(M, "basis-refs", True, "", f)
+        errs = check_refs_links(md)
+        for e in errs:
+            rep.add(M, "refs-links", False, e, f)
+        if not errs:
+            rep.add(M, "refs-links", True, "", f)
         if "detail.scenario" in ids:
             errs, n_sc = check_scenarios(md, spec)
             for e in errs:
@@ -1094,6 +1270,29 @@ def mode_all(ctx: Ctx, rep: Report, files: list[Path]) -> None:
                 rep.add(M, "scenario-ref", False, e, f)
             if not errs:
                 rep.add(M, "scenario-ref", True, "", f)
+            errs = check_scenario_titles(md, spec)
+            for e in errs:
+                rep.add(M, "scenario-title", False, e, f)
+            if not errs:
+                rep.add(M, "scenario-title", True, "", f)
+        if "selfcheck" in ids:
+            errs, n_q = check_selfcheck_answers(md)
+            for e in errs:
+                rep.add(M, "selfcheck", False, e, f)
+            if not errs:
+                rep.add(M, "selfcheck", True, f"문제 {n_q}개 · 풀이 {n_q}개", f)
+        if "example.impl" in ids:
+            deps = check_forward_deps(md)
+            rep.add(M, "forward-deps", True,
+                    f"구현 예시 앞에서 구현 코드·행·출력을 가리키는 줄 {len(deps)}개"
+                    + (f"(L{', L'.join(map(str, deps[:12]))}{' …' if len(deps) > 12 else ''})" if deps else "")
+                    + " — 설명이 그 코드에 기대는지 채점이 본다(PG37)", f)
+        if "boundary.compare" in ids:
+            errs = check_pseudo_headings(md)
+            for e in errs:
+                rep.add(M, "pseudo-heading", False, e, f)
+            if not errs:
+                rep.add(M, "pseudo-heading", True, "", f)
 
 
 def mode_links(ctx: Ctx, rep: Report, files: list[Path]) -> None:
@@ -1688,6 +1887,17 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
     ref_spec = ["--spec-file", str(fx / "spec-reference.json")]
     cases += [
         ("all", "good-gof 통과", ["--all", *gof_spec, str(fx / "good-gof.md")], 0, None),
+        ("all", "명세 1.5.0 실패(풀이 없음 · 틀 제목 · 굵은 글씨 문단 머리)",
+         ["--all", *gof_spec, str(fx / "structure-15-gof.md")], 1,
+         both(need({"selfcheck", "scenario-title", "pseudo-heading"}, "all"),
+              contains("all", "`> 풀이 —` 블록이 없습니다", "틀 제목입니다", "`#### …` 헤딩으로 씁니다"))),
+        ("all", "lexicon 실패(산문 둘 · 표 칸 · text 도식 — `코드` 와 코드 펜스 안은 세지 않음)",
+         ["--all", *gof_spec, str(fx / "lexicon-gof.md")], 1,
+         both(need({"lexicon"}, "all"),
+              contains("all", "[v.metaphor.hansu]", "[v.metaphor.grip]", "[v.metaphor.face]", "[v.metaphor.break]"),
+              lambda d, o: (_failed_msgs(d, "all").count("[v.metaphor.break]") == 1
+                            and "[v.metaphor.hold]" not in _failed_msgs(d, "all"),
+                            "`깨진다`(백틱)·java 펜스 주석의 「들고 있다」는 세지 않아야 함"))),
         ("all", "bad-gof 실패(헤딩·최소 조건·링크·mermaid)", ["--all", *gof_spec, str(fx / "bad-gof.md")], 1,
          lambda d, o: (lambda a, b: (a[0] and b[0], a[1] + " · " + b[1]))(
              need({"heading", "min-conditions", "links", "mermaid"}, "all")(d, o),
@@ -1734,9 +1944,16 @@ def self_test(want_modes: set[str], as_json: bool) -> int:
          both(need({"self-contained"}, "all"), contains("all", "PG30", "그림 3.2", "구현 쟁점 1"))),
         ("all", "scenario-short 실패(시나리오 1개 · 단계 2개)", ["--all", *gof_spec, str(fx / "scenario-short-gof.md")], 1,
          both(need({"scenarios"}, "all"), contains("all", "2개 이상", "단계가 2개"))),
-        ("all", "scenario-ref-missing 실패(조건에 시나리오 언급 없음 · 비교 절 1회)",
+        ("all", "refs-links 실패(본문 바깥 링크가 참고 자료에 없음 · `#` 조각은 견주지 않음)",
+         ["--all", *gof_spec, str(fx / "refs-links-gof.md")], 1,
+         both(need({"refs-links"}, "all"),
+              contains("all", "https://example.org/missing"),
+              lambda d, o: ("https://example.org/listed" not in _failed_msgs(d, "all"),
+                            "참고 자료에 있는 문서의 다른 `#` 조각은 통과해야 함"))),
+        ("all", "scenario-ref-missing 실패(조건에 시나리오 언급 없음 · 번호만 · 목록 뒤 문단은 마지막 조건에 안 셈 · 비교 절 1회)",
          ["--all", *gof_spec, str(fx / "scenario-ref-missing-gof.md")], 1,
-         both(need({"scenario-ref"}, "all"), contains("all", "조건 1 이", "1회 언급"))),
+         both(need({"scenario-ref"}, "all"),
+              contains("all", "조건 1 이 어느", "조건 2 이 시나리오 번호만", "조건 3 이 어느", "1회 언급"))),
         ("all", "good-ref 통과(참고 문서)", ["--all", *ref_spec, str(fx / "good-ref.md")], 0, None),
         ("all", "ref-locator 실패(참고 문서의 원서 지시자)", ["--all", *ref_spec, str(fx / "ref-locator.md")], 1,
          need({"self-contained"}, "all")),

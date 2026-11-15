@@ -40,7 +40,7 @@ export default function PrototypeFlow() {
     <Canvas width={W} height={620}>
       <DiagramHeader
         eyebrow="Prototype collaboration"
-        title="새 객체는 견본의 복제 연산 안에서만 태어나고, 손보는 것은 복제본 쪽이다"
+        title="새 객체는 견본의 복제 연산 안에서만 만들어지고, 손보는 것은 복제본 쪽이다"
       />
       {LANES.map((l) => (
         <Lifeline key={l.id} x={l.x} y={TOP} height={LIFE_H} headWidth={HEAD_W} label={l.label} />

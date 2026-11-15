@@ -37,7 +37,7 @@ export default function CompositeStructure() {
     <Canvas width={W} height={430}>
       <DiagramHeader
         eyebrow="Composite structure"
-        title="Composite 는 Component 를 구현하면서 Component 를 0..* 개 든다"
+        title="Composite 는 Component 를 구현하면서 Component 를 0..* 개 가진다"
       />
       <DomainModel spec={SPEC} origin={{ x: GUTTER, y: 104 }} />
     </Canvas>
