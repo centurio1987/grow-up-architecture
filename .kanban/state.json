@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 50,
+  "next_seq": 51,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -300,12 +300,12 @@
       "parent": "KAN-002-4FZX1V"
     },
     "KAN-002.2-4E05GD": {
-      "col": "todo",
+      "col": "doing",
       "title": "파일럿 두 편과 회고 — RT-01 라이브 동시 시청자 수 · CT-01 선착순 쿠폰 발급",
       "verbatim": "질문: 남은 두 결정(파일럿 두 편, 칸반 카드로 관리)을 추천대로 정할까요?\n답변: 추천대로",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-11-13",
+      "갱신": "2026-11-15",
       "title_hash": "7ce163c649dc7294395c0921f3545d545748523e",
       "verbatim_hash": "df7ab06bfe288586f458bb02c9d437468479054f",
       "short": "파일럿 두 편과 회고",
@@ -355,7 +355,6 @@
   },
   "order": [
     "KAN-002.3-8DTJ6W",
-    "KAN-002.2-4E05GD",
     "KAN-002-4FZX1V",
     "KAN-001.1-P5N9NF",
     "KAN-001.2-4NWK0T",
@@ -365,9 +364,20 @@
     "KAN-001.6-HB5NH9",
     "KAN-001.7-4MRJ1B",
     "KAN-001-YXTC2C",
-    "KAN-002.1-7YT11M"
+    "KAN-002.1-7YT11M",
+    "KAN-002.2-4E05GD"
   ],
   "recent": [
+    {
+      "seq": 50,
+      "t": "2026-11-15T12:00",
+      "a": "ai",
+      "id": "KAN-002.2-4E05GD",
+      "op": "move",
+      "w": "7BM1CZ",
+      "from": "todo",
+      "to": "doing"
+    },
     {
       "seq": 49,
       "t": "2026-11-14T20:29",
