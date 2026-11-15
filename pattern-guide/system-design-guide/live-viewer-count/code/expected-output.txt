@@ -1,0 +1,29 @@
+-- scenario 1: one join, one close, one pause --
+t=0.5s total=1200 actual=1200
+t=2.3s join conn=1201 edge=a
+t=2.5s total=1200 actual=1201
+t=3.5s total=1201 actual=1201
+t=10.2s close conn=1201 edge=a
+t=10.5s total=1201 actual=1200
+t=11.5s total=1200 actual=1200
+t=12.5s pause conn=751 edge=a last-signal=12.0s
+t=12.5s total=1200 actual=1199
+t=58.5s total=1199 actual=1199
+-- scenario 2: 3000 joins in 5 seconds --
+t=60.5s total=1199 actual=1506 joins=307 reports=3 publishes=1 sse-writes=1507 naive=415371
+t=61.5s total=1801 actual=2065 joins=559 reports=3 publishes=1 sse-writes=2066 naive=998374
+t=62.5s total=2357 actual=2686 joins=621 reports=3 publishes=1 sse-writes=2687 naive=1475496
+t=63.5s total=2996 actual=3288 joins=602 reports=3 publishes=1 sse-writes=3289 naive=1798475
+t=64.5s total=3592 actual=3903 joins=615 reports=3 publishes=1 sse-writes=3904 naive=2211540
+t=65.5s total=4199 actual=4199 joins=296 reports=3 publishes=1 sse-writes=4200 naive=1199244
+-- scenario 3: edge c stops --
+t=80.0s stop edge=c dropped=1400 screens-frozen-at=4199
+t=81.5s total=4389 actual=4199 a=1494 b=1495 c=1400
+t=82.5s total=3164 actual=4199 a=1581 b=1583 c=-
+t=83.5s total=3341 actual=4199 a=1670 b=1671 c=-
+t=84.5s total=3517 actual=4199 a=1758 b=1759 c=-
+t=85.5s total=3697 actual=4199 a=1848 b=1849 c=-
+t=86.5s total=3858 actual=4199 a=1928 b=1930 c=-
+t=87.5s total=4033 actual=4199 a=2016 b=2017 c=-
+t=88.5s total=4199 actual=4199 a=2099 b=2100 c=-
+last-reconnect=87.9s

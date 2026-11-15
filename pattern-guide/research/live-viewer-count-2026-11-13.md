@@ -130,7 +130,7 @@
 | ID | 대조한 것 | 결과 |
 | --- | --- | --- |
 | V1 | d초 하트비트 · d+ε 만료 · 지연 타이머, 「less than 200ms at p99」, 노드당 「approximately 1.8K QPS」 | 맞음 |
-| V2 | 「100,000 connections on the same machine」, 로열 웨딩 최고 「18 million viewers」를 「180 machines」로, 「75 milliseconds at p90」, WebSocket 이 방화벽에 막히는 일 | 맞음 |
+| V2 | 「100,000 connections on the same machine」, 로열 웨딩 최고 「18 million viewers」를 「180 machines」로, 「75 milliseconds at p90」, WebSocket 이 방화벽에 막히는 일 | 문자열은 맞음. **다만 같은 발표가 앞에서 같은 행사를 「more than 80 million viewers concurrently」라고도 말합니다**(9절 미해결 질문 9 의 충돌). 1,800만 명은 단독으로 인용하지 않고, 「한 대 10만 연결 × 180대」 계산만 쓰거나 두 값을 함께 적습니다(1차 게이트에서 채점 워커가 찾음) |
 | V4 | 하트비트 「every 30 seconds」 예시, 「more than a minute」 끊기면 오프라인 | 맞음 |
 | V5 | 「hundreds of thousands of concurrent persistent connections」, SSE 사용 | 맞음. 「노드당 약 10만」은 V5 가 아니라 V2 의 문장입니다 |
 | V6 | 폴링 질의의 「80%」가 새 데이터 없음, 1~2초 폴링이 「on the order of a billion queries per second」, 푸시 전환 뒤 CPU · QPS 「decreased by a factor of 10」, 시청자당 「at most one highly ranked comment … per second」, 최선 노력 전달 | 맞음(PDF 1~6쪽) |
@@ -171,7 +171,7 @@
 | V13 | Twitch 개발자 포럼 사용자 글: [43387](https://discuss.dev.twitch.com/t/how-long-is-the-dalay-of-get-streams/43387) · [20645](https://discuss.dev.twitch.com/t/getting-stream-viewer-count-webhook-notifications/20645) · [29688](https://discuss.dev.twitch.com/t/live-viewer-count-cache-interval-legal-chatter-data/29688) · [1085](https://discuss.dev.twitch.com/t/how-does-twitch-count-views/1085) | 2014~2023 |
 | V14 | [Twitch API — Get Streams](https://dev.twitch.tv/docs/api/reference/streams) | 확인 안 함 |
 | V15 | [Hotstar — Scaling Hotstar.com for 10Mn concurrency (슬라이드)](https://www.slideshare.net/hotstar-engineering/scaling-hotstarcom-for-10mn-concurrency) | 확인 안 함 |
-| V16 | [Hotstar PubSub (Rootconf Delhi 2020 소개)](https://hasgeek.com/rootconf/2020-delhi/sub/pubsub-realtime-messaging-service-hotstar-LP7A7b7ZVu6ibfgYFAcvXZ) | 2020-01-18 |
+| V16 | [Hotstar PubSub (Rootconf Delhi 2020 소개)](https://hasgeek.com/rootconf/2020-delhi/sub/pubsub-realtime-messaging-service-hotstar-LP7A7b7ZVu6ibfgYFAcvXZ) | 소개 글 제출 2019-11-26, 행사 2020-01-18(2026-11-15 원문 확인) |
 | V17 | [High Scalability — Capturing A Billion Emo(j)i-ons (Hotstar 글 재게시)](https://highscalability.com/capturing-a-billion-emo-j-i-ons/) | 2024-03-26 |
 | V18 | [Amazon IVS API — Stream (`viewerCount`)](https://docs.aws.amazon.com/ivs/latest/LowLatencyAPIReference/API_Stream.html) | 확인 안 함 |
 | V19 | [PubNub — Presence events](https://www.pubnub.com/docs/general/presence/presence-events) | 확인 안 함 |
