@@ -1,0 +1,24 @@
+-- scenario 1: user 1 presses twice at 0ms --
+t=0.000ms req=0 user=1 presses, api-1
+t=0.000ms req=1 user=1 presses, api-2
+t=0.255ms req=0 user=1 redis SADD -> 1
+t=0.260ms req=1 user=1 redis SADD -> 0
+t=0.510ms req=1 user=1 api: already issued
+t=1.035ms req=0 user=1 redis INCR -> 1
+t=1.285ms req=0 user=1 api: enqueue seq=1, answer success
+t=10.000ms req=0 user=1 worker INSERT seq=1 -> 1 row
+-- scenario 2: 30000 requests in 90.367ms for 1000 coupons --
+atomic: requests=30000 success=1000 over=0 double=0 already=600 sold-out=28400 retry=0
+atomic: redis-commands=16646 api-local-sold-out=23718 max-wait=48.472ms db-rows=1000 db-rejected=0 last-row=2000.000ms
+check-then-act: requests=30000 success=4316 over=3316 double=367 already=0 sold-out=25684 retry=0
+check-then-act: redis-commands=44324 api-local-sold-out=12154 max-wait=209.192ms db-rows=3905 db-rejected=411 last-row=8640.000ms
+-- scenario 3: redis primary stops at 300ms, 9000 requests --
+t=300.000ms redis primary stops, count=882
+t=1300.000ms replica promoted, count=869 (lost 13 INCR)
+as-is: requests=9000 success=1013 over=13 double=0 already=112 sold-out=4536 retry=3339
+as-is: redis-commands=2154 api-local-sold-out=4532 max-wait=1.015ms db-rows=1000 db-rejected=13 last-row=2030.000ms
+t=300.000ms redis primary stops, count=882
+t=1300.000ms replica promoted, count=869 (lost 13 INCR), pause
+t=1770.000ms queue empty, rebuild from db: count=882, resume
+recount: requests=9000 success=1000 over=0 double=0 already=114 sold-out=2982 retry=4904
+recount: redis-commands=2130 api-local-sold-out=2978 max-wait=1.015ms db-rows=1000 db-rejected=0 last-row=2010.000ms
