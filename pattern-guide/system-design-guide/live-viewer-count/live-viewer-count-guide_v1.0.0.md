@@ -4,7 +4,7 @@ slug: live-viewer-count
 spec: system-design-guide
 spec_version: 1.0.1
 version: 1.0.0
-status: published
+status: legacy
 case: RT-01
 date: 2026-11-15
 ---
