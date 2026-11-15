@@ -123,6 +123,35 @@
 8. LinkedIn 발표 영상(V2)의 게시 연도. QCon London 2022 세션 페이지(V3)를 기준으로 적었습니다.
 9. 한 글 안에서 수치가 충돌하는 곳: Twitch 채팅 규모 "하루 100억 건 이상"과 "하루 수천억 건"(V12), LinkedIn 같은 행사의 동시 시청자 1,800만 명과 8,000만 명(V2 요약본). 어느 쪽이 맞는지 판단할 근거가 없어 인용하지 않습니다.
 
+## 9-1. 원문 대조 (2026-11-15, 카드 `KAN-002.2-4E05GD` S4)
+
+본문에 실을 수치를 집필 전에 원문과 대조했습니다(명세 SD40). 원문 HTML 이나 PDF 를 받아 수치 · 인용 문자열을 직접 찾았습니다. **본문은 아래 「맞음」 행의 수치만 출처 수치로 씁니다.** 표에 없는 출처의 수치는 쓰기 전에 같은 방식으로 대조합니다.
+
+| ID | 대조한 것 | 결과 |
+| --- | --- | --- |
+| V1 | d초 하트비트 · d+ε 만료 · 지연 타이머, 「less than 200ms at p99」, 노드당 「approximately 1.8K QPS」 | 맞음 |
+| V2 | 「100,000 connections on the same machine」, 로열 웨딩 최고 「18 million viewers」를 「180 machines」로, 「75 milliseconds at p90」, WebSocket 이 방화벽에 막히는 일 | 맞음 |
+| V4 | 하트비트 「every 30 seconds」 예시, 「more than a minute」 끊기면 오프라인 | 맞음 |
+| V5 | 「hundreds of thousands of concurrent persistent connections」, SSE 사용 | 맞음. 「노드당 약 10만」은 V5 가 아니라 V2 의 문장입니다 |
+| V6 | 폴링 질의의 「80%」가 새 데이터 없음, 1~2초 폴링이 「on the order of a billion queries per second」, 푸시 전환 뒤 CPU · QPS 「decreased by a factor of 10」, 시청자당 「at most one highly ranked comment … per second」, 최선 노력 전달 | 맞음(PDF 1~6쪽) |
+| V15 | 동시 1,000만+, 분당 50만 증가 | **열람 실패** — 봇 검사 페이지가 떠서 원문을 못 읽었습니다(우회하지 않음). 본문에 출처 수치로 쓰지 않습니다. 3절의 분당 50만 계산은 본문에서 (가정) 수치로 바꿉니다 |
+| V16 | 연결당 초당 1건 | **고침** — 원문은 「50M peak concurrent connections with 1rps messages sent rate」이고 대회 기간 「250 Billion+ messages」입니다. 「연결당」은 원문에 없는 해석이라 본문에서는 원문 표현대로 씁니다 |
+| V17 | 이모지를 「a batch of 2 seconds」로 집계 | 맞음 |
+| V18 | 입장 「within 15 seconds」, 이탈 「within 1 minute」 | 맞음 |
+| V19 | `presenceTimeout` 기본 「300 seconds」 | 맞음 |
+| V22 | 온라인 1000명이 한 마디씩이면 「1 million notifications」, 10,000명 「100 million」, 100,000명 「10 billion」, 대형 서버 연결의 「around 90%」가 수동 | 맞음 |
+| V23 | presence 이벤트 수신이 「reduced by a factor of 5」 | 맞음 |
+| V24 | 「up to 12 KB of memory」, 「standard error rate of 0.81%」 | 맞음 |
+| V27 | 「Since Redis 2.6 the expire error is from 0 to 1 milliseconds」, 수동 · 능동 만료 | 맞음 |
+| V29 | `SET` 180,180 req/s(파이프라인 없음) | 맞음(쿠폰 노트 C16 과 같은 문서) |
+| V32 | HTTP/2 가 아니면 브라우저당 연결 「6」개 제한, HTTP/2 동시 스트림 기본 100, `retry` 필드, `:` 주석 줄 | 맞음 |
+| V36 | Chrome 88 부터 숨은 탭 타이머 「once per second」, 조건이 맞으면 「once per minute」, 「5 minutes」 넘게 숨겨진 페이지 | 맞음 |
+| V37 | ALB 유휴 타임아웃 기본 「60 seconds」 | 맞음 |
+| V38 | 지수 백오프만으로는 「clusters of calls」가 남아 지터를 더함, 2015-03-04 | 맞음 |
+| V40 | `WINDOW TUMBLING (SIZE 30 SECONDS)` · `COUNT_DISTINCT`, Spark Streaming 대신 ksqlDB | 맞음 |
+
+대조하지 않은 출처(V3 · V7~V14 · V20 · V21 · V25 · V26 · V28 · V30 · V31 · V33~V35 · V39)는 수치를 본문에 싣지 않거나, 실을 때 먼저 대조합니다.
+
 ## 10. 출처
 
 | ID | 출처 | 게시일 |
