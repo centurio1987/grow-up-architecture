@@ -1,6 +1,6 @@
 ---
 name: design-pattern-guide
-description: 디자인 패턴 가이드 1편을 authoring-kit 명세(gof-guide · analysis-guide)로 집필·재집필하는 진입 스킬. 사전 확인 → 리서치 노트·사전 지식 점검(참고 문서 reference-note) → authoring-write 위임 → 기계 검사·품질 게이트 → 발행·게이트 기록까지 끌고 간다. 트리거 — "디자인 패턴 가이드", "Singleton/Strategy/Observer/... 패턴 가이드 작성/재집필", "분석 패턴 가이드", "Account/Quantity/Transaction 패턴 가이드", "design pattern guide", "패턴 가이드 문서". 여러 패턴을 요청하면 패턴마다 1편씩 따로 돈다. 이미 있는 코드가 패턴에 맞는지 판정하는 일은 design-pattern-analyzer 가 맡는다.
+description: 디자인 패턴 가이드 1편(gof-guide · analysis-guide)과 시스템 설계 사례 가이드 1편(system-design-guide)을 authoring-kit 명세로 집필·재집필하는 진입 스킬. 사전 확인 → 리서치 노트·사전 지식 점검(참고 문서 reference-note) → authoring-write 위임 → 기계 검사·품질 게이트 → 발행·게이트 기록까지 끌고 간다. 트리거 — "디자인 패턴 가이드", "Singleton/Strategy/Observer/... 패턴 가이드 작성/재집필", "분석 패턴 가이드", "Account/Quantity/Transaction 패턴 가이드", "design pattern guide", "패턴 가이드 문서", "시스템 설계 가이드", "시스템 설계 사례 가이드", "system design guide". 여러 패턴을 요청하면 패턴마다 1편씩 따로 돈다. 이미 있는 코드가 패턴에 맞는지 판정하는 일은 design-pattern-analyzer 가 맡는다.
 argument-hint: <pattern-kebab-name>
 ---
 
@@ -11,6 +11,7 @@ argument-hint: <pattern-kebab-name>
 
 > **집필 규칙은 이 파일에 없다.** 골격·작성법·최소 조건의 판정 원칙은 명세(spec)
 > `gof-guide` · `analysis-guide` 에, 문체는 퍼소나(voice) `ppangtolab-teacher` 에 산다.
+> 시스템 설계 사례 가이드는 명세 `system-design-guide` 가 정한다.
 > 이 스킬은 **어느 명세로 쓸지 고르고, 넘기고, 게이트와 발행을 끌고 가는 일**만 한다.
 > 플러그인이 없으면 명확히 실패한다.
 
@@ -21,12 +22,26 @@ argument-hint: <pattern-kebab-name>
 | `pattern-guide/design-pattern-guide/<패턴>/` (`dirs.content` · `dirs.tracks`) | `gof-guide` | `gof-guide-canvas` |
 | `pattern-guide/ddd-analysis-pattern-guide/<패턴>/` (`dirs.content` · `dirs.tracks`) | `analysis-guide` | `analysis-guide-canvas` |
 | `pattern-guide/reference/<슬러그>/` (`dirs.reference`) — 가이드가 기대는 주제 밖 사전 지식 | `reference-note` | `reference-note-canvas` |
+| `pattern-guide/system-design-guide/<슬러그>/` (`dirs.content` · `dirs.tracks`) — 문제 하나 = 한 편 | `system-design-guide` | `system-design-guide-canvas` |
 
-voice 는 셋 다 `ppangtolab-teacher` 다. 참고 문서는 패턴이 아니라 **개념군** 단위이고, 가이드 집필 도중 사전 지식 점검(1단계)이 없다고 판정할 때 먼저 쓴다.
+voice 는 넷 다 `ppangtolab-teacher` 다. 참고 문서는 패턴이 아니라 **개념군** 단위이고, 가이드 집필 도중 사전 지식 점검(1단계)이 없다고 판정할 때 먼저 쓴다.
 
 대상 트리는 `$ARGUMENTS-pattern.md` 가 이미 있는 쪽이다. 두 트리 어디에도 없는 새 패턴이면
 `dirs.research` 의 `candidates.md` 「결정」 절에 기록된 spec 을 따른다. 거기에도 없으면 멈추고
 어느 트리에 둘지 묻는다 — 채택 결정 없이 새 패턴을 만들지 않는다.
+
+### 시스템 설계 트랙에서 달라지는 점
+
+골격과 작성법은 명세가 정하므로 여기에는 이 스킬의 진행에서 달라지는 것만 적는다.
+
+- **무엇을 쓸지는 칸반 카드가 정한다.** 후보는 사례 목록 `pattern-guide/research/system-design-cases-2026-11-13.md` 의 ID(`RT-01` 등)이고,
+  슬러그는 패턴 이름이 아니라 문제 이름이다(`live-viewer-count`). `candidates.md` 「결정」 절은 이 트랙을 다루지 않는다. 머리말 `case` 키에 후보 ID 를 적는다.
+- **최소 조건 절이 없다.** 그 자리를 `## 요구 충족 확인` 이 맡는다. 아래 「주의」의 analyzer 계약 문구와 2단계의 패턴 골격 설명은 이 트랙에 걸리지 않는다.
+- **인덱스 등록(4단계의 3)을 하지 않는다.** 이 계열의 인덱스는 카드 `KAN-002.3` 에서 세운다. 포인터 점검(4단계의 4)은 그대로 돈다 —
+  인덱스에 없는 편은 오류가 아니고, 낡은 판을 가리키는 것만 오류다.
+- **사전 지식 점검은 원서 대신 기술 개념으로 한다.** 본문이 기대는 바깥 기술(저장소 자료구조 · 메시지 브로커의 보장 · 프로토콜)을 뽑아
+  본문에서 풀지, 참고 문서로 잇을지를 정한다.
+- **출처 수치는 집필 전에 원문과 대조한다**(명세 SD40). 리서치 노트의 수치 가운데 본문에 실을 것을 골라 원문을 다시 열어 보고, 어긋나면 노트를 먼저 고친다.
 
 ## 동작
 
@@ -43,7 +58,7 @@ test -f "$PLUGIN/scripts/authoring.py" || echo "authoring-kit 없음 — 여기�
 ```bash
 python3 "$PLUGIN/scripts/authoring.py" status
 python3 "$PLUGIN/scripts/authoring.py" lock          # 검사만. --update 는 규약 개정 때만
-python3 "$PLUGIN/scripts/authoring.py" resolve --voice ppangtolab-teacher --spec <gof-guide|analysis-guide> --profile main --frozen
+python3 "$PLUGIN/scripts/authoring.py" resolve --voice ppangtolab-teacher --spec <gof-guide|analysis-guide|system-design-guide> --profile main --frozen
 ```
 
 - **플러그인이 없으면 여기서 멈춘다.** 구 경로(옛 `template.md`·옛 SKILL.md 산문 규칙)로 조용히
@@ -65,6 +80,7 @@ python3 "$PLUGIN/scripts/authoring.py" resolve --voice ppangtolab-teacher --spec
 | GoF 생성·구조 | `gof-creational-structural.md` |
 | GoF 행위 | `gof-behavioral.md` |
 | 분석 패턴 | `analysis-patterns.md` |
+| 시스템 설계 사례 | 문제마다 한 장 — `live-viewer-count-2026-11-13.md` · `coupon-issuance-2026-11-15.md`. 후보 목록은 `system-design-cases-2026-11-13.md` |
 
 - **회계 계열(Account · Transaction · Posting Rule)** 은 `accounting-context.md` 를 반드시 읽는다.
   상황 설정의 배경은 그 확정안에서 가져오고, 이 자리에서 새로 정하지 않는다.
@@ -84,7 +100,7 @@ python3 "$PLUGIN/scripts/authoring.py" resolve --voice ppangtolab-teacher --spec
 ### 2. 집필 — `authoring-write` 에 위임
 
 ```
-Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide>
+Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide|system-design-guide>
 ```
 
 넘길 것: **대상 경로** · 1단계에서 읽은 **리서치 노트의 절**(경로와 절 제목, 회계 계열이면
@@ -182,8 +198,8 @@ PY
 
 ## 참조 파일
 
-- `gof-guide-canvas.md` · `analysis-guide-canvas.md` · `reference-note-canvas.md` (이 폴더) — 캔버스. `paths.json` `templates` 가 가리킨다. 헤딩 문구·순서를 바꾸지 않는다
-- `../../authoring/specs/{gof-guide,analysis-guide,reference-note}/` — 항목 구성 · 항목별 작성법 · 판정 원칙
+- `gof-guide-canvas.md` · `analysis-guide-canvas.md` · `reference-note-canvas.md` · `system-design-guide-canvas.md` (이 폴더) — 캔버스. `paths.json` `templates` 가 가리킨다. 헤딩 문구·순서를 바꾸지 않는다
+- `../../authoring/specs/{gof-guide,analysis-guide,reference-note,system-design-guide}/` — 항목 구성 · 항목별 작성법 · 판정 원칙
 - `~/.claude/authoring/voices/ppangtolab-teacher/` — voice (전역, 여러 프로젝트가 함께 쓴다)
 - `../../authoring/paths.json` — 경로(`dirs`) · 캔버스(`templates`) · 명령(`commands`)
 - `../../authoring.lock.json` — 이 프로젝트가 서 있는 규칙 조합
