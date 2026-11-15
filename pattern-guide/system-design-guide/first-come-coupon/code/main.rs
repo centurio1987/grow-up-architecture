@@ -128,8 +128,10 @@ impl<'a> CouponIssue<'a> {
                 if i + 1 < self.at.len() { self.clock.schedule(self.at[i + 1], Kind::Arrive, i + 1); }
                 self.note(now, i, &format!("presses, api-{}", i % 2 + 1));
                 if self.paused { self.n.retry += 1; }
-                else if self.sold_out[i % 2] { self.n.gone += 1; self.n.local += 1; }
-                else { self.send(i, now, 0); }
+                else if self.sold_out[i % 2] {
+                    self.n.gone += 1;
+                    self.n.local += 1;
+                } else { self.send(i, now, 0); }
             }
             Kind::Redis => {
                 self.reply[i] = -1;
@@ -224,7 +226,8 @@ fn arrivals(rng: &mut Rng, count: usize, max_gap: u32) -> Arrivals {
     let (mut at, mut user, mut users) = (Vec::with_capacity(count), Vec::with_capacity(count), 0);
     for i in 0..count {
         let again = i == 1 || (i > 1 && rng.below(10) == 0);
-        user.push(if again { user[i - 1] } else { users += 1; users });
+        if !again { users += 1; }
+        user.push(if again { user[i - 1] } else { users });
         at.push(if i == 0 { 0 } else { at[i - 1] + rng.below(max_gap + 1) as i64 });
     }
     Arrivals { at, user, users }

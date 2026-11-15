@@ -130,8 +130,10 @@ class CouponIssue {
         if (i + 1 < this.a.at.length) this.clock.schedule(this.a.at[i + 1]!, Kind.ARRIVE, i + 1);
         this.note(now, i, `presses, api-${(i % 2) + 1}`);
         if (this.paused) n.retry++;
-        else if (this.soldOut[i % 2]) { n.gone++; n.local++; }
-        else this.send(i, now, 0);
+        else if (this.soldOut[i % 2]) {
+          n.gone++;
+          n.local++;
+        } else this.send(i, now, 0);
         break;
       case Kind.REDIS: {
         this.reply[i] = -1;
@@ -189,7 +191,9 @@ class CouponIssue {
         }
         this.clock.schedule(now + WORK_US, Kind.WORK, 0);
         break;
-      case Kind.REPLICATE: redis.replicate(); break;
+      case Kind.REPLICATE:
+        redis.replicate();
+        break;
       case Kind.STOP:
         redis.up = false;
         n.stopCount = redis.count;

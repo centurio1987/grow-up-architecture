@@ -19,12 +19,28 @@ export const REDIS: Box = { x: 300, y: 90, w: 190, h: 100, role: 'database', tag
 export const QUEUE: Box = { x: 620, y: 260, w: 170, role: 'queue', tag: 'KAFKA', name: '발급 큐', note: '성공한 요청만 쌓임' };
 export const WORKER: Box = { x: 620, y: 430, w: 170, role: 'process', tag: 'WORKER', name: '발급 워커', note: '정해 둔 속도로 기록' };
 export const DB: Box = { x: 300, y: 420, w: 190, h: 100, role: 'database', tag: 'POSTGRESQL', name: '쿠폰 DB', note: '유니크 제약 둘' };
+/**
+ * 개념도 밖 배포 세부 — 시나리오 1 · 2 가 기대는 앞단의 부하 분산(명세 SD11, 1.1.0).
+ * 개념도 상자가 아니라 경로 그림에만 그린다. 정식 설명은 기술 항목 「쿠폰 API 서버」 안의 문단이다.
+ * 사용자 앱과 쿠폰 API 서버 사이, 요청 화살표(y=285) 위에 놓는다.
+ */
+export const LB: Box = { x: 180, y: 261, w: 104, role: 'process', tag: 'LB', name: '부하 분산', note: '' };
 
 export function Boxes({ boxes }: { boxes: Box[] }) {
   return (
     <>
       {boxes.map((b) => (
-        <RoleBox key={b.tag + b.name} x={b.x} y={b.y} w={b.w} h={b.h ?? BOX_H} role={b.role} tag={b.tag} name={b.name} note={b.note} />
+        <RoleBox
+          key={b.tag + b.name}
+          x={b.x}
+          y={b.y}
+          w={b.w}
+          h={b.note ? (b.h ?? BOX_H) : b.h}
+          role={b.role}
+          tag={b.tag}
+          name={b.name}
+          note={b.note || undefined}
+        />
       ))}
     </>
   );
@@ -96,6 +112,8 @@ export function Lane({ spec }: { spec: LaneSpec }) {
 /** 개념도의 화살표 자리. 시나리오 그림은 글만 바꿔 쓴다. */
 export const PATH = {
   request: { from: { x: 164, y: 285 }, to: { x: 300, y: 285 } },
+  toLb: { from: { x: 164, y: 285 }, to: { x: 180, y: 285 } },
+  fromLb: { from: { x: 284, y: 285 }, to: { x: 300, y: 285 } },
   answer: { from: { x: 300, y: 318 }, to: { x: 164, y: 318 } },
   decide: { from: { x: 395, y: 260 }, to: { x: 395, y: 190 } },
   enqueue: { from: { x: 490, y: 300 }, to: { x: 620, y: 300 } },

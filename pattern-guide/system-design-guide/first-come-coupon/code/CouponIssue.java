@@ -131,8 +131,10 @@ public final class CouponIssue {
                 if (i + 1 < at.length) clock.schedule(at[i + 1], Kind.ARRIVE, i + 1);
                 note(now, i, "presses, api-" + (i % 2 + 1));
                 if (paused) retry++;
-                else if (soldOut[i % 2]) { gone++; local++; }
-                else send(i, now, 0);
+                else if (soldOut[i % 2]) {
+                    gone++;
+                    local++;
+                } else send(i, now, 0);
             }
             case REDIS -> {
                 reply[i] = -1;
