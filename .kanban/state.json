@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 55,
+  "next_seq": 56,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -332,7 +332,7 @@
       ]
     },
     "KAN-002.3-8DTJ6W": {
-      "col": "todo",
+      "col": "doing",
       "title": "1차 12편 집필 — RT-03 · RT-08 · CT-03 · CT-05 · AG-03 · RD-01 · GE-02 · MD-01 · SY-01 · IN-01 · AI-01 · AI-02",
       "verbatim": "질문: 남은 두 결정(파일럿 두 편, 칸반 카드로 관리)을 추천대로 정할까요?\n답변: 추천대로",
       "생성": "ai",
@@ -378,6 +378,16 @@
     "KAN-002.3-8DTJ6W"
   ],
   "recent": [
+    {
+      "seq": 55,
+      "t": "2026-11-16T15:29",
+      "a": "ai",
+      "id": "KAN-002.3-8DTJ6W",
+      "op": "move",
+      "w": "7BM1CZ",
+      "from": "todo",
+      "to": "doing"
+    },
     {
       "seq": 54,
       "t": "2026-11-16T14:48",
@@ -950,26 +960,6 @@
       "reason": "워커가 편마다 같은 원전을 다시 뒤지면 33번 중복되고, 후보 채택은 유저 몫이라 먼저 물어야 한다",
       "goal": "pattern-guide/research/ 노트 4건(주장·출처·원전 위치·미해결 질문) + 후보 보고서 + 회계 배경 확정안, 유저 결정 접수",
       "memo": ""
-    },
-    {
-      "seq": 5,
-      "t": "2026-09-17T09:15",
-      "a": "ai",
-      "id": "KAN-001-YXTC2C",
-      "op": "brief",
-      "w": "TNA8EY",
-      "fields": {
-        "short": "가이드 재집필",
-        "purpose": "pattern-guide/ 아래 패턴 가이드 33편(GoF 23 + DDD 분석 패턴 10)을 처음부터 다시 쓴다",
-        "reason": "현재 33편은 용어 정의 절이 없고 DDD 가이드가 aggregate 경계를 정의하지 않은 채 경계를 암시하는 코드를 실어 기준 문서로 쓸 수 없다",
-        "goal": "authoring-kit spec 2종으로 33편을 다시 써 게이트 PASS, analyzer·인덱스가 새 가이드를 가리킨다"
-      },
-      "before": {
-        "short": "가이드 재집필",
-        "purpose": "pattern-guide/ 아래 패턴 가이드 33편(GoF 23 + DDD 분석 패턴 10)을 처음부터 다시 쓴다",
-        "reason": "",
-        "goal": ""
-      }
     }
   ],
   "layout": 3,
