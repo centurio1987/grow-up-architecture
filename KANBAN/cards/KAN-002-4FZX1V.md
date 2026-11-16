@@ -41,7 +41,7 @@ scope: pattern-guide/system-design-guide/**, pattern-guide/research/system-desig
 work 하나가 하위 카드 하나다. 각 하위 카드가 자기 실행 문서와 배치를 갖는다.
 
 - [x] `S1` 명세 등록 — `KAN-002.1-7YT11M`. 완료 기준: 그 카드가 완료되고 `check-guides` 가 새 트랙을 명세대로 검사한다
-- [ ] `S2` 파일럿 두 편과 회고 — `KAN-002.2-4E05GD`. 완료 기준: 그 카드가 완료되고 회고를 반영한 명세 개정판이 나온다
+- [x] `S2` 파일럿 두 편과 회고 — `KAN-002.2-4E05GD`. 완료 기준: 그 카드가 완료되고 회고를 반영한 명세 개정판이 나온다
 - [ ] `S3` 1차 12편 집필 — `KAN-002.3-8DTJ6W`. 완료 기준: 그 카드가 완료되고 인덱스에 이 계열이 선다
 
 ## 검증
@@ -58,3 +58,4 @@ python3 scripts/check-guides.py --gates --pointers --derived                    
 - 2026-11-13T20:35 · s:298c14ef — `실행 계획` 섹션 교체
 - 2026-11-13T20:35 · s:298c14ef — `검증` 섹션 교체
 - 2026-11-14T20:30 · s:298c14ef · S1 done — KAN-002.1 완료 — 명세 system-design-guide 1.0.0 등록, 시험 초안이 check-guides --all·--compile·--run 통과, 문서 전체 승인(2026-11-14)
+- 2026-11-16T14:38 · s:298c14ef · S2 done — KAN-002.2 완료 — 파일럿 두 편 v1.1.0 발행(명세 1.1.1), 회고 R1~R14 를 명세에 반영, check-guides --all·--compile·--run 과 --gates·--pointers·--derived 통과, 판단 항목 5/5 승인 뒤 문서 전체 승인(2026-11-16). 세 편(SY-01·MD-01·AI-02)의 집필 전 확인은 S3 시작 때 첫 편보다 먼저(회고 8절)

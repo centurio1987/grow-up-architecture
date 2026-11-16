@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 52,
+  "next_seq": 53,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -300,12 +300,12 @@
       "parent": "KAN-002-4FZX1V"
     },
     "KAN-002.2-4E05GD": {
-      "col": "review",
+      "col": "done",
       "title": "파일럿 두 편과 회고 — RT-01 라이브 동시 시청자 수 · CT-01 선착순 쿠폰 발급",
       "verbatim": "질문: 남은 두 결정(파일럿 두 편, 칸반 카드로 관리)을 추천대로 정할까요?\n답변: 추천대로",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-11-15",
+      "갱신": "2026-11-16",
       "title_hash": "7ce163c649dc7294395c0921f3545d545748523e",
       "verbatim_hash": "df7ab06bfe288586f458bb02c9d437468479054f",
       "short": "파일럿 두 편과 회고",
@@ -368,6 +368,16 @@
     "KAN-002.2-4E05GD"
   ],
   "recent": [
+    {
+      "seq": 52,
+      "t": "2026-11-16T14:38",
+      "a": "ai",
+      "id": "KAN-002.2-4E05GD",
+      "op": "move",
+      "w": "7BM1CZ",
+      "from": "review",
+      "to": "done"
+    },
     {
       "seq": 51,
       "t": "2026-11-15T15:33",
@@ -956,17 +966,6 @@
       "field": "verbatim",
       "before": "",
       "after": "전체 가이드 재집필을 수행해라."
-    },
-    {
-      "seq": 2,
-      "t": "2026-09-16T23:25",
-      "a": "ai",
-      "id": "KAN-001-YXTC2C",
-      "op": "edit",
-      "w": "TNA8EY",
-      "field": "title",
-      "before": "전체 가이드 재집필을 수행해라.",
-      "after": "전체 가이드 재집필"
     }
   ],
   "layout": 3,

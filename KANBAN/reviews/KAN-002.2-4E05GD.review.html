@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<!-- kanban-fp:9935c83c0aab13e74990018c24f6891db94f1572 -->
+<!-- kanban-fp:ac15cbbf4f7d74a0e42909bb8ace7bca0a2dfbed -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KAN-002.2-4E05GD 검토 요청</title>
 <style>
@@ -374,8 +374,9 @@ html:has(#rv-list) { scroll-behavior: smooth; }
       background: var(--bg-elevated); border: var(--border-width) solid var(--border);
       box-shadow: var(--offset-lg); }
 .dh-cv { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .6rem; }
-.dh-cv b { font-family: var(--font-mono); font-size: 30px; line-height: 1;
-           letter-spacing: -.02em; font-weight: 700; white-space: nowrap; }
+/* 숫자는 본문 글꼴의 고른 폭 숫자다(KAN-023 S4, 시안 `.conv__n`) — 모노 글꼴은 빗금 앞뒤가 넓어 「2 / 3」이 흩어졌다. */
+.dh-cv b { font-family: var(--font-sans); font-variant-numeric: tabular-nums; font-size: 30px; line-height: 1;
+           font-weight: 700; white-space: nowrap; }
 /* 분모의 슬래시만 죽인다 — 「5 / 7」에서 눈이 잡아야 하는 것은 5 와 7 이다. */
 .dh-cv b i { font-style: normal; color: var(--fg-subtle); }
 .dh-sub { font-size: 12.5px; line-height: 1.4; color: var(--fg-muted); white-space: nowrap; }
@@ -613,11 +614,12 @@ details.jd-srcs { margin: .55rem 0 0; }
  * 수 한 줄이면 그 확인이 끝난다. 항목 8 · 판정 12 짜리 문서가 한 판에 들어오는 것이
  * 이 규칙의 값이다(의뢰서 §6-1).
  *
- * **접되 지우지 않는다** — 펴면 열린 항목과 한 글자도 다르지 않은 내용이 나온다. */
+ * **접되 지우지 않는다** — 펴면 열린 항목과 한 글자도 다르지 않은 내용이 나온다.
+ * 줄 바탕은 열린 항목 머리와 같은 흰 바탕이다(KAN-023 S4, 시안 `ReviewSaved` 닫힌 항목) — 전역 접기의 가라앉은 바탕을 덮는다. */
 .jd-fold > summary { display: grid;
                      grid-template-columns: auto auto auto minmax(0, 1fr) auto auto;
                      gap: .5rem; align-items: center; font-family: var(--font-sans);
-                     font-size: 15px; font-weight: 400; border: 0;
+                     font-size: 15px; font-weight: 400; border: 0; background: var(--bg-elevated);
                      border-bottom: var(--border-width) solid var(--border); }
 /* 전역 접기 표식(▸)을 여기서는 끈다 — grid 컨테이너 안의 `::before` 는 칸 하나를 차지해
    네 칸짜리 줄을 통째로 밀어낸다. 대신 오른쪽 끝의 「펴기/접기」가 같은 말을 한다. */
@@ -635,7 +637,6 @@ details.jd-srcs { margin: .55rem 0 0; }
 .jd-fold > summary > .jd-tog { grid-column: 6; }
 .jd-tog::after { content: "펴기"; }
 .jd-fold[open] .jd-tog::after { content: "접기"; }
-.jd-fold[open] > summary { background: var(--bg-elevated); }
 /* 접힌 항목은 정말 한 줄이다 — 전역 `details` 바깥 여백(.7rem)이 머리 위아래에 빈 띠를 남기고, 머리 밑줄이 항목 테와
    겹쳐 두 줄로 보였다(KAN-021 S19 대조, 시안 Review · ReviewSaved). 펴면 머리 밑줄이 몸과 가른다. */
 .jd-fold { margin: 0; }
@@ -1118,7 +1119,8 @@ textarea { line-height: 1.6; resize: vertical; }
   animation: kb-count var(--t-count) var(--ease-snap) var(--t-quick) 1 backwards; }
 .jd.fx-trace, .jd.fx-trace > .jd-head, .jd-ns > li.fx-trace {
   animation: kb-trace var(--t-trace) var(--ease-out) calc(var(--t-quick) + var(--t-count)) 1 backwards; }
-/* 닫힌 항목의 접힘 줄은 가라앉은 바탕이라 끝 색을 제 바탕으로 둔다(kb-trace 는 `--bg-elevated` 에서 끝난다). */
+/* 닫힌 항목의 접힘 줄은 끝 색을 제 바탕으로 둔다(kb-trace 는 `--bg-elevated` 에서 끝난다). 지금 그 바탕도 흰색이지만
+   (KAN-023 S4) 접힘 줄 바탕이 바뀌어도 잦아든 뒤 색이 어긋나지 않게 제 바탕을 따른다. */
 .jd.fx-trace > .jd-fold > summary {
   animation: kb-wash var(--t-trace) var(--ease-out) calc(var(--t-quick) + var(--t-count)) 1 backwards; }
 @keyframes kb-outline-in { 0% { outline-color: transparent; } }
@@ -1210,7 +1212,7 @@ python3 scripts/kanban.py review-item  &lt;project-root&gt; --card KAN-002.2-4E0
   <div class="rv-title-text">
     <h1>파일럿 두 편과 회고</h1>
     <p class="rv-long">파일럿 두 편과 회고 — RT-01 라이브 동시 시청자 수 · CT-01 선착순 쿠폰 발급</p>
-    <p class="rv-sub">검토 요청 · 11-15 · 항목 5<span class="rv-sub-rest"> · 검토 칸 · 문서 검토 대기 · 추가 의견 총 8 · <a href="#evidence">무엇을 바꿨고 무엇으로 확인했나 ↓</a></span></p>
+    <p class="rv-sub">검토 요청 · 11-15 · 항목 5<span class="rv-sub-rest"> · 완료 칸 · 문서 승인됨 · 추가 의견 총 8 · <a href="#evidence">무엇을 바꿨고 무엇으로 확인했나 ↓</a></span></p>
   </div>
   <a class="rv-btn" href="../reports/KAN-002.2-4E05GD.report.html">계획 리포트</a>
 </div>
@@ -1227,7 +1229,7 @@ python3 scripts/kanban.py review-item  &lt;project-root&gt; --card KAN-002.2-4E0
   <div class="dh-act"><span class="tag tag-done">남은 항목 없음</span></div>
 </div>
 
-<section class="rv-allok" aria-label="문서 전체 판정"><div class="rv-allok-text"><h3>살아 있는 5건이 모두 승인되었습니다</h3><p>이제 문서 전체를 승인할 수 있습니다. 철회된 항목은 없습니다. 「문서 전체 승인」을 누르면 명령으로 나갑니다. 명령을 터미널에서 실행한 뒤 카드를 맡은 세션에 이렇게 보내세요.</p><p class="rv-allok-say">「KAN-002.2-4E05GD 검토 판정을 읽고 처리해 주세요.」</p></div><div class="rv-allok-act"><button data-judge-all="승인">문서 전체 승인</button><span class="tag tag-wait" data-pending="*" hidden></span></div></section>
+<section class="rv-allok is-done" aria-label="문서 전체 판정"><div class="rv-allok-text"><h3>문서가 승인되었습니다</h3><p>카드를 완료로 옮기고 병합 · 정리하는 것은 카드를 맡은 세션입니다. 그 세션에 이렇게 보내세요.</p><p class="rv-allok-say">「KAN-002.2-4E05GD 검토 판정을 읽고 처리해 주세요.」</p></div></section>
 
 
 
@@ -1275,7 +1277,7 @@ python3 scripts/kanban.py review-item  &lt;project-root&gt; --card KAN-002.2-4E0
 <h2 id="ev-h">무엇을 바꿨고 무엇으로 확인했나</h2>
 <details class="ev-fold">
 <summary><span class="evid"><span class="evid-cell"><span class="evid-l">검증 기준</span><span class="evid-big">10줄</span><span class="evid-sub">카드 문서 「검증」 절의 사본 · 펼치면 원문</span></span><span class="evid-cell"><span class="evid-l">실행 결과 첨부</span><span class="evid-big">28줄</span><span class="evid-last">마지막 줄 — 「전체: 통과」</span></span><span class="evid-cell"><span class="evid-l">바뀐 크기</span><span class="evid-big">50파일</span><span class="evid-sub">+15,592 −80 · 커밋 13</span></span></span>
-<span class="ev-more"><span class="ev-tog"></span><span class="ev-meta">기준 원문 · 실행 결과 28줄 · 변경 파일 50 · 커밋 13 · 롤백 태그 14 · 기술 정보</span></span></summary>
+<span class="ev-more"><span class="ev-tog"></span><span class="ev-meta">기준 원문 · 실행 결과 28줄 · 변경 파일 50 · 커밋 13 · 롤백 태그 14 · 기술 정보 · 판정 이력 2</span></span></summary>
 <div class="ev-body">
 <section class="ev-part"><h3>검증 기준 <span class="ev-n">카드 문서 「검증」 절의 사본</span></h3>
 <pre>python3 ~/.claude/skills/manage-kanban/scripts/kanban.py batch-status . --card KAN-002.2-4E05GD   # work 마다 묶음 하나
@@ -1355,12 +1357,17 @@ kan/KAN-002.2-4E05GD/batch5</pre></details>
 <tr><td>베이스</td><td><code>26696fd046fb574c82ef864c1a24e9febf3819d4</code></td></tr>
 <tr><td>변경 훑기</td><td><code>git diff 26696fd046fb574c82ef864c1a24e9febf3819d4...HEAD</code></td></tr>
 </table></div></details>
-
+<details><summary>문서 판정 이력<span class="fold-n">2건</span></summary><section class="card"><p><strong>판정</strong>: 승인</p>
+<p><strong>판정 이력</strong>:</p>
+<ul>
+<li>승인 · 유저 · 2026-11-16</li>
+<li>승인 · 유저 · 2026-11-16</li>
+</ul></section></details>
 </div></details>
 </section>
 
 <p class="meta src">생성 근거: .kanban/reviews/KAN-002.2-4E05GD.review.json
-· KANBAN.md · 갱신 2026-11-15</p>
+· KANBAN.md · 갱신 2026-11-16</p>
 </div>
 
 <section class="tray" id="tray" aria-label="저장 전 판정">
