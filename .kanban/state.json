@@ -1,6 +1,6 @@
 {
   "next_id": 3,
-  "next_seq": 53,
+  "next_seq": 55,
   "cards": {
     "KAN-001-YXTC2C": {
       "col": "done",
@@ -332,12 +332,12 @@
       ]
     },
     "KAN-002.3-8DTJ6W": {
-      "col": "backlog",
+      "col": "todo",
       "title": "1차 12편 집필 — RT-03 · RT-08 · CT-03 · CT-05 · AG-03 · RD-01 · GE-02 · MD-01 · SY-01 · IN-01 · AI-01 · AI-02",
       "verbatim": "질문: 남은 두 결정(파일럿 두 편, 칸반 카드로 관리)을 추천대로 정할까요?\n답변: 추천대로",
       "생성": "ai",
       "최종": "ai",
-      "갱신": "2026-11-13",
+      "갱신": "2026-11-16",
       "title_hash": "4c026a47d8ed2d042771d79562b39554d1455aa0",
       "verbatim_hash": "df7ab06bfe288586f458bb02c9d437468479054f",
       "short": "1차 12편 집필",
@@ -348,13 +348,22 @@
       "reason_hash": "0ed8a967218f06a5fa2fa7446ed9d6317fbce88c",
       "goal": "12편이 게이트 PASS 로 발행되고 인덱스에 시스템 설계 사례 계열이 선다",
       "goal_hash": "0e5886b18d85b0093628be48f2c7472996103b85",
-      "memo": "파일럿 회고 뒤 목록과 순서를 다시 본 다음 할 일로 옮긴다. 선정 기준은 사례 목록 요약 절",
-      "memo_hash": "90cf946500c6bc85b7ec7c01ceb112eddf30aaee",
-      "parent": "KAN-002-4FZX1V"
+      "memo": "차례와 집필 전 확인은 회고 8절(2026-11-16 KAN-002.2 검토 승인). 편마다 출처는 사례 목록 2절의 그 행",
+      "memo_hash": "6ed4d61cb623e939e81bdc8d208f48472b409be3",
+      "parent": "KAN-002-4FZX1V",
+      "scope": [
+        "pattern-guide/system-design-guide/**",
+        "pattern-guide/research/system-design-*",
+        "pattern-guide/gate-results.jsonl",
+        ".claude/authoring/specs/system-design-guide/**",
+        ".claude/authoring/paths.json",
+        ".claude/authoring.lock.json",
+        ".claude/skills/design-pattern-guide/SKILL.md",
+        ".claude/skills/design-pattern-guide/system-design-guide-canvas.md"
+      ]
     }
   },
   "order": [
-    "KAN-002.3-8DTJ6W",
     "KAN-002-4FZX1V",
     "KAN-001.1-P5N9NF",
     "KAN-001.2-4NWK0T",
@@ -365,9 +374,31 @@
     "KAN-001.7-4MRJ1B",
     "KAN-001-YXTC2C",
     "KAN-002.1-7YT11M",
-    "KAN-002.2-4E05GD"
+    "KAN-002.2-4E05GD",
+    "KAN-002.3-8DTJ6W"
   ],
   "recent": [
+    {
+      "seq": 54,
+      "t": "2026-11-16T14:48",
+      "a": "ai",
+      "id": "KAN-002.3-8DTJ6W",
+      "op": "move",
+      "w": "7BM1CZ",
+      "from": "backlog",
+      "to": "todo"
+    },
+    {
+      "seq": 53,
+      "t": "2026-11-16T14:48",
+      "a": "ai",
+      "id": "KAN-002.3-8DTJ6W",
+      "op": "edit",
+      "w": "7BM1CZ",
+      "field": "memo",
+      "before": "파일럿 회고 뒤 목록과 순서를 다시 본 다음 할 일로 옮긴다. 선정 기준은 사례 목록 요약 절",
+      "after": "차례와 집필 전 확인은 회고 8절(2026-11-16 KAN-002.2 검토 승인). 편마다 출처는 사례 목록 2절의 그 행"
+    },
     {
       "seq": 52,
       "t": "2026-11-16T14:38",
@@ -939,33 +970,6 @@
         "reason": "",
         "goal": ""
       }
-    },
-    {
-      "seq": 4,
-      "t": "2026-09-16T23:25",
-      "a": "ai",
-      "id": "KAN-001-YXTC2C",
-      "op": "brief",
-      "w": "TNA8EY",
-      "fields": {
-        "short": "가이드 재집필",
-        "purpose": "pattern-guide/ 아래 패턴 가이드 33편(GoF 23 + DDD 분석 패턴 10)을 처음부터 다시 쓴다"
-      },
-      "before": {
-        "short": "",
-        "purpose": ""
-      }
-    },
-    {
-      "seq": 3,
-      "t": "2026-09-16T23:25",
-      "a": "ai",
-      "id": "KAN-001-YXTC2C",
-      "op": "edit",
-      "w": "TNA8EY",
-      "field": "verbatim",
-      "before": "",
-      "after": "전체 가이드 재집필을 수행해라."
     }
   ],
   "layout": 3,

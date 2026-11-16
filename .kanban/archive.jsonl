@@ -1,2 +1,4 @@
 {"seq": 1, "t": "2026-09-16T23:23", "a": "유저", "id": "KAN-001-YXTC2C", "op": "create", "w": "TNA8EY", "col": "backlog", "title": "전체 가이드 재집필을 수행해라.", "verbatim": "", "parent": null, "short": "", "purpose": "", "reason": "", "goal": "", "memo": "", "request_template": "free"}
 {"seq": 2, "t": "2026-09-16T23:25", "a": "ai", "id": "KAN-001-YXTC2C", "op": "edit", "w": "TNA8EY", "field": "title", "before": "전체 가이드 재집필을 수행해라.", "after": "전체 가이드 재집필"}
+{"seq": 3, "t": "2026-09-16T23:25", "a": "ai", "id": "KAN-001-YXTC2C", "op": "edit", "w": "TNA8EY", "field": "verbatim", "before": "", "after": "전체 가이드 재집필을 수행해라."}
+{"seq": 4, "t": "2026-09-16T23:25", "a": "ai", "id": "KAN-001-YXTC2C", "op": "brief", "w": "TNA8EY", "fields": {"short": "가이드 재집필", "purpose": "pattern-guide/ 아래 패턴 가이드 33편(GoF 23 + DDD 분석 패턴 10)을 처음부터 다시 쓴다"}, "before": {"short": "", "purpose": ""}}
