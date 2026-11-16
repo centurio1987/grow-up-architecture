@@ -37,8 +37,9 @@ voice 는 넷 다 `ppangtolab-teacher` 다. 참고 문서는 패턴이 아니라
 - **무엇을 쓸지는 칸반 카드가 정한다.** 후보는 사례 목록 `pattern-guide/research/system-design-cases-2026-11-13.md` 의 ID(`RT-01` 등)이고,
   슬러그는 패턴 이름이 아니라 문제 이름이다(`live-viewer-count`). `candidates.md` 「결정」 절은 이 트랙을 다루지 않는다. 머리말 `case` 키에 후보 ID 를 적는다.
 - **최소 조건 절이 없다.** 그 자리를 `## 요구 충족 확인` 이 맡는다. 아래 「주의」의 analyzer 계약 문구와 2단계의 패턴 골격 설명은 이 트랙에 걸리지 않는다.
-- **인덱스 등록(4단계의 3)을 하지 않는다.** 이 계열의 인덱스는 카드 `KAN-002.3` 에서 세운다. 포인터 점검(4단계의 4)은 그대로 돈다 —
-  인덱스에 없는 편은 오류가 아니고, 낡은 판을 가리키는 것만 오류다.
+- **인덱스는 `pattern-guide/system-design-guide/README.md` 다**(4단계의 3). 발행할 때 그 편을 사례 목록의 계열(RT · CT · AG …) 절에 손으로 넣고,
+  그 계열 절이 아직 없으면 사례 목록 2절의 차례대로 새로 만든다. 포인터 점검(4단계의 4)은 인덱스에서 빠진 편을 잡지 않고 낡은 판을 가리키는 것만 잡으므로,
+  넣었는지는 발행 때 눈으로 확인한다.
 - **사전 지식 점검은 원서 대신 기술 개념으로 한다.** 본문이 기대는 바깥 기술(저장소 자료구조 · 메시지 브로커의 보장 · 프로토콜)을 뽑아
   본문에서 풀지, 참고 문서로 잇을지를 정한다.
 - **출처 수치는 집필 전에 원문과 대조한다**(명세 SD40). 리서치 노트의 수치 가운데 본문에 실을 것을 골라 원문을 다시 열어 보고, 어긋나면 노트를 먼저 고친다.
@@ -56,11 +57,12 @@ voice 는 넷 다 `ppangtolab-teacher` 다. 참고 문서는 패턴이 아니라
 
 ## 동작
 
-아래 `$PLUGIN` 은 authoring-kit 플러그인 루트다. 플러그인 스킬 안에서는 `${CLAUDE_PLUGIN_ROOT}` 이고,
-이 프로젝트 스킬에서는 그 변수가 비어 있을 수 있으므로 lock 에 고정된 버전의 설치 경로를 쓴다.
+아래 `$PLUGIN` 은 authoring-kit 플러그인 루트이고, **언제나 lock 에 고정된 판의 설치 경로**다. `${CLAUDE_PLUGIN_ROOT}` 는 쓰지 않는다 —
+그 변수는 지금 켜진 플러그인 판을 가리켜 lock 의 판과 다를 수 있고, 다르면 0단계의 lock 검사가 그 판만 보는 항목 때문에 멈춘다
+(0.4.2 환경에서 0.3.0 lock 을 검사하면 다섯 항목이 어긋난다, 카드 `KAN-002.2` 검토 5번).
 
 ```bash
-PLUGIN="${CLAUDE_PLUGIN_ROOT:-$HOME/.claude/plugins/cache/centurio87-plugins/authoring-kit/$(python3 -c 'import json;print(json.load(open(".claude/authoring.lock.json"))["plugin"]["version"])')}"
+PLUGIN="$HOME/.claude/plugins/cache/centurio87-plugins/authoring-kit/$(python3 -c 'import json;print(json.load(open(".claude/authoring.lock.json"))["plugin"]["version"])')"
 test -f "$PLUGIN/scripts/authoring.py" || echo "authoring-kit 없음 — 여기서 멈춘다"
 ```
 
@@ -154,7 +156,8 @@ Skill(authoring-kit:authoring-write) --spec <gof-guide|analysis-guide|system-des
    이 편이 링크한 **참고 문서**도 같은 명령으로 렌더 상태를 확인한다 — 가이드는 fresh 인데 참고 문서 HTML 이 낡아 있으면 독자가 두 판본을 본다.
 3. **인덱스 등록** — `paths.json` 의 `dirs.index`(`PATTERNS.md`)에 이 편을 **손으로 끼워 넣는다.** 분류·비교 페어 구조가 뜻을 담고 있으므로
    **인덱스 전체를 알파벳순으로 다시 만드는 것은 금지**다. 새 버전을 냈으면 인덱스가 가리키는 파일명도 그 자리에서 고친다.
-   분석 패턴은 `pattern-guide/ddd-analysis-pattern-guide/README.md` 가 인덱스다.
+   분석 패턴은 `pattern-guide/ddd-analysis-pattern-guide/README.md`, 시스템 설계 사례는 `pattern-guide/system-design-guide/README.md` 가 인덱스다.
+   인덱스를 고쳤으면 `commands.render` 로 그 인덱스의 HTML 도 다시 굽는다.
 4. **포인터 점검** — `commands.pointers`. 인덱스·기준 예시·**참고 문서 링크**가 최신 발행본을 가리키는지 본다.
    기준은 **발행본**이다 — 초안이 더 높은 버전으로 있어도 포인터는 발행본을 가리킨다(집필 중에 포인터가 전부 빨개지지 않게 하려는 것).
 

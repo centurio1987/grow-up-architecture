@@ -15,7 +15,8 @@
     "gate_logs": "pattern-guide/gate-logs",
     "index": [
       "PATTERNS.md",
-      "pattern-guide/ddd-analysis-pattern-guide/README.md"
+      "pattern-guide/ddd-analysis-pattern-guide/README.md",
+      "pattern-guide/system-design-guide/README.md"
     ],
     "draft": "KANBAN/reports",
     "report": "KANBAN/reports"
