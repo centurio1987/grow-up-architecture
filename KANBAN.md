@@ -50,7 +50,7 @@
   - 메모: 파일럿 1 근거는 live-viewer-count-2026-11-13.md, 파일럿 2 재료는 사례 목록 C5 · C13~C16. 선정 이유는 사례 목록 3절
   - 실행 문서: KANBAN/cards/KAN-002.2-4E05GD.md (8/8 · 최근 11-15)
   - 계획 리포트: KANBAN/reports/KAN-002.2-4E05GD.report.html (낡음)
-  - 검토 문서: KANBAN/reviews/KAN-002.2-4E05GD.review.md (승인 4/5 · 추가 의견 1 · 추가 의견 총 6 · 검토 대기)
+  - 검토 문서: KANBAN/reviews/KAN-002.2-4E05GD.review.md (승인 5/5 · 추가 의견 총 8 · 검토 대기)
   - 원문:
     ```text
     질문: 남은 두 결정(파일럿 두 편, 칸반 카드로 관리)을 추천대로 정할까요?
