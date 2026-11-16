@@ -4,7 +4,7 @@ slug: first-come-coupon
 spec: system-design-guide
 spec_version: 1.1.1
 version: 1.1.0
-status: published
+status: legacy
 case: CT-01
 date: 2026-11-15
 ---

@@ -12,7 +12,7 @@
 
 | 사례 | 문제 | 고른 구조 | 가이드 |
 | --- | --- | --- | --- |
-| RT-01 | 라이브 동시 시청자 수 | 연결을 가진 에지가 세고, 합계는 1초에 한 번 모두에게 보냄 | [live-viewer-count-guide_v1.1.0.md](live-viewer-count/live-viewer-count-guide_v1.1.0.md) |
+| RT-01 | 라이브 동시 시청자 수 | 연결을 가진 에지가 세고, 합계는 1초에 한 번 모두에게 보냄 | [live-viewer-count-guide_v1.1.1.md](live-viewer-count/live-viewer-count-guide_v1.1.1.md) |
 
 ## CT 경합과 정합성
 
@@ -20,4 +20,4 @@
 
 | 사례 | 문제 | 고른 구조 | 가이드 |
 | --- | --- | --- | --- |
-| CT-01 | 선착순 쿠폰 발급 | 판정은 Redis 명령 하나씩, 기록은 큐 뒤에서, 마지막 확인은 DB 유니크 제약 | [first-come-coupon-guide_v1.1.0.md](first-come-coupon/first-come-coupon-guide_v1.1.0.md) |
+| CT-01 | 선착순 쿠폰 발급 | 판정은 Redis 명령 하나씩, 기록은 큐 뒤에서, 마지막 확인은 DB 유니크 제약 | [first-come-coupon-guide_v1.1.1.md](first-come-coupon/first-come-coupon-guide_v1.1.1.md) |

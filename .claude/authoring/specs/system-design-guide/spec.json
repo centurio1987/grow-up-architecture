@@ -3,7 +3,7 @@
   "schema_version": 1,
   "id": "system-design-guide",
   "label": "가이드 — 시스템 설계 사례(문제 하나 = 한 편)",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "source": {
     "origin": "authored",
     "refs": [
