@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:0ad9430928ddc99c1bdeeee2a7adef6ecbfc693d56ac24e8db45dd3db7fa6730 -->
+<!-- guide-fp:cbee7bca91f853ba74df1c37b6aa32518b56afb33982ea863afa1335e02739b6 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -555,7 +555,7 @@ After — 값의 종류를 모르는 층이 하나 있을 때
   Observation(p-7 · abo      · [범주] A        · 잰 날 9/1 · 적은 날 9/1)
   "이 환자에 대해 아는 것 전부?"   ──▶  한 목록으로 돌아온다
   잘못 적은 값을 거부              ──▶  둘 다 같은 방식으로 거부된다</code></pre>
-<p>분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고(근거: Fowler <em>Analysis Patterns</em> 3장 「Observations and Measurements」 — 이 계열의 절들이 여기 모여 있습니다), 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.1.0.html">Measurement</a> · <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level</a> · <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity</a> 입니다.</p>
+<p>분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고(근거: Fowler <em>Analysis Patterns</em> 3장 「Observations and Measurements」 — 이 계열의 절들이 여기 모여 있습니다), 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.1.0.html">Measurement</a> · <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level</a> · <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity</a> 입니다.</p>
 <p>이 글의 예제는 병원 한 곳의 임상 관측 기록이에요. 이웃 개념들이 서로 어떻게 놓이는지는 <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>에 따로 정리돼 있고, 이 글이 파고드는 것은 그 정리에서 맨 위에 놓인 <strong>사실 한 층</strong>입니다. 이 기록에서 관측 한 건은 자기 값과 두 시각, 거부 표시를 스스로 갖고, 환자 · 관측 항목 · 범주 값은 번호(id)로만 가리켜요. 범주 목록은 관측 항목이 갖습니다. 값이 그 항목에 맞는지 대조하는 일과 「그 날 알던 값」을 고르는 조회는 관측도 항목도 아닌 <strong>창구</strong>가 맡고, 그 답은 어디에도 저장하지 않고 물을 때마다 적은 날과 거부 표시를 보고 다시 골라요. 관측을 누가 가질지, 항목 체계를 어디에 둘지의 다른 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.</p>
 <pre tabindex="0"><code class="language-text">이 글이 고른 경계
   관측 ─────── 값 · 잰 날 · 적은 날 · 거부 표시를 스스로 가짐
@@ -646,7 +646,7 @@ non-smoker       잰 날                                  적은 날</code></pre
 <li><strong>PhenomenonType</strong>(관측 항목) — 무엇에 대한 사실인가를 답하는 개념입니다. 혈액형 · 흡연 여부 · 수축기 혈압이 각각 하나씩이에요.
 <ul>
 <li>책임: 항목의 이름을 갖고, 그 항목의 값이 크기인지 범주인지를 정합니다. 크기 항목이면 허용 단위를, 범주 항목이면 그 항목이 쓰는 범주 목록을 가져요(시나리오 2 의 1단계).</li>
-<li>협력: 항목 하나에 관측이 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a>가 패턴으로 다뤄요.</li>
+<li>협력: 항목 하나에 관측이 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level 가이드</a>가 패턴으로 다뤄요.</li>
 </ul>
 </li>
 <li><strong>Phenomenon</strong>(범주 값) — 범주 항목이 쓰는 값 하나입니다. 혈액형의 A · B · O · AB 가 각각 하나예요.
@@ -1758,7 +1758,7 @@ p-7 · SmokingStatusSet  · {smoker}  · 일어난 날 2026-09-03 · 적은 날 
 <li><a href="ddd-analysis-pattern-guide/measurement/measurement-guide_v1.1.0.html">Measurement 가이드</a> — 값 자리에 크기가 온 하위 종류. 조건 2 가 그 편의 모델과 이 편을 가르고, 조건 1·5 는 그 편의 조건 1·2 와 같은 것을 한 층 위에서 말합니다.</li>
 <li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity 가이드</a> — 값 자리에 오는 크기의 최소 조건과 단위 환산. 개념 정리의 Quantity 항목이 여기를 가리킵니다.</li>
 <li><a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html">Range 가이드</a> — 범위를 값 하나로 다루는 법. <code>[선택]</code> 11 이 쓰는 범위가 그것입니다.</li>
-<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a> — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.</li>
+<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level 가이드</a> — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.</li>
 <li><a href="https://hl7.org/fhir/R5/observation.html">HL7 FHIR R5 Observation</a> — 실제 사례 표의 요소 이름과 다중도, <code>value[x]</code> 의 열세 가지 타입, <code>status</code> 의 코드, <code>dataAbsentReason</code> 의 용도(2026-09-29 조회).</li>
 </ul>
 </main>

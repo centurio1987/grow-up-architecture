@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:fe799f6120862ea0db4ec068d93096447b5b9a580c05d2621a4c7642429e0fc1 -->
+<!-- guide-fp:40cb25d323efc44e6efa5ead9c7f7d55c788f10df95214c37175d9afa7ee26af -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -555,7 +555,7 @@ After — 측정값이 기록일 때
   Measurement(환자 A · systolic · 120 mmHg · 9/3)
   새 검사 항목 하나  ──▶  항목 데이터 한 줄
   9/3 에 120 을 적음  ──▶  118 도 그대로 남는다</code></pre>
-<p>분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고, 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity</a> · <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level</a> · <a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html">Observation</a> 입니다(근거: Fowler <em>Analysis Patterns</em> 3장 「Observations and Measurements」 §3.4~§3.9).</p>
+<p>분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고, 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity</a> · <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level</a> · <a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html">Observation</a> 입니다(근거: Fowler <em>Analysis Patterns</em> 3장 「Observations and Measurements」 §3.4~§3.9).</p>
 <p>이웃 개념들이 서로 어떻게 놓이는지는 <a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a>에 따로 정리돼 있고, 이 글이 파고드는 것은 그중 기록 한 층입니다. 이 글의 병동 기록에서는 측정 기록 한 건이 따로 있고, 환자와 측정 항목은 번호로만 가리켜요. 기록을 만들고 「그날 알던 값」을 답하는 일은 기록과 항목 밖의 <strong>창구</strong>가 맡고, 기록은 창구의 <strong>장부</strong>에 쌓입니다. 값의 단위를 항목의 허용 단위와 대조하는 것도 창구이고, 「그날 알던 값」은 어디에도 적어 두지 않은 채 물을 때마다 적은 날과 거부한 날을 보고 골라요. 기록을 누가 담을지 다른 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.</p>
 <pre tabindex="0"><code class="language-text">이 글이 고른 경계
   Measurement ──── 대상과 항목은 번호로만 가리킴 · 값과 두 시각 · 거부 표시를 가짐
@@ -620,7 +620,7 @@ After — 측정값이 기록일 때
 <li><strong>PhenomenonType</strong>(측정 항목) — 무엇을 재는가를 답하는 개념입니다. 수축기 혈압 · 맥박 · 혈당이 각각 하나씩이에요.
 <ul>
 <li>책임: 항목의 이름을 가지고, 이 예제에서는 그 항목이 어떤 단위로 적히는지도 함께 가집니다. 매일 생기는 사실이 아니라 사실을 해석하는 쪽이라 기록과는 따로 바뀌어요(시나리오 2 의 1단계).</li>
-<li>협력: 항목 하나에 Measurement 가 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a>가 패턴으로 다뤄요.</li>
+<li>협력: 항목 하나에 Measurement 가 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level 가이드</a>가 패턴으로 다뤄요.</li>
 </ul>
 </li>
 <li><strong>Quantity</strong>(측정값) — 수치와 단위를 한 값으로 묶은 것입니다. 118 mmHg 가 하나예요.
@@ -1621,7 +1621,7 @@ p-7 · systolic · 120 mmHg · 2026-12-31   (의사가 연말까지 맞추려는
 <li><a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a> — Quantity · Unit · Measurement · Observation · Rejected Observation 이 서로 어떻게 놓이는지를 정리한 문서. 개념 정리 절이 두 시각과 거부 표시의 자리를 이 문서로 보냅니다.</li>
 <li><a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a> — 상황 설정 표가 쓰는 Bounded Context · Aggregate · Entity · Value Object · id 참조의 뜻.</li>
 <li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity 가이드</a> — 값 자리에 오는 Quantity 의 최소 조건과 단위 환산. 조건 3 이 값의 내부 규칙을 이 글로 넘깁니다.</li>
-<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a> — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.</li>
+<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level 가이드</a> — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.</li>
 <li><a href="ddd-analysis-pattern-guide/account/account-guide_v1.2.0.html">Account 가이드</a> — 기록들이 합해져 잔액을 설명하는 모델. 비교 절의 마지막 행이 이 글과 대조합니다.</li>
 <li><a href="https://hl7.org/fhir/R5/observation.html">HL7 FHIR R5 Observation</a> · <a href="https://hl7.org/fhir/R5/datatypes.html">HL7 FHIR R5 데이터 타입</a> — 실제 사례 표의 요소 이름과 <code>value</code> 의 정밀도 서술.</li>
 <li><a href="https://ucum.org/ucum">UCUM</a> — FHIR 이 단위 코드로 권고하는 체계. 실제 사례 표의 <code>code</code> 행이 가리킵니다.</li>

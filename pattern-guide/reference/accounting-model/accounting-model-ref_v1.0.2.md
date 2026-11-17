@@ -203,7 +203,7 @@ Posting Rule — Transaction   0..1 — *            규칙이 거래를 만든�
 - 같은 가이드 「비슷한 패턴·안티패턴과의 차이」 — Transaction 이 Account 의 대체가 아니라 짝인 이유(「Transaction」).
 - [Transaction 가이드](../../ddd-analysis-pattern-guide/transaction/transaction-guide_v1.1.0.md) 「개념 정리」 — Posting Rule 항목이 규칙과 사실을 다른 층에 두는 이유를 이 문서로 넘깁니다(「지식 층위와 운영 층위」 「Posting Rule」). 「한눈에 보는 개요」와 시나리오 셋이 값을 쓰기 전에 기대는 부호 규약 · 전기 · 역분개도 여기에 있어요(「복식부기의 기초」 「원장과 전기」 「역분개」).
 - [Posting Rule 가이드](../../ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.md) 「한눈에 보는 개요」와 시나리오 셋 — 규칙이 만든 거래가 원장에 들어가는 값들이 부호 규약과 전기, 그리고 규칙이 사실 위 다른 층에 앉는다는 것을 이미 아는 것으로 두고 이 문서로 넘깁니다(「복식부기의 기초」 「원장과 전기」 「지식 층위와 운영 층위」 「Posting Rule」).
-- [Knowledge Level 가이드](../../ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.md) 「비슷한 패턴·안티패턴과의 차이」 — Posting Rule 문단이 기대는 사전 지식이 계정 종류와 전기 규칙을 지식 층위에 두는 회계 쪽 배치입니다(「AccountType」 「지식 층위와 운영 층위」 「Posting Rule」).
+- [Knowledge Level 가이드](../../ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.md) 「비슷한 패턴·안티패턴과의 차이」 — Posting Rule 문단이 기대는 사전 지식이 계정 종류와 전기 규칙을 지식 층위에 두는 회계 쪽 배치입니다(「AccountType」 「지식 층위와 운영 층위」 「Posting Rule」).
 
 ## 참고 자료
 

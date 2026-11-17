@@ -37,7 +37,7 @@ Range 의 해법은 **두 끝점과 각 끝을 포함하는지까지 한 값으�
 소포 20 kg           안 들어옴            안 들어옴             들어옴
 ```
 
-Range 는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고 관측값을 범주로 나누는 자리와 값 모델링 자리 양쪽에 쓰이며(근거: Fowler *Analysis Patterns* 4장 「Observations for Corporate Finance」 §4.3 Range · §4.4 Phenomenon with Range), 함께 쓰는 패턴은 [Quantity](../quantity/quantity-guide_v1.2.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.0.md) 이에요.
+Range 는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고 관측값을 범주로 나누는 자리와 값 모델링 자리 양쪽에 쓰이며(근거: Fowler *Analysis Patterns* 4장 「Observations for Corporate Finance」 §4.3 Range · §4.4 Phenomenon with Range), 함께 쓰는 패턴은 [Quantity](../quantity/quantity-guide_v1.2.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.1.md) 이에요.
 
 이 글의 예제는 택배 요금표예요. 배송 상품 하나의 **요금표**(`RateTable`)가 자기 구간 목록과 표가 다루는 무게 전체인 **적용 구간**을 갖고, 구간 하나(`RateBand`)는 Range 값 하나와 요금을 가집니다. 배송 상품은 번호(`ProductId`)로만 가리켜요. 구간 하나의 규칙(하한이 상한보다 크지 않음, 경계에서의 포함 판정)은 Range 값이 스스로 지키고, 구간들 사이의 규칙(겹치지 않음, 빈틈 없이 덮음)은 요금표가 지킵니다. 소포 하나의 요금은 물을 때마다 표에서 찾아 돌려줄 뿐 따로 적어 두지 않아요. 구간을 누가 갖고 겹침 규칙을 어디서 지킬지 다른 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.
 
@@ -1157,7 +1157,7 @@ record C(int threshold, boolean inclusive) {
 - [Value Object (Fowler bliki)](https://martinfowler.com/bliki/ValueObject.html) — 값 객체의 aliasing 문제와 그 대책으로 불변을 먼저 권한다는 서술. 최소 조건 8 의 근거.
 - [참고 문서 「수량·측정·관측 모델」](../../reference/observation-model/observation-model-ref_v1.0.2.md) — 개념 정리가 가리키는 Range · Quantity · Measurement · Observation 의 층 관계.
 - [Quantity 가이드](../quantity/quantity-guide_v1.2.0.md) — 개요가 함께 쓰는 패턴으로 잇고 개념 정리가 가리키는 Quantity 의 정의와 단위 환산 규칙.
-- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.0.md) — 개요가 함께 쓰는 패턴으로 잇고, 사용 목적이 구간으로 값을 분류하는 규칙을 데이터로 둘 때 고르라고 가리키는 패턴.
+- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.1.md) — 개요가 함께 쓰는 패턴으로 잇고, 사용 목적이 구간으로 값을 분류하는 규칙을 데이터로 둘 때 고르라고 가리키는 패턴.
 - [참고 문서 「DDD 전술 용어」](../../reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.md) — 상황 설정 표의 네 행이 쓰는 Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식.
 - [PostgreSQL: Range Types](https://www.postgresql.org/docs/current/rangetypes.html) — 구간 타입과 경계 표기, 이산 타입의 `[)` 정규형, 배제 제약, multirange. 「실제 사례」 표의 앞 세 행과 비교 절의 세 번째 대상.
 - [HL7 FHIR R5 Data Types](https://hl7.org/fhir/R5/datatypes.html) — `Range` 의 `low` · `high` 와 양 끝 포함 규정 및 규칙 `rng-2`, `Period` 와 규칙 `per-1`, 범위 밖 측정값에는 비교자를 붙인 Quantity 를 쓰라는 권고. 비교 절의 두 번째 대상과 「실제 사례」 표.

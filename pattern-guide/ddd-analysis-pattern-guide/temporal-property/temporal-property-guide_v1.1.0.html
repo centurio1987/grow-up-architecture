@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:cfb1b5cceea262f36754390894466eb8726057c46b5202b5633c83b7f7afa358 -->
+<!-- guide-fp:a4d91bac70c3e558d6e11ea40344fe1f4b79173222bf5fefe2536946e41763a6 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -733,7 +733,7 @@ tbody tr:last-child td {
 </thead>
 <tbody>
 <tr><td><a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html">Range</a> 의 <code>RateBand.weights</code></td><td>요금 구간 하나의 무게 범위</td><td>1 ✗ (이력이 아니라 값 하나)</td><td>아니다 — Range 는 이 패턴의 부품이지 이 패턴이 아니다</td></tr>
-<tr><td><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level</a> 의 <code>InspectionType.정상 범위</code></td><td>점검 종류의 정상 범위</td><td>1 ✗ (이력이 없다)</td><td>아니다 — 그래서 그 편의 판정은 기록 시점에 한 번 정해지고 고정된다</td></tr>
+<tr><td><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level</a> 의 <code>InspectionType.정상 범위</code></td><td>점검 종류의 정상 범위</td><td>1 ✗ (이력이 없다)</td><td>아니다 — 그래서 그 편의 판정은 기록 시점에 한 번 정해지고 고정된다</td></tr>
 <tr><td><a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html">Observation</a> 의 환자 관측</td><td>지목할 속성이 없다</td><td>0 ✗</td><td>아니다 — 비교 절 「Observation 과의 차이」가 이 자리다</td></tr>
 <tr><td><a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.html">Posting Rule</a> 의 규칙 등록부</td><td>사건 종류 <code>USAGE</code> 의 전기 규칙</td><td>1·2·3·4 모두 ○</td><td><strong>그렇다</strong> — 그 편의 등록부가 이 패턴의 한 적용이다</td></tr>
 </tbody>
@@ -1691,7 +1691,7 @@ class Employee {
 <li><a href="ddd-analysis-pattern-guide/range/range-guide_v1.1.0.html">Range 가이드</a> — 유효 기간을 담는 구간 값의 정의와 경계 규칙. 개요·개념 정리·비교 절이 부품으로 가리킵니다.</li>
 <li><a href="ddd-analysis-pattern-guide/posting-rule/posting-rule-guide_v1.1.0.html">Posting Rule 가이드</a> — 규칙마다 유효 기간을 두고 발생 시점으로 조회하는 모델. 교차 판정 표와 비교 절의 다섯째 대상입니다.</li>
 <li><a href="ddd-analysis-pattern-guide/observation/observation-guide_v1.1.0.html">Observation 가이드</a> — 대상·항목·값 세 자리를 가진 기록 모델. 교차 판정 표와 비교 절의 넷째 대상입니다.</li>
-<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a> — 판정이 기록 시점에 한 번 정해지고 고정되는 모델. 교차 판정 표의 두 번째 행입니다.</li>
+<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level 가이드</a> — 판정이 기록 시점에 한 번 정해지고 고정되는 모델. 교차 판정 표의 두 번째 행입니다.</li>
 <li><a href="https://doc.rust-lang.org/std/time/index.html">Rust std::time</a> — 이 모듈에 달력 날짜 타입이 없다는 것. 「상황 설정」이 날짜를 자체 값으로 둔 이유입니다.</li>
 <li><a href="https://mariadb.com/docs/server/reference/sql-structure/temporal-tables/application-time-periods">MariaDB Application-Time Periods</a> — <code>PERIOD FOR</code> 가 두 시간 칼럼을 한 기간으로 묶고 순서 제약을 자동으로 거는 것. 「실제 사례」의 첫 항목입니다.</li>
 <li><a href="https://mariadb.com/docs/server/reference/sql-structure/temporal-tables/system-versioned-tables">MariaDB System-Versioned Tables</a> — <code>ROW START</code> · <code>ROW END</code> 와 <code>FOR SYSTEM_TIME AS OF</code>, 그리고 삽입·삭제 시점이 변화가 나타난 시점과 다를 수 있다는 서술. 「실제 사례」의 첫 항목입니다.</li>

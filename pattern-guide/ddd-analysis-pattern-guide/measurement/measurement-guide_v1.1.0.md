@@ -29,7 +29,7 @@ After — 측정값이 기록일 때
   9/3 에 120 을 적음  ──▶  118 도 그대로 남는다
 ```
 
-분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고, 함께 쓰는 패턴은 [Quantity](../quantity/quantity-guide_v1.2.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.0.md) · [Observation](../observation/observation-guide_v1.1.0.md) 입니다(근거: Fowler *Analysis Patterns* 3장 「Observations and Measurements」 §3.4~§3.9).
+분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고, 함께 쓰는 패턴은 [Quantity](../quantity/quantity-guide_v1.2.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.1.md) · [Observation](../observation/observation-guide_v1.1.0.md) 입니다(근거: Fowler *Analysis Patterns* 3장 「Observations and Measurements」 §3.4~§3.9).
 
 이웃 개념들이 서로 어떻게 놓이는지는 [참고 문서 「수량·측정·관측 모델」](../../reference/observation-model/observation-model-ref_v1.0.2.md)에 따로 정리돼 있고, 이 글이 파고드는 것은 그중 기록 한 층입니다. 이 글의 병동 기록에서는 측정 기록 한 건이 따로 있고, 환자와 측정 항목은 번호로만 가리켜요. 기록을 만들고 「그날 알던 값」을 답하는 일은 기록과 항목 밖의 **창구**가 맡고, 기록은 창구의 **장부**에 쌓입니다. 값의 단위를 항목의 허용 단위와 대조하는 것도 창구이고, 「그날 알던 값」은 어디에도 적어 두지 않은 채 물을 때마다 적은 날과 거부한 날을 보고 골라요. 기록을 누가 담을지 다른 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.
 
@@ -113,7 +113,7 @@ After — 측정값이 기록일 때
   - 협력: 대상 하나와 PhenomenonType 하나를 가리키고, Quantity 하나를 담아요. 같은 대상·항목·값을 가진 기록 둘도 서로 다른 사실입니다 — 같은 날 두 번 쟀으면 기록도 두 건이에요.
 - **PhenomenonType**(측정 항목) — 무엇을 재는가를 답하는 개념입니다. 수축기 혈압 · 맥박 · 혈당이 각각 하나씩이에요.
   - 책임: 항목의 이름을 가지고, 이 예제에서는 그 항목이 어떤 단위로 적히는지도 함께 가집니다. 매일 생기는 사실이 아니라 사실을 해석하는 쪽이라 기록과는 따로 바뀌어요(시나리오 2 의 1단계).
-  - 협력: 항목 하나에 Measurement 가 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.0.md)가 패턴으로 다뤄요.
+  - 협력: 항목 하나에 Measurement 가 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.1.md)가 패턴으로 다뤄요.
 - **Quantity**(측정값) — 수치와 단위를 한 값으로 묶은 것입니다. 118 mmHg 가 하나예요.
   - 책임: 수치가 무엇으로 셌는지를 값 안에 담습니다. 단위가 다른 값끼리의 계산과 환산은 [Quantity 가이드](../quantity/quantity-guide_v1.2.0.md)의 몫이고, 이 글에서는 값 자리에 오는 것이 그것이라는 데까지가 필요합니다(시나리오 1 의 1단계).
   - 협력: Measurement 하나가 Quantity 하나를 담습니다. 같은 118 mmHg 를 담은 기록이 여럿일 수 있어요.
@@ -1093,7 +1093,7 @@ void reject(String reason, TimePoint on) {
 - [참고 문서 「수량·측정·관측 모델」](../../reference/observation-model/observation-model-ref_v1.0.2.md) — Quantity · Unit · Measurement · Observation · Rejected Observation 이 서로 어떻게 놓이는지를 정리한 문서. 개념 정리 절이 두 시각과 거부 표시의 자리를 이 문서로 보냅니다.
 - [참고 문서 「DDD 전술 용어」](../../reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.md) — 상황 설정 표가 쓰는 Bounded Context · Aggregate · Entity · Value Object · id 참조의 뜻.
 - [Quantity 가이드](../quantity/quantity-guide_v1.2.0.md) — 값 자리에 오는 Quantity 의 최소 조건과 단위 환산. 조건 3 이 값의 내부 규칙을 이 글로 넘깁니다.
-- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.0.md) — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.
+- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.1.md) — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.
 - [Account 가이드](../account/account-guide_v1.2.0.md) — 기록들이 합해져 잔액을 설명하는 모델. 비교 절의 마지막 행이 이 글과 대조합니다.
 - [HL7 FHIR R5 Observation](https://hl7.org/fhir/R5/observation.html) · [HL7 FHIR R5 데이터 타입](https://hl7.org/fhir/R5/datatypes.html) — 실제 사례 표의 요소 이름과 `value` 의 정밀도 서술.
 - [UCUM](https://ucum.org/ucum) — FHIR 이 단위 코드로 권고하는 체계. 실제 사례 표의 `code` 행이 가리킵니다.

@@ -30,7 +30,7 @@ After — 값의 종류를 모르는 층이 하나 있을 때
   잘못 적은 값을 거부              ──▶  둘 다 같은 방식으로 거부된다
 ```
 
-분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고(근거: Fowler *Analysis Patterns* 3장 「Observations and Measurements」 — 이 계열의 절들이 여기 모여 있습니다), 함께 쓰는 패턴은 [Measurement](../measurement/measurement-guide_v1.1.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.0.md) · [Quantity](../quantity/quantity-guide_v1.2.0.md) 입니다.
+분류는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고(근거: Fowler *Analysis Patterns* 3장 「Observations and Measurements」 — 이 계열의 절들이 여기 모여 있습니다), 함께 쓰는 패턴은 [Measurement](../measurement/measurement-guide_v1.1.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.1.md) · [Quantity](../quantity/quantity-guide_v1.2.0.md) 입니다.
 
 이 글의 예제는 병원 한 곳의 임상 관측 기록이에요. 이웃 개념들이 서로 어떻게 놓이는지는 [참고 문서 「수량·측정·관측 모델」](../../reference/observation-model/observation-model-ref_v1.0.2.md)에 따로 정리돼 있고, 이 글이 파고드는 것은 그 정리에서 맨 위에 놓인 **사실 한 층**입니다. 이 기록에서 관측 한 건은 자기 값과 두 시각, 거부 표시를 스스로 갖고, 환자 · 관측 항목 · 범주 값은 번호(id)로만 가리켜요. 범주 목록은 관측 항목이 갖습니다. 값이 그 항목에 맞는지 대조하는 일과 「그 날 알던 값」을 고르는 조회는 관측도 항목도 아닌 **창구**가 맡고, 그 답은 어디에도 저장하지 않고 물을 때마다 적은 날과 거부 표시를 보고 다시 골라요. 관측을 누가 가질지, 항목 체계를 어디에 둘지의 다른 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.
 
@@ -128,7 +128,7 @@ non-smoker       잰 날                                  적은 날
   - 협력: 대상 하나에 관측이 여럿 붙습니다. 그 연결이 값의 종류를 모르는 층에 붙어 있다는 것이 이 패턴의 핵심이에요(시나리오 1 의 5단계).
 - **PhenomenonType**(관측 항목) — 무엇에 대한 사실인가를 답하는 개념입니다. 혈액형 · 흡연 여부 · 수축기 혈압이 각각 하나씩이에요.
   - 책임: 항목의 이름을 갖고, 그 항목의 값이 크기인지 범주인지를 정합니다. 크기 항목이면 허용 단위를, 범주 항목이면 그 항목이 쓰는 범주 목록을 가져요(시나리오 2 의 1단계).
-  - 협력: 항목 하나에 관측이 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.0.md)가 패턴으로 다뤄요.
+  - 협력: 항목 하나에 관측이 여럿 붙습니다. 이렇게 "사실" 과 "사실의 종류" 를 두 무리로 가르는 방식 자체는 [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.1.md)가 패턴으로 다뤄요.
 - **Phenomenon**(범주 값) — 범주 항목이 쓰는 값 하나입니다. 혈액형의 A · B · O · AB 가 각각 하나예요.
   - 책임: 통제된 값으로 자기를 구별합니다. 문자열이 아니라 모델이 가진 값이라서, 같은 것을 두 이름으로 적는 일이 생기지 않아요(시나리오 1 의 3단계).
   - 협력: 범주 값 하나는 항목 하나에 속하고, 항목 하나가 범주 값 여럿을 가집니다.
@@ -1213,5 +1213,5 @@ p-7 · SmokingStatusSet  · {smoker}  · 일어난 날 2026-09-03 · 적은 날 
 - [Measurement 가이드](../measurement/measurement-guide_v1.1.0.md) — 값 자리에 크기가 온 하위 종류. 조건 2 가 그 편의 모델과 이 편을 가르고, 조건 1·5 는 그 편의 조건 1·2 와 같은 것을 한 층 위에서 말합니다.
 - [Quantity 가이드](../quantity/quantity-guide_v1.2.0.md) — 값 자리에 오는 크기의 최소 조건과 단위 환산. 개념 정리의 Quantity 항목이 여기를 가리킵니다.
 - [Range 가이드](../range/range-guide_v1.1.0.md) — 범위를 값 하나로 다루는 법. `[선택]` 11 이 쓰는 범위가 그것입니다.
-- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.0.md) — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.
+- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.1.md) — 사실과 사실의 종류를 두 무리로 가르는 방식 자체. 개념 정리의 PhenomenonType 항목이 여기를 가리킵니다.
 - [HL7 FHIR R5 Observation](https://hl7.org/fhir/R5/observation.html) — 실제 사례 표의 요소 이름과 다중도, `value[x]` 의 열세 가지 타입, `status` 의 코드, `dataAbsentReason` 의 용도(2026-09-29 조회).

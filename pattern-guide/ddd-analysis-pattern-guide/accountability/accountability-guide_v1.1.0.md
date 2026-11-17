@@ -48,7 +48,7 @@ After — 잇는 선이 자기 자리를 갖는 모델
 
 > 기억법 — 칸을 늘리는 패턴이 아니라, **선을 개념으로 승격시키는** 패턴.
 
-분류는 Fowler 『Analysis Patterns』 의 책임 관계 장에 속한 기반 추상이고(근거: Analysis Patterns 2장 「Accountability」 §2.4 Accountability), 함께 쓰는 패턴은 [Party](../party/party-guide_v1.1.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.0.md) 입니다.
+분류는 Fowler 『Analysis Patterns』 의 책임 관계 장에 속한 기반 추상이고(근거: Analysis Patterns 2장 「Accountability」 §2.4 Accountability), 함께 쓰는 패턴은 [Party](../party/party-guide_v1.1.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.1.md) 입니다.
 
 이 글의 조직 장부에서는 관계가 당사자 밖에 자기 기간을 갖고 따로 있으며, 양 끝의 두 당사자와 자기 종류는 번호로만 가리켜요. 당사자 · 계통 · 관계는 저마다 **당사자 장부 · 계통 장부 · 관계 장부**에 쌓이고, 관계를 등록하고 「이 계통의 상위는 누구인가」에 답하는 일은 장부 밖의 **조직 구조 서비스**가 맡습니다. 계통별 상위는 어디에도 적어 두지 않고 물을 때마다 관계 장부에서 찾는 값이에요. 관계를 누가 가질지 다른 선택지 둘은 「상황이 달라지면」에서 나란히 봅니다.
 
@@ -1231,7 +1231,7 @@ final class Employee {
 - [UML Diagrams for Chapter 2 (apchap2.pdf)](https://martinfowler.com/apsupp/apchap2.pdf) — 그림 2.8(Accountability 의 양 끝이 commissioner 와 responsible 로 각각 Party 에 연결되고 Accountability Type 과 Time Period 가 붙는 해법 그림), 그림 2.9~2.13(당사자 분류와 연결 규칙, 계층·단계 제약). 개념 정리의 도식 설명, 최소 조건 2 · 3 · 4 와 선택 조건 5 · 8 의 근거
 - [Organization Structures 개정 초안 (accountability.pdf)](https://martinfowler.com/apsupp/accountability.pdf) — 「Accountability」 절 머리글(당사자들 사이의 관계 그래프를 나타낸다), 이 패턴으로 넘어가는 대목(관계를 그 자체로 객체로 만들고 링크의 종류에 따라 타입을 매긴다), 「Making it work」(관계 하나가 당사자 둘 사이의 링크이고 종류마다 인스턴스를 만든다 · 계통을 함께 묻는 한 방향 질의), 「When to use it」(조직 계층으로 충분하면 쓰지 않는다 · 권한 계통이 여럿인 것이 이 패턴을 쓰는 동기다), 「Cycle Checking」(관계를 불변으로 두고 만들기 전에 확인한다), 「Sample Code」(관계가 양 끝 당사자 모두에 자기를 등록하는 예제), 「Using a Knowledge Level」(기본형은 느슨하고 제약은 더할 수 있다), 「Object Graph」(링크를 연관으로 두는 길과 연관 객체로 두는 길 · 실무의 그래프는 대개 비순환이다). 최소 조건 1 · 2 · 3 과 선택 조건 7 · 8, 사용 목적의 「쓰지 말아야 할 때」 첫 항목, 「상황이 달라지면」 셋째 행
 - [Party 편 가이드](../party/party-guide_v1.1.0.md) — 양 끝에 오는 행위 주체를 한 이름으로 담는 패턴. 개요의 함께 쓰는 패턴, 개념 정리의 Party 항목, 최소 조건 2 의 범위 설명, 선택 조건 6 이 이어받은 판단
-- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.0.md) — 어떤 종류의 당사자끼리 이어도 되는지를 규칙 데이터로 올리는 패턴. 개요의 함께 쓰는 패턴과 선택 조건 8
+- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.1.md) — 어떤 종류의 당사자끼리 이어도 되는지를 규칙 데이터로 올리는 패턴. 개요의 함께 쓰는 패턴과 선택 조건 8
 - [Domain-Driven Design Reference (Evans, 2015)](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf) — Entity 정의(속성이 같아도 구별돼야 하는 객체). 선택 조건 6 의 DDD 매핑 근거
 - [참고 문서 「DDD 전술 용어」](../../reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.md) — Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식 · Repository. 상황 설정 표의 네 행을 읽는 데 필요한 용어
 - [Effective Aggregate Design Part I (Vernon)](https://www.dddcommunity.org/wp-content/uploads/files/pdf_articles/Vernon_2011_1.pdf) — 참된 불변식을 일관성 경계 안에 모델링하라는 규칙과 작은 aggregate 규칙. 「상황이 달라지면」 표의 첫째·둘째 행이 견주는 기준

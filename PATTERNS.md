@@ -57,7 +57,7 @@ GoF 23편에는 없지만 같은 층에서 쓰이는 설계 패턴이다. 원전
 | --- | --- | --- |
 | Specification (명세) | 후보가 기준을 만족하는지 판정하는 책임을 후보와 분리된 객체에 두고, 그 객체를 조합해 기준을 쌓음 | [specification-guide_v1.1.0.md](pattern-guide/design-pattern-guide/specification/specification-guide_v1.1.0.md) |
 | Dependency Injection (의존성 주입) | 협력 객체를 스스로 만들거나 찾지 않고, 조립자가 추상 타입의 구현을 생성자·설치 연산으로 넣어 줌 | [dependency-injection-guide_v1.1.0.md](pattern-guide/design-pattern-guide/dependency-injection/dependency-injection-guide_v1.1.0.md) |
-| Null Object (널 객체) | 협력자가 없는 상태를 빈 참조가 아니라 같은 인터페이스의 중립 동작 객체로 표현해, 쓰는 쪽에서 부재 검사를 없앰 | [null-object-guide_v1.1.0.md](pattern-guide/design-pattern-guide/null-object/null-object-guide_v1.1.0.md) |
+| Null Object (널 객체) | 협력자가 없는 상태를 빈 참조가 아니라 같은 인터페이스의 중립 동작 객체로 표현해, 쓰는 쪽에서 부재 검사를 없앰 | [null-object-guide_v1.1.1.md](pattern-guide/design-pattern-guide/null-object/null-object-guide_v1.1.1.md) |
 
 ## 분석 패턴 (Analysis Patterns)
 
@@ -68,7 +68,7 @@ Martin Fowler 『Analysis Patterns』(1997)의 분석 패턴이다. GoF 가 **�
 | --- | --- | --- |
 | Party (당사자) | 사람과 조직을 한 이름으로 받아 공통인 것을 그 한 자리에 모음 | [party-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/party/party-guide_v1.1.0.md) |
 | Accountability (책임 관계) | 두 당사자를 잇는 관계를 칸이 아니라 개념으로 세워 종류·기간을 닮 | [accountability-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/accountability/accountability-guide_v1.1.0.md) |
-| Knowledge Level (지식 수준) | 사실을 해석하는 규칙을 사실과 다른 층에 인스턴스로 세움 | [knowledge-level-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.md) |
+| Knowledge Level (지식 수준) | 사실을 해석하는 규칙을 사실과 다른 층에 인스턴스로 세움 | [knowledge-level-guide_v1.1.1.md](pattern-guide/ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.md) |
 | Quantity (수량) | 값과 단위를 묶어 단위 안전 연산 제공 | [quantity-guide_v1.2.0.md](pattern-guide/ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.md) |
 | Range (범위) | 두 끝과 「그 끝을 포함하는가」를 한 값에 담아 경계 판정을 한 곳에 모음 | [range-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/range/range-guide_v1.1.0.md) |
 | Temporal Property (시간 속성) | 시간에 따라 바뀌는 속성을 유효 기간이 붙은 값들의 이력으로 두고, 시점을 인자로 받는 접근자로 그 시점의 값을 돌려줌 | [temporal-property-guide_v1.1.0.md](pattern-guide/ddd-analysis-pattern-guide/temporal-property/temporal-property-guide_v1.1.0.md) |

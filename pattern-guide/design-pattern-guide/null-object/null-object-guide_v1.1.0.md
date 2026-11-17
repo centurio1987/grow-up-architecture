@@ -4,7 +4,7 @@ slug: null-object
 spec: gof-guide
 spec_version: 1.5.0
 version: 1.1.0
-status: published
+status: legacy
 date: 2026-11-13
 ---
 

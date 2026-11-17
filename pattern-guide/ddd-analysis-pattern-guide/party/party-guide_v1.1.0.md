@@ -51,7 +51,7 @@ After — 공통인 것이 Party 한 자리에 놓이는 모델
 
 > 기억법 — 갈래를 없애는 패턴이 아니라, **갈래를 아는 자리를 하나로 줄이는** 패턴.
 
-분류는 Fowler 『Analysis Patterns』 의 책임 관계 장에 속한 기반 추상이고(근거: Analysis Patterns 2장 「Accountability」 §2.1 Party), 함께 쓰는 패턴은 [Accountability](../accountability/accountability-guide_v1.1.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.0.md) 입니다.
+분류는 Fowler 『Analysis Patterns』 의 책임 관계 장에 속한 기반 추상이고(근거: Analysis Patterns 2장 「Accountability」 §2.1 Party), 함께 쓰는 패턴은 [Accountability](../accountability/accountability-guide_v1.1.0.md) · [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.1.md) 입니다.
 
 이 글의 예제는 자재를 사들이는 회사의 거래처 관리예요. 여기서 Party 한 건은 이름 · 연락 수단 · 갈래별 속성을 스스로 갖고, 발주서는 공급자와 요청 부서를 Party 번호(id)로만 가리킵니다. 발주서를 낼 때 그 번호가 **거래처 장부**에 있는지 보는 일과 발송지를 뽑는 일은 **발주 서비스**가 맡고, 발송지는 발주서에 적어 두지 않고 물을 때마다 장부에서 Party 를 찾아 주소를 읽어요. 사람과 조직을 따로 두거나, 연락 수단을 따로 떼거나, 갈래를 아예 두지 않는 다른 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.
 

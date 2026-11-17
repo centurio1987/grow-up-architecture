@@ -216,7 +216,7 @@ Temporal Property 는 Fowler 의 시간 관련 모델 갈래입니다(근거: Fo
 | 발행본 | 지목한 속성 | 조건 1~4 | 이 패턴인가 |
 | --- | --- | --- | --- |
 | [Range](../range/range-guide_v1.1.0.md) 의 `RateBand.weights` | 요금 구간 하나의 무게 범위 | 1 ✗ (이력이 아니라 값 하나) | 아니다 — Range 는 이 패턴의 부품이지 이 패턴이 아니다 |
-| [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.0.md) 의 `InspectionType.정상 범위` | 점검 종류의 정상 범위 | 1 ✗ (이력이 없다) | 아니다 — 그래서 그 편의 판정은 기록 시점에 한 번 정해지고 고정된다 |
+| [Knowledge Level](../knowledge-level/knowledge-level-guide_v1.1.1.md) 의 `InspectionType.정상 범위` | 점검 종류의 정상 범위 | 1 ✗ (이력이 없다) | 아니다 — 그래서 그 편의 판정은 기록 시점에 한 번 정해지고 고정된다 |
 | [Observation](../observation/observation-guide_v1.1.0.md) 의 환자 관측 | 지목할 속성이 없다 | 0 ✗ | 아니다 — 비교 절 「Observation 과의 차이」가 이 자리다 |
 | [Posting Rule](../posting-rule/posting-rule-guide_v1.1.0.md) 의 규칙 등록부 | 사건 종류 `USAGE` 의 전기 규칙 | 1·2·3·4 모두 ○ | **그렇다** — 그 편의 등록부가 이 패턴의 한 적용이다 |
 
@@ -1157,7 +1157,7 @@ fn main() {
 - [Range 가이드](../range/range-guide_v1.1.0.md) — 유효 기간을 담는 구간 값의 정의와 경계 규칙. 개요·개념 정리·비교 절이 부품으로 가리킵니다.
 - [Posting Rule 가이드](../posting-rule/posting-rule-guide_v1.1.0.md) — 규칙마다 유효 기간을 두고 발생 시점으로 조회하는 모델. 교차 판정 표와 비교 절의 다섯째 대상입니다.
 - [Observation 가이드](../observation/observation-guide_v1.1.0.md) — 대상·항목·값 세 자리를 가진 기록 모델. 교차 판정 표와 비교 절의 넷째 대상입니다.
-- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.0.md) — 판정이 기록 시점에 한 번 정해지고 고정되는 모델. 교차 판정 표의 두 번째 행입니다.
+- [Knowledge Level 가이드](../knowledge-level/knowledge-level-guide_v1.1.1.md) — 판정이 기록 시점에 한 번 정해지고 고정되는 모델. 교차 판정 표의 두 번째 행입니다.
 - [Rust std::time](https://doc.rust-lang.org/std/time/index.html) — 이 모듈에 달력 날짜 타입이 없다는 것. 「상황 설정」이 날짜를 자체 값으로 둔 이유입니다.
 - [MariaDB Application-Time Periods](https://mariadb.com/docs/server/reference/sql-structure/temporal-tables/application-time-periods) — `PERIOD FOR` 가 두 시간 칼럼을 한 기간으로 묶고 순서 제약을 자동으로 거는 것. 「실제 사례」의 첫 항목입니다.
 - [MariaDB System-Versioned Tables](https://mariadb.com/docs/server/reference/sql-structure/temporal-tables/system-versioned-tables) — `ROW START` · `ROW END` 와 `FOR SYSTEM_TIME AS OF`, 그리고 삽입·삭제 시점이 변화가 나타난 시점과 다를 수 있다는 서술. 「실제 사례」의 첫 항목입니다.

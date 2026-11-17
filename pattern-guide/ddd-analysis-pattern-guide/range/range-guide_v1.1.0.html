@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:936ac5d5ca331aa98e1a0a0518ceaeaa8740a1a1cb513f36d7ea42d646947d9a -->
+<!-- guide-fp:2524a7bb1676053260fe85afcec9496f45e74b12c2af1ca043358bfe0ab0700c -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -558,7 +558,7 @@ After — 두 끝과 포함 여부가 한 값 안에 있다
 소포 2 kg            들어옴               안 들어옴             안 들어옴
 소포 2001 g          안 들어옴            들어옴                안 들어옴
 소포 20 kg           안 들어옴            안 들어옴             들어옴</code></pre>
-<p>Range 는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고 관측값을 범주로 나누는 자리와 값 모델링 자리 양쪽에 쓰이며(근거: Fowler <em>Analysis Patterns</em> 4장 「Observations for Corporate Finance」 §4.3 Range · §4.4 Phenomenon with Range), 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity</a> · <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level</a> 이에요.</p>
+<p>Range 는 Fowler 『Analysis Patterns』(1997)의 관측·측정 계열이고 관측값을 범주로 나누는 자리와 값 모델링 자리 양쪽에 쓰이며(근거: Fowler <em>Analysis Patterns</em> 4장 「Observations for Corporate Finance」 §4.3 Range · §4.4 Phenomenon with Range), 함께 쓰는 패턴은 <a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity</a> · <a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level</a> 이에요.</p>
 <p>이 글의 예제는 택배 요금표예요. 배송 상품 하나의 <strong>요금표</strong>(<code>RateTable</code>)가 자기 구간 목록과 표가 다루는 무게 전체인 <strong>적용 구간</strong>을 갖고, 구간 하나(<code>RateBand</code>)는 Range 값 하나와 요금을 가집니다. 배송 상품은 번호(<code>ProductId</code>)로만 가리켜요. 구간 하나의 규칙(하한이 상한보다 크지 않음, 경계에서의 포함 판정)은 Range 값이 스스로 지키고, 구간들 사이의 규칙(겹치지 않음, 빈틈 없이 덮음)은 요금표가 지킵니다. 소포 하나의 요금은 물을 때마다 표에서 찾아 돌려줄 뿐 따로 적어 두지 않아요. 구간을 누가 갖고 겹침 규칙을 어디서 지킬지 다른 선택지 셋은 「상황이 달라지면」에서 나란히 봅니다.</p>
 <pre tabindex="0"><code class="language-text">이 글이 고른 경계
   요금표 ────── 구간 목록과 적용 구간을 가짐 (겹치지 않음 · 빈틈 없이 덮음을 지킴)
@@ -1674,7 +1674,7 @@ record C(int threshold, boolean inclusive) {
 <li><a href="https://martinfowler.com/bliki/ValueObject.html">Value Object (Fowler bliki)</a> — 값 객체의 aliasing 문제와 그 대책으로 불변을 먼저 권한다는 서술. 최소 조건 8 의 근거.</li>
 <li><a href="reference/observation-model/observation-model-ref_v1.0.2.html">참고 문서 「수량·측정·관측 모델」</a> — 개념 정리가 가리키는 Range · Quantity · Measurement · Observation 의 층 관계.</li>
 <li><a href="ddd-analysis-pattern-guide/quantity/quantity-guide_v1.2.0.html">Quantity 가이드</a> — 개요가 함께 쓰는 패턴으로 잇고 개념 정리가 가리키는 Quantity 의 정의와 단위 환산 규칙.</li>
-<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.0.html">Knowledge Level 가이드</a> — 개요가 함께 쓰는 패턴으로 잇고, 사용 목적이 구간으로 값을 분류하는 규칙을 데이터로 둘 때 고르라고 가리키는 패턴.</li>
+<li><a href="ddd-analysis-pattern-guide/knowledge-level/knowledge-level-guide_v1.1.1.html">Knowledge Level 가이드</a> — 개요가 함께 쓰는 패턴으로 잇고, 사용 목적이 구간으로 값을 분류하는 규칙을 데이터로 둘 때 고르라고 가리키는 패턴.</li>
 <li><a href="reference/ddd-tactical-terms/ddd-tactical-terms-ref_v1.0.2.html">참고 문서 「DDD 전술 용어」</a> — 상황 설정 표의 네 행이 쓰는 Bounded Context · Aggregate · Aggregate Root · Entity · Value Object · id 참조 · 불변식.</li>
 <li><a href="https://www.postgresql.org/docs/current/rangetypes.html">PostgreSQL: Range Types</a> — 구간 타입과 경계 표기, 이산 타입의 <code>[)</code> 정규형, 배제 제약, multirange. 「실제 사례」 표의 앞 세 행과 비교 절의 세 번째 대상.</li>
 <li><a href="https://hl7.org/fhir/R5/datatypes.html">HL7 FHIR R5 Data Types</a> — <code>Range</code> 의 <code>low</code> · <code>high</code> 와 양 끝 포함 규정 및 규칙 <code>rng-2</code>, <code>Period</code> 와 규칙 <code>per-1</code>, 범위 밖 측정값에는 비교자를 붙인 Quantity 를 쓰라는 권고. 비교 절의 두 번째 대상과 「실제 사례」 표.</li>
