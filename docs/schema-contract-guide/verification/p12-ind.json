@@ -1,0 +1,8 @@
+{
+  "dependent": "problems/data/p12-delivery-log.csv:기사코드",
+  "referenced": "problems/data/p12-drivers.csv:기사코드",
+  "holds": false,
+  "missing": [
+    "D09"
+  ]
+}

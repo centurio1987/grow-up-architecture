@@ -1,0 +1,8 @@
+{
+  "dependent": "problems/data/tum-bookings-dump.csv:member_id",
+  "referenced": "problems/data/tum-members.csv:member_id",
+  "holds": false,
+  "missing": [
+    "M44"
+  ]
+}

@@ -1,0 +1,5 @@
+[테마] editorial-magazine-01 / editorial-data-01 (skill-default)
+[결과] /Users/centurio/grow-up-architecture/docs/schema-contract-guide/index.html (1802KB)
+[가드] 바깥 요청 0 · 서체 Georgia(시스템) 96819 · IBM Plex Mono 99545 · Pretendard 172297 · 넘침 0
+[확인] 프리셋이 선언한 시스템 서체에 기댄다(동봉 안 됨): Georgia — 읽는 기기에 없으면 그 기기의 기본 서체로 보인다
+종료 코드 0

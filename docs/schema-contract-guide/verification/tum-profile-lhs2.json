@@ -1,0 +1,266 @@
+{
+  "file": "tum-bookings-dump.csv",
+  "rows": 12,
+  "columns": {
+    "booking_id": {
+      "distinct": 12,
+      "null": 0,
+      "top": [
+        [
+          "B101",
+          1
+        ],
+        [
+          "B102",
+          1
+        ]
+      ]
+    },
+    "member_id": {
+      "distinct": 4,
+      "null": 0,
+      "top": [
+        [
+          "M07",
+          4
+        ],
+        [
+          "M12",
+          3
+        ]
+      ]
+    },
+    "member_name": {
+      "distinct": 4,
+      "null": 0,
+      "top": [
+        [
+          "김하나",
+          4
+        ],
+        [
+          "박도윤",
+          3
+        ]
+      ]
+    },
+    "grade": {
+      "distinct": 2,
+      "null": 0,
+      "top": [
+        [
+          "일반",
+          7
+        ],
+        [
+          "상주",
+          5
+        ]
+      ]
+    },
+    "room_code": {
+      "distinct": 3,
+      "null": 0,
+      "top": [
+        [
+          "R1",
+          5
+        ],
+        [
+          "R2",
+          4
+        ]
+      ]
+    },
+    "room_capacity": {
+      "distinct": 3,
+      "null": 3,
+      "top": [
+        [
+          "6",
+          5
+        ],
+        [
+          "4",
+          4
+        ]
+      ]
+    },
+    "starts_at": {
+      "distinct": 11,
+      "null": 0,
+      "top": [
+        [
+          "2026-11-06 09:00",
+          2
+        ],
+        [
+          "2026-11-03 10:00",
+          1
+        ]
+      ]
+    },
+    "ends_at": {
+      "distinct": 12,
+      "null": 0,
+      "top": [
+        [
+          "2026-11-03 11:30",
+          1
+        ],
+        [
+          "2026-11-03 12:00",
+          1
+        ]
+      ]
+    },
+    "status": {
+      "distinct": 4,
+      "null": 0,
+      "top": [
+        [
+          "confirmed",
+          5
+        ],
+        [
+          "used",
+          4
+        ]
+      ]
+    },
+    "cancelled_at": {
+      "distinct": 3,
+      "null": 10,
+      "top": [
+        [
+          "",
+          10
+        ],
+        [
+          "2026-11-06 08:30",
+          1
+        ]
+      ]
+    }
+  },
+  "minimal_uccs": [
+    [
+      "booking_id"
+    ],
+    [
+      "ends_at"
+    ],
+    [
+      "starts_at",
+      "status"
+    ],
+    [
+      "starts_at",
+      "cancelled_at"
+    ],
+    [
+      "member_id",
+      "room_code",
+      "status"
+    ],
+    [
+      "member_id",
+      "room_capacity",
+      "status"
+    ],
+    [
+      "member_name",
+      "room_code",
+      "status"
+    ],
+    [
+      "member_name",
+      "room_capacity",
+      "status"
+    ]
+  ],
+  "minimal_fds": [
+    {
+      "lhs": [
+        "member_id"
+      ],
+      "rhs": "member_name"
+    },
+    {
+      "lhs": [
+        "member_name"
+      ],
+      "rhs": "member_id"
+    },
+    {
+      "lhs": [
+        "room_code"
+      ],
+      "rhs": "room_capacity"
+    },
+    {
+      "lhs": [
+        "room_capacity"
+      ],
+      "rhs": "room_code"
+    },
+    {
+      "lhs": [
+        "starts_at"
+      ],
+      "rhs": "member_id"
+    },
+    {
+      "lhs": [
+        "starts_at"
+      ],
+      "rhs": "member_name"
+    },
+    {
+      "lhs": [
+        "starts_at"
+      ],
+      "rhs": "grade"
+    },
+    {
+      "lhs": [
+        "starts_at"
+      ],
+      "rhs": "room_code"
+    },
+    {
+      "lhs": [
+        "starts_at"
+      ],
+      "rhs": "room_capacity"
+    },
+    {
+      "lhs": [
+        "member_id",
+        "status"
+      ],
+      "rhs": "grade"
+    },
+    {
+      "lhs": [
+        "member_id",
+        "status"
+      ],
+      "rhs": "cancelled_at"
+    },
+    {
+      "lhs": [
+        "member_name",
+        "status"
+      ],
+      "rhs": "grade"
+    },
+    {
+      "lhs": [
+        "member_name",
+        "status"
+      ],
+      "rhs": "cancelled_at"
+    }
+  ]
+}

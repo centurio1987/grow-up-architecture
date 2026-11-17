@@ -1,0 +1,8 @@
+{"type":"booking_confirmed","booking":"B051","member":"M07","room":"R1","start":"2025-03-04 10:00","end":"2025-03-04 11:00"}
+{"type":"booking_confirmed","booking":"B052","member":"M12","room":"R2","start":"2025-03-04 14:00","end":"2025-03-04 15:30"}
+{"type":"booking_confirmed","booking":"B060","member":"M07","room":"R1","start":"2025-03-11 10:00","end":"2025-03-11 12:00","note":"대표 예약"}
+{"event":"booking.confirmed","eventId":"e-1","bookingId":"B210","memberId":"M07","roomCode":"R1","startAt":"2026-01-05T10:00:00+09:00","endAt":"2026-01-05T11:30:00+09:00"}
+{"event":"booking.confirmed","eventId":"e-2","bookingId":"B211","memberId":"M31","roomCode":"R3","startAt":"2026-01-05T13:00:00+09:00","endAt":"2026-01-05T14:00:00+09:00"}
+{"event":"booking.confirmed","eventId":"e-90","bookingId":"B402","memberId":"M12","roomCode":"R2","startAt":"2026-06-02T09:00:00+09:00","endAt":"2026-06-02T10:30:00+09:00","minutes":90}
+{"event":"booking.confirmed","eventId":"e-91","bookingId":"B403","memberId":"M07","roomCode":"R1","startAt":"2026-06-02T01:00:00Z","endAt":"2026-06-02T02:00:00Z","minutes":60}
+{"event":"booking.confirmed","eventId":"e-95","bookingId":"B410","memberId":"M44","roomCode":"R3","startAt":"2026-06-03T15:00:00+09:00","endAt":"2026-06-03T16:00:00+09:00","minutes":null}

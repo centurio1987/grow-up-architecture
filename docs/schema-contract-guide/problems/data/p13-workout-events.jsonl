@@ -1,0 +1,11 @@
+{"type":"run_end","user":"u-17","ts":"2026-09-01T07:12:03+09:00","dur":1810,"dist":5.02}
+{"type":"run_end","user":"u-22","ts":"2026-09-01T19:40:11+09:00","dur":2405,"dist":6.5}
+{"type":"run_end","user":"u-17","ts":"2026-09-03T07:05:47+09:00","dur":1755,"dist":5.0,"memo":"비 옴"}
+{"event":"workout_end","app":"2.0.1","user_id":"u-17","at":"2026-09-10T07:10:00+09:00","kind":"run","duration_sec":1800,"distance_km":5.1}
+{"event":"workout_end","app":"2.0.1","user_id":"u-31","at":"2026-09-10T20:00:30+09:00","kind":"cycle","duration_sec":3600,"distance_km":21.4}
+{"event":"workout_end","app":"2.0.3","user_id":"u-22","at":"2026-09-11T06:55:02+09:00","kind":"swim","duration_sec":2700,"distance_km":null}
+{"event":"workout_end","app":"2.0.3","user_id":"u-22","at":"2026-09-12T06:58:40+09:00","kind":"swim","duration_sec":2650,"laps":40,"pool_m":25}
+{"event":"workout.ended","event_id":"e-9f10","app":"3.0.0","user_id":"u-17","at":"2026-10-01T07:08:15+09:00","kind":"run","duration":{"value":31,"unit":"min"},"distance":{"value":5.2,"unit":"km"}}
+{"event":"workout.ended","event_id":"e-9f10","app":"3.0.0","user_id":"u-17","at":"2026-10-01T07:08:15+09:00","kind":"run","duration":{"value":31,"unit":"min"},"distance":{"value":5.2,"unit":"km"}}
+{"event":"workout.ended","event_id":"e-a201","app":"3.0.0","user_id":"u-31","at":"2026-10-01T11:10:00Z","kind":"cycle","duration":{"value":1.1,"unit":"h"},"distance":{"value":24000,"unit":"m"}}
+{"event":"workout.ended","event_id":"e-a3c7","app":"3.0.1","user_id":"u-22","at":"2026-10-02T06:50:00+09:00","kind":"swim","duration":{"value":45,"unit":"min"},"laps":[{"n":1,"sec":62},{"n":2,"sec":65}],"pool_m":25}

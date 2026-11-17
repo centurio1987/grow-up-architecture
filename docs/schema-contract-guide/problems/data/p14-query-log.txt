@@ -1,0 +1,8 @@
+# 매장 프로그램과 외부 프로그램이 보낸 질의(2026-10-01 ~ 10-10, 같은 꼴은 한 번만 적고 횟수를 붙임)
+[매장/가격표]   412회  SELECT ITEM_CD, ITEM_NM, PRICE1 FROM TB_ITEM WHERE USE_YN = 'Y' AND CAT1 = ? ORDER BY ITEM_NM
+[매장/거래처가] 57회   SELECT I.ITEM_CD, I.ITEM_NM, I.PRICE2 FROM TB_ITEM I, TB_CUST C WHERE C.CUST_CD = ? AND C.CUST_GB = 'C'
+[매장/재고]     389회  SELECT SUM(QTY) FROM TB_STOCK WHERE ITEM_CD = ?
+[매장/출고]     96회   INSERT INTO TB_INOUT VALUES (?, ?, ?, 'O', ?, ?, ?, ?)
+[매장/출고]     96회   UPDATE TB_STOCK SET QTY = QTY - ?, UPD_DT = ? WHERE ITEM_CD = ? AND WH_CD = ?
+[매장/일보]     10회   SELECT * FROM TB_INOUT WHERE DT = ? ORDER BY SEQ
+[회계프로그램]  10회   SELECT DT, ITEM_CD, QTY, CUST_CD FROM TB_INOUT WHERE IO_GB = 'O' AND DT = ?
