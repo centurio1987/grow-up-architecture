@@ -21,6 +21,7 @@
 | 사례 | 문제 | 고른 구조 | 가이드 |
 | --- | --- | --- | --- |
 | CT-01 | 선착순 쿠폰 발급 | 판정은 Redis 명령 하나씩, 기록은 큐 뒤에서, 마지막 확인은 DB 유니크 제약 | [first-come-coupon-guide_v1.1.1.md](first-come-coupon/first-come-coupon-guide_v1.1.1.md) |
+| CT-03 | 티켓 예매와 좌석 선점 | 대기실이 입장 속도를 정하고, 좌석은 점유 번호와 만료 시각을 단 조건부 UPDATE 한 문장으로 붙잡음 | [ticket-seat-hold-guide_v1.0.0.md](ticket-seat-hold/ticket-seat-hold-guide_v1.0.0.md) |
 | CT-05 | 결제 · 송금 중복 방지 | 멱등 키를 결제와 같은 트랜잭션에 쓰고, 결과를 모르는 결제는 실패 대신 「알 수 없음」으로 두어 같은 키로 다시 물음 | [payment-idempotency-guide_v1.0.0.md](payment-idempotency/payment-idempotency-guide_v1.0.0.md) |
 
 ## IN 공통 부품

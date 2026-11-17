@@ -1,0 +1,61 @@
+-- scenario 1: U1 is first in line and buys one of 500 seats, no load and no failure --
+t=0ms U1 room: arrived at 0ms, admitted with a token
+t=50ms U1 api: seat map refreshed at 0ms, free=500, picks seat 47
+t=20151ms U1 db: UPDATE seat 47 -> 1 row, hold_no=1 until=620151ms
+t=21000ms map: seat 47 shows held
+t=300252ms U1 api: pay 110000 won -> payment service
+t=302253ms U1 db: payment approved, confirm UPDATE seat 47 hold_no=1 -> 1 row, INSERT sale -> 1 row, commit
+t=302304ms U1 app: ticket for seat 47
+t=303000ms map: seat 47 shows sold
+one booking: tries=1 hold-statements=1 held=1 refused=0 told-held-twice=0 refunds=0 sales=1 double-sold=0 hold-reply-max=102ms
+-- scenario 2: 20000 people arrive within 60s for 500 seats, the room admits up to 10 per second --
+t=2050ms U16 api: seat map refreshed at 2000ms, free=500, picks seat 23
+t=2050ms U17 api: seat map refreshed at 2000ms, free=500, picks seat 23
+t=14050ms U134 api: seat map refreshed at 14000ms, free=500, picks seat 23
+t=22151ms U16 db: UPDATE seat 23 -> 1 row, hold_no=1 until=622151ms
+t=22151ms U17 db: UPDATE seat 23 -> 0 rows, held by U16 until 622151ms
+t=23000ms map: seat 23 shows held
+t=34151ms U134 db: UPDATE seat 23 -> 0 rows, held by U16 until 622151ms
+t=302252ms U16 api: pay 110000 won -> payment service
+t=304253ms U16 db: payment approved, confirm UPDATE seat 23 hold_no=1 -> 1 row, INSERT sale -> 1 row, commit
+t=305000ms map: seat 23 shows sold
+guide: tries=1519 hold-statements=1519 held=500 refused=1019 told-held-twice=0 refunds=0 sales=500 double-sold=0 hold-reply-max=102ms
+guide room: admitted=500 last-admitted-arrived=1497ms on-booking-path-max=500 booking-requests-per-second-max=48 last-sale=533475ms sold-out-notice=534000ms in-line=19500
+for-update: tries=3556 hold-statements=3556 held=500 refused=3056 told-held-twice=0 refunds=0 sales=500 double-sold=0 hold-reply-max=282204ms
+for-update room: admitted=600 last-admitted-arrived=1797ms on-booking-path-max=600 booking-requests-per-second-max=200 last-sale=2139279ms sold-out-notice=2140000ms in-line=19400
+t=2050ms U16 api: seat map refreshed at 2000ms, free=500, picks seat 23
+t=2050ms U17 api: seat map refreshed at 2000ms, free=500, picks seat 23
+t=14050ms U134 api: seat map refreshed at 14000ms, free=500, picks seat 23
+t=22151ms U16 db: SELECT seat 23 -> free, hold_no=0
+t=22151ms U17 db: SELECT seat 23 -> free, hold_no=0
+t=22153ms U16 db: UPDATE seat 23 -> 1 row, hold_no=1 until=622153ms
+t=22153ms U17 db: UPDATE seat 23 -> 1 row, hold_no=2 until=622153ms, but U16 was told held too
+t=23000ms map: seat 23 shows held
+t=34151ms U134 db: SELECT seat 23 -> held by U17 until 622153ms
+t=302254ms U16 api: pay 110000 won -> payment service
+t=302254ms U17 api: pay 110000 won -> payment service
+t=304255ms U16 db: payment approved, confirm UPDATE seat 23 hold_no=1 -> 0 rows (seat hold_no=2), rollback, no INSERT, refund 110000 won
+t=304255ms U17 db: payment approved, confirm UPDATE seat 23 hold_no=2 -> 1 row, INSERT sale -> 1 row, commit
+t=305000ms map: seat 23 shows sold
+split-select-update: tries=1550 hold-statements=2071 held=521 refused=1029 told-held-twice=21 refunds=21 sales=500 double-sold=0 hold-reply-max=104ms
+optimistic-version: tries=1519 hold-statements=2033 held=500 refused=1019 told-held-twice=0 refunds=0 sales=500 double-sold=0 hold-reply-max=104ms version-conflicts=14
+no room: every arrival opens the seat map at once, booking-requests-per-second-max=334 on-booking-path-max=20000
+-- scenario 3: A holds the last seat, the payment service stops 594000~606000ms while A pays, B presses every 60s from 300000ms --
+t=0ms A db: UPDATE seat 1 -> 1 row, hold_no=1 until=600000ms
+t=300000ms B db: UPDATE seat 1 -> 0 rows, held by A until 600000ms
+t=360000ms B db: UPDATE seat 1 -> 0 rows, held by A until 600000ms
+t=420000ms B db: UPDATE seat 1 -> 0 rows, held by A until 600000ms
+t=480000ms B db: UPDATE seat 1 -> 0 rows, held by A until 600000ms
+t=540000ms B db: UPDATE seat 1 -> 0 rows, held by A until 600000ms
+t=595000ms A api: pay 110000 won -> payment service, which is down until 606000ms
+t=600000ms B db: UPDATE seat 1 -> 1 row, hold_no=2 until=1200000ms
+t=608001ms A db: payment approved, confirm UPDATE seat 1 hold_no=1 -> 0 rows (seat hold_no=2), rollback, no INSERT, refund 110000 won
+t=880101ms B api: pay 110000 won -> payment service
+t=882102ms B db: payment approved, confirm UPDATE seat 1 hold_no=2 -> 1 row, INSERT sale -> 1 row, commit
+guide: tries=7 hold-statements=7 held=2 refused=5 told-held-twice=0 refunds=1 sales=1 double-sold=0 hold-reply-max=102ms seat 1 sold to B
+t=608001ms A db: payment approved, INSERT sale seat 1 -> 1 row, commit
+t=882102ms B db: payment approved, INSERT sale seat 1 -> 23505 unique_violation, rollback, refund 110000 won
+insert-only: tries=7 hold-statements=7 held=2 refused=5 told-held-twice=0 refunds=1 sales=1 double-sold=0 hold-reply-max=102ms seat 1 sold to A
+t=608001ms A db: payment approved, INSERT sale seat 1 -> 1 row, commit
+t=882102ms B db: payment approved, INSERT sale seat 1 -> 1 row, commit
+insert-only-no-unique: tries=7 hold-statements=7 held=2 refused=5 told-held-twice=0 refunds=0 sales=2 double-sold=1 hold-reply-max=102ms seat 1 sold to A B
