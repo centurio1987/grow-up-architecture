@@ -93,7 +93,7 @@ python3 "$PLUGIN/scripts/authoring.py" resolve --voice ppangtolab-teacher --spec
 | GoF 생성·구조 | `gof-creational-structural.md` |
 | GoF 행위 | `gof-behavioral.md` |
 | 분석 패턴 | `analysis-patterns.md` |
-| 시스템 설계 사례 | 문제마다 한 장 — `live-viewer-count-2026-11-13.md` · `coupon-issuance-2026-11-15.md`. 후보 목록은 `system-design-cases-2026-11-13.md` |
+| 시스템 설계 사례 | 문제마다 한 장 — 파일럿은 `live-viewer-count-2026-11-13.md` · `coupon-issuance-2026-11-15.md`, 1차 묶음부터는 `system-design-<슬러그>-<쓰는 날>.md`. 후보 목록은 `system-design-cases-2026-11-13.md` |
 
 - **회계 계열(Account · Transaction · Posting Rule)** 은 `accounting-context.md` 를 반드시 읽는다.
   상황 설정의 배경은 그 확정안에서 가져오고, 이 자리에서 새로 정하지 않는다.

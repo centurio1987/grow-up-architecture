@@ -21,3 +21,11 @@
 | 사례 | 문제 | 고른 구조 | 가이드 |
 | --- | --- | --- | --- |
 | CT-01 | 선착순 쿠폰 발급 | 판정은 Redis 명령 하나씩, 기록은 큐 뒤에서, 마지막 확인은 DB 유니크 제약 | [first-come-coupon-guide_v1.1.1.md](first-come-coupon/first-come-coupon-guide_v1.1.1.md) |
+
+## IN 공통 부품
+
+다른 문제들이 함께 쓰는 부품입니다. 부품 가운데 단독 문제로도 성립하는 것만 한 편으로 다룹니다.
+
+| 사례 | 문제 | 고른 구조 | 가이드 |
+| --- | --- | --- | --- |
+| IN-01 | API 처리율 제한 | 리전마다 Redis 에서 Lua 한 번으로 근사 창을 세고, Redis 가 멈추면 서버마다 토큰 버킷으로 열어 둠 | [api-rate-limiting-guide_v1.0.0.md](api-rate-limiting/api-rate-limiting-guide_v1.0.0.md) |

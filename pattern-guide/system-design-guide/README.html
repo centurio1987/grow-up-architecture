@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:c31a32aacb76fa75a5a0e8b9285be987bba0df249866217bb34053d45797c07a -->
+<!-- guide-fp:1ee0ae69023ece27fb405ff6753906eec66ec78c09f3daeea93aaa0f077e90f4 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -495,6 +495,7 @@ tbody tr:last-child td {
 <ol>
 <li><a href="#rt-실시간-전달">RT 실시간 전달</a></li>
 <li><a href="#ct-경합과-정합성">CT 경합과 정합성</a></li>
+<li><a href="#in-공통-부품">IN 공통 부품</a></li>
 </ol>
 </details>
 <p>문제(요구) 하나마다 그 문제를 가장 잘 푸는 시스템 구조를 한 편으로 보이는 가이드 모음입니다. 각 편은 명세 <code>system-design-guide</code>(<code>.claude/authoring/specs/system-design-guide/</code>)의 절 구성을 따라 시스템 개념도 · 시나리오 · 개념도에 든 기술의 설명 · 세 언어(Java · TypeScript · Rust) 구현 코드를 담습니다.</p>
@@ -523,6 +524,18 @@ tbody tr:last-child td {
 </thead>
 <tbody>
 <tr><td>CT-01</td><td>선착순 쿠폰 발급</td><td>판정은 Redis 명령 하나씩, 기록은 큐 뒤에서, 마지막 확인은 DB 유니크 제약</td><td><a href="first-come-coupon/first-come-coupon-guide_v1.1.1.md">first-come-coupon-guide_v1.1.1.md</a></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="in-공통-부품">IN 공통 부품</h2>
+<p>다른 문제들이 함께 쓰는 부품입니다. 부품 가운데 단독 문제로도 성립하는 것만 한 편으로 다룹니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>사례</th><th>문제</th><th>고른 구조</th><th>가이드</th></tr>
+</thead>
+<tbody>
+<tr><td>IN-01</td><td>API 처리율 제한</td><td>리전마다 Redis 에서 Lua 한 번으로 근사 창을 세고, Redis 가 멈추면 서버마다 토큰 버킷으로 열어 둠</td><td><a href="api-rate-limiting/api-rate-limiting-guide_v1.0.0.md">api-rate-limiting-guide_v1.0.0.md</a></td></tr>
 </tbody>
 </table>
 </div>

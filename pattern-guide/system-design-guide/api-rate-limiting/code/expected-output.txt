@@ -1,0 +1,31 @@
+-- formula: cloudflare example, prev=42 cur=18 at 15s of a 60s window --
+estimate=49.500
+-- scenario 1: K1 sends one request every 80ms to region A --
+t=0.000ms K1 #1 lb -> api-1, EVALSHA sent
+t=0.260ms K1 #1 redis lua -> allow prev=0 cur=1
+t=0.510ms K1 #1 api-1: 200 remaining=599, forward to backend
+t=47920.000ms K1 #600 lb -> api-4, EVALSHA sent
+t=47920.260ms K1 #600 redis lua -> allow prev=0 cur=600
+t=47920.510ms K1 #600 api-4: 200 remaining=0, forward to backend
+t=48000.000ms K1 #601 lb -> api-1, EVALSHA sent
+t=48000.260ms K1 #601 redis lua -> reject prev=0 cur=600
+t=48000.510ms K1 #601 api-1: 429 retry-after=13s, block K1 here until 60100.000ms
+t=48320.000ms K1 #605 api-1: 429 from local block, no redis call
+K1: sent=750 allowed=600 rejected=150 redis-calls=604 api-local-429=146 max-judge=0.510ms
+-- scenario 2: K2 sends 4 at a time, 600 in 59s-60s and 600 in 60s-61s --
+fixed-window: allowed=1200 window0=600 window1=600 redis-calls=1200 api-local-429=0 max-judge=0.540ms
+sliding-lua: allowed=609 window0=600 window1=9 redis-calls=649 api-local-429=551 max-judge=0.540ms
+exact-log: allowed=600; sliding-lua differs on 9 of 1200 (wrongly allowed 9, wrongly rejected 0) = 0.750%
+two-step: allowed=612 window0=600 window1=12 redis-calls=1240 api-local-429=572 max-judge=1.050ms
+-- candidates: K1 sends 600 to region A, K4 sends 1800 across regions A B C, in one minute --
+per-region-full: K1 allowed=600/600 K4 allowed=1800/1800 cross-region-calls=0
+split-in-three: K1 allowed=200/600 K4 allowed=600/1800 cross-region-calls=0
+central-redis: K1 allowed=600/600 K4 allowed=600/1800 cross-region-calls=1200
+-- scenario 3: region A redis stops at 15s and restarts empty at 35s, K3 floods from 16s --
+open: K1 allowed=480/480 K3 allowed=2500/4400 K3-during-outage=1900 fallbacks=2060 redis-calls=926 api-local-429=1896 max-judge=5.000ms
+closed: K1 allowed=320/480 K3 allowed=600/4400 K3-during-outage=0 fallbacks=2060 redis-calls=926 api-local-429=1896 max-judge=5.000ms
+t=15000.000ms redis stops responding
+t=35000.000ms redis restarts with no counters and an empty script cache
+t=35000.510ms api-1: EVALSHA -> NOSCRIPT, resend the script with EVAL
+local: K1 allowed=480/480 K3 allowed=828/4400 K3-during-outage=228 fallbacks=2060 redis-calls=926 api-local-429=1896 max-judge=5.000ms
+local: redis counts K3 at 600 for window 0, K3 actually got 828
