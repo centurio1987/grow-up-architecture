@@ -1,0 +1,61 @@
+-- scenario 1: K1 pays 30000 for O1, one request and no failure --
+t=50ms K1 req=0 lb -> api-1 POST /payments order=O1&amount=30000
+t=51ms K1 req=0 db: INSERT idempotency row + payment P1 (processing), commit
+t=52ms K1 req=0 api -> pg approve, idempotency key P1
+t=202ms K1 pg: approve P1 amount=30000 (approvals of P1: 1)
+t=353ms K1 db: payment P1 succeeded, save response 201 + outbox row, commit
+t=404ms K1 req=0 app: 201 {"payment":"P1","status":"succeeded"}
+t=1000ms K1 relay: outbox P1 -> order service, O1 paid
+one payment: requests=1 pg-approvals=1 orders-charged-twice=0 payments-succeeded=1 order-notices=1
+-- scenario 2: 580 attempts in the peak second, every 10th pressed twice 30ms apart, K104 resent with another amount --
+t=66ms K109 req=9 db: INSERT idempotency row + payment P109 (processing), commit
+t=67ms K109 req=9 api -> pg approve, idempotency key P109
+t=87ms K104 req=638 db: same key, fingerprint 831846809 != 831817018 -> 422
+t=96ms K109 req=580 db: duplicate key, payment P109 processing -> 409
+t=147ms K109 req=580 app: 409 {"error":"in progress"}
+t=419ms K109 req=9 app: 201 {"payment":"P109","status":"succeeded"}
+t=1198ms K109 req=639 db: duplicate key, response saved -> replay it with Idempotent-Replayed: true
+t=1249ms K109 req=639 app: 201 {"payment":"P109","status":"succeeded"}
+idempotency-table: requests=697 pg-approvals=580 orders-charged-twice=0 payments-succeeded=580 order-notices=580 db-tx=1277 409=58 replayed=58
+redis-lock-3s: requests=757 pg-approvals=639 orders-charged-twice=59 payments-succeeded=639 order-notices=639 db-tx=1396 lock-busy=118
+-- scenario 3: first the response to K2 is lost on its way to the app --
+t=50ms K2 req=0 lb -> api-1 POST /payments order=O2&amount=30000
+t=51ms K2 req=0 db: INSERT idempotency row + payment P2 (processing), commit
+t=52ms K2 req=0 api -> pg approve, idempotency key P2
+t=202ms K2 pg: approve P2 amount=30000 (approvals of P2: 1)
+t=353ms K2 db: payment P2 succeeded, save response 201 + outbox row, commit
+t=404ms K2 req=0 app: connection dropped, response lost
+t=1000ms K2 relay: outbox P2 -> order service, O2 paid
+t=1454ms K2 req=1 lb -> api-2 POST /payments order=O2&amount=30000
+t=1455ms K2 req=1 db: duplicate key, response saved -> replay it with Idempotent-Replayed: true
+t=1506ms K2 req=1 app: 201 {"payment":"P2","status":"succeeded"}
+with-key: requests=2 pg-approvals=1 orders-charged-twice=0 payments-succeeded=1 order-notices=1
+no-key: requests=2 pg-approvals=2 orders-charged-twice=1 payments-succeeded=2 order-notices=2
+-- then pg loses the approval responses for P3 P4 P5 and stops answering from 100250ms for 4 hours --
+t=50ms K3 req=0 lb -> api-1 POST /payments order=O3&amount=50000
+t=51ms K3 req=0 db: INSERT idempotency row + payment P3 (processing), commit
+t=52ms K3 req=0 api -> pg approve, idempotency key P3
+t=202ms K3 pg: approve P3 amount=50000 (approvals of P3: 1), response lost
+t=1202ms K4 pg: approve P4 amount=40000 (approvals of P4: 1), response lost
+t=10053ms K3 db: payment P3 unknown after pg read timeout, commit
+t=10104ms K3 req=0 app: 202 {"payment":"P3","status":"unknown"}
+t=11053ms K4 db: payment P4 unknown after pg read timeout, commit
+t=11154ms K3 req=4 lb -> api-1 POST /payments order=O3&amount=50000
+t=11155ms K3 req=4 db: duplicate key, payment P3 unknown -> ask pg again with key P3
+t=11306ms K3 pg: key P3 seen, replay its approval (approvals of P3: 1)
+t=11457ms K3 db: payment P3 succeeded, save response 201 + outbox row, commit
+t=11508ms K3 req=4 app: 201 {"payment":"P3","status":"succeeded"}
+t=12000ms K3 relay: outbox P3 -> order service, O3 paid
+t=60151ms K4 pg: key P4 seen, replay its approval (approvals of P4: 1)
+t=60302ms K4 db: payment P4 succeeded, save response 201 + outbox row, commit (confirm job)
+t=61000ms K4 relay: outbox P4 -> order service, O4 paid
+t=100202ms K5 pg: approve P5 amount=70000 (approvals of P5: 1), response lost
+t=110053ms K5 db: payment P5 unknown after pg read timeout, commit
+t=110202ms K6 pg: down, approve request for P6 never arrives
+t=120053ms K6 db: payment P6 unknown after pg read timeout, commit
+t=100800000ms reconcile with pg records: matched=2 unknown->succeeded=1 unknown->failed=1 anomalies=0 (confirm job asked pg again 120 times before)
+t=100801000ms K5 relay: outbox P5 -> order service, O5 paid
+this guide: requests=5 pg-approvals=3 orders-charged-twice=0 payments-succeeded=3 order-notices=3 anomalies=0
+timeout-as-failure: requests=5 pg-approvals=4 orders-charged-twice=1 payments-succeeded=1 order-notices=1 anomalies=3
+new-pg-key-per-retry: requests=5 pg-approvals=5 orders-charged-twice=2 payments-succeeded=3 order-notices=3 anomalies=2
+no-confirm-cutoff: requests=5 pg-approvals=5 orders-charged-twice=1 payments-succeeded=4 order-notices=4 anomalies=1
