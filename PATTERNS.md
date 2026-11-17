@@ -27,7 +27,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | Bridge (브릿지) | 추상(Abstraction)과 구현(Implementor)을 분리해 독립적으로 확장 | [bridge-guide_v1.1.0.md](pattern-guide/design-pattern-guide/bridge/bridge-guide_v1.1.0.md) |
 | Composite (컴포지트) | 부분-전체 계층을 같은 인터페이스로 다루고, 묶음의 답은 자식들의 답을 모아 만듦 | [composite-guide_v1.1.0.md](pattern-guide/design-pattern-guide/composite/composite-guide_v1.1.0.md) |
 | Decorator (데코레이터) | 객체에 동적으로 책임을 추가 | [decorator-guide_v1.1.0.md](pattern-guide/design-pattern-guide/decorator/decorator-guide_v1.1.0.md) |
-| Facade (퍼사드) | 서브시스템에 통합된 단순한 진입점 제공 | [facade-guide_v1.1.0.md](pattern-guide/design-pattern-guide/facade/facade-guide_v1.1.0.md) |
+| Facade (퍼사드) | 서브시스템에 통합된 단순한 진입점 제공 | [facade-guide_v1.1.1.md](pattern-guide/design-pattern-guide/facade/facade-guide_v1.1.1.md) |
 | Flyweight (플라이웨이트) | 다수의 미세 객체를 공유로 효율화 | [flyweight-guide_v1.1.0.md](pattern-guide/design-pattern-guide/flyweight/flyweight-guide_v1.1.0.md) |
 | Proxy (프록시) | 다른 객체에 대한 접근을 대리/제어 | [proxy-guide_v1.1.0.md](pattern-guide/design-pattern-guide/proxy/proxy-guide_v1.1.0.md) |
 
@@ -43,7 +43,7 @@ GoF(Gang of Four) 23개 디자인 패턴의 한국어 가이드 모음. 각 문�
 | Iterator (이터레이터) | 순회 위치를 집합 밖의 순회자에 들려, 내부 표현을 숨긴 채 원소를 차례로 내줌 | [iterator-guide_v1.1.0.md](pattern-guide/design-pattern-guide/iterator/iterator-guide_v1.1.0.md) |
 | Mediator (중재자) | 동료들이 서로를 참조하지 않고 중재자를 거쳐 협력하게 함 | [mediator-guide_v1.1.0.md](pattern-guide/design-pattern-guide/mediator/mediator-guide_v1.1.0.md) |
 | Memento (메멘토) | 되돌릴 상태를 통째로 떠서, 아무도 못 여는 값으로 맡김 | [memento-guide_v1.1.0.md](pattern-guide/design-pattern-guide/memento/memento-guide_v1.1.0.md) |
-| Observer (옵저버) | 1:N 의존성 관계에서 상태 변화 자동 통보 | [observer-guide_v1.1.0.md](pattern-guide/design-pattern-guide/observer/observer-guide_v1.1.0.md) |
+| Observer (옵저버) | 1:N 의존성 관계에서 상태 변화 자동 통보 | [observer-guide_v1.1.1.md](pattern-guide/design-pattern-guide/observer/observer-guide_v1.1.1.md) |
 | State (상태) | 상태마다 객체를 두고 요청을 위임하며, 그 상태 객체가 실행 중에 바뀜 | [state-guide_v1.1.0.md](pattern-guide/design-pattern-guide/state/state-guide_v1.1.0.md) |
 | Strategy (전략) | 알고리즘군을 캡슐화하고 런타임 교체 | [strategy-guide_v1.2.0.md](pattern-guide/design-pattern-guide/strategy/strategy-guide_v1.2.0.md) |
 | Template Method (템플릿 메서드) | 알고리즘 골격을 상위 타입에, 달라지는 단계만 하위 타입에 | [template-method-guide_v1.1.0.md](pattern-guide/design-pattern-guide/template-method/template-method-guide_v1.1.0.md) |

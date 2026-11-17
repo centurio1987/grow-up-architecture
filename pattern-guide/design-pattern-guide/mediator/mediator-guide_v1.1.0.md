@@ -36,7 +36,7 @@ After : 위젯은 가운데 객체만 알고, 가운데 객체가 나머지를 �
   "등급이 바뀌면 무엇을 한다" 규칙이 있는 곳   SeatForm 안 한 곳
 ```
 
-분류는 행위 패턴이고, 함께 쓰는 패턴은 [Observer](../observer/observer-guide_v1.1.0.md) 입니다.
+분류는 행위 패턴이고, 함께 쓰는 패턴은 [Observer](../observer/observer-guide_v1.1.1.md) 입니다.
 
 이 글은 시나리오 셋을 따라갑니다. 등급 하나를 고른 것이 화면 전체로 번지는 길, 새 위젯이 더해질 때 무엇이 안 바뀌는가, 동료끼리 직접 부르거나 규칙을 동료에 흩거나 중재자를 걷어내면 어떤 값이 조용히 틀리는가. 끝까지 읽으면 어떤 코드를 Mediator 라고 불러도 되는지 필수 조건 넷으로 판정할 수 있고, 그림만으로는 차이를 알 수 없는 Facade 와도 구분할 수 있게 됩니다.
 
@@ -285,7 +285,7 @@ Mediator 와 구조가 닮았거나 같은 단서에서 떠오르는 대상 넷�
 
 #### Facade 와의 차이
 
-구분 기준은 가운데 객체를 아는 쪽이 바깥 Client 뿐인지, 안쪽 객체들도 아는지입니다. 두 패턴은 "여러 객체 사이에 하나가 끼어들어 직접 얽히는 것을 줄인다"는 모양이 같아서 그림만으로는 구분되지 않아요. 다른 점은 **방향**입니다. 아래 표는 [Facade 가이드](../facade/facade-guide_v1.1.0.md)가 정리한 것이고, 이 글은 같은 표를 Mediator 열에서 읽어요.
+구분 기준은 가운데 객체를 아는 쪽이 바깥 Client 뿐인지, 안쪽 객체들도 아는지입니다. 두 패턴은 "여러 객체 사이에 하나가 끼어들어 직접 얽히는 것을 줄인다"는 모양이 같아서 그림만으로는 구분되지 않아요. 다른 점은 **방향**입니다. 아래 표는 [Facade 가이드](../facade/facade-guide_v1.1.1.md)가 정리한 것이고, 이 글은 같은 표를 Mediator 열에서 읽어요.
 
 ```text
                                     Facade                        Mediator
@@ -1302,7 +1302,7 @@ aisle off  -> window=false aisle=true
   - 4장 Structural Patterns, Facade(185쪽부터) — 관련 패턴(Related Patterns)에 적힌 Mediator 와의 대비: 프로토콜의 방향, 서브시스템 클래스가 Facade 를 모른다는 것, Facade 는 새 기능을 정의하지 않는다는 것. Facade 비교 절의 근거
   - 5장 Behavioral Patterns, Observer(293쪽부터) — 구현 쟁점의 ChangeManager 가 Mediator 의 사례라는 설명. Observer 비교 절 마지막 문단의 근거
   - 5장 Behavioral Patterns 의 토론 「Should Communication be Encapsulated or Distributed?」 — Mediator 와 Observer 를 경쟁 패턴으로 두고, 통신의 캡슐화와 분산, 재사용성과 이해 용이성의 맞바꿈을 적은 자리. Observer 비교 절의 근거
-- [Facade 가이드](../facade/facade-guide_v1.1.0.md) — 가운데 객체를 아는 쪽이 어디인가로 두 패턴을 가르는 네 줄 표, 창구에 업무 규칙을 넣었을 때 규칙이 한 경로에만 적용된다는 실행 결과, 서브시스템 안에 중재자를 두는 포개짐. Facade 비교 절이 그 표를 Mediator 열에서 읽고 포개짐을 반대 방향에서 받음
+- [Facade 가이드](../facade/facade-guide_v1.1.1.md) — 가운데 객체를 아는 쪽이 어디인가로 두 패턴을 가르는 네 줄 표, 창구에 업무 규칙을 넣었을 때 규칙이 한 경로에만 적용된다는 실행 결과, 서브시스템 안에 중재자를 두는 포개짐. Facade 비교 절이 그 표를 Mediator 열에서 읽고 포개짐을 반대 방향에서 받음
 - [Java SE(Standard Edition) 21 — ButtonGroup](https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/ButtonGroup.html) — 같은 그룹 객체를 공유하는 버튼들 중 하나를 켜면 나머지가 꺼진다는 클래스 설명, `buttons` 필드, `setSelected(ButtonModel, boolean)`. 실제 라이브러리 절의 ConcreteMediator 대응
 - [Java SE 21 — ButtonModel](https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/ButtonModel.html) — `setGroup(ButtonGroup)` 이 버튼이 속한 그룹을 식별하는 연산이고 서로 배타적인 라디오 버튼에 필요하다는 설명. 실제 라이브러리 절의 Colleague 대응
 - [refactoring.guru — Mediator](https://refactoring.guru/design-patterns/mediator) — 중재자가 시간이 지나며 God Object 로 진화할 수 있다는 단점, Facade 아래 서브시스템 객체는 서로 직접 통신할 수 있지만 Mediator 의 컴포넌트는 중재자만 안다는 구분. 비교 절의 God Object 줄과 Facade 줄

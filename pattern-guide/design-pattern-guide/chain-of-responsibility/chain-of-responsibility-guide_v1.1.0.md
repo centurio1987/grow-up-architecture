@@ -309,7 +309,7 @@ public String handle(ExpenseRequest request) {
 
 #### Observer 와의 차이
 
-구분 기준은 목록을 끝까지 순회하는지, 하나가 처리하면 멈추는지입니다. [Observer 가이드](../observer/observer-guide_v1.1.0.md)가 고정한 코드 표식을 그대로 씁니다 — 통지 루프에 조기 종료가 있는지, 그리고 갱신 연산이 「내가 처리했다」는 답을 돌려주는지예요. 둘 다 보내는 쪽과 받는 쪽을 떼어 놓지만, 이쪽은 후보들 사이로 요청을 넘기다 하나가 맡으면 끝냅니다(근거: GoF 5장 행위 패턴 토론 — 잠재적 수신자들의 사슬을 따라 요청을 넘겨 보내는 쪽과 받는 쪽을 분리한다).
+구분 기준은 목록을 끝까지 순회하는지, 하나가 처리하면 멈추는지입니다. [Observer 가이드](../observer/observer-guide_v1.1.1.md)가 고정한 코드 표식을 그대로 씁니다 — 통지 루프에 조기 종료가 있는지, 그리고 갱신 연산이 「내가 처리했다」는 답을 돌려주는지예요. 둘 다 보내는 쪽과 받는 쪽을 떼어 놓지만, 이쪽은 후보들 사이로 요청을 넘기다 하나가 맡으면 끝냅니다(근거: GoF 5장 행위 패턴 토론 — 잠재적 수신자들의 사슬을 따라 요청을 넘겨 보내는 쪽과 받는 쪽을 분리한다).
 
 ```java no-compile
 // Observer 의 순회 — 끝까지 돈다
@@ -877,7 +877,7 @@ Servlet Filter           필터는 next 가 없고, 받은 chain 으로 chain.do
   - 4장 Structural Patterns, Composite(163쪽부터) — 관련 패턴(Related Patterns)에서 자식이 부모를 거슬러 올라가는 링크를 이 패턴의 다음 후보 링크로 쓰는 대비. Composite 겹침 절의 근거
   - 5장 Behavioral Patterns 끝의 토론(Discussion of Behavioral Patterns) — 잠재적 수신자들의 사슬을 따라 요청을 넘겨 보내는 쪽과 받는 쪽을 떼어 놓는다는 서술. Observer 비교의 근거
 - [Decorator 가이드](../decorator/decorator-guide_v1.1.0.md) — 「층이 전달을 멈출 수 있는가」로 둘을 가른 비교 절과, 전달을 멈추는 층은 이쪽이라고 판정한 최소 조건 3번. Decorator 비교에서 기준을 반대 방향으로 받은 근거
-- [Observer 가이드](../observer/observer-guide_v1.1.0.md) — 「목록을 끝까지 순회하는가, 하나가 처리하면 멈추는가」와 그 코드 표식(조기 종료가 있는지, 연산이 「내가 처리했다」는 답을 돌려주는지). Observer 비교의 기준을 맞춘 근거
+- [Observer 가이드](../observer/observer-guide_v1.1.1.md) — 「목록을 끝까지 순회하는가, 하나가 처리하면 멈추는가」와 그 코드 표식(조기 종료가 있는지, 연산이 「내가 처리했다」는 답을 돌려주는지). Observer 비교의 기준을 맞춘 근거
 - [Command 가이드](../command/command-guide_v1.1.0.md) · [Mediator 가이드](../mediator/mediator-guide_v1.1.0.md) — 「무엇을 끼워 넣어 떼어 놓는가」로 셋을 한 틀에 묶은 자리. Mediator·Command 비교의 기준을 맞춘 근거
 - [Composite 가이드](../composite/composite-guide_v1.1.0.md) — 개요에서 부모로 요청을 올려 보내면 이 패턴이 된다고 적은 자리. Composite 겹침 절의 근거
 - [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.2.md) — 개념 정리의 위임, Command 비교의 Invoker · Receiver · Command 객체

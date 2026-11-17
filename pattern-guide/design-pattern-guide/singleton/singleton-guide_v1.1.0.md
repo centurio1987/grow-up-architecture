@@ -31,7 +31,7 @@ After : 만드는 자리는 타입 안, 바깥에는 통로 하나
                                                     next() ─▶ B-0001, B-0002, B-0003
 ```
 
-GoF(Gang of Four, 1994년에 나온 *Design Patterns* 의 저자 네 명을 함께 부르는 이름)의 분류로는 생성 패턴이고 객체 범위입니다. 함께 쓰는 패턴은 [Abstract Factory](../abstract-factory/abstract-factory-guide_v1.1.0.md) · [Facade](../facade/facade-guide_v1.1.0.md) 예요.
+GoF(Gang of Four, 1994년에 나온 *Design Patterns* 의 저자 네 명을 함께 부르는 이름)의 분류로는 생성 패턴이고 객체 범위입니다. 함께 쓰는 패턴은 [Abstract Factory](../abstract-factory/abstract-factory-guide_v1.1.0.md) · [Facade](../facade/facade-guide_v1.1.1.md) 예요.
 
 이 글은 시나리오 셋을 따라갑니다. 주문 하나가 번호를 받는 길, 창구가 늘고 번호 형식이 바뀔 때 무엇이 안 바뀌는가, 통로를 우회하면 어느 단계에서 번호가 겹치는가. 끝까지 읽으면 어떤 코드를 Singleton 이라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, 전역 변수나 정적 유틸리티 클래스와도 구분할 수 있게 됩니다.
 

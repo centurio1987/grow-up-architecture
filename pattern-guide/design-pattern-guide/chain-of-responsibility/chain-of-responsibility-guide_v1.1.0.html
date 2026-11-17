@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:490079fda1b8e3ebc7172ab29266718f383aa301fc8af61739828548c88775cd -->
+<!-- guide-fp:ab1c391e20fc8e704571ffa44b5aef0a1d9fc811bc39862425008ec6d91f7bb5 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -837,7 +837,7 @@ public String handle(ExpenseRequest request) {
 }</code></pre>
 <p>두 코드를 놓고 보면 다른 줄이 하나입니다. 다음을 부르는 호출이 <code>if</code> 밖에 있느냐 안에 있느냐예요. 시나리오 1 의 5단계가 위쪽 모양이었다면 R1 의 <code>seen=</code> 칸에 세 결재자가 다 찍혔을 것이고, 실제로 시나리오 3 의 2단계에서 그렇게 됐습니다. 이 패턴을 고르면 맡을 수 있는 하나가 처리하고 끝내는 흐름을 얻고, 모든 층이 반드시 실행된다는 보장을 포기해요. Decorator 가이드가 「바깥 층이 이미 한 일과 안쪽에서 일어나지 않은 일이 어긋난다」고 적은 그 위험을 이쪽은 정상 동작으로 받아들이는 것이고, 그래서 사슬에서는 맡은 후보가 앞선 후보의 기록과 어긋나지 않도록 순서를 설계해야 합니다(시나리오 2 의 5단계).</p>
 <h4 id="observer-와의-차이">Observer 와의 차이</h4>
-<p>구분 기준은 목록을 끝까지 순회하는지, 하나가 처리하면 멈추는지입니다. <a href="design-pattern-guide/observer/observer-guide_v1.1.0.html">Observer 가이드</a>가 고정한 코드 표식을 그대로 씁니다 — 통지 루프에 조기 종료가 있는지, 그리고 갱신 연산이 「내가 처리했다」는 답을 돌려주는지예요. 둘 다 보내는 쪽과 받는 쪽을 떼어 놓지만, 이쪽은 후보들 사이로 요청을 넘기다 하나가 맡으면 끝냅니다(근거: GoF 5장 행위 패턴 토론 — 잠재적 수신자들의 사슬을 따라 요청을 넘겨 보내는 쪽과 받는 쪽을 분리한다).</p>
+<p>구분 기준은 목록을 끝까지 순회하는지, 하나가 처리하면 멈추는지입니다. <a href="design-pattern-guide/observer/observer-guide_v1.1.1.html">Observer 가이드</a>가 고정한 코드 표식을 그대로 씁니다 — 통지 루프에 조기 종료가 있는지, 그리고 갱신 연산이 「내가 처리했다」는 답을 돌려주는지예요. 둘 다 보내는 쪽과 받는 쪽을 떼어 놓지만, 이쪽은 후보들 사이로 요청을 넘기다 하나가 맡으면 끝냅니다(근거: GoF 5장 행위 패턴 토론 — 잠재적 수신자들의 사슬을 따라 요청을 넘겨 보내는 쪽과 받는 쪽을 분리한다).</p>
 <pre class="code-block--no-compile" tabindex="0"><code class="language-java">// Observer 의 순회 — 끝까지 돈다
 void notifyObservers(ExpenseRequest request) {
     for (ExpenseObserver observer : observers) {
@@ -1406,7 +1406,7 @@ final class AlertBus {
 </ul>
 </li>
 <li><a href="design-pattern-guide/decorator/decorator-guide_v1.1.0.html">Decorator 가이드</a> — 「층이 전달을 멈출 수 있는가」로 둘을 가른 비교 절과, 전달을 멈추는 층은 이쪽이라고 판정한 최소 조건 3번. Decorator 비교에서 기준을 반대 방향으로 받은 근거</li>
-<li><a href="design-pattern-guide/observer/observer-guide_v1.1.0.html">Observer 가이드</a> — 「목록을 끝까지 순회하는가, 하나가 처리하면 멈추는가」와 그 코드 표식(조기 종료가 있는지, 연산이 「내가 처리했다」는 답을 돌려주는지). Observer 비교의 기준을 맞춘 근거</li>
+<li><a href="design-pattern-guide/observer/observer-guide_v1.1.1.html">Observer 가이드</a> — 「목록을 끝까지 순회하는가, 하나가 처리하면 멈추는가」와 그 코드 표식(조기 종료가 있는지, 연산이 「내가 처리했다」는 답을 돌려주는지). Observer 비교의 기준을 맞춘 근거</li>
 <li><a href="design-pattern-guide/command/command-guide_v1.1.0.html">Command 가이드</a> · <a href="design-pattern-guide/mediator/mediator-guide_v1.1.0.html">Mediator 가이드</a> — 「무엇을 끼워 넣어 떼어 놓는가」로 셋을 한 틀에 묶은 자리. Mediator·Command 비교의 기준을 맞춘 근거</li>
 <li><a href="design-pattern-guide/composite/composite-guide_v1.1.0.html">Composite 가이드</a> — 개요에서 부모로 요청을 올려 보내면 이 패턴이 된다고 적은 자리. Composite 겹침 절의 근거</li>
 <li><a href="reference/gof-vocabulary/gof-vocabulary-ref_v1.0.2.html">참고 문서 「GoF 공통 어휘」</a> — 개념 정리의 위임, Command 비교의 Invoker · Receiver · Command 객체</li>

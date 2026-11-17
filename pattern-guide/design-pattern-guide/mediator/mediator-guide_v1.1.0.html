@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:abcba170f0af43caa9feaa8ce6d36ff9c583b6069ff704d351e2f35ad9339bce -->
+<!-- guide-fp:eedc1320694a9290f95803730934108c6bd0f991ccb0d621ae9cf8db539c630d -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -558,7 +558,7 @@ After : 위젯은 가운데 객체만 알고, 가운데 객체가 나머지를 �
   IssueBtn  ─┘     무엇을 시킬지)
   위젯 하나가 가진 참조     1개 (가운데 객체)
   "등급이 바뀌면 무엇을 한다" 규칙이 있는 곳   SeatForm 안 한 곳</code></pre>
-<p>분류는 행위 패턴이고, 함께 쓰는 패턴은 <a href="design-pattern-guide/observer/observer-guide_v1.1.0.html">Observer</a> 입니다.</p>
+<p>분류는 행위 패턴이고, 함께 쓰는 패턴은 <a href="design-pattern-guide/observer/observer-guide_v1.1.1.html">Observer</a> 입니다.</p>
 <p>이 글은 시나리오 셋을 따라갑니다. 등급 하나를 고른 것이 화면 전체로 번지는 길, 새 위젯이 더해질 때 무엇이 안 바뀌는가, 동료끼리 직접 부르거나 규칙을 동료에 흩거나 중재자를 걷어내면 어떤 값이 조용히 틀리는가. 끝까지 읽으면 어떤 코드를 Mediator 라고 불러도 되는지 필수 조건 넷으로 판정할 수 있고, 그림만으로는 차이를 알 수 없는 Facade 와도 구분할 수 있게 됩니다.</p>
 <h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
 <h3 id="시나리오-1--등급-하나를-골랐을-뿐인데-화면-셋이-따라-움직이는-길">시나리오 1 — 등급 하나를 골랐을 뿐인데 화면 셋이 따라 움직이는 길</h3>
@@ -802,7 +802,7 @@ MileageToggle 추가   MileageToggle 클래스 (새로 씀)               CabinL
 </table>
 </div>
 <h4 id="facade-와의-차이">Facade 와의 차이</h4>
-<p>구분 기준은 가운데 객체를 아는 쪽이 바깥 Client 뿐인지, 안쪽 객체들도 아는지입니다. 두 패턴은 "여러 객체 사이에 하나가 끼어들어 직접 얽히는 것을 줄인다"는 모양이 같아서 그림만으로는 구분되지 않아요. 다른 점은 <strong>방향</strong>입니다. 아래 표는 <a href="design-pattern-guide/facade/facade-guide_v1.1.0.html">Facade 가이드</a>가 정리한 것이고, 이 글은 같은 표를 Mediator 열에서 읽어요.</p>
+<p>구분 기준은 가운데 객체를 아는 쪽이 바깥 Client 뿐인지, 안쪽 객체들도 아는지입니다. 두 패턴은 "여러 객체 사이에 하나가 끼어들어 직접 얽히는 것을 줄인다"는 모양이 같아서 그림만으로는 구분되지 않아요. 다른 점은 <strong>방향</strong>입니다. 아래 표는 <a href="design-pattern-guide/facade/facade-guide_v1.1.1.html">Facade 가이드</a>가 정리한 것이고, 이 글은 같은 표를 Mediator 열에서 읽어요.</p>
 <pre tabindex="0"><code class="language-text">                                    Facade                        Mediator
 가운데 객체를 아는 쪽               바깥 Client 뿐                 바깥 Client + 안쪽 동료들
 안쪽에서 가운데로 나가는 호출        없음                           있음 — 동료가 사건을 알린다 (최소 조건 2번)
@@ -1847,7 +1847,7 @@ final class LightSwitch implements Subscriber {
 <li>5장 Behavioral Patterns 의 토론 「Should Communication be Encapsulated or Distributed?」 — Mediator 와 Observer 를 경쟁 패턴으로 두고, 통신의 캡슐화와 분산, 재사용성과 이해 용이성의 맞바꿈을 적은 자리. Observer 비교 절의 근거</li>
 </ul>
 </li>
-<li><a href="design-pattern-guide/facade/facade-guide_v1.1.0.html">Facade 가이드</a> — 가운데 객체를 아는 쪽이 어디인가로 두 패턴을 가르는 네 줄 표, 창구에 업무 규칙을 넣었을 때 규칙이 한 경로에만 적용된다는 실행 결과, 서브시스템 안에 중재자를 두는 포개짐. Facade 비교 절이 그 표를 Mediator 열에서 읽고 포개짐을 반대 방향에서 받음</li>
+<li><a href="design-pattern-guide/facade/facade-guide_v1.1.1.html">Facade 가이드</a> — 가운데 객체를 아는 쪽이 어디인가로 두 패턴을 가르는 네 줄 표, 창구에 업무 규칙을 넣었을 때 규칙이 한 경로에만 적용된다는 실행 결과, 서브시스템 안에 중재자를 두는 포개짐. Facade 비교 절이 그 표를 Mediator 열에서 읽고 포개짐을 반대 방향에서 받음</li>
 <li><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/ButtonGroup.html">Java SE(Standard Edition) 21 — ButtonGroup</a> — 같은 그룹 객체를 공유하는 버튼들 중 하나를 켜면 나머지가 꺼진다는 클래스 설명, <code>buttons</code> 필드, <code>setSelected(ButtonModel, boolean)</code>. 실제 라이브러리 절의 ConcreteMediator 대응</li>
 <li><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.desktop/javax/swing/ButtonModel.html">Java SE 21 — ButtonModel</a> — <code>setGroup(ButtonGroup)</code> 이 버튼이 속한 그룹을 식별하는 연산이고 서로 배타적인 라디오 버튼에 필요하다는 설명. 실제 라이브러리 절의 Colleague 대응</li>
 <li><a href="https://refactoring.guru/design-patterns/mediator">refactoring.guru — Mediator</a> — 중재자가 시간이 지나며 God Object 로 진화할 수 있다는 단점, Facade 아래 서브시스템 객체는 서로 직접 통신할 수 있지만 Mediator 의 컴포넌트는 중재자만 안다는 구분. 비교 절의 God Object 줄과 Facade 줄</li>

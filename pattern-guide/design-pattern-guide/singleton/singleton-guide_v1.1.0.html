@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:fa0832ab0358487c5f33fd86c2ae0e848d870e4e411fe9703bdc6cad9bc2d943 -->
+<!-- guide-fp:df398e0aa0a9cdec69cf94dbf03a431f5cbf2d0f2986e1c829c2518b3ee625b5 -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -553,7 +553,7 @@ After : 만드는 자리는 타입 안, 바깥에는 통로 하나
   정산 배치   ─┘                  uniqueInstance ─▶ 발급기 (하나)
                                   private 생성자  ← 바깥에서 부를 수 없음
                                                     next() ─▶ B-0001, B-0002, B-0003</code></pre>
-<p>GoF(Gang of Four, 1994년에 나온 <em>Design Patterns</em> 의 저자 네 명을 함께 부르는 이름)의 분류로는 생성 패턴이고 객체 범위입니다. 함께 쓰는 패턴은 <a href="design-pattern-guide/abstract-factory/abstract-factory-guide_v1.1.0.html">Abstract Factory</a> · <a href="design-pattern-guide/facade/facade-guide_v1.1.0.html">Facade</a> 예요.</p>
+<p>GoF(Gang of Four, 1994년에 나온 <em>Design Patterns</em> 의 저자 네 명을 함께 부르는 이름)의 분류로는 생성 패턴이고 객체 범위입니다. 함께 쓰는 패턴은 <a href="design-pattern-guide/abstract-factory/abstract-factory-guide_v1.1.0.html">Abstract Factory</a> · <a href="design-pattern-guide/facade/facade-guide_v1.1.1.html">Facade</a> 예요.</p>
 <p>이 글은 시나리오 셋을 따라갑니다. 주문 하나가 번호를 받는 길, 창구가 늘고 번호 형식이 바뀔 때 무엇이 안 바뀌는가, 통로를 우회하면 어느 단계에서 번호가 겹치는가. 끝까지 읽으면 어떤 코드를 Singleton 이라고 불러도 되는지 필수 조건 셋으로 판정할 수 있고, 전역 변수나 정적 유틸리티 클래스와도 구분할 수 있게 됩니다.</p>
 <h2 id="패턴-자세히-들여다보기">패턴 자세히 들여다보기</h2>
 <h3 id="시나리오-1--첫-주문에-번호가-붙는-길">시나리오 1 — 첫 주문에 번호가 붙는 길</h3>

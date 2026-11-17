@@ -183,13 +183,13 @@ Command 가 할 때  :  execute() { document.paste(); }           Receiver 의 �
 - [Prototype 가이드](../../design-pattern-guide/prototype/prototype-guide_v1.1.0.md) — 「개념 정리」에서 계층이 하나라는 말을 풀 때 → 클래스 패턴과 객체 패턴
 - [Singleton 가이드](../../design-pattern-guide/singleton/singleton-guide_v1.1.0.md) — 「한눈에 보는 개요」가 이 패턴이 객체 범위인 이유를 풀 때 → 클래스 패턴과 객체 패턴 / Flyweight 비교가 공유 단위가 키별로 갈리는 자리를 짚을 때 → 내재 상태와 외재 상태
 - [Bridge 가이드](../../design-pattern-guide/bridge/bridge-guide_v1.1.0.md) — 「개념 정리」 → 위임 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
-- [Facade 가이드](../../design-pattern-guide/facade/facade-guide_v1.1.0.md) — 「개념 정리」의 Facade 항목이 일을 넘기는 방식을 부를 때 → 위임(delegation)
+- [Facade 가이드](../../design-pattern-guide/facade/facade-guide_v1.1.1.md) — 「개념 정리」의 Facade 항목이 일을 넘기는 방식을 부를 때 → 위임(delegation)
 - [Flyweight 가이드](../../design-pattern-guide/flyweight/flyweight-guide_v1.1.0.md) — 「한눈에 보는 개요」와 「개념 정리」가 두 낱말의 정의를 맡기는 자리 → 내재 상태와 외재 상태
 - [Proxy 가이드](../../design-pattern-guide/proxy/proxy-guide_v1.1.0.md) — 「한눈에 보는 개요」가 이 패턴이 객체 범위인 이유를 풀 때 → 클래스 패턴과 객체 패턴
 - [Chain of Responsibility 가이드](../../design-pattern-guide/chain-of-responsibility/chain-of-responsibility-guide_v1.1.0.md) — 「한눈에 보는 개요」 → 위임 / Mediator·Command 비교 → Invoker · Receiver · Command 객체 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
 - [Command 가이드](../../design-pattern-guide/command/command-guide_v1.1.0.md) — 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
 - [Iterator 가이드](../../design-pattern-guide/iterator/iterator-guide_v1.1.0.md) — 「실제 라이브러리에서」 표가 `iterator()` 와 `into_iter()` 의 결합 시점을 가를 때 → 컴파일 시점 결합과 실행 시점 결합
-- [Observer 가이드](../../design-pattern-guide/observer/observer-guide_v1.1.0.md) — 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / Command 비교 → Invoker · Receiver · Command 객체 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
+- [Observer 가이드](../../design-pattern-guide/observer/observer-guide_v1.1.1.md) — 「개념 정리」 → 인터페이스에 프로그래밍한다 · 위임 / Command 비교 → Invoker · Receiver · Command 객체 / 구현 해설 → 컴파일 시점 결합과 실행 시점 결합
 - [State 가이드](../../design-pattern-guide/state/state-guide_v1.1.0.md) — 「개념 정리」 → 위임 · 인터페이스에 프로그래밍한다 / 「한눈에 보는 개요」와 최소 조건 8번 → 내재 상태와 외재 상태
 - [Template Method 가이드](../../design-pattern-guide/template-method/template-method-guide_v1.1.0.md) — 「한눈에 보는 개요」 → 클래스 패턴과 객체 패턴 / Strategy 비교 → 위임
 

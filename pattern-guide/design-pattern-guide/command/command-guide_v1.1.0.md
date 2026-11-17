@@ -333,7 +333,7 @@ Observer : 주체가 "바뀌었다" 를 등록된 전부에게 알린다
   item.ship(9)  →  updated(item)  →  받는 쪽 수는 실행 중에 0~N 으로 변함
 ```
 
-[Observer 가이드](../observer/observer-guide_v1.1.0.md)가 이 한 쌍을 같은 기준으로 고정해 두었고, 이 편은 그 기준을 Command 쪽에서 다시 확인한 것입니다. 왜 그 차이가 생기는지는 시나리오 2 의 4단계에 있어요. 매크로를 더할 때 `EditorSession` 이 한 줄도 안 바뀐 것은 버튼 하나에 커맨드 하나가 걸려 있기 때문이고, 그 자리를 목록으로 바꾸려면 붙이고 떼는 연산과 순회 코드가 따로 필요합니다. Command 를 고르면 무엇을 할지가 한 객체에 담겨 있어 실행을 미루고 되돌릴 수 있는 대신, 받는 쪽의 수가 실행 중에 늘고 주는 느슨함은 얻지 못해요.
+[Observer 가이드](../observer/observer-guide_v1.1.1.md)가 이 한 쌍을 같은 기준으로 고정해 두었고, 이 편은 그 기준을 Command 쪽에서 다시 확인한 것입니다. 왜 그 차이가 생기는지는 시나리오 2 의 4단계에 있어요. 매크로를 더할 때 `EditorSession` 이 한 줄도 안 바뀐 것은 버튼 하나에 커맨드 하나가 걸려 있기 때문이고, 그 자리를 목록으로 바꾸려면 붙이고 떼는 연산과 순회 코드가 따로 필요합니다. Command 를 고르면 무엇을 할지가 한 객체에 담겨 있어 실행을 미루고 되돌릴 수 있는 대신, 받는 쪽의 수가 실행 중에 늘고 주는 느슨함은 얻지 못해요.
 
 #### Memento 와의 차이
 
@@ -1064,7 +1064,7 @@ session.press("prefix")                 executor.execute(작업)
   - 5장 Behavioral Patterns 끝의 토론(Discussion of Behavioral Patterns) — 인자로 건네는 토큰을 두고 Command 에서는 다형적 실행 연산이 중요하고 Memento 의 인터페이스는 좁아 값으로만 전달된다는 대비, 보내는 쪽과 받는 쪽을 떼어 놓는 방식의 비교(Command 는 그 바인딩을 별도 객체에 정의한다, Observer 는 주체가 옵저버를 여럿 가질 수 있고 그 수가 실행 중에 변해 Command 보다 느슨하다, Mediator 는 제삼의 객체를 거치고 Chain of Responsibility 는 후보의 사슬로 넘긴다). Observer·Memento·Mediator·Chain of Responsibility 비교의 근거
 - [참고 문서 「GoF 공통 어휘」](../../reference/gof-vocabulary/gof-vocabulary-ref_v1.0.2.md) — 개념 정리의 인터페이스에 프로그래밍한다는 원칙과 위임, 구현 해설의 컴파일 시점 결합과 실행 시점 결합
 - [Strategy 가이드](../strategy/strategy-guide_v1.2.0.md) — 「비슷한 패턴·안티패턴과의 차이」가 같은 차이를 Strategy 쪽에서 적은 자리. Strategy 비교의 기준을 맞춘 근거
-- [Observer 가이드](../observer/observer-guide_v1.1.0.md) — 「비슷한 패턴·안티패턴과의 차이」가 보내는 쪽이 무엇을 말하는가로 두 패턴을 가른 자리. Observer 비교의 기준을 맞춘 근거
+- [Observer 가이드](../observer/observer-guide_v1.1.1.md) — 「비슷한 패턴·안티패턴과의 차이」가 보내는 쪽이 무엇을 말하는가로 두 패턴을 가른 자리. Observer 비교의 기준을 맞춘 근거
 - [Mediator 가이드](../mediator/mediator-guide_v1.1.0.md) — 「비슷한 패턴·안티패턴과의 차이」가 무엇을 끼워 넣어 떼어 놓는가로 셋을 가른 자리. Mediator·Chain of Responsibility 비교의 기준을 맞춘 근거
 - [Builder 가이드](../builder/builder-guide_v1.1.0.md) — `std::process::Command` 를 빌더 사례로 다루는 자리. 「실제 라이브러리에서」의 이름 충돌 주의
 - [refactoring.guru — Command](https://refactoring.guru/design-patterns/command) — 발신자와 수신자 사이에 계층이 생겨 복잡해질 수 있다는 단점, Chain of Responsibility 의 처리자나 요청을 커맨드로 구현하는 조합
