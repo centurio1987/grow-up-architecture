@@ -48,6 +48,7 @@
 - 직접 인용(영어 원문)은 15단어 이하, 장마다 많아야 한 곳입니다. 나머지는 우리말로 풀어 씁니다.
 - 원전에서 온 말과 이 가이드가 만든 말을 구분합니다. 이 가이드가 만든 것: 추출 원장과 여섯 칸, 근거 수준(관찰·진술·확인), 계약의 다섯 겹, 보장 위치표, 실제 계약, 외부 스키마의 다섯 항목, 갱신 의미 결정표.
 - 수치는 계산해서 확인한 값만 씁니다. 설명용으로 지어낸 빈도·목표는 "가정"이라고 붙입니다. 실습 자료의 수치는 `verification/`의 스크립트 출력에서 옮깁니다.
+- 본문의 계산 예(글자 위치 자르기, "2만여" 같은 어림수, 요금 검산)도 손으로 쓴 값을 그대로 두지 않습니다. 새 계산 예를 쓰면 `verification/check_body_numbers.py`에 검사 한 줄을 더합니다. 어림수에는 계산식을 괄호로 붙여 검사가 문장을 찾을 수 있게 합니다(예: `2만 9천여 행(80 × 365 = 29,200)`). `tools/build.py`가 굽기 전에 이 검사를 돌리고, 어긋나면 굽지 않습니다. 1장 글자 밀림 예와 12장 어림수가 틀린 채 발행된 일(2026-11-18)에서 생긴 규칙입니다.
 - 실행하지 못한 것(PostgreSQL DDL, 계약 시험)은 실행하지 못했다고 적습니다.
 - 버전·날짜는 조회일(2026-11-17) 기준임을 밝힙니다.
 
@@ -88,6 +89,7 @@
 ```bash
 K=~/.claude/plugins/cache/centurio87-plugins/authoring-kit/0.4.2/scripts
 python3 tools/check_glyphs.py chapters/*.md problems/*.md appendix/*.md
+python3 verification/check_body_numbers.py              # 본문 계산 예를 다시 셈함. 어긋나면 종료 코드 1
 python3 $K/scan_ai_style.py <파일>                      # 등급 B 이상이면 통과
 python3 $K/scan_lexicon.py <파일> --voice ppangtolab-teacher   # 통과, 또는 위 오탐만 남음
 ```

@@ -50,6 +50,14 @@ def main():
         print(glyph.stdout)
         sys.exit("굽기 가드에 걸리는 글자가 있습니다. 원고를 고친 뒤 다시 실행하세요.")
 
+    # 본문 계산 예(글자 위치 자르기, 어림수, 검산)가 원고 문장과 맞는지. 2026-11-18 1장·12장 오기에서 생긴 검사
+    nums = subprocess.run([sys.executable, str(ROOT / "verification/check_body_numbers.py")],
+                          cwd=ROOT, capture_output=True, text=True)
+    if nums.returncode != 0:
+        print(nums.stdout)
+        sys.exit("본문 계산 예가 다시 셈한 값과 다릅니다. verification/body-numbers.json 을 보고 원고를 고치세요.")
+    print(f"본문 계산 예: {len(nums.stdout.strip().splitlines())}건 맞음")
+
     body = "\n\n".join(p.read_text(encoding="utf-8").strip() for p in files)
     out = ROOT / "guide.md"
     out.write_text(FRONT + "\n" + body + "\n", encoding="utf-8")

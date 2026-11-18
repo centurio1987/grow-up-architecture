@@ -30,7 +30,8 @@
 이 폴더에서 실행합니다.
 
 ```sh
-python3 tools/build.py          # 원고 모으기 + 굽기 가드 글자 검사 + publish-report 로 index.html 굽기
+python3 tools/build.py          # 원고 모으기 + 굽기 가드 글자 검사 + 본문 계산 예 검사 + publish-report 로 index.html 굽기
+python3 verification/check_body_numbers.py   # 본문 계산 예(1장 글자 위치, 어림수, 검산)를 다시 셈해 원고 문장과 맞춤
 python3 tools/style_report.py   # 원고마다 박자 등급과 어휘 규약 결과 → verification/style-report.json
 node tools/screenshot.mjs       # 데스크톱·휴대폰 폭 화면과 가로 넘침 → verification/screens.json
 python3 verification/tum_roundtrip.py      # 13장 인구 왕복(SQLite)
@@ -57,8 +58,9 @@ HTML 굽기는 `~/.claude/skills/publish-report`(bun, Playwright)를 씁니다. 
 | P15 종합 문제 | 인구 왕복(구독 27개, 합계 1,947,000원)과 반례 8건이 기대대로 | `p15-result.json` (SQLite 3.53.0) |
 | 제4부 본문 예(「틈」 덤프·로그) | 프로파일과 필드 출현 수 | `tum-profile.json`, `tum-events-profile.json` 외 |
 | 원고 문체 48개 | 박자 등급 A 44개·B 4개. 어휘 규약 통과 44개, 알려진 오탐만 남음 4개 | `style-report.json` |
-| 굽기 가드 | 바깥 요청 0, 넘침 0, 375px 넘침 경고 없음 (index.html 2,187,698바이트) | `build-log.txt` |
+| 굽기 가드 | 바깥 요청 0, 넘침 0, 375px 넘침 경고 없음 (index.html 2,187,834바이트) | `build-log.txt` |
 | 화면 | 1440px·390px에서 가로 넘침 없음. 제목 수 h1 8·h2 54가 구성과 같음 | `screens.json`, `*.png` |
+| 본문 계산 예 9건 | 1장 글자 위치(15~22번째 = `11710001`), 4·12장 어림수, 8·9·13·21·24장 검산이 원고 문장과 같음 | `body-numbers.json`. 2026-11-18 1장·12장 오기를 고치며 더함 |
 | PostgreSQL DDL(4·12장, P06·P07, 26장 호환 뷰) | **실행 안 함** | 이 환경에 PostgreSQL 없음. 문법은 공식 문서 근거 |
 | OpenAPI·AsyncAPI 조각(11장) | YAML로 읽히는지만 확인. 명세 검증기는 안 돌림 | — |
 | 계약 시험(Pact 등) | **실행 안 함** | HTTP 서버·브로커 없음 |
