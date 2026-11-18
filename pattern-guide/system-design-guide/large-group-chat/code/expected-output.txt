@@ -1,0 +1,27 @@
+-- scenario 1: A sends one message to a room with 1000000 online on 67 relays, 1 in 10 watching it --
+t=0ms A app: sends a message on its WebSocket
+t=50ms relay 1: passes A's message to the room process
+t=51ms room: gives it seq=1 and appends it to the room log
+t=53ms room: the log has seq=1, sends seq=1 to 67 relays
+t=55ms relay 2: seq=1 to 1500 watching sessions, 13500 not watching are skipped, done at 70ms
+t=120ms V app: got A's message seq=1, last=1
+one message: messages=1 room-sends=67 relay-sends=100000 skipped=900000 delay-first=120ms delay-max=120ms watching-behind=0 not-watching-got=0
+-- scenario 2: 20 messages per second for 5s, P opens the room at 2500ms --
+t=2500ms P app: opens the room it was not watching, last=0
+t=2550ms relay 2: P is watching, reads the room log after seq 0
+t=2552ms relay 2: P gets seq 1..50 from the room log
+t=2602ms P app: last=50, caught up 102ms after opening the room
+guide: messages=100 room-sends=6700 relay-sends=10000050 skipped=89999949 delay-first=120ms delay-max=121ms watching-behind=0 not-watching-got=0
+all-watching: messages=100 room-sends=6700 relay-sends=100000000 skipped=0 delay-first=255ms delay-max=10155ms watching-behind=0 not-watching-got=0
+direct: messages=100 room-sends=100000000 relay-sends=0 skipped=0 delay-first=10102ms delay-max=995152ms
+two senders press at the same ms, X on relay 1 and Y on relay 2:
+guide: V1 sees X Y, V2 sees X Y
+relay-order: V1 sees X Y, V2 sees Y X
+-- scenario 3: relay 1 stops at 2000ms while 20 messages per second go on, its 15000 sessions reconnect --
+t=2000ms relay 1: stops, 15000 connections close, R had last=39 and waits 1862ms to reconnect
+t=3912ms relay 2: R is watching, reads the room log after seq 39
+t=3914ms relay 2: R gets seq 40..78 from the room log
+t=3964ms R app: last=78, caught up 1964ms after relay 1 stopped
+guide: reconnected=15000 log-reads=1500 filled-from-log=74786 live-dropped=102 trimmed=0 gaps-left=0 recovered-max=5101ms reconnects-per-second-max=3087 log-reads-per-second-max=329
+no-jitter: reconnected=15000 log-reads=1500 filled-from-log=1500 live-dropped=0 trimmed=0 gaps-left=0 recovered-max=102ms reconnects-per-second-max=15000 log-reads-per-second-max=1500
+pubsub-only: reconnected=15000 log-reads=0 lost=74684 sessions-with-gap=1500
