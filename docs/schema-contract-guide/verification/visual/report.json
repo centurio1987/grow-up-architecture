@@ -1,0 +1,35 @@
+{
+  "desktop-light": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sheets": 32,
+    "empty": [],
+    "svgs": 26,
+    "wide": [],
+    "height": 65217,
+    "overflowX": false,
+    "errors": []
+  },
+  "desktop-dark": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "sheets": 32,
+    "empty": [],
+    "svgs": 26,
+    "wide": [],
+    "height": 65217,
+    "overflowX": false,
+    "errors": []
+  },
+  "mobile-light": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "sheets": 32,
+    "empty": [],
+    "svgs": 26,
+    "wide": [],
+    "height": 96238,
+    "overflowX": false,
+    "errors": []
+  }
+}

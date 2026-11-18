@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>세 층 스키마와 계약 도해</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="세 층 스키마와 계약 가이드의 뼈대를 그림과 손으로 만져 보는 장치로 옮긴 동반 판">
+<!--@STYLE-->
+</head>
+<body>
+<div class="topbar" aria-label="도면 목록"><nav class="topbar-in" id="topnav"></nav></div>
+<div class="shell">
+  <aside class="rail" aria-label="도면 목록">
+    <div class="brand">세 층 스키마와 계약 도해</div>
+    <div class="brand-sub"><a href="index.html">본문(index.html) 열기 →</a></div>
+    <nav id="railnav"></nav>
+    <div class="tools"><button type="button" class="btn theme-btn">밝게 · 어둡게</button></div>
+  </aside>
+  <main>
+    <div class="wrap">
+      <header class="masthead">
+        <div class="eyebrow">외부 · 개념 · 내부 스키마 + 계약 — 동반 도해판</div>
+        <h1>세 층 스키마와 계약 도해</h1>
+        <p class="lede">40만 자 원고의 정의·표·예제를 그림과 손으로 만져 보는 장치로 옮겼습니다. 장마다 「틈」 회의실 예약 사례가 이어지고, 자세한 설명과 출처는 각 도면의 「본문에서 읽기」로 이어지는 <a href="index.html">본문</a>에 있습니다.</p>
+        <div class="legend" aria-label="색 범례">
+          <span class="L-ext"><i class="sw"></i>외부 스키마 · 보이는 것</span>
+          <span class="L-con"><i class="sw"></i>개념 스키마 · 참인 것</span>
+          <span class="L-int"><i class="sw"></i>내부 스키마 · 저장된 것</span>
+          <span class="L-ctr"><i class="sw"></i>계약 · 지키겠다고 한 것</span>
+        </div>
+        <p class="motto">개념 스키마는 <b class="L-con">참인 것</b>, 외부 스키마는 <b class="L-ext">보이는 것</b>, 내부 스키마는 <b class="L-int">저장된 것</b>, 계약은 <b class="L-ctr">지키겠다고 한 것</b>입니다.</p>
+      </header>
+      <div id="sheets"></div>
+      <footer class="foot">
+        <p>원고: <code>chapters/</code> · <code>problems/</code> · <code>appendix/</code>. 이 판은 <code>visual/</code> 원본을 <code>tools/build_visual.py</code>로 구워 만듭니다. 원고가 바뀌면 <code>visual/data-*.js</code>를 함께 고칩니다.</p>
+        <p>그림 안의 계산(글자 위치 자르기, 겹침 검사, 청구 계산, 프로파일링)은 이 쪽에서 직접 돌립니다. 수치의 정본은 <code>verification/</code>의 결과 파일입니다.</p>
+        <button type="button" class="btn theme-btn">밝게 · 어둡게</button>
+      </footer>
+    </div>
+  </main>
+</div>
+<!--@SCRIPT-->
+</body>
+</html>

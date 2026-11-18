@@ -17,6 +17,7 @@
 ## 파일
 
 - `index.html`: 완성 HTML. `tools/build.py`가 만드는 파생물이라 손으로 고치지 않습니다.
+- `visual.html`: 도해판. 장마다 정의·표·「틈」 예를 그림과 손으로 만지는 장치(분류 놀이, 원문↔원장 연결, 겹침 시험대, 인구 왕복 계산, 덤프 프로파일링 등)로 옮긴 동반 판입니다. 「본문에서 읽기」는 `index.html`의 같은 절로 이어집니다. `tools/build_visual.py`가 `visual/`의 원본(뼈대·모양·`data-*.js` 내용·`sec-*.js` 그림)을 구운 파생물이라 손으로 고치지 않습니다. 원고를 고치면 `visual/data-*.js`도 함께 고칩니다.
 - `guide.md`: 원고를 한 파일로 모은 것. 역시 파생물입니다.
 - `chapters/`, `problems/`, `appendix/`: 원고(정본).
 - `problems/data/`: 실습 자료. P10 메신저 대화, P11 회비 장부, P12 배송 기록·기사 목록, P13 운동 앱 로그, P14 철물점 DB·질의 기록, P15 주문 엑셀, 그리고 제4부 본문용 「틈」 예약 덤프·회원·이벤트 로그.
@@ -40,6 +41,8 @@ python3 verification/check_p11_p13_p14.py  # P11·P13·P14 풀이 수치
 python3 verification/check_part4_ddl.py     # P11~P14 재설계 DDL 을 SQLite 에서 실행
 python3 verification/check_p15.py           # P15 인구 왕복·반례 시험
 python3 verification/p02-dates.py           # P02~P08 풀이 수치(p03-slots.py … p08-academy.py 도 같은 꼴)
+python3 tools/build_visual.py   # 도해판 visual.html 굽기(쓰인 글자만 남긴 서체를 넣어 바깥 요청 0)
+node tools/check_visual.mjs map c13 c24   # 도해판을 1440px·390px, 밝은·어두운 주제로 열어 오류·넘침 → verification/visual/
 ```
 
 HTML 굽기는 `~/.claude/skills/publish-report`(bun, Playwright)를 씁니다. 화면 찍기도 그 스킬에 설치된 Playwright를 씁니다. 다른 컴퓨터에서는 `tools/screenshot.mjs`의 경로를 바꿉니다.
@@ -61,6 +64,8 @@ HTML 굽기는 `~/.claude/skills/publish-report`(bun, Playwright)를 씁니다. 
 | 굽기 가드 | 바깥 요청 0, 넘침 0, 375px 넘침 경고 없음 (index.html 2,187,834바이트) | `build-log.txt` |
 | 화면 | 1440px·390px에서 가로 넘침 없음. 제목 수 h1 8·h2 54가 구성과 같음 | `screens.json`, `*.png` |
 | 본문 계산 예 9건 | 1장 글자 위치(15~22번째 = `11710001`), 4·12장 어림수, 8·9·13·21·24장 검산이 원고 문장과 같음 | `body-numbers.json`. 2026-11-18 1장·12장 오기를 고치며 더함 |
+| 도해판 화면 | 32개 도면 모두 그려짐, 콘솔 오류 0, 1440px·390px 가로 넘침 없음, 바깥 요청 0 | `verification/visual/report.json`, `*.png` |
+| 도해판 계산 | 반례 시험 10건 기대대로, 인구 왕복 V3(김하나 월말 0원·월초 21,000원), 덤프 근사 종속 오차 0.1667과 M44 포함 종속이 원고 수치와 같음 | 페이지 안에서 다시 셈. 정본은 위 결과 파일 |
 | PostgreSQL DDL(4·12장, P06·P07, 26장 호환 뷰) | **실행 안 함** | 이 환경에 PostgreSQL 없음. 문법은 공식 문서 근거 |
 | OpenAPI·AsyncAPI 조각(11장) | YAML로 읽히는지만 확인. 명세 검증기는 안 돌림 | — |
 | 계약 시험(Pact 등) | **실행 안 함** | HTTP 서버·브로커 없음 |
