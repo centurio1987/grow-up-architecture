@@ -4,7 +4,7 @@
 > 카드 메타(생성/최종/갱신)는 manage-kanban 스킬이 관리한다. 규칙은 스킬 SKILL.md를 따른다.
 
 ## 백로그
-<!-- 아직 착수 결정 전. 우선순위 미정 후보 풀. 백로그→할 일 이동이 "할지 고민" → "하기로 확정" 전환점. -->
+<!-- 아직 시작 결정 전. 우선순위 미정 후보 풀. 백로그→할 일 이동이 "할지 고민" → "하기로 확정" 전환점. -->
 
 ## 할 일
 
@@ -34,8 +34,8 @@
   - 이유: 분류마다 근거가 두꺼운 문제부터 써야 명세가 여러 난제에서 서는지 확인되고, 후속 53건이 따를 예시가 생긴다
   - 목표: 12편이 게이트 PASS 로 발행되고 인덱스에 시스템 설계 사례 계열이 선다
   - 메모: 차례와 집필 전 확인은 회고 8절(2026-11-16 KAN-002.2 검토 승인). 편마다 출처는 사례 목록 2절의 그 행
-  - 실행 문서: KANBAN/cards/KAN-002.3-8DTJ6W.md (12/28 · 최근 11-18)
-  - 계획 리포트: KANBAN/reports/KAN-002.3-8DTJ6W.report.html (낡음)
+  - 실행 문서: KANBAN/cards/KAN-002.3-8DTJ6W.md (13/28 · 최근 11-22)
+  - 계획 리포트: KANBAN/reports/KAN-002.3-8DTJ6W.report.html (최신 아님)
   - 원문:
     ```text
     질문: 남은 두 결정(파일럿 두 편, 칸반 카드로 관리)을 추천대로 정할까요?
@@ -111,7 +111,7 @@
   - 목표: authoring-kit spec 2종으로 33편을 다시 써 게이트 PASS, analyzer·인덱스가 새 가이드를 가리킨다
   - 요청서: KANBAN/requests/done/KAN-001-YXTC2C.request.md (자유 형식 · 유저)
   - 실행 문서: KANBAN/cards/KAN-001-YXTC2C.md (3/7 · 최근 09-30)
-  - 계획 리포트: KANBAN/reports/KAN-001-YXTC2C.report.html (낡음)
+  - 계획 리포트: KANBAN/reports/KAN-001-YXTC2C.report.html (지난 계획)
   - 검토 문서: KANBAN/reviews/KAN-001-YXTC2C.review.md (승인 7/7 · 추가 의견 총 7 · 승인)
   - 원문:
     ```text
@@ -125,7 +125,7 @@
   - 목표: 명세가 등록되고 check-guides 가 새 트랙의 초안을 명세대로 검사한다(세 언어 컴파일·실행 계약 포함)
   - 메모: 결정은 준비안 5절 1·2 — 세 언어 동일 출력 유지, 위치 pattern-guide/system-design-guide/
   - 실행 문서: KANBAN/cards/KAN-002.1-7YT11M.md (4/4 · 최근 11-14)
-  - 계획 리포트: KANBAN/reports/KAN-002.1-7YT11M.report.html (낡음)
+  - 계획 리포트: KANBAN/reports/KAN-002.1-7YT11M.report.html (지난 계획)
   - 검토 문서: KANBAN/reviews/KAN-002.1-7YT11M.review.md (승인 1/1 · 추가 의견 총 2 · 승인)
   - 원문:
     ```text
@@ -143,7 +143,7 @@
   - 목표: 두 편이 게이트 PASS 로 발행되고, 파일럿 2 리서치 노트와 회고를 반영한 명세 개정판이 나온다
   - 메모: 파일럿 1 근거는 live-viewer-count-2026-11-13.md, 파일럿 2 재료는 사례 목록 C5 · C13~C16. 선정 이유는 사례 목록 3절
   - 실행 문서: KANBAN/cards/KAN-002.2-4E05GD.md (8/8 · 최근 11-15)
-  - 계획 리포트: KANBAN/reports/KAN-002.2-4E05GD.report.html (낡음)
+  - 계획 리포트: KANBAN/reports/KAN-002.2-4E05GD.report.html (지난 계획)
   - 검토 문서: KANBAN/reviews/KAN-002.2-4E05GD.review.md (승인 5/5 · 추가 의견 총 8 · 승인)
   - 원문:
     ```text

@@ -25,6 +25,14 @@
 | CT-03 | 티켓 예매와 좌석 선점 | 대기실이 입장 속도를 정하고, 좌석은 점유 번호와 만료 시각을 단 조건부 UPDATE 한 문장으로 붙잡음 | [ticket-seat-hold-guide_v1.0.0.md](ticket-seat-hold/ticket-seat-hold-guide_v1.0.0.md) |
 | CT-05 | 결제 · 송금 중복 방지 | 멱등 키를 결제와 같은 트랜잭션에 쓰고, 결과를 모르는 결제는 실패 대신 「알 수 없음」으로 두어 같은 키로 다시 물음 | [payment-idempotency-guide_v1.0.0.md](payment-idempotency/payment-idempotency-guide_v1.0.0.md) |
 
+## AG 집계와 근사
+
+많은 이벤트를 모아 수를 내야 하고, 한 건도 틀리면 안 되는지 근사로 충분한지에 따라 구조가 갈리는 문제입니다.
+
+| 사례 | 문제 | 고른 구조 | 가이드 |
+| --- | --- | --- | --- |
+| AG-03 | 광고 클릭 집계 | 클릭 ID 로 거른 뒤 클릭 시각 1분 창으로 세고, 결과는 (광고 ID, 분 시작) 을 결과 ID 로 삼아 체크포인트마다 트랜잭션으로 커밋해 결과 표가 덮어씀 | [ad-click-aggregation-guide_v1.0.0.md](ad-click-aggregation/ad-click-aggregation-guide_v1.0.0.md) |
+
 ## IN 공통 부품
 
 다른 문제들이 함께 쓰는 부품입니다. 부품 가운데 단독 문제로도 성립하는 것만 한 편으로 다룹니다.

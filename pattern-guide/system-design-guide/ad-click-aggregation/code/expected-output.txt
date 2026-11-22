@@ -1,0 +1,30 @@
+-- scenario 1: A clicks ad 1001 at 30000ms while 1000 clicks per second flow into 8 partitions --
+t=30000ms A app: clicks ad 1001 and sends the signed impression id that came with the ad
+t=30050ms ad server: signature ok, click id=30051, click time=30050, writes it to partition 4
+t=30051ms task 4: click id=30051 is new, partial (ad 1001, minute 0)=1
+t=65006ms task 4: watermark 60005 passed the end of minute 0, its partials for minute 0 are ready
+t=65008ms sum: every task passed minute 0, (ad 1001, minute 0)=1 goes into the open transaction
+t=70000ms checkpoint: all 8 tasks reached the barrier, state and offsets saved, 1001 outputs committed
+t=70001ms result table: (ad 1001, minute 0)=1 is visible, 10001ms after minute 0 ended
+-- scenario 2: 10000 clicks per second in minute 2, 30% on ad 7, 1% sent twice, ad servers b and c hold 5s of clicks --
+guide: held-by-b-and-c=10000 dropped-duplicates=6000 busiest-partition-per-second=1241 ad-7=177383 from 8 partials minute-2-visible-after=10001ms
+by-ad: busiest-partition-per-second=3840 minute-2-visible-after=56444ms minute-3-visible-after=10001ms
+no-dedup: over=6000 under=0 counted-separately=0 of 0
+t=300000ms ad server b: writes 5000 clicks held since minute 2, 120000ms after it ended
+guide: minute-2 590000 -> 595000 results-sent-again=5000
+t=300316ms result table: minute 2 with b's clicks is visible, 316ms after b wrote them
+processing-time: minute-2=589991 of 595000 minute-5=65000 of 60000
+t=842000ms ad server c: writes 5000 clicks held since minute 2, 662000ms after it ended
+guide: minute-2=595000 of 595000 over=0 under=0 counted-separately=5000 of 5000
+-- scenario 3: the job stops at 847000ms, 7000ms after the checkpoint at 840000ms, and restarts 30000ms later --
+t=840000ms checkpoint: all 8 tasks reached the barrier, state and offsets saved, 0 outputs committed
+t=845008ms sum: minute 13 fires, 1000 results go into the open transaction
+t=847000ms job: stops, 6000 outputs in the open transaction (5000 separate counts) are never committed
+t=877000ms job: restarts from the checkpoint at 840000ms, reads 11999 records again from the saved offsets
+t=877628ms sum: minute 13 fires, 1000 results go into the open transaction
+t=880000ms checkpoint: all 8 tasks reached the barrier, state and offsets saved, 6000 outputs committed
+t=880001ms result table: minute 13 is visible, 40001ms after it ended and 3001ms after the restart
+guide: replayed=11999 minute-13-visible-after=40001ms over=0 under=0 counted-separately=5000 of 5000
+no-transaction: minute-13-visible-after=5009ms over=0 under=0 counted-separately=10000 of 5000
+at-least-once: minute-2=595900 of 595000 minute-13=120000 of 60000 over=61829 under=829 counted-separately=0 of 5000
+all minutes: guide visible-after-max=10002ms except minute 13, over=0 under=0 counted-separately=5000 of 5000
