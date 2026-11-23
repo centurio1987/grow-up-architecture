@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- guide-fp:3ff7f4dcf0f28609457579bc36d11c4e0c6ed52ae3b805654f5b1b78319f4e85 -->
+<!-- guide-fp:5cfb4da469a29ea739651c12cc764f6dfd3a42738fd52b26a2e63cde0dae618b -->
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -496,6 +496,7 @@ tbody tr:last-child td {
 <li><a href="#rt-실시간-전달">RT 실시간 전달</a></li>
 <li><a href="#ct-경합과-정합성">CT 경합과 정합성</a></li>
 <li><a href="#ag-집계와-근사">AG 집계와 근사</a></li>
+<li><a href="#rd-읽기-증폭">RD 읽기 증폭</a></li>
 <li><a href="#in-공통-부품">IN 공통 부품</a></li>
 </ol>
 </details>
@@ -540,6 +541,18 @@ tbody tr:last-child td {
 </thead>
 <tbody>
 <tr><td>AG-03</td><td>광고 클릭 집계</td><td>클릭 ID 로 거른 뒤 클릭 시각 1분 창으로 세고, 결과는 (광고 ID, 분 시작) 을 결과 ID 로 삼아 체크포인트마다 트랜잭션으로 커밋해 결과 표가 덮어씀</td><td><a href="ad-click-aggregation/ad-click-aggregation-guide_v1.0.0.md">ad-click-aggregation-guide_v1.0.0.md</a></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="rd-읽기-증폭">RD 읽기 증폭</h2>
+<p>읽기가 쓰기보다 훨씬 많아서, 보여 줄 결과를 읽을 때 모을지 쓸 때 미리 넣어 둘지에 따라 구조가 갈리는 문제입니다.</p>
+<div class="table-wrap" tabindex="0">
+<table>
+<thead>
+<tr><th>사례</th><th>문제</th><th>고른 구조</th><th>가이드</th></tr>
+</thead>
+<tbody>
+<tr><td>RD-01</td><td>홈 타임라인</td><td>일반 계정의 글은 30일 안에 접속한 팔로워의 Redis 정렬 집합(글 ID, 최근 800개)에 미리 넣고, 큰 계정의 글은 읽을 때 섞으며, 페이지는 max_id · since_id 로 넘김</td><td><a href="home-timeline/home-timeline-guide_v1.0.0.md">home-timeline-guide_v1.0.0.md</a></td></tr>
 </tbody>
 </table>
 </div>

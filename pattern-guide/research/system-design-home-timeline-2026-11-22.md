@@ -45,10 +45,10 @@
 | 목표와 현실 | 「Fanout can be slow. Try to do it under 5 seconds but doesn't work sometimes.」 | 같음 | N2 절 The Future |
 | 피드 조회 규모 | 슬라이드 7쪽 「10 billion / day」 · 「60 ms」 평균 지연 | Facebook, 2012-06 | N6 |
 | 지연 | 「FollowFeed's p99 latency for the mobile news feed is around 140ms」 | LinkedIn, 2016 | N5 |
-| 쓰기 대 읽기 | 「Dashboard runs at a million writes a second, 50K reads a second, and it is growing.」 | Tumblr, 2013 인터뷰 정리 | N9 |
+| 쓰기 대 읽기 | 「Dashboard runs at a million writes a second, 50K reads a second, and it is growing.」 — 같은 글은 같은 수치를 받은편지함으로 바꾸려는 설계의 사양으로도 적음: 「Spec'ed at a million writes a second and 50K reads a second.」 | Tumblr, 2013 인터뷰 정리(2012 글도 같은 문장) | N9 |
 | 한 번에 보는 양 | 「Defaults to 20 statuses. Max 40 statuses.」 | Mastodon 홈 타임라인 API | N11 |
 
-- Twitter 의 쓰기 수치는 같은 강연이어도 출처마다 다릅니다. 요약 글(N2)은 초당 6천 건, 슬라이드의 제3자 사본은 하루 약 4억 건 · 평균 약 5천 · 피크 약 7천 · 큰 사건 때 1만 2천 이상이라고 조사 워커가 전했습니다(사본이라 이 노트는 대조하지 않음, 확인 안 함). 가이드는 N2 의 값만 쓰고 시점을 붙입니다.
+- Twitter 의 쓰기 수치는 같은 요약 글(N2) 안에도 여러 값이 있습니다. 「300K requests per second for reading and 6000 RPS for writing.」 말고도 「Tweet input statistics: 400m tweets per day; 5K/sec daily average; 7K/sec daily peak; >12K/sec during large events.」가 함께 있어요. 30만도 다른 자리에서는 「300K QPS for timelines (home and search)」라서 검색 타임라인 읽기까지 합친 값입니다. 조사 워커는 쓰기의 다른 값을 슬라이드의 제3자 사본에서 왔다고 전했지만, 같은 값이 N2 안에 있습니다(2026-11-22 원문 대조, S15 게이트가 짚음). 가이드는 6천을 쓰더라도 같은 글의 다른 값과 30만의 대상을 함께 밝히고 시점을 붙입니다.
 - Tumblr 는 쓰기(초당 1백만)가 읽기(초당 5만)보다 많습니다. 받은편지함(inbox) 방식에서는 글 하나가 팔로워 수만큼 쓰기가 되기 때문이고, 같은 정리 글은 「Posts are only about 50GB a day. Follower list updates are 2.7TB a day.」라고 적습니다(N8). 「Follower list updates」가 정확히 무엇을 센 것인지 글이 풀지 않아 해석에 주의합니다(판단).
 - **요구 표 후보(가정)**: 하루 활성 사용자 수 · 평균 팔로우 수 · 초당 새 글 · 초당 타임라인 읽기(Twitter 2012 요약의 읽기 대 쓰기 비율을 참고), 새 글이 팔로워 타임라인에 보이기까지 5초 안(N2 의 목표를 빌린 가정), 타임라인 첫 페이지 응답 수십 ms 안(가정), 팔로워가 매우 많은 계정(예: 1억 명)이 글을 써도 위 5초를 지킴(가정 — 문제의 어려운 점), 오래 쉬었다 돌아온 사용자도 첫 화면을 몇 초 안에 받음(가정), 페이지를 넘겨도 글이 빠지거나 두 번 나오지 않음(가정).
 - 위 가운데 「큰 계정이 써도 5초」는 사례 목록 RD-01 행의 어려운 점(「팔로워 많은 계정의 쓰기 fan-out 폭증」)에서 나온 요구이고, 고른 구조에 맞춰 넣은 것이 아닙니다(판단). 큰 계정 기준은 요구가 아니라 구조의 설정값입니다.
@@ -96,14 +96,14 @@
 
 ### 4-5. 비활성 사용자 — 퍼뜨리지 않고, 돌아오면 다시 만든다
 
-- Twitter 2012(N2, 2차): 「If you are not an active user then the tweet does not go into the cache.」, 「Active user is someone who has logged into Twitter within 30 days, which can change depending on cache capacity or Twitter's usage.」. 돌아온 사용자를 어떻게 다시 만드는지는 이 글에 없습니다(확인 안 함). 같은 글: 「Every active user is stored in RAM to keep latencies down.」
+- Twitter 2012(N2, 2차): 「If you are not an active user then the tweet does not go into the cache.」, 「Active user is someone who has logged into Twitter within 30 days, which can change depending on cache capacity or Twitter's usage.」. 캐시에서 빠진 사용자를 다시 만드는 과정은 같은 글이 reconstruction 이라는 이름으로 적습니다 — 「If you fall out of the Redis cluster then you go through a process called reconstruction.」, 「Query against the social graph service. Figure out who you follow. Hit disk for every single one of them and then shove them back into Redis.」(정정 2026-11-22 — 처음에 「이 글에 없다」고 잘못 적었고 S15 게이트가 짚음). 같은 글: 「Every active user is stored in RAM to keep latencies down.」
 - Mastodon(N10, 문서): 「Mastodon stores home feeds in RAM (specifically, in the Redis database).」, 「Mastodon periodically clears out home feeds of users who haven't been online in a while」, 「if they re-appear, it regenerates those home feeds from database data.」, 「By default, users are considered active if they have been online in the past 7 days.」, 그리고 「Regeneration of home feeds is computationally expensive」. 백업 문서는 「The home and list feeds are stored in Redis but can be regenerated with tootctl.」.
 - Mastodon v4.7.6(N12, 코드): `ACTIVE_DURATION = ENV.fetch('USER_ACTIVE_DAYS', 7).to_i.days`. 퍼뜨릴 때 `push_to_home` 첫 줄이 `return false unless account.user&.signed_in_recently?` — 오래 접속하지 않은 팔로워의 홈 피드에는 넣지 않습니다. 다시 만들 때는 `PrecomputeFeedService` 가 `FeedManager.instance.populate_home(account)` 를 부르고, 다시 만드는 동안 홈 타임라인 API 는 206(부분 응답)을 돌려줍니다(N11, 조사 워커 원문).
 - 가이드가 쓸 말(판단): 비활성 사용자를 빼면 3절 4번의 캐시 크기와 1번의 쓰기가 활성 비율만큼 줄어듭니다. 대가는 돌아온 사용자의 첫 화면이 다시 만들기를 기다리는 것이고, Twitter 의 30일(2012)과 Mastodon 의 7일(현재 기본값)은 그 저울질의 서로 다른 값입니다.
 
 ### 4-6. 순서와 커서 페이지 — 시간순으로 커지는 ID 를 커서로
 
-- 시간순 ID(N17 · N16 · N18): Twitter 의 Snowflake 저장소 README(2010) — 「time - 41 bits (millisecond precision w/ a custom epoch gives us 69 years)」, 「configured machine id - 10 bits - gives us up to 1024 machines」, 「sequence number - 12 bits - rolls over every 4096 per machine (with protection to avoid rollover in the same ms)」. X 의 현재 문서 — 「X IDs are 64-bit unsigned integers」, 「This means IDs are roughly time-ordered: higher IDs generally represent newer objects.」(대략의 순서이지 엄밀한 보장이 아님). Discord — 「Discord utilizes Twitter's snowflake format for uniquely identifiable descriptors (IDs).」(비트 구성은 Discord 쪽이 다름, 조사 워커 원문).
+- 시간순 ID(N17 · N16 · N18): Twitter 의 Snowflake 저장소 README(2010) — 「time - 41 bits (millisecond precision w/ a custom epoch gives us 69 years)」, 「configured machine id - 10 bits - gives us up to 1024 machines」, 「sequence number - 12 bits - rolls over every 4096 per machine (with protection to avoid rollover in the same ms)」. X 의 현재 문서 — 「X IDs are 64-bit unsigned integers」, 「This means IDs are roughly time-ordered: higher IDs generally represent newer objects.」(대략의 순서이지 엄밀한 보장이 아님). 그 「대략」의 폭은 Snowflake README 가 적습니다 — 「we already don't guarantee in-order delivery」, 「within a reasonable bound (we're promising 1s, but shooting for 10's of ms)」(2010 년 설계 목표, 지금의 X 가 같은지는 확인 안 함 — S15 게이트가 짚어 더함). Discord — 「Discord utilizes Twitter's snowflake format for uniquely identifiable descriptors (IDs).」(비트 구성은 Discord 쪽이 다름, 조사 워커 원문).
 - Mastodon API(N11): `max_id` — 「All results returned will be lesser than this ID. In effect, sets an upper bound on results.」, `since_id` — 「All results returned will be greater than this ID. In effect, sets a lower bound on results.」, `min_id` — 「Returns results immediately newer than this ID. In effect, sets a cursor at this ID and paginates forward.」. ID 는 「Always treat IDs as opaque strings」.
 - Mastodon v4.7.6 의 읽기(N12, `Feed#get`): `zrevrangebyscore(key, "(#{max_id}", "(#{since_id}", limit: [0, limit], with_scores: true)` — 점수가 글 ID 이므로 「max_id 보다 작고 since_id 보다 큰」 것을 오프셋 0 으로 읽습니다. Redis 의 열린 구간 — 「It is possible to specify an open interval (exclusive) by prefixing the score with the character (.」(N14, ZRANGE). `ZREVRANGEBYSCORE` 는 6.2.0 부터 사용 중단(deprecated)으로 표시되고 `ZRANGE … BYSCORE REV` 가 대신합니다(N14, 이 노트가 원문에서 확인).
 - 오프셋 방식의 비용(N14): 「Keep in mind that if <offset> is large, the sorted set needs to be traversed for <offset> elements before getting to the elements to return, which can add up to O(N) time complexity.」 리스트도 「LRANGE list 0 10 will return 11 elements, that is, the rightmost item is included.」처럼 위치로 읽습니다(N13).
@@ -143,7 +143,7 @@
 | Twitter(2012 강연, 2차 요약) | 쓰기 때 퍼뜨리기, Redis 에 사용자마다 글 ID 800개, 3벌 복제, 4천 곳씩 파이프라인, 30일 안 활성 사용자만, 큰 계정은 읽을 때 섞는 방향을 검토 | 4-1 · 4-3 · 4-4 · 4-5 | N2 · N3 |
 | Facebook(2012 슬라이드) | Megafeed(쓰기 때 퍼뜨리기) 대신 Multifeed(읽을 때 모으기)를 고름, 이유 넷, 한 조회에 약 40 요청 | 4-2 · 6절 B | N6 |
 | LinkedIn(2016) | 읽을 때 모으기, 쓰기 때 만들면 데이터가 62배, RocksDB, p99 약 140ms | 4-2 · 6절 B | N5 |
-| Tumblr(2012 · 2013 인터뷰 정리) | 모으기에서 받은편지함으로, 큰 계정은 접근 모형으로 선택적 미리 만들기, 쓰기 초당 1백만 대 읽기 5만 | 4-3 · 2절 | N8 · N9 |
+| Tumblr(2012 · 2013 인터뷰 정리) | 모으기에서 받은편지함으로, 큰 계정은 접근 모형으로 선택적 미리 만들기, 쓰기 초당 1백만 대 읽기 5만(같은 글에 운영 수치 「runs at」과 바꾸려는 설계의 사양 「Spec'ed at」으로 함께 나옴) | 4-3 · 2절 | N8 · N9 |
 | Mastodon(v4.7.6) | 쓰기 때 퍼뜨리기, Redis 정렬 집합에 글 ID 800개, 7일 비활성 건너뛰기와 다시 만들기, ID 커서 페이지 | 4-1 · 4-4 · 4-5 · 4-6 | N10 · N11 · N12 |
 
 - Pinterest · Instagram · 현재 X 의 홈 피드 구조는 원문을 열지 못했거나(403) 1차 자료를 찾지 못해 쓰지 않습니다. X 의 2023 공개 저장소(`home-mixer`)는 퍼뜨리기와 캐시를 말하지 않아, 2012 구조가 지금도 그대로라고 쓸 근거가 없습니다.
@@ -164,25 +164,25 @@
 3. Tumblr 정리 글이 가리키는 「Feeding Frenzy」 논문(선택적으로 미리 만들기)은 열어 보지 않았습니다.
 4. Mastodon 의 ID 가 정렬 집합 점수(배정밀도)의 정밀 범위(±2^53) 안에 드는지는 확인 안 함입니다.
 5. 「오프셋 대신 ID 커서」의 이유를 직접 적은 공식 문장은 찾지 못했습니다.
-6. Twitter 의 쓰기 처리량은 요약 글(초당 6천)과 슬라이드 사본(평균 약 5천 · 피크 약 7천)이 다르고, 사본은 이 노트가 대조하지 않았습니다.
+6. (정정, 2026-11-22) Twitter 의 쓰기 처리량은 같은 요약 글(N2) 안에 초당 6천과 평균 5천 · 피크 7천 · 큰 사건 때 1만 2천 이상이 함께 있습니다. 출처 사이의 차이가 아니라 같은 글의 다른 값이므로 미해결 질문이 아닙니다(2절 참고).
 7. Pinterest(2014 · 2018) · Instagram · 현재 X 의 홈 피드 구조는 원문을 확인하지 못했습니다.
 8. 요구 표의 사용자 수 · 평균 팔로워 · 5초 · 큰 계정 1억 명은 가정입니다.
 
 ## 10. 원문 대조
 
-대조 날짜는 모두 2026-11-22 입니다. 「글자 그대로」는 원문 페이지를 다시 받아 태그를 벗긴 텍스트에서 문자열을 찾은 것이고(따옴표 모양 · 공백 · 백틱 · 밑줄 · 합자만 맞춤), Facebook 슬라이드는 PDF 를 받아 글자층을 뽑았고, Mastodon 코드는 v4.7.6 태그의 원본 파일을 받았습니다. 「조사 워커 원문」은 조사 워커가 원문에서 옮겼으나 이 노트가 다시 찾지 않은 것입니다. 인용 후보 94개를 대조해 94개 모두 문자열이 맞았습니다. 바로잡은 것이 하나 있어요 — Tumblr 정리 글의 큰 계정 문장은 원문이 「…user feeds by their access model (see Feeding Frenzy ).」로 이어지는데, 조사 워커가 「feeds.」에서 끊어 옮겼습니다. 조사 워커가 확인하지 못했다고 한 두 가지(Mastodon v4.7.6 `push_to_home` 의 비활성 건너뛰기, `ZREVRANGEBYSCORE` 의 사용 중단)는 이 노트가 원문에서 확인했습니다.
+대조 날짜는 모두 2026-11-22 입니다. 「글자 그대로」는 원문 페이지를 다시 받아 태그를 벗긴 텍스트에서 문자열을 찾은 것이고(따옴표 모양 · 공백 · 백틱 · 밑줄 · 합자만 맞춤), Facebook 슬라이드는 PDF 를 받아 글자층을 뽑았고, Mastodon 코드는 v4.7.6 태그의 원본 파일을 받았습니다. 「조사 워커 원문」은 조사 워커가 원문에서 옮겼으나 이 노트가 다시 찾지 않은 것입니다. 인용 후보 94개를 대조해 94개 모두 문자열이 맞았습니다. 그 뒤 S15 게이트가 짚은 인용 8개(N2 의 다른 쓰기 값 · 30만의 대상 · reconstruction 두 문장, N9 의 「Spec'ed at」, N17 의 순서 범위 두 구절, N10 의 Sidekiq 큐)를 더해 102개를 다시 대조했고 102개가 맞았습니다. 바로잡은 것이 하나 있어요 — Tumblr 정리 글의 큰 계정 문장은 원문이 「…user feeds by their access model (see Feeding Frenzy ).」로 이어지는데, 조사 워커가 「feeds.」에서 끊어 옮겼습니다. 조사 워커가 확인하지 못했다고 한 두 가지(Mastodon v4.7.6 `push_to_home` 의 비활성 건너뛰기, `ZREVRANGEBYSCORE` 의 사용 중단)는 이 노트가 원문에서 확인했습니다.
 
 | 출처 | 대조 방법 | 본문에 쓸 수 있는 것 | 같은 글 안의 다른 값 · 대상 · 동사 |
 | --- | --- | --- | --- |
 | N1 InfoQ Timelines at Scale | 페이지만(대본 없음) | 강연의 존재 · 강연자 · 게시일 | 이 페이지에 800 · fan-out 같은 내용 없음 |
-| N2 High Scalability, Twitter 150M | 글자 그대로 | 홈 타임라인 정의 · 5초 목표 · 30만 대 6천 · 800 두 표현 · 3벌 · 4k 파이프라인 · Flock · 비활성 30일 · RAM · 1m 에 3.5초 · Lady Gaga 5분 · 읽을 때 한꺼번에 조회는 「tried and died」 · 쓰기 때 퍼뜨리기 · The Future 의 혼합 계획 | 2차 요약(2012-11 강연). 혼합은 계획 단계. 800 은 도입부 「maximum of 800」과 본문 「is 800 entries long」 |
+| N2 High Scalability, Twitter 150M | 글자 그대로 | 홈 타임라인 정의 · 5초 목표 · 30만 대 6천 · 800 두 표현 · 3벌 · 4k 파이프라인 · Flock · 비활성 30일 · RAM · 1m 에 3.5초 · Lady Gaga 5분 · 읽을 때 한꺼번에 조회는 「tried and died」 · 쓰기 때 퍼뜨리기 · The Future 의 혼합 계획 | 2차 요약(2012-11 강연). 혼합은 계획 단계. 800 은 도입부 「maximum of 800」과 본문 「is 800 entries long」. 쓰기는 6천 말고도 「Tweet input statistics: 400m tweets per day; 5K/sec daily average; 7K/sec daily peak; >12K/sec during large events.」, 30만은 다른 자리에서 「300K QPS for timelines (home and search)」 |
 | N3 VMware Tanzu 사례 | 글자 그대로 | Redis 에 마지막 800 트윗 ID · 본문은 넣지 않음 | 2차(강연을 출처로 밝힘), 강연자 철자 오기 있음 |
 | N4 High Scalability, Twitter Redis | 글자 그대로 | Timeline 은 Redis · 타임라인에는 Memcache 가 Redis 만큼 맞지 않았고 문제는 fanout · Hybrid List | 2014 강연의 2차 요약, 2012 와 시점 다름 |
 | N5 LinkedIn FollowFeed | 글자 그대로 | 두 모델 정의 · 읽을 때 모으기 선택 · 62배 · A/B 시험이 어려움 · RocksDB · 역시간순 · p99 140ms · 다섯 배 감소 | 관련성 정렬 피드. 큰 계정 · 비활성 · 커서 없음 |
 | N6 Facebook 2012 슬라이드 | 글자 그대로(PDF 글자층) | Megafeed · Multifeed · 이유 넷(<10k 포함) · 한 조회 약 40 요청 · 해시테이블에서 연결 리스트 | 관련성 순위 피드. 캐시 길이 · 비활성 · 커서 없음 |
 | N7 Facebook Multifeed 2015 | 글자 그대로 | aggregator 가 leaf 들에 요청을 뿌림 | 여기서 fan-out 은 요청 분산의 뜻 |
-| N8 · N9 High Scalability, Tumblr | 글자 그대로 | 받은편지함은 모으기의 반대 · 모으기의 한계 · 큰 계정은 선택적으로 미리 만들기 · 50GB 대 2.7TB · 쓰기 1백만 대 읽기 5만 · 대시보드는 Twitter 타임라인과 비슷 | 2차(인터뷰 정리), 계획 단계 서술 포함 |
-| N10 Mastodon 문서(설정 · 백업 · 확장) | 글자 그대로 | 홈 피드는 Redis · 비활성 정리와 다시 만들기 · 기본 7일 · 다시 만들기는 비쌈 · tootctl 로 다시 만듦 | 설정 2026-10-08, 확장 2026-07-20, 백업 2025-11-21 갱신 |
+| N8 · N9 High Scalability, Tumblr | 글자 그대로 | 받은편지함은 모으기의 반대 · 모으기의 한계 · 큰 계정은 선택적으로 미리 만들기 · 50GB 대 2.7TB · 쓰기 1백만 대 읽기 5만 · 대시보드는 Twitter 타임라인과 비슷 | 2차(인터뷰 정리), 계획 단계 서술 포함. 1백만 · 5만은 「runs at」(운영)과 「Spec'ed at」(받은편지함 설계의 사양) 두 동사로 나옴 |
+| N10 Mastodon 문서(설정 · 백업 · 확장) | 글자 그대로 | 홈 피드는 Redis · 비활성 정리와 다시 만들기 · 기본 7일 · 다시 만들기는 비쌈 · tootctl 로 다시 만듦 · 작업 큐의 내용은 되살릴 수 없음(「The only irrecoverable data will be the contents of the Sidekiq queues and scheduled retries of previously failed jobs.」, 백업 문서) | 설정 2026-10-08, 확장 2026-07-20, 백업 2025-11-21 갱신 |
 | N11 Mastodon API 문서 | 글자 그대로 | max_id · since_id · min_id 정의 · 기본 20 최대 40 · ID 는 불투명 문자열 | 가이드라인 2025-11-23, 타임라인 2026-10-19 갱신. 206 응답은 조사 워커 원문 |
 | N12 Mastodon v4.7.6 코드 | 글자 그대로(원본 파일) | MAX_ITEMS 800 · ZADD 로 글 ID · ZREMRANGEBYRANK 자르기 · 비활성 건너뛰기 · 7일 상수 · push_bulk · 커서 읽기 · populate_home | 공식 저장소 코드(문서 아님). 큰 계정 분기 없음 |
 | N13 Redis 리스트 문서 | 글자 그대로 | LPUSH · LTRIM 짝으로 최근 N 개 · 평균 O(1) · capped collection · 소셜 네트워크의 최근 업데이트 · LRANGE 끝 포함 | 예시 값 100 은 문서 예시 |

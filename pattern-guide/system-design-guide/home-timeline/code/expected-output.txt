@@ -1,0 +1,24 @@
+-- scenario 1: alice posts once, bob opens his home timeline 5000ms later --
+t=70000ms alice: posts id=293601284096, 200 followers is not above 2000, the worker will fan it out
+t=70099ms fan-out: id=293601284096 is in the timelines of 100 followers seen in the last 30 days (bob's at 70000ms), 100 others skipped (dave last seen 40 days ago)
+t=75000ms bob: page 1 = 20 posts, newest id=293601284096 by alice, oldest id=174063620096, from star's list 0, answered 105ms later, repeated=0 missing=0
+-- scenario 2: star (100000 followers) posts between bob's page 1 and page 2, 4 more posts come in --
+t=90000ms bob: page 1 = 20 posts, newest id=293601284096 by alice, oldest id=174063620096, from star's list 0, answered 105ms later, repeated=0 missing=0
+read-all: the same page 1 from 201 author lists instead of 1 timeline and 1 list
+t=90500ms star: posts id=379584516096, 100000 followers is above 2000, the worker will skip it and followers read it from star's own list
+t=91000ms alice: posts id=381681668096, 200 followers is not above 2000, the worker will fan it out
+t=96000ms bob: page 2 by max_id=174063620096 = 20 posts, newest id=169869316096 by user 10119, oldest id=90177540096, from star's list 0, answered 105ms later, repeated=0 missing=0
+offset: page 2 by offset=20 = 20 posts, repeated=5
+t=97000ms bob: newer by since_id=293601284096 = 5 posts, newest id=394264580096 by user 47008, oldest id=379584516096, from star's list 1, answered 105ms later, repeated=0 missing=0
+fan-out-all: star's post was in all 50000 active followers' timelines 50134ms after it was written (bob's after 25134ms), alice's post written at 91000ms was in bob's after 50035ms, 721 of 1499 posts took over 5000ms
+-- scenario 3: cache node 0 stops while alice's post at 120000ms fans out, then carol on that node and dave (away 40 days) read --
+t=120000ms alice: posts id=503316484096, 200 followers is not above 2000, the worker will fan it out
+t=120030ms cache node 0: stops, its 25002 built timelines are gone, an empty node takes its place
+t=120032ms fan-out: writing id=503316484096 to user 113808 on node 0 fails, the job goes back to the queue at 121032ms to start again from its first follower
+t=121399ms fan-out: id=503316484096 is in the timelines of 100 followers seen in the last 30 days, the retry wrote it again to 24 that already had it and each kept one copy
+t=125000ms no-marker: carol's page 1 from the timeline as it is (ids=1) = 2 posts, missing=18
+t=125000ms carol: no built mark, rebuilt from 200 author lists to ids=66, then page 1 = 20 posts, newest id=503316484096 by alice, oldest id=199229444096, from star's list 1, alice's id=503316484096 x1, answered 118ms later, repeated=0 missing=0
+t=126000ms dave: no timeline, last seen 40 days ago, rebuilt from 200 author lists to ids=66, then page 1 = 20 posts, newest id=503316484096 by alice, oldest id=199229444096, from star's list 1, alice's id=503316484096 x1, answered 118ms later, repeated=0 missing=0
+t=127000ms bob: page 1 = 20 posts, newest id=503316484096 by alice, oldest id=199229444096, from star's list 1, alice's id=503316484096 x1, answered 105ms later, repeated=0 missing=0
+t=127000ms list: bob's page 1 has alice's id=503316484096 x2, repeated=1
+guide: 1499 fan-out jobs done, the slowest was in all active followers' timelines 1399ms after it was written, reads missing=0 repeated=0
