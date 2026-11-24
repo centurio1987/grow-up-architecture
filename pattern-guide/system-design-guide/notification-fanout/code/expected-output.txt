@@ -1,0 +1,27 @@
+-- scenario 1: login asks for one urgent sms while nothing else is running --
+t=1000ms login: urgent sms for minsu key=login-minsu-1 is stored as n=0 and queued at 1002ms, the reply goes back
+t=1050ms worker 1: takes n=0 first from the urgent sms queue, sms A answers 200 at 1070ms, recorded at 1075ms, handed over 70ms after it was received
+-- scenario 2: a campaign for 10000 users comes first, urgent and normal pushes 1000ms later, an fcm region fails --
+t=10000ms marketing: a campaign for 10000 users is stored and queued at 10002ms, the reply goes back
+t=11000ms login: urgent push for sora key=approve-sora-1 is stored as n=10001 and queued at 11002ms, the reply goes back
+t=11000ms order: normal push for sora key=order-sora-1 is stored as n=10002 and queued at 11002ms, the reply goes back
+t=35000ms login: urgent push for yuna key=approve-yuna-1 is stored as n=10003 and queued at 35002ms, the reply goes back
+guide: sora's urgent push was handed over 70ms after it was received, her normal push after 70ms, the last of the 10000 campaign pushes after 112720ms
+one-queue: sora's urgent push was handed over 111720ms after it was received, her normal push after 111720ms, the last of the 10000 campaign pushes after 112720ms
+guide: fcm region down 30000-50000ms, retries took at most 20 of the 100 tokens a second while new pushes waited, 429 from fcm 0 (0 on a first try), yuna's urgent push in the failed region after 15020ms and 1 failures, pushes through on a first try in that time 734, the last campaign push after 112720ms, failure queue 0
+no-share: fcm region down 30000-50000ms, retries skip the quota check, 429 from fcm 3796 from 41900ms to 109987ms (2361 on a first try), yuna's urgent push in the failed region after 34538ms and 2 failures, pushes through on a first try in that time 718, the last campaign push after 177408ms, failure queue 0
+-- scenario 3: sms A fails 220000-240000ms, a reply is lost, a token is gone, worker 0 stops before recording --
+t=220470ms sms A: 5 of the last 10 calls failed, the breaker opens and sms go to B
+t=230770ms sms A: half-open, 3 of 3 test calls failed, the breaker opens again
+t=241070ms sms A: half-open, 3 test calls passed, the breaker closes and sms go to A again
+t=250000ms login: urgent sms for minsu key=login-minsu-2 is stored as n=10505 and queued at 250002ms, the reply is lost
+t=251000ms login: sends key=login-minsu-2 again, the api answers with n=10505 (handed over) and adds nothing, notifications for that key 1
+t=260000ms order: normal push for dora key=order-dora-1 is stored as n=10606 and queued at 260002ms, the reply goes back
+t=260070ms fcm: 404 UNREGISTERED for dora's push n=10606, the token is removed and the push is not retried
+t=299990ms order: normal push for jisu key=order-jisu-5521 is stored as n=10807 and queued at 299992ms, the reply goes back
+t=299990ms order: normal sms for jisu key=order-jisu-5521-sms is stored as n=10808 and queued at 299992ms, the reply goes back
+t=300022ms worker 0: stops after the vendors answered 200 at 300020ms for normal push n=10807 to fcm and normal sms n=10808 to sms A, before recording at 300025ms
+t=312000ms queue: the same 2 become visible again 12000ms after worker 0 took them, worker 1 sends them again
+sms: 801 urgent from 200000ms to 280000ms, sent to A 605 times and to B 208 times, 8 failed at A and went out later, the slowest was handed over 2120ms after it was received
+jisu's device: push n=10807 arrived 2 times, on screen 1 (the same tag replaces it), sms n=10808 arrived 2 times, on screen 2
+guide: 10809 notifications, handed over 10808, token removed 1, failure queue 0, still waiting 0, arrived twice on devices 2, flagged by the platform as maybe sent twice 2

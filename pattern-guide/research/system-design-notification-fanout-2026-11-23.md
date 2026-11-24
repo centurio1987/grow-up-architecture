@@ -37,9 +37,9 @@
 2. **발송사 이중화와 차단기** — 우아한형제들은 SMS 발송사 둘을 두고, 하나가 멈추면 다른 쪽으로 트래픽을 100% 넘겼습니다. 다만 판단은 사람이 합니다(M6). LY 의 Pushsphere 는 실패가 쌓여 차단기가 열리면 그 엔드포인트를 풀에서 빼고, 재시도 전에 남은 할당량을 확인합니다(M5).
 3. **앱이 열려 있을 때의 장기 연결** — Netflix Pushy 는 WebSocket 연결 수억 개를 유지합니다(M2). Uber 는 SSE 를 gRPC 양방향 스트림으로 바꿨습니다(M1). 우아한형제들은 SSE 와 `Last-Event-ID` 로 끊긴 동안의 메시지를 다시 보냅니다(M7).
 
-이 노트의 추천 구조(판단)는 이렇습니다. **알림 API 는 요청한 서비스가 붙인 중복 방지 키와 함께 알림을 알림 저장소에 먼저 적고, 같은 키가 다시 오면 처음 결과를 돌려줍니다. 적은 뒤에 우선순위 큐에 넣고 받았다고 답합니다. 큐는 급한 것(인증번호 등) · 보통 · 캠페인으로 나누고, 채널 작업자는 급한 큐를 먼저 비웁니다. 발송사 응답은 셋으로 가릅니다. 성공은 기록합니다. 다시 보내도 되는 실패(429 · 5xx)는 지수 백오프와 지터만큼 기다리게 해 큐에 다시 넣습니다. 다시 보내면 안 되는 실패(410 등)는 토큰을 지우고 끝냅니다. 정한 횟수를 넘긴 알림은 실패 큐로 보냅니다. 재시도는 발송사 할당량 가운데 정해 둔 몫 안에서만 합니다. SMS 는 발송사 둘에 차단기를 두어 열리면 다른 쪽으로 넘깁니다. 앱이 열려 있으면 장기 연결(SSE)로 먼저 보냅니다. 같은 알림은 같은 접기 ID 로 보내 기기에서 하나로 합칩니다.** 근거와 버린 후보는 6절에 있습니다.
+이 노트의 추천 구조(판단)는 이렇습니다. **알림 API 는 요청한 서비스가 붙인 중복 방지 키와 함께 알림을 알림 저장소에 먼저 적고, 같은 키가 다시 오면 처음 결과를 돌려줍니다. 적은 뒤에 우선순위 큐에 넣고 받았다고 답합니다. 큐는 급한 것(인증번호 등) · 보통 · 캠페인으로 나누고, 채널 작업자는 급한 큐를 먼저 비웁니다. 발송사 응답은 셋으로 가릅니다. 성공은 기록합니다. 다시 보내도 되는 실패(429 · 5xx)는 지수 백오프와 지터만큼 기다리게 해 큐에 다시 넣습니다. 다시 보내면 안 되는 실패(410 등)는 토큰을 지우고 끝냅니다. 정한 횟수를 넘긴 알림은 실패 큐로 보냅니다. 재시도는 발송사 할당량 가운데 정해 둔 몫 안에서만 합니다. SMS 는 발송사 둘에 차단기를 두어 열리면 다른 쪽으로 넘깁니다. 앱이 열려 있으면 장기 연결(SSE)로 먼저 보냅니다. 같은 알림은 iOS 에서는 같은 `apns-collapse-id`, Android 에서는 같은 알림 태그(`notification.tag`)로 보내 사용자 화면에서 하나로 바꿔 보이게 합니다.** FCM 의 `collapse_key` 는 아직 전달되지 않은 메시지를 접는 값이라 화면의 알림을 합치지 않습니다(4-6). 근거와 버린 후보는 6절에 있습니다.
 
-**이 구조로도 남는 것**이 있습니다. 발송사로 나가는 호출은 정확히 한 번이 될 수 없습니다. Kafka 설계 문서: 「Exactly-once delivery for other destination systems generally requires cooperation with such systems」(M23). 그래서 작업자가 발송사의 응답을 받은 뒤 기록하기 전에 멈추면 같은 알림이 한 번 더 갑니다. 푸시는 접기 ID 로 기기 화면에서 합칠 수 있지만, SMS 에는 그런 장치가 없습니다(판단, 4-6). 가이드는 이 창을 요구 범위에서 빼지 말고 고른 구조의 한계로 적어야 합니다(앞 편 S15 의 SD18 지적).
+**이 구조로도 남는 것**이 있습니다. 발송사로 나가는 호출은 정확히 한 번이 될 수 없습니다. Kafka 설계 문서: 「Exactly-once delivery for other destination systems generally requires cooperation with such systems」(M23). 그래서 작업자가 발송사의 응답을 받은 뒤 기록하기 전에 멈추면 같은 알림이 한 번 더 갑니다. 푸시는 iOS 의 `apns-collapse-id` 나 Android 의 알림 태그로 사용자 화면에서 하나로 바꿔 보이게 할 수 있지만, SMS 에는 그런 장치가 없습니다(판단, 4-6). 가이드는 이 창을 요구 범위에서 빼지 말고 고른 구조의 한계로 적어야 합니다(앞 편 S15 의 SD18 지적).
 
 ## 2. 요구사항 절에 쓸 근거 — 「몰림」 · 「빠짐과 겹침」 · 「발송사 장애」를 숫자로
 
@@ -123,7 +123,7 @@
 ### 4-6. 남는 중복과 유실의 한계 — 구조의 가정으로 적을 것
 
 - 외부 호출에는 정확히 한 번이 없음(M23, 1절). Uber 의 옛 구조는 확인 응답을 30초마다 묶어 보내서 「The delivery state of a message is unknown for up to 30 seconds after it is written to a RAMEN connection.」였습니다(M1). 확인이 늦으면 다시 보낼지 정할 수 없다는 예입니다.
-- 기기에서 합치기: APNs `apns-collapse-id` 는 「When sending the same notification more than once, use the same value in this header to merge the requests.」(M11). FCM `collapse_key` 는 「An identifier of a group of messages that can be collapsed, so that only the last message gets sent」(M18). 접기 메시지에는 3절 6번의 기기당 한도가 따로 걸립니다(M15). SMS · 이메일에서 같은 장치를 적은 문서는 이번에 보지 않았습니다(확인 안 함).
+- 사용자 화면에서 하나로 보이게 하기: APNs `apns-collapse-id` 는 「An identifier you use to merge multiple notifications into a single notification for the user.」이고 「When sending the same notification more than once, use the same value in this header to merge the requests.」입니다(M11). **FCM 의 `collapse_key` 는 다른 일을 합니다.** 「An identifier of a group of messages that can be collapsed, so that only the last message gets sent when delivery can be resumed.」(M18) — 기기에 아직 전달되지 않은 메시지를 접는 값이고, 같은 칸에 「A maximum of 4 different collapse keys is allowed at any given time.」가 붙습니다. Android 알림 서랍에 이미 보이는 알림을 바꾸는 값은 알림 태그(`AndroidNotification.tag`)입니다: 「If specified and a notification with the same tag is already being shown, the new notification replaces the existing one in the notification drawer.」(M18). 접기 메시지에는 3절 6번의 기기당 한도가 따로 걸립니다(M15). (정정 2026-11-23 — 처음에 `collapse_key` 인용을 「gets sent」에서 끊고 「기기에서 같은 알림을 하나로 합친다」고 적었음. S17 게이트 1라운드가 짚음) SMS · 이메일에서 같은 장치를 적은 문서는 이번에 보지 않았습니다(확인 안 함).
 - 발송사 뒤의 전달은 발송사의 best-effort: 「As a best-effort service, APNs may reorder notifications you send to the same device token.」, 「Your notifications may also get throttled, saved in storage, and in some cases, not delivered.」(M11). FCM 도 「Our goal is to always deliver every message sent using FCM.」 바로 뒤에 「However, delivering every message sometimes results in a poor overall user experience.」를 둡니다(M15). 그래서 가이드의 「유실 0」은 「받았다고 답한 알림이 발송사에 넘겨졌거나 실패 큐에 기록됨」까지로 범위를 정하고, 그 뒤는 발송사의 보장이라고 밝힙니다(판단).
 - **큐와 알림 저장소의 보존은 고른 구조의 가정입니다.** LINE 2019: 「The push queue in messaging servers became full, losing pushes.」(M4). 원인은 0시에 연결이 한꺼번에 몰려 푸시 부품의 힙이 급히 늘고 full GC 가 난 것입니다(「leading to full GC (garbage collection) due to a sharp increase in the heap memory of the push component」). 큐가 꽉 찼을 때의 규칙(받기를 거절하고 요청한 서비스가 다시 보내게 함 등)을 설계에 두어야 합니다(판단). 앞 편(S15)은 고른 구조에만 있는 큐의 보존을 요구 범위로 빼서 게이트에서 지적받았습니다.
 
@@ -131,7 +131,7 @@
 
 - 우아한형제들 SSE(M7, PC 클라이언트에 적용, 모바일 앱은 향후 과제): 한계를 먼저 인정합니다 — 브로커에 따라 「메시지 순서가 역전되거나 유실이 생길 수 있습니다」. 조치는 「파트너별로 파티션을 분리하여 메시지 순서를 보장」, 「SSE 연결이 끊어진 경우를 대비하여 메시지 이력을 일정 기간 보관」, 「Last-Event-ID를 통해 재연결 시 놓친 메시지를 차례대로 재전송」, 「메시지 전송 실패 시 재시도 메커니즘 구현」입니다. 이력을 며칠 보관하는지는 글에 없습니다(원문에서 `보관 기간` · `TTL` 0개). 중요 이벤트는 받았다는 호출을 따로 받습니다(「서버는 해당 URL이 호출되면 디바이스가 이벤트를 수신한 것으로 인지하고 DB에 마킹합니다.」). 서버를 다시 띄울 때 한꺼번에 다시 접속하는 문제는 「각 세션 지속 시간을 random의 jitter 시간을 설정해 골고루 분포되도록 하였습니다.」로 풉니다. 브로커를 한 번 거쳐 「네트워크 홉이 증가하고 수십ms단위의 레이턴시가 증가하지만, 정확성과 안정성이 더 중요하므로 허용 가능한 수준이었습니다.」. WebSocket 대신 SSE 를 고른 이유는 「WebSocket의 양방향 통신은 오버엔지니어링이 될 수 있습니다」입니다.
 - HTML 표준의 SSE(M24): 「The Last-Event-ID HTTP request header reports an EventSource object's last event ID string to the server」, 다시 연결까지 기다리는 시간은 구현이 정하고 「probably in the region of a few seconds」, 서버는 「a client can be told to stop reconnecting using the HTTP 204 No Content response code」. `Last-Event-ID` 는 마지막으로 받은 ID 를 알려 주는 헤더일 뿐이고, 놓친 것을 다시 보내는 일은 서버의 설계입니다(판단).
-- Netflix Pushy(M2): 서버 한 대 평균 연결이 6만이던 시절이 있었고(「we would add new instances when the average number of connections reached 60,000 connections per instance」), 지금은 「we ended up with instances that handle an average of 200,000 connections per node, with breathing room to go up to 400,000 connections if we had to」입니다(40만은 최대가 아니라 **여유 한도**). 기기는 「devices will reconnect every 30 minutes or so, with some staggering」. 큐를 거치는 간접 전달은 「best-effort」였고, 직접 전달은 상태 코드로 결과를 돌려줘 「letting them retry if a device they're targeting has gone offline」. 지연은 「we reduced median latency to less than a millisecond, with the 99th percentile of latency at less than 4ms」.
+- Netflix Pushy(M2): 서버 한 대 평균 연결이 6만이던 시절이 있었고(「we would add new instances when the average number of connections reached 60,000 connections per instance」), 지금은 「we ended up with instances that handle an average of 200,000 connections per node, with breathing room to go up to 400,000 connections if we had to」입니다(40만은 최대가 아니라 **여유 한도**). 기기는 「devices will reconnect every 30 minutes or so, with some staggering」. 큐를 거치는 간접 전달은 「best-effort」였고, 직접 전달은 상태 코드로 결과를 돌려줘 「letting them retry if a device they're targeting has gone offline」. 지연은 **캐시로 조회를 뺀 요청에 한해** 「From the incoming message arriving at Pushy to the response being sent back to the device, we reduced median latency to less than a millisecond, with the 99th percentile of latency at less than 4ms」이고, 바로 앞 문장이 그 범위를 「For these requests where caching removed KeyValue from the hot path, we were able to greatly speed things up.」로 정합니다. 서버 일반의 지연이 아닙니다(정정 2026-11-23 — 처음에 범위 없이 적었음. S17 게이트 1라운드가 짚음).
 - Uber(M1): 옛 SSE 구조에서 서버는 「Ramen Server also sends a heartbeat message to the mobile side every 4 seconds.」, 앱은 「The mobile client assumes that the connection is broken and reconnects if it sees no heartbeat or messages up to 7 seconds.」. 새 gRPC 구조의 응답 모델은 5초마다 heartbeat 를 보냅니다(「Heartbeats are sent out to indicate that the connection is healthy every 5 seconds.」) — 4초와 5초는 **다른 구조의 값**입니다. gRPC 에서는 「The acknowledgement can be sent over the same stream instantly without extra networking calls from the mobile client.」, 문제가 생기면 「We invested in building tooling on the mobile side for quickly falling back from gRPC to the SSE protocol.」. 결과는 「Push success rates have increased by a minimum of 1-2% across all apps」(측정 조건은 글에 없음). 이 글에는 중복 방지 · 전달 보장 등급 · 재시도 · `Last-Event-ID` 가 없습니다(원문에서 `duplicate` · `at least once` · `idempot` · `retry` · `Last-Event-ID` 0개).
 - 장기 연결은 앱이 꺼져 있으면 쓸 수 없으므로 푸시를 대신하지 않고 앞에 놓는 길입니다(판단). 연결이 없거나 정한 시간 안에 받았다는 응답이 없으면 푸시로 넘깁니다(판단).
 
@@ -142,7 +142,7 @@
 1. **캠페인과 인증번호가 겹침(급한 알림의 반례).** 큐가 하나면 캠페인 1백만 건이 먼저 들어간 뒤의 인증번호는 그 뒤에서 기다립니다. 처리가 초당 5,000건(가정)이면 200초(계산 — 1,000,000 ÷ 5,000)로 5초 요구를 넘깁니다. 우선순위 큐면 작업자가 다음 꺼낼 때 바로 가져갑니다.
 2. **SMS 발송사 A 가 멈춤.** 우아한형제들의 2021 년 두 사건(M6)을 모형으로: 차단기가 실패율로 열리고 B 로 넘기며, 기다린 뒤 반열림에서 시험 호출로 A 의 회복을 확인합니다. 사람이 판단할 때와 견줄 값(알람에서 전환까지의 시간)은 M6 에 없으므로 가정으로 둡니다.
 3. **푸시 발송사의 리전 장애와 재시도 폭주(M5).** 재시도 횟수만 정해 두면 실패한 요청의 재시도가 할당량을 다 써서 새 요청까지 429 를 받습니다(3절 5번). 할당량의 몫 안에서만 재시도하면 새 요청이 먼저 나갑니다.
-4. **작업자가 발송사 호출 뒤 기록 전에 멈춤.** 가시성 시간이 지나 다른 작업자가 같은 알림을 다시 보냅니다(M19 · M20). 푸시는 같은 접기 ID 로 기기에서 하나로 합쳐지고, SMS 는 두 번 갑니다. 가이드는 이 한 건을 출력으로 세고 한계로 적습니다.
+4. **작업자가 발송사 호출 뒤 기록 전에 멈춤.** 가시성 시간이 지나 다른 작업자가 같은 알림을 다시 보냅니다(M19 · M20). 푸시는 iOS 의 `apns-collapse-id` 나 Android 의 알림 태그가 같으면 화면에서 하나로 바뀌어 보이고(FCM `collapse_key` 로는 아님, 4-6), SMS 는 두 번 갑니다. 가이드는 이 한 건을 출력으로 세고 한계로 적습니다.
 5. **더는 쓸 수 없는 토큰.** 410 `Unregistered` · FCM `UNREGISTERED` 는 재시도하지 않고 토큰을 지웁니다(M12 · M13). 재시도하면 할당량만 씁니다(판단).
 6. **유효 시간이 지난 알림.** 30초짜리 배차 제안(M1)처럼 유효 시간이 지난 재시도는 보내지 않고 버립니다(M14 「Set a maximum interval for dropping requests that are no longer timely」).
 7. **장기 연결 서버 하나가 멈춤.** 그 서버의 연결이 곧바로 다시 연결합니다(M2). 지터 없이 같은 간격이면 한 순간에 몰리고, 지터를 두면 흩어집니다(M7). 다시 연결한 앱은 `Last-Event-ID` 로 놓친 것만 받습니다(M7 · M24).
@@ -184,7 +184,7 @@
   - 급한 알림이 발송사에 넘겨지기까지 걸린 시간(큐 하나 대 우선순위 큐)과 캠페인이 끝난 시각
   - 재시도 몫이 있을 때와 없을 때 받은 429 수, 새 요청이 성공한 수
   - 차단기가 열리고 반열리고 닫힌 시각, A · B 로 보낸 수
-  - 작업자가 멈춘 뒤 두 번 나간 수와 그 가운데 기기에서 합쳐진 수, 실패 큐로 간 수, 지운 토큰 수
+  - 작업자가 멈춘 뒤 두 번 나간 수와 그 가운데 화면에서 하나로 보인 수(알림 태그 · `apns-collapse-id` 를 흉내 낼 때, 고정 문자열이 아니라 셈한 값으로), 실패 큐로 간 수, 지운 토큰 수
   - 연결 서버가 멈춘 뒤 다시 연결한 시각의 분포(지터 유무), `Last-Event-ID` 로 다시 보낸 수
 - 세 언어 출력의 글자 단위 일치를 위해 시각은 정수 밀리초로 찍고, 지터는 정해진 씨앗의 정수 의사 난수로 만듭니다(명세 SD26).
 - **이름표(앞 편에서 되먹임).** S15 는 「표시」라는 낱말을 두 뜻으로 써서 4라운드에 지적받았습니다. 이 편은 처음부터 이름을 가릅니다(판단).
@@ -194,7 +194,7 @@
 | 우선순위 | 우리 큐에서 무엇을 먼저 꺼낼지 | 발송사 긴급도(`apns-priority` · FCM `priority`) |
 | 발송사 긴급도 | 기기에서 언제 깨워 보여 줄지(발송사의 값) | 우선순위 |
 | 중복 방지 키 | 요청한 서비스가 만든 키, 알림 API 가 같은 요청을 한 번만 받게 함 | 접기 ID, 알림 ID |
-| 접기 ID | `apns-collapse-id` · `collapse_key`, 기기에서 같은 알림을 하나로 합침 | 중복 방지 키 |
+| 접기 ID | iOS `apns-collapse-id`, 사용자 화면에서 같은 알림을 하나로 합침. Android 에서 같은 일을 하는 값은 알림 태그(`notification.tag`) | 중복 방지 키, FCM `collapse_key`(아직 전달되지 않은 메시지를 접는 값 — 화면을 합치지 않음) |
 | 알림 ID | `apns-id`, 추적용 | 중복 방지 키 |
 | 재시도 | 작업자가 발송사에 다시 보냄 | 다시 연결(장기 연결) |
 | 실패 큐 | 정한 횟수를 넘긴 알림이 가는 곳 | 재시도 대기(지연을 두고 큐에 다시 넣은 것) |
@@ -219,12 +219,12 @@
 
 ## 10. 원문 대조
 
-대조 날짜는 모두 2026-11-23 입니다. 「글자 그대로」는 원문 페이지를 다시 받아 태그를 벗긴 텍스트(Apple 문서는 같은 문서의 JSON 데이터, FCM 문서는 같은 문서의 마크다운 판, RFC 는 텍스트 판)에서 문자열을 찾은 것이고, 따옴표 모양 · 공백 · 백틱 · 밑줄 · 줄표 · 합자만 맞췄습니다. 「조사 워커 원문」은 조사 워커가 원문에서 옮겼으나 이 노트가 다시 찾지 않은 것입니다. 대조는 두 번 했습니다. 먼저 조사 워커가 옮긴 인용 후보 109개를 대조해 108개가 맞았고, 맞지 않은 하나(AWS 의 차단기 문장)는 원문에서 문장 중간의 구절이라 범위를 바로잡았습니다(4-5). 노트를 쓴 뒤에는 노트 안의 「…」 가운데 12자 이상인 서로 다른 143개를 모두 뽑아 원문 33편 전체에서 찾았고 136개가 맞았습니다. 나머지 7개는 원문 인용이 아닌 자리입니다(이 노트가 묶어 쓴 말 넷, 파일럿 회고 노트의 문장 하나, 열리지 않은 글의 제목 하나, 그리고 조사 워커가 전한 InfoQ 의 동사 「regularly handles」 — 마지막 것은 원문에 없어 M3 행을 정정함). 「글에 없음」은 원문 텍스트에서 낱말을 세어 0개일 때만 적었습니다.
+대조 날짜는 모두 2026-11-23 입니다. 「글자 그대로」는 원문 페이지를 다시 받아 태그를 벗긴 텍스트(Apple 문서는 같은 문서의 JSON 데이터, FCM 문서는 같은 문서의 마크다운 판, RFC 는 텍스트 판)에서 문자열을 찾은 것이고, 따옴표 모양 · 공백 · 백틱 · 밑줄 · 줄표 · 합자만 맞췄습니다. 「조사 워커 원문」은 조사 워커가 원문에서 옮겼으나 이 노트가 다시 찾지 않은 것입니다. 대조는 두 번 했습니다. 먼저 조사 워커가 옮긴 인용 후보 109개를 대조해 108개가 맞았고, 맞지 않은 하나(AWS 의 차단기 문장)는 원문에서 문장 중간의 구절이라 범위를 바로잡았습니다(4-5). 노트를 쓴 뒤에는 노트 안의 「…」 가운데 12자 이상인 서로 다른 인용을 모두 뽑아 원문 33편 전체에서 찾았습니다. S17 게이트 1라운드가 짚은 두 정정(4-6 의 FCM `collapse_key`, 4-7 의 Netflix 지연 범위)을 넣은 뒤 다시 대조해 148개 가운데 140개가 맞았습니다. 나머지 8개는 원문 인용이 아닌 자리입니다(이 노트가 묶어 쓴 말 다섯, 파일럿 회고 노트의 문장 하나, 열리지 않은 글의 제목 하나, 그리고 조사 워커가 전한 InfoQ 의 동사 「regularly handles」 — 마지막 것은 원문에 없어 M3 행을 정정함). 「글에 없음」은 원문 텍스트에서 낱말을 세어 0개일 때만 적었습니다.
 
 | 출처 | 대조 방법 | 본문에 쓸 수 있는 것 | 같은 글 안의 다른 값 · 대상 · 동사 · 「없음」을 확인한 낱말 |
 | --- | --- | --- | --- |
 | M1 Uber | 글자 그대로 | 30초 동안 전달 상태 모름 · 배차 제안 30초 유효 · 다시 보낼 수 없음 · heartbeat 4초 · 재연결 7초 · 확인 응답 30초 묶음 · gRPC 즉시 확인 · SSE 로 되돌림 · 성공률 최소 1 ~ 2% | heartbeat 4초(옛 SSE)와 5초(gRPC 응답 모델)는 다른 구조. 우선순위는 계획(「We would like to prioritize」). `duplicate` · `at least once` · `idempot` · `retry` · `Last-Event-ID` 0개 |
-| M2 Netflix Pushy(Medium 의 원 글) | 글자 그대로 | 연결 수억 · 초당 30만 도달 · 평균 16만 + 5만 · 평균 20만 연결과 여유 40만 · 옛 6만 · 30분쯤마다 재연결 · 멈춘 서버의 기기는 곧바로 재연결 · 직접 전달의 상태 코드 · 지연 중앙값 1ms 아래 p99 4ms 아래 | 99.999% 가 세 동사(「steady」 · 「over the last few months」 · 「regularly average」). 백만 대 재연결은 「We could have a million connections per instance, but」의 가정. `retries` · `duplicate` 0개 |
+| M2 Netflix Pushy(Medium 의 원 글) | 글자 그대로 | 연결 수억 · 초당 30만 도달 · 평균 16만 + 5만 · 평균 20만 연결과 여유 40만 · 옛 6만 · 30분쯤마다 재연결 · 멈춘 서버의 기기는 곧바로 재연결 · 직접 전달의 상태 코드 · 지연 중앙값 1ms 아래 p99 4ms 아래(캐시로 조회를 뺀 요청에 한함 — 정정 2026-11-23) | 99.999% 가 세 동사(「steady」 · 「over the last few months」 · 「regularly average」). 백만 대 재연결은 「We could have a million connections per instance, but」의 가정. `retries` · `duplicate` 0개 |
 | M3 InfoQ, Netflix Pushy | 글자 그대로 | 2차 요약의 존재 | 원 글의 문장 「it regularly reaches 300,000 messages sent per second」를 그대로 인용함. 조사 워커는 InfoQ 가 동사를 「handles」로 바꿨다고 전했으나 본문에 그런 문장이 없음(정정 2026-11-23 — 「handles」는 제목의 연결 수 쪽에만 있음). 본문은 M2 를 씀 |
 | M4 LINE 연말 대비 | 글자 그대로 | 짧은 시간의 지수적 증가 · 2019 푸시 큐가 차서 잃음 · 원인(0시 연결 몰림 · full GC) · 차단기 · 역할별 큐 분리 · 여러 경로로 다시 시도해 잃지 않게 설계 | 숫자 없음. `duplicate` · `priority` · `rate limit` · `Kafka` 0개 |
 | M5 LY Pushsphere | 글자 그대로(유니코드 정규화 뒤) | 수배 ~ 수십배 · 지진 · 40만 QPS 요구 · 할당량 · 재시도 3 하드코딩과 리전 장애 사건 · 할당량을 보고 재시도 · 차단기와 엔드포인트 교체 · 알람 30건 이상에서 4건 · 실패율 0에 가까움 | 40만은 요구 사항. 원문이 한글 분해형이라 정규화가 필요했음. `중복` · `우선순위` · `재시도 간격` · `백오프` 0개 |
@@ -237,7 +237,7 @@
 | M13 FCM 오류 코드 | 글자 그대로(마크다운 판) | `UNAVAILABLE` 세 요구 · 할당량 초과 1분 · `UNREGISTERED` 토큰 지우기 | M14 와 429 안내가 다름 |
 | M14 FCM 대규모 발송 권고 | 글자 그대로(마크다운 판) | 몰림이 혼잡의 가장 큰 원인 · 오류별 처리 · 최소 10초 · 기본 60초 · 10초 타임아웃 · 지터 · 오래된 요청은 버림 · 할당량 토큰 | 갱신 2026-11-18. `503` 0개(503 은 M13 에만) |
 | M15 FCM 제한과 할당량 | 글자 그대로(마크다운 판) | 기본 분당 60만 · 분은 시계와 맞지 않음 · 기기당 분 240 · 시간 5,000 · 접기 20 과 3분에 1 · 모두 전달이 목표이나 늘 좋은 경험은 아님 | M14 의 「Quota Tokens」와 단위 표현이 다름 |
-| M16 · M17 · M18 FCM 수명 · 긴급도 · REST 문서 | 글자 그대로 | TTL 0 ~ 28일 · `high` 는 즉시 시도 · 오용 시 낮춰짐 · `collapse_key` 는 마지막 것만 | REST 문서 갱신 2026-10-28 |
+| M16 · M17 · M18 FCM 수명 · 긴급도 · REST 문서 | 글자 그대로 | TTL 0 ~ 28일 · `high` 는 즉시 시도 · 오용 시 낮춰짐 · `collapse_key` 는 전달을 다시 할 수 있을 때 마지막 것만(아직 전달되지 않은 메시지) · 서랍의 알림을 바꾸는 것은 알림 태그 | REST 문서 갱신 2026-10-28. `collapse_key` 를 처음에 끊어 인용했음(정정 2026-11-23) |
 | M19 ~ M22 SQS 문서 | 글자 그대로 | 가시성 시간 기본 30초 · 최대 12시간 · 다시 보임 · 절대적 보장 없음 · 표준 큐 적어도 한 번 · 실패 큐 기본 10 · FIFO 5분 중복 제거 · 지운 뒤에도 ID 추적 | 실패 큐 경계 문장이 두 문서에서 다름. 표준 큐 문서에 `deduplication` 0개 |
 | M23 Kafka 설계 4.4 | 글자 그대로 | 적어도 한 번의 정의와 기본값 · 멱등 생산자는 로그 안 · 외부 시스템은 협력 필요 | 4.1 판도 같은 정의(조사 워커 원문) |
 | M24 HTML 표준 SSE | 글자 그대로 | `Last-Event-ID` 헤더 · 다시 연결은 몇 초쯤(구현이 정함) · 204 로 멈춤 | Living Standard(조사 워커가 본 갱신일 2026-11-22) |

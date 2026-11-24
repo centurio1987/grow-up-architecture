@@ -14,6 +14,7 @@
 | --- | --- | --- | --- |
 | RT-01 | 라이브 동시 시청자 수 | 연결을 가진 에지가 세고, 합계는 1초에 한 번 모두에게 보냄 | [live-viewer-count-guide_v1.1.1.md](live-viewer-count/live-viewer-count-guide_v1.1.1.md) |
 | RT-03 | 대형 그룹 채팅 | 방 프로세스 한 곳이 순번을 붙여 로그에 먼저 쓰고, 중계 서버는 그 방을 보고 있는 연결에만 보내며, 놓친 것은 마지막 순번 이후를 로그에서 읽음 | [large-group-chat-guide_v1.0.0.md](large-group-chat/large-group-chat-guide_v1.0.0.md) |
+| RT-08 | 알림 대량 발송 | 요청을 중복 방지 키와 함께 저장소에 먼저 적고 급한 · 보통 · 캠페인 세 줄의 우선순위 큐에 넣으며, 발송사 응답마다 재시도(재시도도 할당량 확인) · 기기 토큰 지움 · 실패 큐로 가르고, SMS 는 발송사 둘과 차단기로 이중화 | [notification-fanout-guide_v1.0.0.md](notification-fanout/notification-fanout-guide_v1.0.0.md) |
 
 ## CT 경합과 정합성
 
