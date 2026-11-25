@@ -42,7 +42,7 @@ python3 verification/check_part4_ddl.py     # P11~P14 재설계 DDL 을 SQLite �
 python3 verification/check_p15.py           # P15 인구 왕복·반례 시험
 python3 verification/p02-dates.py           # P02~P08 풀이 수치(p03-slots.py … p08-academy.py 도 같은 꼴)
 python3 tools/build_visual.py   # 도해판 visual.html 굽기(쓰인 글자만 남긴 서체를 넣어 바깥 요청 0)
-node tools/check_visual.mjs map c13 c24   # 도해판을 1440px·390px, 밝은·어두운 주제로 열어 오류·넘침 → verification/visual/
+node tools/check_visual.mjs map c13 c24   # 도해판을 1440px·390px, 밝은·어두운 주제로 열어 오류·넘침·배치 어긋남(버튼을 누른 상태까지) → verification/visual/
 ```
 
 HTML 굽기는 `~/.claude/skills/publish-report`(bun, Playwright)를 씁니다. 화면 찍기도 그 스킬에 설치된 Playwright를 씁니다. 다른 컴퓨터에서는 `tools/screenshot.mjs`의 경로를 바꿉니다.
@@ -64,7 +64,7 @@ HTML 굽기는 `~/.claude/skills/publish-report`(bun, Playwright)를 씁니다. 
 | 굽기 가드 | 바깥 요청 0, 넘침 0, 375px 넘침 경고 없음 (index.html 2,187,834바이트) | `build-log.txt` |
 | 화면 | 1440px·390px에서 가로 넘침 없음. 제목 수 h1 8·h2 54가 구성과 같음 | `screens.json`, `*.png` |
 | 본문 계산 예 9건 | 1장 글자 위치(15~22번째 = `11710001`), 4·12장 어림수, 8·9·13·21·24장 검산이 원고 문장과 같음 | `body-numbers.json`. 2026-11-18 1장·12장 오기를 고치며 더함 |
-| 도해판 화면 | 32개 도면 모두 그려짐, 콘솔 오류 0, 1440px·390px 가로 넘침 없음, 바깥 요청 0 | `verification/visual/report.json`, `*.png` |
+| 도해판 화면 | 32개 도면 모두 그려짐, 콘솔 오류 0, 1440px·390px 가로 넘침 없음, 바깥 요청 0, 배치 검사(그림 밖·상자 밖·겹친 글자, 칸 밖 넘침) 0건 | `verification/visual/report.json`, `*.png` |
 | 도해판 계산 | 반례 시험 10건 기대대로, 인구 왕복 V3(김하나 월말 0원·월초 21,000원), 덤프 근사 종속 오차 0.1667과 M44 포함 종속이 원고 수치와 같음 | 페이지 안에서 다시 셈. 정본은 위 결과 파일 |
 | PostgreSQL DDL(4·12장, P06·P07, 26장 호환 뷰) | **실행 안 함** | 이 환경에 PostgreSQL 없음. 문법은 공식 문서 근거 |
 | OpenAPI·AsyncAPI 조각(11장) | YAML로 읽히는지만 확인. 명세 검증기는 안 돌림 | — |

@@ -4,32 +4,44 @@
     "clientWidth": 1440,
     "sheets": 32,
     "empty": [],
-    "svgs": 26,
+    "svgs": 25,
     "wide": [],
-    "height": 65217,
+    "height": 43917,
     "overflowX": false,
-    "errors": []
+    "errors": [],
+    "layout": {
+      "count": 0,
+      "items": []
+    }
   },
   "desktop-dark": {
     "scrollWidth": 1440,
     "clientWidth": 1440,
     "sheets": 32,
     "empty": [],
-    "svgs": 26,
+    "svgs": 25,
     "wide": [],
-    "height": 65217,
+    "height": 43917,
     "overflowX": false,
-    "errors": []
+    "errors": [],
+    "layout": {
+      "count": 0,
+      "items": []
+    }
   },
   "mobile-light": {
     "scrollWidth": 390,
     "clientWidth": 390,
     "sheets": 32,
     "empty": [],
-    "svgs": 26,
+    "svgs": 25,
     "wide": [],
-    "height": 96238,
+    "height": 64164,
     "overflowX": false,
-    "errors": []
+    "errors": [],
+    "layout": {
+      "count": 0,
+      "items": []
+    }
   }
 }

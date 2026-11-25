@@ -15,6 +15,7 @@
             readLink(sh.anchor)
           ]),
           D.goals[sh.id] ? h('p', { class: 'goal', html: '<b>할 수 있게 되는 것</b> · ' + md(D.goals[sh.id]) }) : null,
+          D.keys[sh.id] ? h('p', { class: 'key' }, [h('span', { class: 'k' }, '핵심'), D.keys[sh.id]]) : null,
           h('div', { class: 'body' })
         ]);
         root.appendChild(sec);
@@ -32,7 +33,7 @@
     var picker, W = 680, H = 500;
     var svg = svgBox(W, H, '네 산출물의 지도: 위에 이용자마다 외부 스키마 셋, 가운데 개념 스키마, 아래 내부 스키마, 다른 팀으로 나가는 외부 스키마에 계약이 걸린다');
     arrowDefs(svg, 'mapArrow');
-    var info = h('div', { class: 'panel c', 'aria-live': 'polite' });
+    var info = h('div', { class: 'panel c side', 'aria-live': 'polite' });
     var groups = {};
     function hot(key, layer, kids) {
       var g = s('g', { class: 'hot L-' + layer, tabindex: 0, role: 'button', 'aria-label': kids.label }, kids.nodes);
@@ -94,7 +95,7 @@
       var L = D.layers[key], M = D.mappings[key];
       clear(info);
       var layer = L ? key : (key === 'ec' ? 'ext' : 'int');
-      info.className = 'panel c L-' + layer + ' fade-in';
+      info.className = 'panel c side L-' + layer + ' fade-in';
       if (L) {
         add(info, [h('div', { class: 'eyebrow' }, L.short), h('h5', null, L.name + ' — ' + L.q), P(L.def), P('**「틈」에서** · ' + L.tum), P(L.example, 'muted small'),
           h('p', { class: 'small' }, [h('a', { href: '#' + L.ch }, (L.ch === 'c02' ? '2장' : L.ch === 'c03' ? '3장' : L.ch === 'c04' ? '4장' : '5장') + ' 도면으로 →')])]);

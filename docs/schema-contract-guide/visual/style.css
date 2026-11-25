@@ -1,6 +1,10 @@
 /* 배치: 왼쪽에 도면 목록(부·장 색인)을 붙이고, 오른쪽에 장마다 한 장씩 「도면」을 쌓는 도면첩.
    네 산출물은 어느 그림에서나 같은 색을 씁니다 — 외부 청, 개념 적, 내부 녹, 계약 황.
-   바탕·잉크·적갈색 초점은 index.html(publish-report editorial-magazine)의 값을 그대로 가져왔습니다. */
+   바탕·잉크·적갈색 초점은 index.html(publish-report editorial-magazine)의 값을 그대로 가져왔습니다.
+   색 규칙: 청·적·녹·황(--ext·--con·--int·--ctr)은 네 산출물을 가리킬 때만 씁니다. 맞음·틀림·주의는 --ok·--bad·--warn,
+   그 밖의 구분(상태 막대, 칸의 출처, 로그 모양 같은 것)은 잉크 농도·무늬·글자 표지로 나눕니다.
+   장의 순서: 할 수 있게 되는 것 → 핵심 한 줄 → 손으로 만지는 그림 한두 개 → 「자세히」 접기(참고 표·긴 설명).
+   배치는 tools/check_visual.mjs 의 배치 검사(그림 밖·상자 밖·겹친 글자, 칸 밖으로 넘친 내용)가 0건이어야 합니다. */
 :root {
   --paper: #FBF7F0;
   --sunken: #F3ECDF;
@@ -346,3 +350,70 @@ svg .hot.on circle { stroke: var(--ink); stroke-width: 3; }
 svg .hot circle:hover { stroke: var(--ink); stroke-width: 2; }
 details.fold > div > label:last-child { border-bottom: 0; }
 @media (max-width: 640px) { .tbl-wrap td { min-width: 6.5em; } .tbl-wrap td:first-child { min-width: 4.5em; } }
+
+/* ===== 리듬 · 인지 부하 정리 (2026-11-18) =====
+   도면 안 블록 사이 간격은 아래 한 규칙이 정합니다. 개별 요소의 바깥 여백은 0으로 두고,
+   앞 블록이 있으면 위쪽에만 12px(소제목은 30px)을 둡니다. 나란히 놓인 칸(.two, .three, .controls)의
+   자식은 이 규칙에서 빠집니다. */
+.sheet .body figure, .sheet .body p, .sheet .body .controls, .sheet .body h4, .sheet .body blockquote { margin: 0; }
+.sheet .body :is(div, p, figure, table, details, ol, ul, pre, blockquote, h4, label) + :is(div, p, figure, details, ol, ul, pre, blockquote, label) { margin-top: 12px; }
+.sheet .body :is(div, p, figure, table, details, ol, ul, pre, blockquote, h4) + h4 { margin-top: 30px; }
+.sheet .body h4 + :is(div, p, figure, details, ol, ul, pre) { margin-top: 10px; }
+.sheet .body .two > *, .sheet .body .three > *, .sheet .body .controls > *, .sheet .body .stepper > *, .sheet .body .pairs > *, .sheet .body .qgrid > *, .sheet .body .legend > *, .sheet .body .strip > *, .sheet .body .board-row > * { margin-top: 0; }
+.sheet .body .panel :is(p, div, h5) + :is(p, div) { margin-top: 6px; }
+.sheet .body .panel p { margin: 0; }
+.sheet .body p { font-size: 15px; line-height: 1.7; max-width: 46em; }
+.sheet .body p.small, .sheet .body .small { font-size: 13.5px; }
+.sheet .body .panel { font-size: 14.5px; }
+.sheet .body .panel p { font-size: inherit; }
+.sheet .body .panel h5 { font-size: 15px; }
+
+/* 핵심 한 줄 — 장마다 같은 자리 */
+.key { margin: 0 0 18px; padding: 12px 16px; background: var(--card); border: 1px solid var(--rule); border-left: 4px solid var(--ink); font-size: 16px; font-weight: 600; line-height: 1.6; max-width: 46em; border-radius: 0 var(--r) var(--r) 0; }
+.key .k { display: block; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .08em; color: var(--ink-3); margin-bottom: 2px; }
+
+/* 「자세히」 접기 — 참고 표와 긴 설명 */
+details.more { border: 1px solid var(--rule); border-radius: var(--r); background: var(--paper); }
+details.more > summary { cursor: pointer; list-style: none; padding: 10px 14px; font-size: 14px; font-weight: 600; display: flex; align-items: baseline; gap: 10px; color: var(--ink-2); }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary::before { content: "+"; font-family: var(--mono); width: 1em; color: var(--ink-3); }
+details.more[open] > summary::before { content: "−"; }
+details.more > summary .n { font-family: var(--mono); font-weight: 400; font-size: 12px; color: var(--ink-3); margin-left: auto; }
+details.more[open] > summary { border-bottom: 1px solid var(--rule); color: var(--ink); }
+details.more > .in { padding: 14px; display: grid; gap: 12px; }
+details.more > .in > * { min-width: 0; margin-top: 0 !important; }
+details.more > .in > h4 { margin-top: 10px !important; }
+
+/* 고를 것이 많은 버튼 묶음은 작게 */
+.controls.many .btn { font-size: 13px; padding: 4px 10px; }
+
+/* 그림 옆 설명 상자는 그림을 따라 내려옵니다 */
+@media (min-width: 861px) { .two > .side { position: sticky; top: 24px; } }
+
+/* 질문 카드 격자 (2장 넣을까 뺄까, 5장 호환 판정) */
+.qgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 8px; }
+.qcard { background: var(--card); border: 1px solid var(--rule); border-radius: var(--r); padding: 12px 14px; display: grid; gap: 8px; align-content: start; }
+.qcard .q { font-size: 14.5px; }
+.qcard .controls { margin: 0; }
+.qcard .res:empty { display: none; }
+.qcard .res { font-size: 13.5px; padding-top: 8px; border-top: 1px dashed var(--rule-2); }
+
+/* 원장 줄: 근거와 출처를 한 줄에 */
+.lrow { grid-template-columns: 30px 24px minmax(0, 1fr) auto; align-items: center; }
+.lrow .meta { flex-direction: row; align-items: center; gap: 8px; }
+.lrow .loc { min-width: 3.4em; text-align: right; }
+.ledger { max-height: 460px; }
+
+/* 상태 칠: 산출물 색이 아닌 구분은 잉크 농도와 무늬로 */
+.shade-1 { fill: var(--ink); } .shade-2 { fill: var(--ink-2); } .shade-3 { fill: var(--rule-2); }
+.chip-shade { display: inline-block; width: 12px; height: 12px; border-radius: 2px; vertical-align: -1px; }
+.S-ok { --c: var(--ok); --t: var(--ok-t); } .S-bad { --c: var(--bad); --t: var(--bad-t); }
+.S-warn { --c: var(--warn); --t: var(--warn-t); }
+/* 20장 신청서 칸: 출처는 글자 표지로(색은 네 산출물에만 씀) */
+.paper-form .fld { border-bottom: 2px dashed var(--ink-3); background: var(--sunken); }
+.paper-form .fld.on { outline: 2px solid var(--ink); background: var(--card); }
+.ob { font-family: var(--sans); font-size: 10px; font-weight: 700; color: var(--ink-2); background: var(--card); border: 1px solid var(--rule-2); border-radius: 2px; padding: 0 3px; margin-right: 3px; vertical-align: 4px; letter-spacing: 0; }
+.legend .ob { vertical-align: 1px; margin-right: 4px; }
+.ledger { border: 1px solid var(--rule); border-radius: var(--r); background: var(--card); padding: 4px; }
+.btn[aria-pressed="true"] code, .btn.on code { background: transparent; color: inherit; }
+.btn code { background: transparent; padding: 0; }

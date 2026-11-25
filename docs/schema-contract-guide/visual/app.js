@@ -67,6 +67,18 @@
     defs.appendChild(s('marker', { id: id, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto-start-reverse' },
       s('path', { d: 'M0,0 L10,5 L0,10 z', class: cls || 'arrowhead' })));
   }
+  // 그림 안 글을 한 줄 max 글자 안팎으로 나눕니다. 나눌 자리는 ' → ' ' + ' ' · ' ', ' 그리고 빈칸 순으로 고릅니다.
+  function wrapLines(text, max) {
+    var out = [], rest = text;
+    while (rest.length > max) {
+      var cut = -1, seps = [' → ', ' + ', ' · ', ', ', ' '];
+      for (var i = 0; i < seps.length && cut < 0; i++) { var k = rest.lastIndexOf(seps[i], max); if (k > max * 0.4) cut = k + (seps[i] === ', ' ? 1 : 0); }
+      if (cut < 0) cut = max;
+      out.push(rest.slice(0, cut).trim()); rest = rest.slice(cut).trim();
+    }
+    out.push(rest);
+    return out;
+  }
   function svgText(x, y, str, cls, anchor) {
     return s('text', { x: x, y: y, class: cls || null, 'text-anchor': anchor || 'start' }, str);
   }
@@ -105,7 +117,7 @@
   // 버튼 묶음. items: [{label, key, cls}], onPick(key, idx)
   function seg(items, onPick, opts) {
     opts = opts || {};
-    var box = h('div', { class: 'controls', role: 'group', 'aria-label': opts.label || null });
+    var box = h('div', { class: 'controls' + (items.length > 5 ? ' many' : ''), role: 'group', 'aria-label': opts.label || opts.lbl || null });
     if (opts.lbl) box.appendChild(h('span', { class: 'lbl' }, opts.lbl));
     var btns = items.map(function (it, i) {
       var b = h('button', { type: 'button', class: 'btn' + (it.cls ? ' ' + it.cls : ''), 'aria-pressed': 'false', html: it.html || null }, it.html ? null : it.label);
@@ -164,11 +176,17 @@
       }
       if (opts.onLight) opts.onLight(kind, id);
     }
-    var grid = h('div', { class: 'two' }, [h('div', null, [h('div', { class: 'eyebrow', style: 'margin-bottom:6px' }, opts.seedTitle || '원문'), left]), h('div', null, [h('div', { class: 'eyebrow', style: 'margin-bottom:6px' }, '추출 원장 · 누르면 출처가 켜집니다'), right])]);
+    var grid = h('div', { class: 'two' }, [h('div', null, [h('div', { class: 'eyebrow', style: 'margin-bottom:6px' }, opts.seedTitle || '원문'), left]), h('div', null, [h('div', { class: 'eyebrow', style: 'margin-bottom:6px' }, '추출 원장 ' + rows.length + '줄' + (rows.length > 9 ? ' · 목록 안에서 스크롤' : '') + ' · 누르면 출처가 켜집니다'), right])]);
     grid.light = light;
     return grid;
   }
   function note(text, cls) { return h('div', { class: 'panel ' + (cls || ''), html: md(text) }); }
+  // 이어서 appendChild 하는 코드를 그대로 두고 접기 안으로 보낼 때: var _b = body; body = foldInto(_b, '제목'); … body = _b;
+  function foldInto(parent, title, hint) { var d = more(title, [], hint); parent.appendChild(d); return d.querySelector('.in'); }
+  // 참고 표와 긴 설명을 접어 둡니다. nodes 는 요소 배열
+  function more(title, nodes, hint) {
+    return h('details', { class: 'more' }, [h('summary', null, [h('span', null, '자세히 · ' + title), hint ? h('span', { class: 'n' }, hint) : null]), h('div', { class: 'in' }, nodes)]);
+  }
 
   // 장마다 그리는 함수. sec-*.js 가 여기에 들어가 RENDER 에 자기를 더합니다.
   var RENDER = [];

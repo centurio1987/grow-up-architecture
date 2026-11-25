@@ -19,17 +19,17 @@
     body.appendChild(H4('여섯 칸은 각각 뒤의 산출물 하나로 이어지도록 골랐습니다'));
     var svg = svgBox(680, 300, '원장의 여섯 칸이 각각 어떤 산출물로 이어지는지 보여 준다', 'minw-560');
     arrowDefs(svg, 'c7a', 'arrowhead');
-    var targets = { glos: [470, 14, '용어집 · 모든 이름', 'none'], con: [470, 66, '개념 스키마', 'con'], ext: [470, 118, '외부 스키마', 'ext'], ctr: [470, 170, '계약', 'ctr'], int: [470, 222, '내부 스키마 (작업 부하)', 'int'], q: [470, 266, '가정 목록 · 다음 인터뷰', 'none'] };
+    var targets = { glos: [450, 14, '용어집 · 모든 산출물의 이름', 'none'], con: [450, 62, '개념 스키마 · 사실 유형(F) · 제약(R)', 'con'], ext: [450, 110, '외부 스키마 (V)', 'ext'], ctr: [450, 158, '계약 · 연산(C) · 조건(R)', 'ctr'], int: [450, 206, '내부 스키마 · 작업 부하(C의 빈도)', 'int'], q: [450, 254, '가정 목록 · 다음 인터뷰 (Q)', 'none'] };
     var edges = { T: [['glos', '']], F: [['con', '사실 유형']], V: [['ext', '']], C: [['ctr', '연산 계약'], ['int', '빈도 → 작업 부하']], R: [['con', '제약'], ['ctr', '계약의 조건']], Q: [['q', '']] };
     var colY = { T: 14, F: 62, V: 110, C: 158, R: 206, Q: 254 };
     var eg = {}, tg = {};
     Object.keys(targets).forEach(function (k) {
       var t = targets[k], g = s('g', { class: 'L-' + t[3] });
-      g.appendChild(s('rect', { x: t[0], y: t[1], width: 200, height: 32, rx: 3, class: t[3] === 'none' ? 'box-s' : 'box-c' }));
-      g.appendChild(svgText(t[0] + 12, t[1] + 21, t[2], 't-sm t-b'));
+      g.appendChild(s('rect', { x: t[0], y: t[1], width: 224, height: 36, rx: 3, class: t[3] === 'none' ? 'box-s' : 'box-c' }));
+      g.appendChild(svgText(t[0] + 12, t[1] + 23, t[2], 't-sm t-b'));
       tg[k] = g; svg.appendChild(g);
     });
-    var info = h('div', { class: 'panel', 'aria-live': 'polite' });
+    var info = h('div', { class: 'panel side', 'aria-live': 'polite' });
     D.cols6.forEach(function (c) {
       var y = colY[c[0]], g = s('g', { class: 'hot', tabindex: 0, role: 'button', 'aria-label': c[0] + ' ' + c[1] });
       g.appendChild(s('rect', { x: 10, y: y, width: 190, height: 36, rx: 3, class: 'box' }));
@@ -39,8 +39,7 @@
       eg[c[0]] = [];
       edges[c[0]].forEach(function (e) {
         var t = targets[e[0]], p = s('g', { class: 'L-' + (t[3] === 'none' ? 'none' : t[3]) });
-        p.appendChild(s('path', { d: 'M200,' + (y + 18) + ' C330,' + (y + 18) + ' 340,' + (t[1] + 16) + ' 466,' + (t[1] + 16), class: 'ln-c', 'marker-end': 'url(#c7a)', style: 'stroke:var(--c)' }));
-        if (e[1]) p.appendChild(svgText(330, (y + t[1]) / 2 + 14, e[1], 't-sm t-mut', 'middle'));
+        p.appendChild(s('path', { d: 'M200,' + (y + 18) + ' C320,' + (y + 18) + ' 330,' + (t[1] + 18) + ' 446,' + (t[1] + 18), class: 'ln-c', 'marker-end': 'url(#c7a)', style: 'stroke:var(--c)' }));
         eg[c[0]].push(p); svg.appendChild(p);
       });
       function pick() {
@@ -54,20 +53,21 @@
 
     // 근거 수준
     body.appendChild(H4('근거 수준은 올라갑니다'));
-    var ladder = svgBox(680, 190, '관찰에서 진술로, 진술에서 확인으로 올라가고, 수준마다 규칙을 다루는 방법이 다르다', 'minw-560');
+    var ladder = svgBox(680, 232, '관찰에서 진술로, 진술에서 확인으로 올라가고, 수준마다 규칙을 다루는 방법이 다르다', 'minw-560');
     arrowDefs(ladder, 'c7b');
-    [['관찰', '자료에서 보였다', '"예약 기록 2천 건에서 겹침이 한 번도 없었다"', '규칙으로 쓰지 않음. 감시 질의로 지켜봄', 0], ['진술', '누군가 그렇다고 말했다', '"매니저: 겹치게는 못 잡아요"', '응용에서 경고로 시작. Q에 "확인 필요"', 1], ['확인', '책임자가 규칙으로 승인', '"운영 책임자가 R3 승인 (11-10 회의록)"', 'DB 제약이나 계약의 사전조건으로 강하게', 2]].forEach(function (l) {
-      var x = 10 + l[4] * 226, y = 110 - l[4] * 46;
-      ladder.appendChild(s('rect', { x: x, y: y, width: 210, height: 70 + l[4] * 0, rx: 4, class: 'box', style: 'stroke-width:' + (1 + l[4] * .6) }));
-      var cx = x + 16;
-      ladder.appendChild(s('circle', { cx: cx, cy: y + 20, r: 6, style: 'stroke:var(--ink-2);stroke-width:1.5;fill:' + (l[4] === 2 ? 'var(--ink-2)' : l[4] === 1 ? 'url(#halfFill)' : 'transparent') }));
-      ladder.appendChild(svgText(x + 30, y + 25, l[0] + ' · ' + l[1], 't-sm t-b'));
-      ladder.appendChild(svgText(x + 12, y + 44, l[2], 't-sm t-mut'));
-      ladder.appendChild(svgText(x + 12, y + 62, '→ ' + l[3], 't-sm'));
-      if (l[4] < 2) {
-        ladder.appendChild(s('path', { d: 'M' + (x + 150) + ',' + (y - 4) + ' C' + (x + 190) + ',' + (y - 30) + ' ' + (x + 220) + ',' + (y - 30) + ' ' + (x + 236) + ',' + (y - 22), class: 'ln', 'marker-end': 'url(#c7b)' }));
-        ladder.appendChild(svgText(x + 196, y - 34, l[4] === 0 ? '담당자에게 물어' : '책임자에게 가서', 't-sm t-sub', 'middle'));
-      }
+    [['확인', '책임자가 규칙으로 승인', '"운영 책임자가 R3을 업무 규칙으로 승인 (2026-11-10 회의록)"', 'DB 제약이나 계약의 사전조건으로 강하게 지킴', 2],
+     ['진술', '누군가 그렇다고 말했다', '"매니저: 겹치게는 못 잡아요"', '응용에서 경고로 시작하고, 확인을 받으면 올림. Q에 "확인 필요"', 1],
+     ['관찰', '자료에서 보였다', '"예약 기록 2천 건에서 같은 회의실 겹침이 한 번도 없었다"', '규칙으로 쓰지 않음. 감시 질의로 반례가 생기는지 지켜봄', 0]].forEach(function (l, k) {
+      var y = 6 + k * 76, x = 130;
+      ladder.appendChild(s('rect', { x: x, y: y, width: 540, height: 66, rx: 4, class: 'box', style: 'stroke-width:' + (1 + l[4] * .6) }));
+      ladder.appendChild(s('circle', { cx: x + 18, cy: y + 19, r: 6, style: 'stroke:var(--ink-2);stroke-width:1.5;fill:' + (l[4] === 2 ? 'var(--ink-2)' : l[4] === 1 ? 'url(#halfFill)' : 'transparent') }));
+      ladder.appendChild(svgText(x + 32, y + 24, l[0] + ' · ' + l[1], 't-sm t-b'));
+      ladder.appendChild(svgText(x + 14, y + 42, l[2], 't-sm t-mut'));
+      ladder.appendChild(svgText(x + 14, y + 59, '→ ' + l[3], 't-sm'));
+    });
+    [[158, 92, '담당자에게', '물어 진술을 얻음'], [82, 16, '책임자에게', '가서 확인을 얻음']].forEach(function (a) {
+      ladder.appendChild(s('line', { x1: 118, y1: a[0] + 30, x2: 118, y2: a[1] + 40, class: 'ln', 'marker-end': 'url(#c7b)' }));
+      ladder.appendChild(svgLines(108, a[0] + 2, [a[2], a[3]], 't-sm t-sub', 'end', 15));
     });
     var dfs = ladder.querySelector('defs');
     var lg = s('linearGradient', { id: 'halfFill' }, [s('stop', { offset: '50%', style: 'stop-color:var(--ink-2)' }), s('stop', { offset: '50%', style: 'stop-color:transparent' })]);
@@ -75,7 +75,7 @@
     body.appendChild(fig(ladder, '진술만 있는 규칙을 DB 제약으로 걸었는데 업무에 예외가 있으면 그 예외를 기록할 길이 막힙니다. 관찰만으로는 규칙이 있다는 증거가 되지 않습니다(21장).', '그림 7-2'));
 
     // 전략
-    body.appendChild(H4('씨앗에 맞는 설계 전략 고르기'));
+    var _b = body; body = foldInto(_b, '씨앗에 맞는 설계 전략 고르기');
     var sh = h('div');
     function drawStrat(i) {
       var ss = D.seedStrategy[i];
@@ -84,6 +84,7 @@
       sh.appendChild(P('**' + ss[0] + '** → ' + ss[1].join(' 또는 ') + ' · ' + ss[2] + '. 이 가이드의 권고이고, 한 프로젝트에서 여러 전략을 섞는 것이 보통입니다.', 'small'));
     }
     add(body, [seg(D.seedStrategy.map(function (x, i) { return { label: x[0], key: i }; }), drawStrat, { lbl: '받은 씨앗', start: 0 }), sh]);
+    body = _b;
 
     // 설계의 흐름
     body.appendChild(H4('설계의 흐름 — 폭포가 아닙니다'));
@@ -95,7 +96,7 @@
       var a = s('a', { href: links[f[2]] || '#c07' });
       a.appendChild(s('rect', { x: x, y: y, width: 150, height: 84, rx: 4, class: 'box' }));
       a.appendChild(svgText(x + 10, y + 20, (i + 1) + '. ' + f[0], 't-sm t-b'));
-      if (f[1]) a.appendChild(svgLines(x + 10, y + 42, f[1].split(' → ').length > 2 ? [f[1].split(' → ').slice(0, 2).join(' → '), '→ ' + f[1].split(' → ').slice(2).join(' → ')] : [f[1]], 't-sm t-mut', 'start', 15));
+      if (f[1]) a.appendChild(svgLines(x + 10, y + 42, wrapLines(f[1], 17), 't-sm t-mut', 'start', 15));
       a.appendChild(svgText(x + 140, y + 76, f[2], 't-sm t-sub', 'end'));
       fl.appendChild(a);
       if (colI < 3) fl.appendChild(s('line', { x1: x + 150, y1: y + 42, x2: x + 166, y2: y + 42, class: 'ln', 'marker-end': 'url(#c7c)' }));
@@ -105,8 +106,9 @@
     fl.appendChild(svgText(420, 292, '새 질문(Q)이 생기면 2로 돌아감', 't-sm', 'middle'));
     body.appendChild(fig(fl, '외부 스키마를 그리다 "지난달 등급"이 필요하다는 걸 알면 원장에 Q를 적고 3으로 돌아갑니다. 검증에서 추적표에 빈칸이 나오면 원장으로 돌아갑니다. 상자를 누르면 그 장의 도면으로 갑니다.', '그림 7-3'));
 
-    body.appendChild(H4('원장에서 흔한 실수'));
+    var _b = body; body = foldInto(_b, '원장에서 흔한 실수');
     body.appendChild(table(['실수', '예', '고치는 법'], [['칸을 섞음', '"일정표는 표 모양으로 회의실 열이 왼쪽"을 F에 적음', '보이는 모양은 V. F에는 사실만'], ['출처를 안 적음', '규칙만 있고 어디서 왔는지 모름', '쪽·줄·칸·발화자를 반드시 적음'], ['질문을 추측으로 채움', 'q1을 묻지 않고 "올림이겠지"로 R 칸에 적음', '추측은 R이 아니라 Q. 답을 받으면 R로 옮기고 근거 수준을 적음'], ['사실을 일반화해서 적음', 'F에 "회원은 회의실을 예약한다"만 적음', '구체적인 예로 적고(8장), 일반화는 사실 유형에서'], ['한 줄에 둘을 적음', '"30분 단위이고 최대 4시간"', '쪼갤 수 있으면 쪼갬(나중에 따로 바뀔 수 있음)']]));
+    body = _b;
   });
 
   // ---------- 8장 ----------
@@ -183,7 +185,7 @@
       schemaBox.appendChild(h('div', { class: 'eyebrow', style: 'margin-bottom:6px;font-family:var(--sans)' }, '8장 결과 스키마 · 이 단계에서 더하거나 바꾼 줄'));
       D.schema8.forEach(function (ln) {
         var st = ln[2], now = st === k, later = st > k;
-        schemaBox.appendChild(h('div', { style: 'padding:1px 6px;border-radius:2px;' + (now ? 'background:var(--con-t);box-shadow:inset 3px 0 0 var(--con)' : '') + (later ? 'opacity:.3' : '') }, [h('span', { style: 'color:var(--ink-3)' }, '[' + ln[0] + '] '), ln[1], st ? h('span', { class: 'tag', style: 'margin-left:6px' }, st + '단계') : null]));
+        schemaBox.appendChild(h('div', { style: 'display:grid;grid-template-columns:3.4em minmax(0,1fr) 3.6em;gap:6px;align-items:baseline;padding:2px 6px;border-radius:2px;' + (now ? 'background:var(--con-t);box-shadow:inset 3px 0 0 var(--con)' : '') + (later ? 'opacity:.3' : '') }, [h('span', { style: 'color:var(--ink-3)' }, '[' + ln[0] + ']'), h('span', null, ln[1]), st ? h('span', { class: 'tag', style: 'justify-self:end' }, st + '단계') : h('span')]));
       });
     }
     var short8 = ['기본 사실', '사실 유형·인구', '개체 합치기·산술 파생', '유일성·항 수', '필수 역할·논리 파생', '값·집합 비교·하위 유형', '그 밖의 제약·마지막 점검'];
@@ -196,21 +198,24 @@
   // ---------- 9장 ----------
   RENDER.push(function renderC09() {
     var body = section('c09'); if (!body) return;
+    var _b = body; body = foldInto(_b, '외부 스키마 설계 일곱 단계와 이용자 목록');
     body.appendChild(steps([['이용자 목록', '역할 × 목적'], ['보기 요구 모으기', '원장의 V 칸'], ['질의 목록', '조건 · 순서 · 묶음 · 빈도'], ['다섯 항목 쓰기', ''], ['열마다 ← 달기', ''], ['갱신 의미 정하기', '읽기 전용 / 쓰기 받음 / 명령으로 분리'], ['가림과 시점', '']], { min: 120 }));
     body.appendChild(table(['이용자', '목적', '원장 줄', '외부 스키마'], [['회원', '내 예약을 확인·관리', 'v3(새로 추가)', tag('ext', 'V1 내 예약')], ['회원', '빈 시간을 찾아 예약', 'v4(새로 추가)', tag('ext', 'V4 회의실 현황')], ['안내 데스크', '손님을 방으로 안내', 'v1', tag('ext', 'V2 오늘 일정표')], ['청구 담당자', '월말 청구', '(원장에 없음 → 추가)', tag('ext', 'V3 월 청구 명세')], ['회계 시스템', '청구 처리', 'v2', tag('ctr', 'E1 예약 확정 이벤트')]]));
     body.appendChild(P('콘셉트 메모가 회원 앱 화면을 말하지 않아 회원 쪽 보기 요구가 원장에 빠져 있었습니다. 이용자 목록은 원장의 빈칸을 찾는 도구이기도 합니다.', 'small muted'));
+    body = _b;
 
     body.appendChild(H4('갱신 의미 결정표 — 이 꼴의 외부 스키마로 쓰기를 받아도 될까'));
     var uh = h('div', { 'aria-live': 'polite' });
     add(body, [seg(D.updateTable.map(function (u, i) { return { label: u[0], key: i }; }), function (i) {
       var u = D.updateTable[i]; clear(uh);
-      add(uh, [h('div', { class: 'panel c ' + (u[2] === 'ok' ? 'L-int' : 'L-con') }, [h('p', null, [h('span', { class: 'pill ' + u[2] }, u[2] === 'ok' ? '받을 수 있음' : '받지 않음'), ' ', h('b', null, u[0])]), P('쓰기를 받으면 · ' + u[1]), P('권고 · ' + u[3])])]);
+      add(uh, [h('div', { class: 'panel c ' + (u[2] === 'ok' ? 'S-ok' : 'S-bad') }, [h('p', null, [h('span', { class: 'pill ' + u[2] }, u[2] === 'ok' ? '받을 수 있음' : '받지 않음'), ' ', h('b', null, u[0])]), P('쓰기를 받으면 · ' + u[1]), P('권고 · ' + u[3])])]);
     }, { start: 0 }), uh]);
     body.appendChild(P('기본 권고는 외부 스키마를 읽기 전용으로 두고, 변경은 원장 C 칸에서 나온 **명령**(O1 예약하기, O2 취소하기)으로 받는 것입니다. 꼴마다 실제로 무슨 일이 생기는지는 [3장의 V1·V4·V5 시연](#c03)에서 볼 수 있어요.', 'small'));
 
-    body.appendChild(H4('V1 내 예약 — 열마다 ←, 그리고 "지금 시각"'));
+    var _b = body; body = foldInto(_b, 'V1 내 예약 — 열마다 ←, 그리고 "지금 시각"');
     body.appendChild(h('div', { class: 'memo mono', style: 'font-size:12.5px;line-height:1.8', html: md('[외부] V1 내 예약 · 이용자: 회원 본인') + '<br>' + ['행 · 그 회원의 예약 하나', '열 · 예약번호 ← 예약(참조) · 회의실 ← F5 · 시작 ← F6 · 끝 ← F6 · 상태 ← F7', '<span style="background:var(--warn-t)">· 취소 가능 여부 ← F7 + F6 + 지금 시각</span> (확정이고 시작 전이면 가능)', '<span style="background:var(--warn-t)">· 무료로 취소 가능 여부 ← F6 + 지금 시각</span> (시작 1시간 전까지면 가능, R5)', '고르기 · F4 = 접속한 회원', '순서 · 다가오는 것은 시작순, 지난 것은 최근순', '가림 · 없음 (본인 예약만 보이므로)', '갱신 · 직접 쓰기 없음. 취소는 명령 "취소하기"(O2)로'].map(esc).join('<br>').replace(/&lt;span style=&quot;background:var\(--warn-t\)&quot;&gt;/g, '<span style="background:var(--warn-t)">').replace(/&lt;\/span&gt;/g, '</span>') }));
     body.appendChild(P('지금 시각은 개념 사실이 아니라 질의할 때 주어지는 값이라 그 의존을 화살표에 적어 둡니다. 화살표를 달 곳이 없는 열(예: "이 예약에 메모 남기기")은 빼거나, 원장에 f를 더해 개념 스키마로 돌아갑니다. 외부 스키마 혼자 새 사실을 만들어 내지는 않아요.', 'small muted'));
+    body = _b;
 
     // 시점 문제
     body.appendChild(H4('시점 문제 — 11월 청구서에서 M07의 무료 분은?'));
@@ -236,13 +241,14 @@
       add(th, [fig(svg), P('(' + o[0] + ') ' + o[1] + ' → 무료 **' + free + '분**' + (i === 2 ? ' (120 × 14/30 + 600 × 16/30 = 56 + 320)' : '') + ' · 13장 인구(사용 330분)로 계산하면 초과 ' + over + '분, 초과 요금 **' + fee.toLocaleString('ko-KR') + '원**.'), P('어느 것이 맞는지는 담화 세계의 규칙이라 원장 q4의 답으로 정해집니다. 어느 답이든 등급이 바뀐 **날짜**가 필요한데 F2는 지금의 등급만 적어요. 그래서 `F2′ 회원 은 [시작일, 종료일) 동안 등급 에 속했다`, `R8 한 회원의 등급 기간은 겹치지 않는다`, `D4 어느 날의 등급 = 그 날을 포함하는 기간의 등급`이 생깁니다.', 'small muted')]);
     }
     add(body, [seg(opts9.map(function (o, i) { return { label: '(' + o[0] + ') ' + o[1], key: i }; }), drawT, { lbl: '규칙', start: 0 }), th]);
+    var _b = body; body = foldInto(_b, '시점 질문 넷');
     body.appendChild(table(['시점 질문', '「틈」의 예'], [['이 값은 지금 값인가, 그때 값인가?', '청구서의 등급은 청구 대상 월의 값인가'], ['과거를 다시 조회하면 같은 답이 나와야 하는가?', '10월 청구서를 12월에 다시 뽑으면 같아야 하는가 → "예"라면 V3는 발행된 문서'], ['언제까지의 변경이 반영되어야 하는가?', '월말 23:59 취소가 그달 청구에 들어가는가'], ['외부 스키마를 받아 간 쪽이 그 값을 보관하는가?', '회계 시스템은 이벤트를 받아 자기 DB에 저장하는가']]));
+    body = _b;
   });
 
   // ---------- 10장 ----------
   RENDER.push(function renderC10() {
     var body = section('c10'); if (!body) return;
-    body.appendChild(steps([['사전 통합', '무엇을, 어떤 순서로 합칠지. 이진(사다리꼴·균형) / n항'], ['비교', '개념끼리 대응과 충돌, 스키마 사이의 관계'], ['맞추기', '충돌을 풀어 합칠 수 있게 고침'], ['병합과 재구성', '겹쳐서 중간 스키마를 만들고 품질 기준에 맞게 다시 짬']]));
     body.appendChild(H4('세 관점의 부분 스키마와 충돌'));
     var colsEl = {};
     var cards = h('div', { class: 'three' }, Object.keys(D.views10).map(function (k) {
@@ -259,14 +265,17 @@
       b.addEventListener('click', function () {
         $$('button', conflictList).forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); b.setAttribute('aria-pressed', 'true');
         Object.keys(colsEl).forEach(function (k) { var on = c[2].indexOf(k) >= 0; colsEl[k].style.background = on ? 'var(--warn-t)' : ''; colsEl[k].style.borderColor = on ? 'var(--warn)' : ''; });
-        clear(res); add(res, [note('<b>' + String(c[0]) + '</b> · ' + String(c[1]) + '<br>해소 → ' + String(c[3]), 'c L-con')]);
+        clear(res); add(res, [note('<b>' + String(c[0]) + '</b> · ' + String(c[1]) + '<br>해소 → ' + String(c[3]), 'c L-none')]);
       });
       conflictList.appendChild(b);
       if (i === 4) setTimeout(function () { b.click(); }, 0);
     });
     add(body, [conflictList, cards, res]);
-    body.appendChild(P('동음이의어는 같은 이름끼리 견줘 찾을 수 있지만, 이음동의어는 바깥 정보가 있어야 찾습니다. 충돌을 고치기 전에 기록이 먼저입니다. 남기지 않으면 "왜 이메일이 키가 아니냐"에 답할 수 없어요.', 'small muted'));
-    body.appendChild(H4('병합 결과'));
+    body.appendChild(P('동음이의어는 같은 이름끼리 비교해 찾을 수 있지만, 이음동의어는 바깥 정보가 있어야 찾습니다. 충돌을 고치기 전에 기록이 먼저입니다. 남기지 않으면 "왜 이메일이 키가 아니냐"에 답할 수 없어요.', 'small muted'));
+    var _b = body; body = foldInto(_b, '통합의 네 단계');
+    body.appendChild(steps([['사전 통합', '무엇을, 어떤 순서로 합칠지. 이진(사다리꼴·균형) / n항'], ['비교', '개념끼리 대응과 충돌, 스키마 사이의 관계'], ['맞추기', '충돌을 풀어 합칠 수 있게 고침'], ['병합과 재구성', '겹쳐서 중간 스키마를 만들고 품질 기준에 맞게 다시 짬']]));
+    body = _b;
+    var _b = body; body = foldInto(_b, '병합 결과와 품질 점검');
     body.appendChild(h('div', { class: 'memo mono', style: 'font-size:12.5px;line-height:1.8', html: [
       '[개체] 회원(회원번호) — 이름 · 이메일 · 상태{활동, 탈퇴}   <span class="muted">← A 회원 + C 고객</span>',
       '[개체] 등급(등급 이름) — 월 무료 분 · 초과 단가(30분당)   <span class="muted">← A 등급 + C 요금제</span>',
@@ -279,24 +288,27 @@
     body.appendChild(P('통합은 합집합이 아닙니다. 모든 관점을 합쳐야 하는 것도 아니에요. C는 다른 팀의 맥락이라 합치지 않고 계약 E1에 적을 수도 있습니다. 그때 산출물은 "스키마 하나와 계약 하나"입니다.', 'small'));
     body.appendChild(H4('품질 점검'));
     body.appendChild(table(['점검', '질문', '「틈」에서 확인'], [['완전성', '원장의 모든 f·r이 스키마 어딘가에 있는가? 모든 v의 열에 화살표를 달 수 있는가?', "손님 이름(F11), 등급 이력(F2') 반영"], ['적절성', '스키마에 원장 어디에도 근거가 없는 요소가 있는가?', '회의실 층 정보: 근거 없음 → 뺌'], ['정확성', '각 요소가 표기법의 정의대로 쓰였고, 요구를 바르게 옮겼는가?', '노쇼를 상태로 둔 것은 q2 답 전까지 잠정'], ['최소성', '다른 요소에서 계산되는 것을 따로 두지 않았는가?', '사용 내역을 D1로 바꿈'], ['이해 용이성', '담당자가 이 스키마를 읽고 자기 업무를 알아보는가?', '용어집의 이름(회의실, 예약 시간) 그대로 씀']]));
+    body = _b;
   });
 
   // ---------- 11장 ----------
   RENDER.push(function renderC11() {
     var body = section('c11'); if (!body) return;
+    var _b = body; body = foldInto(_b, '계약 설계 일곱 단계와 경계 목록');
     body.appendChild(steps([['경계 목록', '동기 호출 / 비동기 이벤트 / 데이터 파일'], ['연산 목록', 'C 칸 → O, 상태 변화 알림 → E'], ['행위 겹', '조건, 실패표, 멱등성, 순서, 동시성'], ['구조·의미 겹', '단위·시간대·코드표·구간의 뜻'], ['품질 겹', '지연, 가용성, 신선도, 보존'], ['진화 겹', '호환 기준, 공지와 폐기, 버전'], ['시험', '소비자 주도 계약 시험, 제공자 검증']], { min: 120 }));
     body.appendChild(table(['경계', '방식', '계약', '원장 줄'], [['회원 앱 → 예약 API', '동기 HTTP', 'O1 예약하기, O2 취소하기, V1·V4 조회', 'c1, c2, v3, v4'], ['데스크 → 예약 API', '동기 HTTP', 'V2 조회', 'v1'], ['예약 시스템 → 회계 시스템', '비동기 이벤트', 'E1 예약 확정, E2 예약 취소, E3 이용 확정(이용완료·노쇼)', 'v2, q3']]));
     body.appendChild(P('E2와 E3은 q3의 답("사용 분 계산에 필요하니 취소와 노쇼도 보내 달라", 가정)에서 생겼습니다. 미결 질문 하나가 계약 둘이 되는 일은 흔해요.', 'small muted'));
+    body = _b;
 
     body.appendChild(H4('O1 예약하기 `POST /bookings` — 실패표'));
-    body.appendChild(h('div', { class: 'two' }, [
+    add(body, [
       h('div', { class: 'memo mono L-ctr', style: 'font-size:12.5px;line-height:1.8;border-top:3px solid var(--ctr)', html: [
         '<b>O1 예약하기</b>   POST /bookings', '입력  memberId, roomCode, startAt, endAt, 머리글 Idempotency-Key',
         'pre1  회원이 존재하고 활동 상태 (업무)', 'pre2  30분 경계, 끝 > 시작, 4시간 이하 (형식)', 'pre3  시작이 지금보다 뒤 (업무)',
         'post1 성공: 확정 예약 하나가 생기고 예약번호를 돌려줌', 'post2 성공: E1 이 같은 트랜잭션 결과에 따라 정확히 한 번 발행 예약됨', 'inv1  확정 예약끼리 같은 회의실이면 구간이 겹치지 않음 (R3)'
       ].join('<br>') }),
       table(['실패', '응답', '상태 변화', '다시 시도'], D.o1fail)
-    ]));
+    ]);
     body.appendChild(P('상태 코드만으로는 부족합니다. 같은 409라도 "다른 시간으로 다시 하면 된다"와 "다시 해도 소용없다"는 소비자가 할 일이 다릅니다. 503에 "상태 변화 없음이 보장됨"을 약속하려면 기록 트랜잭션이 끝나기 전에만 503을 내야 합니다.', 'small muted'));
 
     // 멱등 재시도 시퀀스
@@ -346,23 +358,26 @@
     ob.appendChild(svgText(140, 188, '발행 먼저 → 커밋 실패 → 없는 예약이 청구됨', 't-sm', 'middle'));
     body.appendChild(fig(ob, '예약과 같은 트랜잭션에서 "보낼 이벤트" 행을 기록하고 별도 과정이 그 행을 읽어 발행합니다. 다시 보내면 중복이 생기므로 전달은 **적어도 한 번**이 되고, 소비자는 eventId로 거릅니다. 같은 eventId를 두 번 받은 것은 계약 위반이 아니에요. 한 번도 오지 않았다면 post2 위반입니다.', '그림 11-1'));
 
-    body.appendChild(H4('의미 겹 (O1·E1)'));
+    var _b = body; body = foldInto(_b, '의미 겹 (O1 · E1)');
     body.appendChild(table(['항목', 'O1·E1에서'], [['시각', 'ISO 8601, 오프셋 필수(`+09:00`). `Z`로 보내도 같은 순간으로 해석'], ['구간', '`[startAt, endAt)` — 끝 불포함'], ['단위', '분 단위 길이는 정수 분. 금액은 원, 정수'], ['코드표', '`roomCode`는 회의실 코드표(R1, R2, R3)의 값. 코드표는 별도 조회 API로 제공'], ['식별', '`memberId`는 회원번호. 이메일로 회원을 찾지 않음(10장의 맞추기 결정)']]));
+    body = _b;
 
     body.appendChild(H4('진화 겹 — 이 변경은 어떻게 분류될까'));
     var eh = h('div', { 'aria-live': 'polite' });
     add(body, [seg(D.evolution11.map(function (e, i) { return { html: md(e[0]), key: i }; }), function (i) { var e = D.evolution11[i]; clear(eh); add(eh, [h('p', null, [h('span', { class: 'pill ' + e[1] }, e[2]), ' ', h('span', { html: md(e[3]) })])]); }, { start: 2 }), eh]);
     body.appendChild(P('열거값 추가가 까다로운 것은 소비자가 `switch`로 빠짐없이 나눠 처리하고 있었다면 모르는 값에서 실패하기 때문입니다. "모르는 상태 값은 확정이 아닌 것으로 다룬다" 같은 규칙을 **처음부터** 적어 둡니다. 호환성은 변경할 때가 아니라 첫 계약을 쓸 때 준비합니다.', 'small muted'));
+    var _b = body; body = foldInto(_b, '비호환 변경 절차와 품질 겹');
     body.appendChild(steps([['공지', '변경 내용, 이유, 새 주 버전, 일정 (90일 전, 가정)'], ['병행', '옛 버전과 새 버전을 함께. 이벤트라면 두 채널로'], ['사용 측정', '옛 버전을 누가 아직 쓰는지 (소비자 계약, 호출 기록)'], ['제거', '남은 소비자가 없거나 공지한 날이 되면']]));
     body.appendChild(H4('품질 겹 (값은 가정)'));
     body.appendChild(table(['항목', '약속', '측정'], [['O1 지연', '요청의 95%가 0.5초 이내', 'API 게이트웨이 기록, 월 단위'], ['O1 가용성', '월 99.5%', '5분 간격 상태 확인'], ['E1 신선도', '확정 후 1분 이내 발행', '커밋 시각과 발행 시각의 차'], ['E1 보존', '채널에 7일 보관', '브로커 설정']]));
+    body = _b;
     body.appendChild(P('회계 시스템의 소비자 계약에는 `roomCode`가 없습니다. 회계는 회의실을 쓰지 않으니까요. 회의실별 단가가 생기는 순간 `roomCode`가 소비자 계약에 들어가고, 예약 시스템은 그 필드를 지울 수 없게 됩니다. 소비자 계약은 지금 누가 무엇에 기대는지를 보여 줍니다.', 'small'));
   });
 
   // ---------- 12장 ----------
   RENDER.push(function renderC12() {
     var body = section('c12'); if (!body) return;
-    body.appendChild(H4('사실 유형을 표로 묶기 (Halpin의 규칙)'));
+    var _b = body; body = foldInto(_b, '사실 유형을 표로 묶기 (Halpin의 규칙)');
     var g = svgBox(680, 300, '단순 키 사실 유형은 개체마다 한 표로 묶고 복합 키 사실 유형은 따로 표를 만든다', 'minw-560');
     arrowDefs(g, 'c12a');
     var grp = [['회원', 'F1 이름, 이메일, 상태', 'member'], ['회의실', 'F3 정원', 'room'], ['등급', 'F8 무료 분, 초과 단가', 'grade'], ['예약', 'F4 회원, F5 회의실, F6 시작·끝, F7 상태, F9 취소 시각', 'booking'], ["복합 키", "F2' 회원·기간 → 등급", 'member_grade_period'], ['복합 키', 'F11 예약 → 손님 이름(여럿)', 'booking_guest']];
@@ -373,6 +388,7 @@
       var b = s('g', { class: 'L-int' }); b.appendChild(s('rect', { x: 482, y: y, width: 190, height: 38, rx: 3, class: 'box-c' })); b.appendChild(svgText(577, y + 24, r[2], 't-mono t-b', 'middle')); g.appendChild(b);
     });
     body.appendChild(fig(g, '기본 사실이면 묶은 결과에 중복이 생기지 않습니다. `outbox`·`idempotency`는 개념 스키마에 없는 표입니다. 담화 세계의 사실이 아니라 계약을 지키는 장치라, 보장 위치표에서 어느 계약 조항을 지키는지로 정당화합니다.', '그림 12-1'));
+    body = _b;
 
     body.appendChild(H4('작업 부하 표와 결정 — 모든 인덱스는 어떤 줄에 기댑니다'));
     var dh = h('div', { 'aria-live': 'polite' });
@@ -386,9 +402,10 @@
     setTimeout(function () { var r = $$('tbody tr', wt)[5]; if (r) r.click(); }, 0);
     body.appendChild(P('결정 기록의 "재검토"를 비워 두면 그 결정은 영원히 남습니다. 발행된 청구서는 비정규화가 아니라 새 사실로 다룹니다(`billing_statement`: "이 청구서에 이렇게 적혀 나갔다").', 'small muted'));
 
-    body.appendChild(H4('하위 유형을 옮기는 네 방법 — 그리고 쓰지 않은 이유'));
+    var _b = body; body = foldInto(_b, '하위 유형을 옮기는 네 방법 — 그리고 쓰지 않은 이유');
     body.appendChild(table(['방법', '표', '쓸 수 있는 경우(슬라이드)', '「틈」에서'], [['8A 상위·하위 각각', '`member`, `resident_member(member_id, seat_no)`', '어떤 하위 유형에도', '가능'], ['8B 하위만', '`regular_member`, `resident_member`', '모든 상위 객체가 하위 중 하나에 속할 때', '가능하지만 회원 목록 조회가 둘을 합쳐야 함'], ['8C 한 표 + 유형 속성', '`member(..., kind, seat_no)`', '배타적 하위 유형', '가능. seat_no는 상주일 때만 값'], ['8D 한 표 + 불 플래그 여럿', '`member(..., is_resident, ...)`', '겹치는 하위 유형', '하위 유형이 하나라 의미 없음']]));
     body.appendChild(note('<b>결정</b> 하위 유형으로 옮기지 않습니다. 등급에 이력이 생겨 소속이 날짜에 따라 다르기 때문이에요. 대신 `seat_assignment(member_id, seat_no, valid_from, valid_to)`를 두고 "지정석은 그 기간에 상주 등급인 회원만 가진다"를 보장 위치표에 올립니다. 하위 유형 사상은 소속이 바뀌지 않을 때 가장 잘 맞습니다.', 'c L-int'));
+    body = _b;
 
     body.appendChild(H4('보장 위치표 (완성본) — 규칙마다 지키는 자리'));
     var places = ['DB', '서비스', '질의', '발행 과정'];
@@ -416,7 +433,7 @@
     body.appendChild(P('빈칸은 두 뜻입니다. 정말 해당이 없거나(v1은 계약이 없는 내부 이용자), 설계가 빠뜨렸거나입니다. 빠뜨렸다면 원장으로 돌아갑니다. 갱신하지 않은 추적표는 오히려 틀린 안심을 줍니다.', 'small muted'));
 
     // 인구 왕복
-    body.appendChild(H4('인구 왕복 — 기대값을 먼저 손으로 내고, 실행해 견줍니다'));
+    body.appendChild(H4('인구 왕복 — 기대값을 먼저 손으로 내고, 실행 결과와 비교합니다'));
     var P13 = D.pop13;
     function mins(t) { var a = t.split(':'); return +a[0] * 60 + +a[1]; }
     var gradeRule = 'end';
@@ -445,9 +462,9 @@
         var over = Math.max(0, per[m].used - free), fee = Math.ceil(over / 30) * 3000;
         return { m: m, name: P13.members[m], grade: grade[m], used: per[m].used, free: free, over: over, fee: fee, parts: per[m].parts };
       });
-      var svg = svgBox(680, 190, '회원별 사용 분 구성과 무료 분', 'minw-560');
+      var svg = svgBox(680, 206, '회원별 사용 분 구성과 무료 분', 'minw-560');
       var X = function (v) { return 110 + v * (540 / 660); };
-      var colorOf = { '이용완료': 'var(--int)', '노쇼': 'var(--con)', '늦은 취소': 'var(--ctr)' };
+      var colorOf = { '이용완료': 'var(--ink)', '노쇼': 'var(--ink-2)', '늦은 취소': 'var(--rule-2)' };
       rows.forEach(function (r, i) {
         var y = 14 + i * 58, x = X(0);
         svg.appendChild(svgText(10, y + 18, r.name + ' ' + r.m, 't-sm t-b'));
@@ -455,13 +472,13 @@
           if (p[2].indexOf('무료') === 0) return;
           var w = X(p[1]) - X(0);
           svg.appendChild(s('rect', { x: x, y: y + 4, width: w - 1, height: 22, style: 'fill:' + colorOf[p[2]] }));
-          if (w >= 40) svg.appendChild(s('text', { x: x + w / 2, y: y + 19, 'text-anchor': 'middle', class: 't-sm t-mono', style: 'fill:var(--paper)' }, p[0]));
+          if (w >= 40) svg.appendChild(s('text', { x: x + w / 2, y: y + 19, 'text-anchor': 'middle', class: 't-sm t-mono', style: 'fill:' + (p[2] === '늦은 취소' ? 'var(--ink)' : 'var(--paper)') }, p[0]));
           x += w;
         });
         svg.appendChild(s('line', { x1: X(r.free), y1: y, x2: X(r.free), y2: y + 34, style: 'stroke:var(--focus);stroke-width:2;stroke-dasharray:3 2' }));
         svg.appendChild(svgText(X(r.free) + 4, y + 44, '무료 ' + r.free, 't-sm t-sub'));
       });
-      [['이용완료', 'var(--int)'], ['노쇼', 'var(--con)'], ['늦은 취소', 'var(--ctr)']].forEach(function (l, i) { svg.appendChild(s('rect', { x: 110 + i * 110, y: 180, width: 10, height: 10, style: 'fill:' + l[1] })); svg.appendChild(svgText(124 + i * 110, 189, l[0], 't-sm')); });
+      [['이용완료', 'var(--ink)'], ['노쇼', 'var(--ink-2)'], ['늦은 취소', 'var(--rule-2)']].forEach(function (l, i) { svg.appendChild(s('rect', { x: 110 + i * 110, y: 186, width: 10, height: 10, style: 'fill:' + l[1] })); svg.appendChild(svgText(124 + i * 110, 195, l[0], 't-sm')); });
       return h('div', null, [
         seg([{ label: '월말 기준 (가정)', key: 'end' }, { label: '월초 기준', key: 'start' }, { label: '날수로 나눔', key: 'days' }], function (k) { if (k !== gradeRule) { gradeRule = k; clear(rt); rt.appendChild(v3()); } }, { lbl: 'q4 · M07 등급 규칙', start: ['end', 'start', 'days'].indexOf(gradeRule) }),
         fig(svg, '막대 칸 하나가 예약 하나입니다. B105는 다음 날 13:00 시작 예약을 전날 20:00에 취소해 무료 취소라 빠졌고, B104는 시작 30분 전 취소라 늦은 취소로 들어갔습니다.'),
@@ -523,6 +540,8 @@
     });
     add(body, [h('div', { class: 'controls' }, runBtn), tl, sum]);
     body.appendChild(note('<b>둘째 줄이 중요한 까닭</b> 끝 시각과 다음 시작이 같은 예약은 받아들여져야 합니다. 이 한 사례로 겹침 조건 `b.시작 < 새.끝 AND 새.시작 < b.끝`이 `[시작, 끝)`을 제대로 옮겼는지 확인됩니다. 거부만 시험하면 너무 엄격한 규칙을 놓칩니다.<br><b>찾은 빈칸</b> SQLite 판의 R3 트리거는 `INSERT`에만 걸려 있어 `UPDATE`로 시작·끝을 바꾸면 겹침을 검사하지 않습니다. PostgreSQL 배제 제약은 `UPDATE`에도 걸려 이 문제가 없습니다. 같은 개념 규칙이라도 내부 스키마 판마다 보장 범위가 다를 수 있습니다.', 'c L-int'));
+    var _b = body; body = foldInto(_b, '무엇을 실행했고 무엇을 실행하지 않았나');
     body.appendChild(table(['검사', '실행 여부', '근거'], [['추적표(정적)', '손으로 함', '이 장의 표'], ['인구 왕복 V2·V3', h('span', { class: 'pill ok' }, '실행함 (SQLite 3.53.0)'), '`verification/tum-roundtrip-result.json`'], ['반례 시험 10건', h('span', { class: 'pill ok' }, '실행함 (SQLite 3.53.0)'), '같은 파일'], ['PostgreSQL DDL', h('span', { class: 'pill bad' }, '실행 안 함'), '이 환경에 PostgreSQL 없음'], ['계약 시험', h('span', { class: 'pill bad' }, '실행 안 함'), 'HTTP 서버·브로커 없음']]));
     body.appendChild(P('맞물림 여덟 질문은 [부록 D 설계 검사표](#checklist)에서 하나씩 표시하며 점검할 수 있습니다. q1(올림 여부)을 시험할 인구는 **만들 수 없습니다**. 예약 길이·무료 분이 모두 30의 배수라 초과도 늘 30의 배수이기 때문이에요. 인구를 만들어 보려다 그 인구가 불가능하다는 것을 아는 것도 검증의 결과입니다.', 'small'));
+    body = _b;
   });

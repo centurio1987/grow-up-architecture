@@ -87,23 +87,16 @@
       clear(stackHolder); stackHolder.appendChild(drawStack(changes[i]));
       clear(detail); add(detail, [P('**' + changes[i].ans + '**'), changes[i].note ? P(changes[i].note, 'small muted') : null]);
     } });
-    add(body, [h('div', { class: 'two' }, [tbl, h('div', { class: 'panel' }, [stackHolder, detail])])]);
+    add(body, [h('div', { class: 'two' }, [tbl, h('div', { class: 'panel side' }, [stackHolder, detail])])]);
     body.appendChild(P('숨길 수 없는 변경은 **정보가 사라짐 · 뜻이 바뀜 · 품질이 바뀜** 셋으로 묶입니다. 이 셋이 5장에서 계약을 따로 두는 이유입니다. 사상은 구조를 숨기고, 계약은 뜻·품질·변경 절차를 약속합니다.', 'prose'));
     setTimeout(function () { var first = $('tbody tr', tbl); if (first) first.click(); }, 0);
 
+    var _b = body; body = foldInto(_b, '연표 1970~1987');
     // 연표
     var ev = [[1970, 'Codd', '관계 모델, 데이터 독립성을 목표로'], [1971, 'CODASYL DBTG', '스키마 / 하위 스키마'], [1975, 'ANSI/SPARC 중간 보고서', '외부 · 개념 · 내부 세 층'], [1977, 'Tsichritzis·Klug', '최종 보고서'], [1979, 'Clemons', '하위 스키마 비판, 가상 데이터베이스'], [1987, 'ISO/TR 9007', '개념 스키마와 정보 베이스의 개념·용어']];
-    var tl = svgBox(700, 150, '1970년부터 1987년까지 세 층 구조의 연표', 'minw-560');
-    var sx = function (y) { return 40 + (y - 1969) * (620 / 19); };
-    tl.appendChild(s('line', { x1: 30, y1: 60, x2: 680, y2: 60, class: 'ln' }));
-    ev.forEach(function (e, i) {
-      var x = sx(e[0]), up = i % 2 === 0;
-      tl.appendChild(s('circle', { cx: x, cy: 60, r: 4, class: 'fill-c L-con' }));
-      tl.appendChild(svgText(x, up ? 44 : 82, String(e[0]), 't-mono t-b', 'middle'));
-      tl.appendChild(svgText(x, up ? 26 : 100, e[1], 't-sm t-b', 'middle'));
-      tl.appendChild(svgText(x, up ? 12 : 116, e[2], 't-sm t-mut', 'middle'));
-    });
-    body.appendChild(fig(tl, '원고는 1975·1977 보고서 원문을 직접 보지 못했고, 1985년 후속 보고서(NBS IR 85-3173)와 ISO/TR 9007(1987)에서 정의를 옮겼다고 밝힙니다.', '그림 1-2'));
+    body.appendChild(table(['연도', '누가', '무엇'], ev.map(function (e) { return [h('b', { class: 'mono' }, String(e[0])), e[1], e[2]]; })));
+    body.appendChild(P('원고는 1975·1977 보고서 원문을 직접 보지 못했고, 1985년 후속 보고서(NBS IR 85-3173)와 ISO/TR 9007(1987)에서 정의를 옮겼다고 밝힙니다.', 'small muted'));
+    body = _b;
   });
 
   // ---------- 2장 ----------
@@ -118,18 +111,17 @@
       ['예약 표에 회의실 코드 인덱스를 둔다', 'out', '물리적 접근', '개념화 원칙'],
       ['회원번호는 `M` 다음 숫자 두 자리다', 'dep', '회원이 이 번호를 실제로 쓰면 담화 세계의 식별 방식, 시스템만 쓰면 내부 표현. 가르는 기준은 "담화 세계의 누가 그것을 쓰는가"', '']
     ];
-    var list = h('div', { style: 'display:grid;gap:6px' });
+    var list = h('div', { class: 'qgrid' });
     items.forEach(function (it) {
-      var res = h('div', { class: 'small', 'aria-live': 'polite' });
-      var row = h('div', { class: 'panel', style: 'box-shadow:none;padding:10px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center' }, [
-        h('div', { html: md(it[0]) }),
+      var res = h('div', { class: 'res', 'aria-live': 'polite' });
+      var row = h('div', { class: 'qcard' }, [
+        h('div', { class: 'q', html: md(it[0]) }),
         seg([{ label: '넣음', key: 'in' }, { label: '뺌', key: 'out' }, { label: '경우에 따라', key: 'dep' }], function (k) {
           var ok = k === it[1];
           clear(res); add(res, [h('span', { class: 'pill ' + (ok ? 'ok' : 'bad') }, ok ? '맞음' : '풀이와 다름'), ' ', h('b', null, { in: '넣음', out: '뺌', dep: '경우에 따라' }[it[1]]), ' · ', h('span', { html: md(it[2]) }), it[3] ? h('span', { class: 'muted' }, ' (' + it[3] + ')') : null]);
         }),
         res
       ]);
-      res.style.gridColumn = '1 / -1';
       list.appendChild(row);
     });
     body.appendChild(list);
@@ -161,7 +153,7 @@
     add(body, [h('div', { class: 'two' }, [lcol, rcol]), h('div', { class: 'controls' }, tryBtn), out]);
 
     // 글자 표기 개념 스키마
-    body.appendChild(H4('「틈」의 개념 스키마 (2장 판)'));
+    var _b = body; body = foldInto(_b, '「틈」의 개념 스키마 (2장 판) · 줄을 누르면 부품 이름');
     var kinds = { 개체: 'con', 값: 'none', 사실: 'con', 제약: 'con', 파생: 'con' };
     var lines = [
       ['개체', '회원 · 참조: 회원번호 (예: M07)'], ['개체', '회의실 · 참조: 회의실 코드 (예: R1)'], ['개체', '예약 · 참조: 예약번호 (예: B101)'],
@@ -171,7 +163,7 @@
       ['파생', 'D1 회원의 월 사용 분 = 그 달 이용완료·노쇼 예약과 R5에 걸린 취소 예약의 길이 합'], ['파생', 'D2 초과 분 = max(0, 월 사용 분 - 등급의 월 무료 분)']
     ];
     var parts = { 개체: '따로 알아볼 수 있는 사물의 종류. ER의 개체 집합에 가깝습니다.', 값: '그 자체로 뜻이 정해진 값의 종류(값 유형).', 사실: '개체·값에 관해 말할 수 있는 문장의 틀(사실 유형). ER의 속성·관계에 가깝습니다.', 제약: '사실들이 지켜야 하는 규칙. 정적 규칙은 한 순간의 상태를, 동적 규칙은 상태가 바뀌는 방식을 말합니다.', 파생: '다른 사실에서 계산되는 사실(파생 규칙).' };
-    var pinfo = h('div', { class: 'panel', 'aria-live': 'polite' }, P('왼쪽 줄을 누르면 그 줄이 어떤 부품인지 보입니다.', 'small muted'));
+    var pinfo = h('div', { class: 'panel side', 'aria-live': 'polite' }, P('왼쪽 줄을 누르면 그 줄이 어떤 부품인지 보입니다.', 'small muted'));
     var sch = h('div', { class: 'memo mono', style: 'font-size:13px;line-height:1.8' });
     lines.forEach(function (ln) {
       var row = h('div', { class: 'seg L-' + kinds[ln[0]], tabindex: 0, style: 'display:block;border-bottom-width:0' }, [h('span', { style: 'color:var(--ink-3);display:inline-block;width:3.2em' }, '[' + ln[0] + ']'), ln[1], ln[2] ? h('span', { class: 'tag', style: 'margin-left:8px' }, ln[2] + ' 규칙') : null]);
@@ -181,6 +173,7 @@
     });
     add(body, [h('div', { class: 'two' }, [sch, pinfo])]);
     body.appendChild(P('예약번호가 필요한 까닭: 청구에 취소 기록이 필요해 취소된 예약을 지울 수 없습니다. 그래서 (회의실, 시작)으로는 예약 하나를 가리킬 수 없어요. 8장 결과 판에서는 F9(취소 시각)와 R6이 더해집니다.', 'prose small muted'));
+    body = _b;
   });
 
   // ---------- 3장 ----------
@@ -203,7 +196,7 @@
     body.appendChild(P('모든 열에 화살표를 달 수 있어야 하고, 달 수 없는 열은 개념 스키마에 사실이 빠졌다는 신호입니다. 이 표기는 13장 추적표에서 다시 씁니다.', 'prose small'));
 
     // 다섯 항목
-    body.appendChild(H4('외부 스키마의 다섯 항목'));
+    var _b = body; body = foldInto(_b, '외부 스키마의 다섯 항목 (V2 · V3)');
     var five = {
       V2: [['이용자', '안내 데스크 직원. 손님에게 방을 안내'], ['내용', 'F1, F3, F4, F5, F6, F7'], ['모양', '한 행 = 예약 하나. 시각은 `HH:MM`. 회의실·시작 순'], ['파생 규칙', '확정이고 시작 날짜가 오늘인 예약을 고르고, 회원 이름과 회의실 정원을 붙임'], ['갱신 의미', '읽기 전용']],
       V3: [['이용자', '청구 담당자'], ['내용', '회원 이름 ← F1 · 등급 ← F2 · 사용 분 ← D1 · 무료 분 ← F2 → F8 · 초과 분 ← D2'], ['모양', '행 = 해당 월에 사용 분이 있는 회원 한 명. 순서는 회원 이름'], ['파생 규칙', '고르기 D1 > 0, 월 = 청구 대상 월. 가림 없음(청구 담당자는 모든 회원을 봄)'], ['갱신 의미', '읽기 전용. 초과 분을 0으로 만드는 번역이 여럿이라 쓰기를 받기 어렵습니다. 필요하면 "청구 조정" 사실과 연산을 따로 둡니다']]
@@ -211,6 +204,7 @@
     var fiveHolder = h('div');
     add(body, [seg([{ label: 'V2 오늘 일정표', key: 'V2' }, { label: 'V3 월 청구 명세', key: 'V3' }], function (k) { clear(fiveHolder); fiveHolder.appendChild(table(['항목', k], five[k])); }, { start: 0 }), fiveHolder]);
     body.appendChild(h('div', { class: 'controls', style: 'margin-top:10px' }, [h('span', { class: 'lbl' }, '파생 규칙에 쓰는 연산')].concat(['고르기', '뽑기(투영)', '잇기', '계산', '이름 바꾸기', '모양 바꾸기', '가리기'].map(function (x) { return h('span', { class: 'tag L-ext' }, x); }))));
+    body = _b;
 
     // 뷰 갱신 문제
     body.appendChild(H4('쓰기를 받으면 무슨 일이 생기나 — 뷰 갱신 문제'));
@@ -269,10 +263,11 @@
     body.appendChild(note('읽는 외부 스키마는 파생 규칙으로 끝나고, 쓰는 외부 스키마는 갱신 의미를 따로 정해야 합니다. CQRS로 읽으면 읽기 모델로는 쓰기를 받지 않고 "예약하기" 같은 **명령**으로 받습니다(이 연결은 가이드의 해석).', 'c L-ext'));
 
     // OpenAPI 상자
-    body.appendChild(H4('OpenAPI 문서 한 장에 섞여 있는 것'));
+    var _b = body; body = foldInto(_b, 'OpenAPI 문서 한 장에 섞여 있는 것');
     var oa = [['paths: /bookings  POST, GET', 'ctr', '계약(연산)'], ['responses: 201, 409, 422', 'ctr', '계약(실패)'], ['components.schemas.Booking', 'ext', '외부 스키마(모양)'], ['security: bearerAuth', 'ctr', '계약(조건)'], ['info.version: 1.4.0', 'ctr', '계약(진화)']];
     body.appendChild(h('div', { class: 'panel', style: 'box-shadow:none;font-family:var(--mono);font-size:13px;display:grid;gap:4px' }, oa.map(function (o) { return h('div', { class: 'L-' + o[1], style: 'display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:4px 8px;background:var(--t);border-left:3px solid var(--c)' }, [h('span', null, o[0]), h('span', { style: 'color:var(--c);font-family:var(--sans)' }, '← ' + o[2])]); })));
     body.appendChild(P('OpenAPI 문서 전체를 외부 스키마로 보는 것은 지나칩니다. `components.schemas`와 응답 본문만 외부 스키마입니다.', 'small muted'));
+    body = _b;
   });
 
   // ---------- 4장 ----------
@@ -350,14 +345,15 @@
     body.appendChild(P('가장 중요한 한 줄은 `tstzrange(starts_at, ends_at) WITH &&`입니다. 기본 구간이 `[시작, 끝)`이라 10:00–11:30 뒤의 11:30–12:00은 겹치지 않습니다. `[]`로 바꾸면 같은 데이터가 위반이 돼요. 1장의 "끝 시각 포함/불포함"이 이 한 줄에 들어 있습니다. 일반 `UNIQUE`로는 R3을 못 지킵니다. 같은 값이 아니라 **겹침**을 막아야 하니까요. (DDL은 PostgreSQL 문법이고 원고 환경에서 실행하지 못했습니다.)', 'prose small'));
 
     // 비정규화
-    body.appendChild(H4('비정규화가 예약해 두는 어긋남'));
+    var _b = body; body = foldInto(_b, '비정규화가 예약해 두는 어긋남');
     var dn = [['B101', 'M07', '김하나', 'R1', '11-17 10:00'], ['B105', 'M07', '김하나', 'R2', '11-18 14:00'], ['B120', 'M07', '김하나', 'R1', '11-20 09:00']];
     var dh = h('div'), dmsg = h('p', { class: 'small', 'aria-live': 'polite' });
     function dpaint(n) { clear(dh); dh.appendChild(table(['booking_id', 'member_id', 'member_name', 'room_code', 'starts_at'], dn.map(function (r, i) { return [r[0], r[1], i < n ? h('b', { style: 'color:var(--focus)' }, '김하늘') : r[2], r[3], r[4]]; }))); }
     dpaint(0);
     add(body, [seg([{ label: '처음', key: 0 }, { label: '이름을 한 줄만 고침', key: 1 }, { label: '세 줄 모두 고침', key: 3 }], function (k) { dpaint(k); dmsg.innerHTML = k === 1 ? md('같은 회원 M07이 **두 이름**을 가집니다. `member_id → member_name` 함수 종속이 있는데 member_id가 이 표의 키가 아니라서 생기는 **갱신 이상**입니다.') : k === 3 ? md('세 줄을 다 찾아 고쳐야 맞습니다. 비정규화한다면 누가 맞추는지 보장 위치표에 적습니다. 적지 않은 비정규화는 어긋남을 예약해 둔 것과 같아요.') : ''; }, { start: 0 }), dh, dmsg]);
+    body = _b;
 
-    body.appendChild(H4('보장 위치표 (4장 판)'));
+    var _b = body; body = foldInto(_b, '보장 위치표 (4장 판)');
     body.appendChild(table(['규칙', '지키는 자리', '방법'], [
       ['R1 회원마다 이름 하나, 예약마다 회원·회의실·시각·상태 하나', 'DB', '`NOT NULL`, 열 하나에 값 하나'],
       ['R2 끝 > 시작, 30분 단위, 4시간 이하', 'DB', '`CHECK`'],
@@ -367,6 +363,7 @@
       ['D1·D2 월 사용 분·초과 분', '질의', '청구용 뷰']
     ]));
     body.appendChild(P('내부 스키마 = DDL은 아닙니다. "예약 쓰기는 예약 서비스 한 곳에서만"(R4를 지키는 자리)은 DDL에 나타나지 않아요. 인덱스가 규칙을 지키는 것도 아닙니다. 지키는 것은 `UNIQUE`나 `EXCLUDE` 같은 제약이고, 제약이 안에서 인덱스를 쓸 뿐입니다. 작업 부하와 인덱스 결정은 [12장](#c12)에서 함께 봅니다.', 'prose small muted'));
+    body = _b;
   });
 
   // ---------- 5장 ----------
@@ -381,7 +378,7 @@
       ['진화', '어떻게 바뀌고, 바뀌기 전에 무엇을 알리는가', '필드 추가는 예고 없이 가능. 필드 삭제·뜻 변경은 새 주 버전, 90일 전 공지(가정)', false]
     ];
     var svg = svgBox(400, 300, '계약 상자 안에 외부 스키마(구조·의미)가 있고, 행위·품질·진화가 더해진다');
-    var lx = h('div', { class: 'panel c L-ctr', 'aria-live': 'polite' });
+    var lx = h('div', { class: 'panel c L-ctr side', 'aria-live': 'polite' });
     var gs = [];
     var outer = s('g', { class: 'L-ctr' });
     outer.appendChild(s('rect', { x: 6, y: 6, width: 388, height: 288, rx: 6, class: 'box-c', style: 'fill:transparent' }));
@@ -397,7 +394,7 @@
       g.appendChild(s('rect', { x: L[3] ? 34 : 20, y: y, width: L[3] ? 332 : 360, height: L[3] ? 32 : 36, rx: 3, class: 'box-c' }));
       g.appendChild(svgText(L[3] ? 48 : 34, y + (L[3] ? 21 : 23), L[0], 't-b'));
       g.appendChild(svgText(L[3] ? 100 : 86, y + (L[3] ? 21 : 23), L[1], 't-sm t-mut'));
-      function pick() { gs.forEach(function (x) { x.classList.remove('on'); }); g.classList.add('on'); clear(lx); lx.className = 'panel c fade-in ' + (L[3] ? 'L-ext' : 'L-ctr'); add(lx, [h('div', { class: 'eyebrow' }, L[0] + ' 겹'), h('h5', null, L[1]), P('**「틈」 예약하기 API** · ' + L[2])]); }
+      function pick() { gs.forEach(function (x) { x.classList.remove('on'); }); g.classList.add('on'); clear(lx); lx.className = 'panel c side fade-in ' + (L[3] ? 'L-ext' : 'L-ctr'); add(lx, [h('div', { class: 'eyebrow' }, L[0] + ' 겹'), h('h5', null, L[1]), P('**「틈」 예약하기 API** · ' + L[2])]); }
       g.addEventListener('click', pick); g.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
       gs.push(g); svg.appendChild(g);
     });
@@ -438,11 +435,11 @@
       ['`endAt`을 "불포함"에서 "포함"으로', '의미 겹 변경', 'bad', '구조는 그대로라 옛 소비자는 오류 없이 틀린 계산을 함. MAJOR를 올리고 가능하면 이름을 바꿈(`endAtInclusive`)'],
       ['빈 결과를 `null`에서 `[]`로', '관찰된 의존일 수 있음', 'warn', '안전하다고 단정할 수 없음. 소비자가 `null`로 결과 없음을 판단한다면 실제 계약의 일부']
     ];
-    var ch = h('div', { style: 'display:grid;gap:6px' });
+    var ch = h('div', { class: 'qgrid' });
     cases.forEach(function (c) {
-      var res = h('div', { class: 'small', style: 'grid-column:1/-1' });
-      ch.appendChild(h('div', { class: 'panel', style: 'box-shadow:none;padding:10px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center' }, [
-        h('div', { html: md(c[0]) }),
+      var res = h('div', { class: 'res', 'aria-live': 'polite' });
+      ch.appendChild(h('div', { class: 'qcard' }, [
+        h('div', { class: 'q', html: md(c[0]) }),
         seg([{ label: '그대로', key: 'ok' }, { label: '깨짐', key: 'bad' }], function (k) {
           clear(res);
           var ok = k === c[2] || (c[2] === 'warn');
@@ -476,28 +473,31 @@
       return b;
     })));
     cdcDraw();
-    add(body, [cbox, cdc, cdcMsg, table(['Robinson(2006)의 세 계약', '무엇인가', '성격'], [['제공자 계약', '제공자가 내놓는 기능 전체', '닫혀 있고, 하나이며, 권위가 있음'], ['소비자 계약', '소비자 한 명이 제공자에게 기대하는 것', '열려 있고, 불완전하며, 여럿'], ['소비자 주도 계약', '지금 있는 소비자 계약들을 합한 데서 나온 제공자 계약', '지금의 소비자들에 대해서는 닫혀 있고 완전함']])]);
+    add(body, [cbox, cdc, cdcMsg]);
+    var robinson = (table(['Robinson(2006)의 세 계약', '무엇인가', '성격'], [['제공자 계약', '제공자가 내놓는 기능 전체', '닫혀 있고, 하나이며, 권위가 있음'], ['소비자 계약', '소비자 한 명이 제공자에게 기대하는 것', '열려 있고, 불완전하며, 여럿'], ['소비자 주도 계약', '지금 있는 소비자 계약들을 합한 데서 나온 제공자 계약', '지금의 소비자들에 대해서는 닫혀 있고 완전함']]));
 
     // 실제 계약
     body.appendChild(H4('실제 계약 = 선언한 계약 + 관찰된 의존'));
-    var rc = svgBox(680, 130, '선언한 계약에 관찰된 의존 셋이 더해져 실제 계약이 된다', 'minw-560');
+    var rc = svgBox(680, 156, '선언한 계약 다섯 필드에 관찰된 의존 셋이 더해져 실제 계약이 된다', 'minw-560');
     var decl = ['bookingId', 'status', 'roomCode', 'startAt', 'endAt'], obs = ['시작 시각순 정렬', '빈 목록일 때 [] (null 아님)', '응답 0.3초 안팎'];
-    var x = 10;
-    decl.forEach(function (d) { var w = 74; var g = s('g', { class: 'L-ctr' }); g.appendChild(s('rect', { x: x, y: 20, width: w, height: 34, rx: 3, class: 'box-c' })); g.appendChild(svgText(x + w / 2, 42, d, 't-sm t-mono', 'middle')); rc.appendChild(g); x += w + 4; });
-    obs.forEach(function (d) { var w = 112; rc.appendChild(s('rect', { x: x, y: 20, width: w, height: 34, rx: 3, style: 'fill:var(--warn-t);stroke:var(--warn);stroke-dasharray:4 3' })); rc.appendChild(svgText(x + w / 2, 42, d, 't-sm', 'middle')); x += w + 4; });
-    rc.appendChild(s('path', { d: 'M10,64 v8 h' + (78 * 5 - 6) + ' v-8', class: 'ln' }));
-    rc.appendChild(svgText(10 + 78 * 2.5, 92, '선언한 계약 (순서는 약속 안 함)', 't-sm t-b', 'middle'));
-    rc.appendChild(s('path', { d: 'M' + (10 + 78 * 5) + ',64 v8 h' + (116 * 3 - 4) + ' v-8', class: 'ln' }));
-    rc.appendChild(svgText(10 + 78 * 5 + 174, 92, '관찰된 의존 (Hyrum 법칙)', 't-sm t-b', 'middle'));
-    rc.appendChild(svgText(340, 120, '회계 팀이 정렬을 믿고 첫 줄을 그달 첫 예약으로 처리하면, 내부 변경으로 순서가 바뀌는 날 계약을 어긴 사람 없이 값이 틀립니다', 't-sm t-mut', 'middle'));
-    body.appendChild(fig(rc, '처방은 둘입니다. 기대도 되는 것은 계약에 올려 **선언**하고, 기대면 안 되는 것은 일부러 **흔듭니다**(예: 순서를 무작위로). 26장에서 질의 기록으로 실제 계약을 복원합니다.', '그림 5-3'));
+    rc.appendChild(svgText(10, 35, '선언한 계약', 't-sm t-b'));
+    rc.appendChild(svgText(10, 51, '순서는 약속 안 함', 't-sm t-sub'));
+    decl.forEach(function (d, i) { var x = 120 + i * 108, g = s('g', { class: 'L-ctr' }); g.appendChild(s('rect', { x: x, y: 18, width: 100, height: 34, rx: 3, class: 'box-c' })); g.appendChild(svgText(x + 50, 40, d, 't-sm t-mono', 'middle')); rc.appendChild(g); });
+    rc.appendChild(svgText(10, 87, '+ 관찰된 의존', 't-sm t-b'));
+    rc.appendChild(svgText(10, 103, 'Hyrum 법칙', 't-sm t-sub'));
+    obs.forEach(function (d, i) { var x = 120 + i * 182; rc.appendChild(s('rect', { x: x, y: 70, width: 174, height: 34, rx: 3, style: 'fill:var(--warn-t);stroke:var(--warn);stroke-dasharray:4 3' })); rc.appendChild(svgText(x + 87, 92, d, 't-sm', 'middle')); });
+    rc.appendChild(s('line', { x1: 10, y1: 120, x2: 670, y2: 120, class: 'ln' }));
+    rc.appendChild(svgText(10, 144, '= 실제 계약 · 소비자가 기대는 것은 이 여덟 가지 전부', 't-sm t-b'));
+    body.appendChild(fig(rc, '회계 팀이 정렬을 믿고 첫 줄을 그달 첫 예약으로 처리하면, 내부 변경으로 순서가 바뀌는 날 계약을 어긴 사람 없이 값이 틀립니다. 처방은 둘입니다. 기대도 되는 것은 계약에 올려 **선언**하고, 기대면 안 되는 것은 일부러 **흔듭니다**(예: 순서를 무작위로). 26장에서 질의 기록으로 실제 계약을 복원합니다.', '그림 5-3'));
 
-    body.appendChild(H4('호환성 유형 (Confluent Schema Registry)'));
+    var _b = body; body = foldInto(_b, 'Robinson의 세 계약 · 호환성 유형 · 명세 형식이 적는 겹');
+    body.appendChild(robinson);
     body.appendChild(table(['유형', '뜻', '먼저 올릴 쪽'], [['BACKWARD', '새 스키마를 쓰는 소비자가 바로 앞 스키마로 쓴 데이터를 읽을 수 있음 (기본값)', '소비자'], ['FORWARD', '새 스키마로 쓴 데이터를 바로 앞 스키마의 소비자가 읽을 수 있음', '생산자'], ['FULL', '바로 앞 스키마와 양쪽 모두', '어느 쪽이든 따로'], ['*_TRANSITIVE', '등록된 모든 이전 버전과', '위와 같음'], ['NONE', '검사하지 않음', '주의']]));
     body.appendChild(H4('명세 형식이 적는 겹 (2026-11-17 조회)'));
     var specs = [['OpenAPI 3.2.1', [1, 0, .5, 0, 0]], ['JSON Schema 2020-12', [1, .5, 0, 0, 0]], ['AsyncAPI 3.1.0', [1, 0, .5, 0, 0]], ['Arazzo 1.1.0', [0, 0, 1, 0, 0]], ['ODCS v3.2.0', [1, 0, 0, 1, .5]], ['Pact 계약 파일', [.5, 0, .5, 0, 0]]];
     body.appendChild(table(['형식', '구조', '의미', '행위', '품질', '진화'], specs.map(function (sp) { return [sp[0]].concat(sp[1].map(function (v) { return h('span', { class: v === 1 ? 'pill' : v ? 'pill' : '', style: v === 1 ? 'background:var(--ctr);color:var(--paper);border-color:transparent' : v ? 'background:var(--ctr-t);color:var(--ctr);border-color:transparent' : 'color:var(--ink-3)' }, v === 1 ? '적음' : v ? '일부' : '—'); })); }), { cls: 'heat' }));
     body.appendChild(P('Pact는 구조·행위의 **예**를 적습니다. 파일만 보면 다섯 겹 가운데 의미·품질·진화 정책이 비기 쉽습니다. OpenAPI·AsyncAPI에 사후조건이나 멱등성을 적는 표준 필드는 열람한 범위에서 보이지 않았다고 원고가 적습니다.', 'small muted'));
+    body = _b;
   });
 
   // ---------- 6장 ----------
@@ -555,8 +555,9 @@
     w.appendChild(svgText(350, 381, '추적표 (13장) — 원장 한 줄이 네 산출물의 어디에 나타나는지 잇는 띠', 't-sm t-b', 'middle'));
     body.appendChild(fig(w, '사상은 둘뿐입니다. 계약은 셋째 사상이 아니라, 외부 스키마가 경계를 넘을 때 그 경계에 붙는 약속이에요.', '그림 6-1'));
 
-    body.appendChild(H4('개념-내부 사상표'));
+    var _b = body; body = foldInto(_b, '개념-내부 사상표');
     body.appendChild(table(['개념', '내부', '비고'], [['[개체] 회원(회원번호)', '`member.member_id` 기본 키', '참조 방식이 키로'], ['F1 회원은 이름을 가진다', '`member.name NOT NULL`', '필수 + 하나'], ['F4 예약은 회원이 한 것이다', '`booking.member_id NOT NULL REFERENCES member`', '1:N의 N쪽에 외래 키'], ['F6 예약은 시작·끝을 가진다', '`booking.starts_at`, `booking.ends_at`', '구간은 `[시작, 끝)`'], ['R3 겹침 금지', "`EXCLUDE USING gist (...) WHERE status = 'confirmed'`", 'DB가 지킴'], ['R5 늦은 취소는 사용으로 셈', '`booking.cancelled_at` + 청구 질의', '응용이 지킴']]));
+    body = _b;
 
     body.appendChild(H4('자주 섞이는 용어 쌍 — 눌러서 차이 보기'));
     var pairs = [
