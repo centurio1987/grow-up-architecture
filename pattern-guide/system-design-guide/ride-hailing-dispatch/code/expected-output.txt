@@ -1,0 +1,25 @@
+-- scenario 1: minji asks for a ride at 60000ms, nothing else is going on --
+t=60000ms minji: request r0 is recorded in cell 3:2, free drivers in the cells around: 2 (d02 450m in cell 2:2, d01 672m in cell 3:2)
+t=60000ms dispatch: offers r0 to d02, the write changed 1 row (free -> offered until 75000ms)
+t=63000ms d02: accepts r0, the write changed 1 row (offered -> on a trip), assigned 3000ms after the request was received
+-- scenario 2: a concert ends, 20 requests from the stadium in 1800ms, 12 free drivers around it --
+t=100000ms dispatch: r1 and r2 both read s01 as free, r1's write changed 1 row, r2's write changed 0 rows, offers r2 to s02, the write changed 1 row (free -> offered until 115000ms)
+guide: 20 asked at the stadium, 12 assigned at most 2750ms after the request was received, 8 told no driver 45000ms after it was received with 0 free drivers within 1000m, 0 drivers had two offers at once, 0 drivers went to two riders
+index: each search reads 9 cells, in the rush the stadium searches read node 0 · 1 · 2 184 · 460 · 184 times and the stadium drivers wrote 20 · 50 · 50 locations to them
+lock (the lock store fails over at 101050ms and loses the locks taken in the last 1000ms): 20 asked at the stadium, 20 assigned at most 2750ms after the request was received, 0 told no driver, 8 drivers had two offers at once, 8 drivers went to two riders
+seoyun: r21 far from the stadium during the rush, assigned to o01 2000ms after the request was received
+-- scenario 3: d20 does not answer, d22's app went quiet, index node 1 stops, junho's app sends one request twice --
+t=205000ms dana: request r22 is recorded in cell 6:1, free drivers in the cells around: 2 (d20 223m in cell 6:1, d21 500m in cell 6:1); d22 70m in cell 6:1 is left out, its last location is 35750ms old
+t=205000ms dispatch: offers r22 to d20, the write changed 1 row (free -> offered until 220000ms)
+t=220000ms dispatch: d20 did not answer in 15000ms, withdrawing the offer of r22 changed 1 row (offered -> free)
+t=220000ms dana: free drivers in the cells around: 1 (d21 500m in cell 6:1); d22 70m in cell 6:1 is left out, its last location is 50750ms old
+t=220000ms dispatch: offers r22 to d21, the write changed 1 row (free -> offered until 235000ms)
+t=221000ms d20: accepts r22 late, the write changed 0 rows (d20 is no longer offered r22), no ride
+t=223000ms d21: accepts r22, the write changed 1 row (offered -> on a trip), assigned 18000ms after the request was received
+t=230000ms index node 1: stops and loses what it held, its 20 cells move on the ring (12 to node 0, 8 to node 2), the other 44 cells stay
+t=231000ms junho: request r23 is recorded in cell 2:0, free drivers in the cells around: 0, looks again at 236000ms
+t=231500ms junho: the app sends key k-junho again, the request record returns r23, no second request
+t=236000ms junho: free drivers in the cells around: 2 (d23 360m in cell 2:0, d24 500m in cell 2:0)
+t=236000ms dispatch: offers r23 to d23, the write changed 1 row (free -> offered until 251000ms)
+t=238000ms d23: accepts r23, the write changed 1 row (offered -> on a trip), assigned 7000ms after the request was received
+lock: dana's r22 gets 2 drivers (d20, d21), d20's late accept is written too
