@@ -1,0 +1,25 @@
+-- scenario 1: minsu asks one question while nothing else is running --
+t=1000ms minsu (free): the question is written to the conversation store, run 0 is queued at 1002ms and the run id goes back
+t=1010ms gpu worker 1: takes run 0, prefill until 1230ms, id 1 is written to the token record at 1310ms and the gateway sends it to minsu over sse
+t=7010ms gpu worker 1: writes id 58, the answer goes to the conversation store and the stream ends 6010ms after the question was received
+minsu: run 0 on gpu worker 1, first id 310ms after the question was received, got ids 1-58 in order then the done event (missing 0, twice 0), the conversation store keeps the finished answer with 58 ids
+-- scenario 2: 20 questions a second for 60 seconds (every 5th paid), the gpus fit 16 runs a second --
+guide: paid 240 asked, 240 answered with the first id at most 1310ms after the question was received, 0 refused; free 960 asked, 756 answered with the first id at most 3760ms after the question was received, 204 refused with 429 and Retry-After 8; the paid lane held at most 5 and the free lane 32
+one-queue: paid 240 asked, 240 answered with the first id at most 14710ms after the question was received, 0 refused; free 960 asked, 960 answered with the first id at most 14710ms after the question was received, 0 refused; the one queue held at most 240
+-- scenario 3: jisu's connection drops, gateway 1 restarts, gpu worker 1 stops making tokens, yuna presses stop --
+t=204250ms jisu: the connection drops after id 40, the run goes on
+t=209250ms jisu: reconnects to gateway 0 with Last-Event-ID 40, 18 ids were written while away and 18 come at once, the run finished at 206010ms
+t=213000ms gateway 1: restarts, sora's connection closes after id 27, the browser reconnects after retry 1000ms
+t=214000ms sora: reconnects to gateway 0 with Last-Event-ID 27, 10 ids were written while away and 10 come at once, the rest follow as they are written
+t=230000ms gpu worker 1: stops making tokens with 3 runs on it, it still asks the queue for runs
+t=233000ms queue: 3 runs on gpu worker 1 wrote nothing for 3000ms or more, they fail with an error event (doyun after id 17), gpu worker 1's breaker opens until 263000ms
+t=270010ms queue: gpu worker 1 is half-open, yuna's run is its test run
+t=271000ms queue: the test run on gpu worker 1 wrote id 1, its breaker closes
+t=273220ms yuna: presses stop after id 30, the queue marks the run stopped in the token record and the api answers stopped after id 30
+t=273230ms gpu worker 1: drops yuna's stopped run, the slot is free 10ms after the stop and 140 tokens are not made
+t=273720ms yuna: presses stop again, the api answers stopped after id 30 and changes nothing
+jisu: run 1201 on gpu worker 1, first id 310ms after the question was received, got ids 1-58 in order then the done event (missing 0, twice 0), the conversation store keeps the finished answer with 58 ids
+sora: run 1202 on gpu worker 1, first id 310ms after the question was received, got ids 1-58 in order then the done event (missing 0, twice 0), the conversation store keeps the finished answer with 58 ids
+doyun: run 1203 on gpu worker 1, first id 310ms after the question was received, got ids 1-17 in order then the error event (missing 0, twice 0), the conversation store keeps the failed answer with 17 ids
+dora: run 1206 on gpu worker 0, first id 320ms after the question was received, got ids 1-58 in order then the done event (missing 0, twice 0), the conversation store keeps the finished answer with 58 ids
+yuna: run 1207 on gpu worker 1, first id 310ms after the question was received, got ids 1-30 in order then the stopped event (missing 0, twice 0), the conversation store keeps the stopped answer with 30 ids

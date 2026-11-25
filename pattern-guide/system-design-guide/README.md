@@ -49,3 +49,11 @@
 | 사례 | 문제 | 고른 구조 | 가이드 |
 | --- | --- | --- | --- |
 | IN-01 | API 처리율 제한 | 리전마다 Redis 에서 Lua 한 번으로 근사 창을 세고, Redis 가 멈추면 서버마다 토큰 버킷으로 열어 둠 | [api-rate-limiting-guide_v1.0.0.md](api-rate-limiting/api-rate-limiting-guide_v1.0.0.md) |
+
+## AI AI 서비스
+
+비싸고 느린 모델 추론을 많은 사용자에게 나눠 줘야 하는 문제입니다.
+
+| 사례 | 문제 | 고른 구조 | 가이드 |
+| --- | --- | --- | --- |
+| AI-01 | LLM 채팅 서비스 | 답은 연결과 떼어 토큰 다섯 개마다 순번을 붙여 토큰 기록(Redis Streams)에 적고, 스트림 게이트웨이는 `Last-Event-ID` 다음 순번부터 보내며, GPU 앞에는 유료 · 무료 줄을 두고 줄마다 한도를 넘으면 받은 즉시 429 와 Retry-After 로 거절하고, 조각 사이 시간 제한과 GPU 작업자마다 차단기를 둠 | [llm-chat-streaming-guide_v1.0.0.md](llm-chat-streaming/llm-chat-streaming-guide_v1.0.0.md) |
