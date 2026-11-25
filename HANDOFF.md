@@ -1,6 +1,6 @@
 # 인수인계 — KAN-002.3 1차 12편 집필 (브랜치 `KAN-002-4FZX1V`)
 
-- 기준 시각: 2026-11-25 23:55 KST
+- 기준 시각: 2026-11-25 23:55 KST (2026-11-26 갱신: 태그 105개와 로컬 `main`의 두 커밋을 원격에 올린 사실을 반영)
 - 브랜치: `KAN-002-4FZX1V` (기본 브랜치 `main`에 아직 병합하지 않았습니다)
 - 이 머신의 작업 트리: `/Users/centurio/grow-up-architecture/.work/KAN-002-4FZX1V`
   - 이 트리는 `main` 쪽 작업 트리(`/Users/centurio/grow-up-architecture`) 안의 `.work/`에 있습니다. `.work/`는 `.gitignore`에 들어 있습니다.
@@ -20,7 +20,7 @@
 ### 끝난 것
 
 - S1~S20을 마쳤습니다. 발행한 편은 IN-01, CT-05, CT-03, RT-03, AG-03, RD-01, RT-08, AI-01입니다. 마지막 발행은 `33cf135`(AI-01 v1.0.0, S19)이고, 마지막으로 끝낸 단계는 `0c93b27`(GE-02 리서치 노트, S20)입니다.
-- 단계마다 로컬 태그 `kan/KAN-002.3-8DTJ6W/S<번호>`와 `.../batch<번호>`를 달았습니다(S20·batch10까지). **이 태그는 원격에 올리지 않았습니다.** 2절 「이 머신에만 있는 것」을 봅니다.
+- 단계마다 로컬 태그 `kan/KAN-002.3-8DTJ6W/S<번호>`와 `.../batch<번호>`를 달았습니다(S20·batch10까지). 저장소의 태그 105개(`kan/KAN-001*`, `kan/KAN-002*`)는 모두 원격에도 올렸습니다. 되돌리기(롤백) 지점이라 이어 가는 데는 없어도 되지만, 되돌릴 일이 생기면 씁니다.
 
 ### 하다 만 것: S21 GE-02 「승차 공유 배차 매칭」 집필·발행
 
@@ -60,15 +60,16 @@
 
 - S21 4라운드를 열지(3절 1번).
 - 지난 세션이 따로 알린 것: voice 설정 파일 `~/.claude/authoring/voices/ppangtolab-teacher/style.json`의 금지 패턴이 「깨질」 꼴을 잡지 못합니다. `~/.claude` 아래 공용 설정이라 요청 전에는 고치지 않았습니다. 고칠지 물어야 합니다.
-- 로컬 태그 105개(`kan/...`)를 원격에 올릴지. 이번 인수인계에서는 브랜치만 올렸습니다.
 
 ## 5. 다른 머신에서 이어 가는 법
 
 ```sh
 git clone https://github.com/centurio1987/grow-up-architecture.git   # 처음이면
 cd grow-up-architecture
-git fetch && git switch KAN-002-4FZX1V
+git fetch --tags && git switch KAN-002-4FZX1V
 ```
+
+`--tags`를 붙이면 되돌리기 지점인 `kan/...` 태그도 함께 받습니다.
 
 이 머신처럼 `main` 트리 안의 `.work/`에 따로 작업 트리를 두려면 `git worktree add .work/KAN-002-4FZX1V KAN-002-4FZX1V`를 씁니다. 그렇게 하지 않고 위처럼 바로 `switch`해도 됩니다.
 
@@ -84,7 +85,6 @@ git fetch && git switch KAN-002-4FZX1V
 
 이 머신에만 있고 원격에 없는 것:
 
-- 로컬 태그 105개(`kan/KAN-001*`, `kan/KAN-002*`). 되돌리기(롤백) 지점이라 이어 가는 데는 없어도 되지만, 되돌릴 일이 생기면 필요합니다.
 - 지난 세션의 임시 폴더 `/private/tmp/claude-501/-Users-centurio-grow-up-architecture/298c14ef-8601-4e90-a821-3141c4a78539/scratchpad/kan3/`. 여기에는 다음이 있습니다.
   - `s21/` 아래 본문 조각(`part1.md`~`part4.md`)과 조립 스크립트(`assemble.py`, `build.sh`), 라운드별 수정 스크립트(`fix1.py`~`fix9.py`), 변형 실행 폴더 `variants/`. 커밋한 초안은 이 조각을 조립한 결과입니다. 다른 머신에서는 초안 파일을 바로 고쳐도 됩니다.
   - `resolve-sdg-worker-112.md`: 명세 1.1.2·voice·공통 원칙을 한 벌로 풀어 둔 파일입니다. `authoring.py resolve --voice ppangtolab-teacher --spec system-design-guide --profile main --frozen`으로 다시 만들 수 있습니다.
